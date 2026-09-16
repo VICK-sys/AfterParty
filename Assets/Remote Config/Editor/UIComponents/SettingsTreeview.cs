@@ -94,7 +94,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
         {
             this.keyColumnHeader = keyColumnHeader;
             this.valueColumnHeader = valueColumnHeader;
-            treeView = new SettingsTreeView(new TreeViewState(), new SettingsMultiColumnHeader(CreateSettingsMultiColumnHeaderState()), new JArray(), new JArray());
+            treeView = new SettingsTreeView(new TreeViewState<int>(), new SettingsMultiColumnHeader(CreateSettingsMultiColumnHeaderState()), new JArray(), new JArray());
             treeView.UpdateSetting += OnUpdateSetting;
             m_CreateSettingButtonContent = new GUIContent(addSettingButtonText);
         }
@@ -180,7 +180,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
         }
     }
 
-    internal class SettingsTreeView : TreeView
+    internal class SettingsTreeView : TreeView<int>
     {
         public JArray settingsList;
         public JArray activeSettingsList;
@@ -200,7 +200,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
             public string newType;
         }
 
-        public SettingsTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader, JArray settingsList,
+        public SettingsTreeView(TreeViewState<int> state, MultiColumnHeader multiColumnHeader, JArray settingsList,
             JArray rulesList, bool enableEditingSettingsKeys = true) : base(state, multiColumnHeader)
         {
             this.rowHeight = 18f;
@@ -211,7 +211,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
             Reload();
         }
 
-        private bool isActiveSettingInSettingsList(List<TreeViewItem<JObject>> settingsList, string entityId)
+        private bool isActiveSettingInSettingsList(List<ConfigTreeViewItem<JObject>> settingsList, string entityId)
         {
             foreach (var setting in settingsList)
             {
@@ -223,29 +223,29 @@ namespace Unity.RemoteConfig.Editor.UIComponents
             return false;
         }
 
-        private List<TreeViewItem<JObject>> AddDeletedSettings(
-            List<TreeViewItem<JObject>> tempItems, JArray activeSettings, int id)
+        private List<ConfigTreeViewItem<JObject>> AddDeletedSettings(
+            List<ConfigTreeViewItem<JObject>> tempItems, JArray activeSettings, int id)
         {
             foreach (var setting in activeSettings)
             {
                 if (!isActiveSettingInSettingsList(tempItems, setting["metadata"]["entityId"].Value<string>()))
                 {
-                    tempItems.Add(new TreeViewItem<JObject>(id++, 0, setting["rs"]["key"].Value<string>(), (JObject)setting, false));
+                    tempItems.Add(new ConfigTreeViewItem<JObject>(id++, 0, setting["rs"]["key"].Value<string>(), (JObject)setting, false));
                 }
             }
             return tempItems;
         }
 
-        protected override TreeViewItem BuildRoot()
+        protected override UnityEditor.IMGUI.Controls.TreeViewItem<int> BuildRoot()
         {
-            var root = new TreeViewItem<JObject>(0, -1, "Root", new JObject());
+            var root = new ConfigTreeViewItem<JObject>(0, -1, "Root", new JObject());
             var id = 0;
-            var allItems = new List<TreeViewItem>();
+            var allItems = new List<UnityEditor.IMGUI.Controls.TreeViewItem<int>>();
             if (settingsList != null && settingsList.Count > 0 && activeSettingsList != null)
             {
                 var tempItems = settingsList
-                    .Select(x => new TreeViewItem<JObject>(id++, 0, x["rs"]["key"].Value<string>(), (JObject)x, false))
-                    .ToList<TreeViewItem<JObject>>();
+                    .Select(x => new ConfigTreeViewItem<JObject>(id++, 0, x["rs"]["key"].Value<string>(), (JObject)x, false))
+                    .ToList<ConfigTreeViewItem<JObject>>();
 
                 tempItems = AddDeletedSettings(tempItems, activeSettingsList, id);
 
@@ -261,7 +261,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
                     }
                 }
 
-                allItems = tempItems.ToList<TreeViewItem>();
+                allItems = tempItems.ToList<UnityEditor.IMGUI.Controls.TreeViewItem<int>>();
             }
 
             SetupParentsAndChildrenFromDepths(root, allItems);
@@ -271,14 +271,14 @@ namespace Unity.RemoteConfig.Editor.UIComponents
 
         protected override void RowGUI(RowGUIArgs args)
         {
-            var item = (TreeViewItem<JObject>)args.item;
+            var item = (ConfigTreeViewItem<JObject>)args.item;
             for (int i = 0; i < args.GetNumVisibleColumns(); ++i)
             {
                 CellGUI(args.GetCellRect(i), item, args.GetColumn(i), ref args);
             }
         }
 
-        void CellGUI(Rect cellRect, TreeViewItem<JObject> item, int column, ref RowGUIArgs args)
+        void CellGUI(Rect cellRect, ConfigTreeViewItem<JObject> item, int column, ref RowGUIArgs args)
         {
             var isDisabled = enableEditingSettingsKeys && IsKeyInRules(item.data["metadata"]["entityId"].Value<string>(), rulesList);
             switch (column)
@@ -489,7 +489,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
             }
         }
 
-        private GenericMenu BuildPopupListForSettingTypes(TreeViewItem<JObject> treeViewItem)
+        private GenericMenu BuildPopupListForSettingTypes(ConfigTreeViewItem<JObject> treeViewItem)
         {
             var menu = new GenericMenu();
 
@@ -619,12 +619,12 @@ namespace Unity.RemoteConfig.Editor.UIComponents
         }
     }
 
-    internal class TreeViewItem<T> : TreeViewItem
+    internal class ConfigTreeViewItem<T> : UnityEditor.IMGUI.Controls.TreeViewItem<int>
     {
         public T data;
         public bool enabled;
 
-        public TreeViewItem(int id, int depth, string displayName, T data, bool enabled = true) : base(id, depth,
+        public ConfigTreeViewItem(int id, int depth, string displayName, T data, bool enabled = true) : base(id, depth,
             displayName)
         {
             this.data = data;

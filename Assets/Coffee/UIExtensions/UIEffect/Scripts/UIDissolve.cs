@@ -255,8 +255,8 @@ namespace Coffee.UIExtensions
 				return;
 			}
 
-			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
-			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
+			ulong hash = ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
+			if (_materialCache != null && (_materialCache.hash != hash || _materialCache.texture != m_NoiseTexture || !isActiveAndEnabled || !m_EffectMaterial))
 			{
 				MaterialCache.Unregister(_materialCache);
 				_materialCache = null;
@@ -270,7 +270,7 @@ namespace Coffee.UIExtensions
 			{
 				material = m_EffectMaterial;
 			}
-			else if (_materialCache != null && _materialCache.hash == hash)
+			else if (_materialCache != null && _materialCache.hash == hash && _materialCache.texture == m_NoiseTexture)
 			{
 				material = _materialCache.material;
 			}

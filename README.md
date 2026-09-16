@@ -23,14 +23,28 @@ Are some voices or music too loud? What if the music is too loud but the voices 
 **raonyreis13** - Procedural Notes Spawning
 
 ## Requirements for Editing and Building
-You will need the Unity Editor and an IDE that can support Unity.
 
-I recommend you install Unity **2020.3.32 or newer** and Visual Studio **Community Edition**. Visual Studio Code can work, and if you wanna be fancy then you could purchase JetBrains Rider.
+Install Unity **6000.6.1f1** and Git before opening this project.
+The project uses Universal Render Pipeline 17.6 and the legacy Input Manager.
+TextMesh Pro is included through the Unity UI package.
 
-[How to build for Windows, Linux, and macOS](https://docs.unity3d.com/2019.4/Documentation/Manual/BuildSettingsStandalone.html)
+Open the project in Unity and wait for package resolution and asset import.
+Open `Assets/Scenes/Title.unity` to start the game in the editor.
 
-Also, Unity has an entire manual and C# documentation available online and offline, when selected for download while downloading the Unity Editor.
+Select **Build > Windows 64-bit** to create `Builds/Windows/Unity Party.exe`.
+For command-line builds, use Unity batch mode with `-executeMethod BuildAutomation.BuildWindows`.
+Set `UNITY_PARTY_BUILD_PATH` to select another output executable path.
 
-If you wanna check it out, [it's here!](https://docs.unity3d.com/2019.4/Documentation/Manual/UnityManual.html)
+Run `-batchmode -quit -executeMethod UpgradeValidation.Run` to check object pools, material caching, and CRT rendering.
+Keep graphics enabled for this check.
+Set `UNITY_PARTY_VALIDATION_PATH` to save the CRT control and output images.
 
-There is no guide as of yet to help with how to do specific things, unfortunately. No sure when we'll make guides for those.
+The mod.io browser requires a valid configuration for your game.
+Local startup does not require mod.io initialization.
+
+The GitHub Actions workflow builds Windows 64-bit.
+Configure `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL` repository secrets before running it.
+The workflow requires a valid Unity license and a matching GameCI editor image.
+
+Unity 2021 is no longer supported by this fork.
+Keep the package lock file when cloning or updating the project.

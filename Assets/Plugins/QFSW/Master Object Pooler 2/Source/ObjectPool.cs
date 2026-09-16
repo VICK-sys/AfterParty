@@ -78,10 +78,10 @@ namespace QFSW.MOP2
 
         #region Caches
         private readonly List<GameObject> _pooledObjects = new List<GameObject>();
-        private readonly Dictionary<int, GameObject> _aliveObjects = new Dictionary<int, GameObject>();
+        private readonly Dictionary<EntityId, GameObject> _aliveObjects = new Dictionary<EntityId, GameObject>();
 
         private readonly List<GameObject> _releaseAllBuffer = new List<GameObject>();
-        private readonly Dictionary<(int id, Type type), object> _componentCache = new Dictionary<(int id, Type type), object>();
+        private readonly Dictionary<(EntityId id, Type type), object> _componentCache = new Dictionary<(EntityId id, Type type), object>();
         #endregion
 
         #region Initialization/Creation
@@ -282,7 +282,7 @@ namespace QFSW.MOP2
 
             obj.SetActive(true);
 
-            _aliveObjects.Add(obj.GetInstanceID(), obj);
+            _aliveObjects.Add(obj.GetEntityId(), obj);
             return obj;
         }
 
@@ -328,7 +328,7 @@ namespace QFSW.MOP2
         /// <returns>The retrieved component.</returns>
         public T GetObjectComponent<T>(GameObject obj) where T : class
         {
-            (int id, Type type) key = (obj.GetInstanceID(), typeof(T));
+            (EntityId id, Type type) key = (obj.GetEntityId(), typeof(T));
             T component;
 
             if (_componentCache.ContainsKey(key))
@@ -352,7 +352,7 @@ namespace QFSW.MOP2
         /// <param name="obj">The object to release.</param>
         public void Release(GameObject obj)
         {
-            if (!_aliveObjects.Remove(obj.GetInstanceID()))
+            if (!_aliveObjects.Remove(obj.GetEntityId()))
             {
                 Debug.LogWarning($"Object '{obj}' could not be found in pool '{_name}'; it may have already been released.");
                 return;
@@ -401,7 +401,7 @@ namespace QFSW.MOP2
         /// <param name="obj">The object to destroy.</param>
         public void Destroy(GameObject obj)
         {
-            _aliveObjects.Remove(obj.GetInstanceID());
+            _aliveObjects.Remove(obj.GetEntityId());
             Object.Destroy(obj);
         }
 

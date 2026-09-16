@@ -91,7 +91,7 @@ SubShader {
 
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
-		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
+		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
 		
 		#define MOBILE 1
 		#define UI_DISSOLVE 1

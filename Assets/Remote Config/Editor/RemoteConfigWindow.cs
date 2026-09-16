@@ -20,12 +20,12 @@ namespace Unity.RemoteConfig.Editor
         public bool windowOpenOnInit;
         [NonSerialized] bool m_Initialized;
         RulesTreeView m_RulesTreeView;
-        [SerializeField] TreeViewState m_RulesTreeViewState;
+        [SerializeField] TreeViewState<int> m_RulesTreeViewState;
         [SerializeField] MultiColumnHeaderState m_RulesMultiColumnHeaderState;
-        [SerializeField] TreeViewState m_SettingsTreeViewState;
+        [SerializeField] TreeViewState<int> m_SettingsTreeViewState;
         [SerializeField] MultiColumnHeaderState m_SettingsMultiColumnHeaderState;
         ConfigsTreeView m_ConfigsTreeView;
-        [SerializeField] TreeViewState m_ConfigsTreeViewState;
+        [SerializeField] TreeViewState<int> m_ConfigsTreeViewState;
 
         RulesMultiColumnHeader m_RulesMultiColumnHeader;
 
@@ -332,7 +332,7 @@ namespace Unity.RemoteConfig.Editor
 
                 if (m_RulesTreeViewState == null)
                 {
-                    m_RulesTreeViewState = new TreeViewState();
+                    m_RulesTreeViewState = new TreeViewState<int>();
                 }
 
                 bool firstInit = m_RulesMultiColumnHeaderState == null;
@@ -355,7 +355,7 @@ namespace Unity.RemoteConfig.Editor
 
                 if (m_SettingsTreeViewState == null)
                 {
-                    m_SettingsTreeViewState = new TreeViewState();
+                    m_SettingsTreeViewState = new TreeViewState<int>();
                 }
                 
                 firstInit = m_SettingsMultiColumnHeaderState == null;
@@ -364,7 +364,7 @@ namespace Unity.RemoteConfig.Editor
 
                 if (m_ConfigsTreeViewState == null)
                 {
-                    m_ConfigsTreeViewState = new TreeViewState();
+                    m_ConfigsTreeViewState = new TreeViewState<int>();
                 }
 
                 m_ConfigsTreeView = new ConfigsTreeView(m_ConfigsTreeViewState);
@@ -964,21 +964,21 @@ namespace Unity.RemoteConfig.Editor
         }
     }
 
-    internal class ConfigsTreeView : TreeView
+    internal class ConfigsTreeView : TreeView<int>
     {
         public event Action<IList<int>> SelectionChangedEvent;
 
-        public ConfigsTreeView(TreeViewState state) : base(state)
+        public ConfigsTreeView(TreeViewState<int> state) : base(state)
         {
             Reload();
         }
 
-        protected override TreeViewItem BuildRoot()
+        protected override UnityEditor.IMGUI.Controls.TreeViewItem<int> BuildRoot()
         {
-            var root = new TreeViewItem<string>(0, -1, "Root", "");
+            var root = new ConfigTreeViewItem<string>(0, -1, "Root", "");
             var id = 0;
-            var allItems = new List<TreeViewItem>();
-            allItems.Add(new TreeViewItem<string>(id++, 0, "Settings Config", "Settings Config"));
+            var allItems = new List<UnityEditor.IMGUI.Controls.TreeViewItem<int>>();
+            allItems.Add(new ConfigTreeViewItem<string>(id++, 0, "Settings Config", "Settings Config"));
             SetupParentsAndChildrenFromDepths(root, allItems);
 
             return root;
@@ -995,7 +995,7 @@ namespace Unity.RemoteConfig.Editor
     }
 
     // Displays all the rules
-    internal class RulesTreeView : TreeView
+    internal class RulesTreeView : TreeView<int>
     {
         public JArray rulesList;
 
@@ -1004,22 +1004,22 @@ namespace Unity.RemoteConfig.Editor
         public event Action<string, bool> RuleEnabledOrDisabled;
         public event Action<string, JObject> RuleAttributesChanged;
 
-        public RulesTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader, JArray rulesList) : base(state, multiColumnHeader)
+        public RulesTreeView(TreeViewState<int> state, MultiColumnHeader multiColumnHeader, JArray rulesList) : base(state, multiColumnHeader)
         {
             this.rulesList = rulesList;
             useScrollView = true;
             Reload();
         }
 
-        protected override TreeViewItem BuildRoot()
+        protected override UnityEditor.IMGUI.Controls.TreeViewItem<int> BuildRoot()
         {
-            var root = new TreeViewItem<JObject>(0, -1, "Root", new JObject());
+            var root = new ConfigTreeViewItem<JObject>(0, -1, "Root", new JObject());
             var id = 0;
-            var allItems = new List<TreeViewItem>();
+            var allItems = new List<UnityEditor.IMGUI.Controls.TreeViewItem<int>>();
             if (rulesList != null)
             {
-                allItems.AddRange(rulesList.Select(x => new TreeViewItem<JObject>(id++, 0, x["name"].Value<string>(), (JObject)x))
-                    .ToList<TreeViewItem>());
+                allItems.AddRange(rulesList.Select(x => new ConfigTreeViewItem<JObject>(id++, 0, x["name"].Value<string>(), (JObject)x))
+                    .ToList<UnityEditor.IMGUI.Controls.TreeViewItem<int>>());
             }
             SetupParentsAndChildrenFromDepths(root, allItems);
 
@@ -1028,14 +1028,14 @@ namespace Unity.RemoteConfig.Editor
 
         protected override void RowGUI(RowGUIArgs args)
         {
-            var item = (TreeViewItem<JObject>) args.item;
+            var item = (ConfigTreeViewItem<JObject>) args.item;
             for (int i = 0; i < args.GetNumVisibleColumns(); ++i)
             {
                 CellGUI(args.GetCellRect(i), item, args.GetColumn(i), ref args);
             }
         }
 
-        private void CellGUI(Rect cellRect, TreeViewItem<JObject> item, int column, ref RowGUIArgs args)
+        private void CellGUI(Rect cellRect, ConfigTreeViewItem<JObject> item, int column, ref RowGUIArgs args)
         {
             CenterRectUsingSingleLineHeight(ref cellRect);
 
@@ -1083,8 +1083,8 @@ namespace Unity.RemoteConfig.Editor
         protected override void SelectionChanged(IList<int> selectedIds)
         {
             base.SelectionChanged(selectedIds);
-            var treeViewItems = GetRows() as List<TreeViewItem>;
-            var treeViewItem = treeViewItems.Find(x => x.id == selectedIds[0]) as TreeViewItem<JObject>;
+            var treeViewItems = GetRows() as List<UnityEditor.IMGUI.Controls.TreeViewItem<int>>;
+            var treeViewItem = treeViewItems.Find(x => x.id == selectedIds[0]) as ConfigTreeViewItem<JObject>;
             string ruleId = null;
             if(treeViewItem == null)
             {
@@ -1102,9 +1102,9 @@ namespace Unity.RemoteConfig.Editor
 
         public void SetSelection(string selectRuleId)
         {
-            var treeViewItems = GetRows() as List<TreeViewItem>;
+            var treeViewItems = GetRows() as List<UnityEditor.IMGUI.Controls.TreeViewItem<int>>;
             var selections = new List<int>();
-            foreach (TreeViewItem<JObject> treeViewitem in treeViewItems)
+            foreach (ConfigTreeViewItem<JObject> treeViewitem in treeViewItems)
             {
                 if (selectRuleId == treeViewitem.data["id"].Value<string>())
                 {

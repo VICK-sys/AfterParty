@@ -125,8 +125,8 @@ SubShader {
 
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
-		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc"
-		#include "Assets/TextMesh Pro/Resources/Shaders/TMPro.cginc"
+		#include "Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc"
+		#include "Assets/TextMesh Pro/Shaders/TMPro.cginc"
 		
 		#define UI_SHINY 1
 		#include "Assets/Coffee/UIExtensions/UIEffect/Shaders/UI-Effect.cginc"

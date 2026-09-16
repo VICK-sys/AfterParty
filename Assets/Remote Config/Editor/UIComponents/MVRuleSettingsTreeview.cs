@@ -19,7 +19,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
 
         public MVRuleSettingsView()
         {
-            treeView = new MVRuleSettingsTreeView(new TreeViewState(), new MVRuleSettingsMultiColumnHeader(CreateSettingsMultiColumnHeaderState(1), rule, settings), null, false);
+            treeView = new MVRuleSettingsTreeView(new TreeViewState<int>(), new MVRuleSettingsMultiColumnHeader(CreateSettingsMultiColumnHeaderState(1), rule, settings), null, false);
             treeView.OnAddVariantClicked += TreeView_OnAddVariantClicked;
             treeView.OnVariantUpdated += TreeView_OnVariantUpdated;
             treeView.OnVariantDeleted += TreeView_OnVariantDeleted;
@@ -389,7 +389,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
         }
     }
 
-    internal class MVRuleSettingsTreeView : TreeView
+    internal class MVRuleSettingsTreeView : TreeView<int>
     {
         public JArray settingsList;
         public JObject rule;
@@ -416,7 +416,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
             multiColumnHeader = header;
         }
 
-        public MVRuleSettingsTreeView(TreeViewState state, MVRuleSettingsMultiColumnHeader multiColumnHeader, JArray settingsList,
+        public MVRuleSettingsTreeView(TreeViewState<int> state, MVRuleSettingsMultiColumnHeader multiColumnHeader, JArray settingsList,
             bool enableEditingSettingsKeys = true) : base(state, multiColumnHeader)
         {
             this.rowHeight = 18f;
@@ -428,11 +428,11 @@ namespace Unity.RemoteConfig.Editor.UIComponents
             Reload();
         }
 
-        protected override TreeViewItem BuildRoot()
+        protected override UnityEditor.IMGUI.Controls.TreeViewItem<int> BuildRoot()
         {
-            var root = new TreeViewItem<JObject>(0, -1, "Root", new JObject());
+            var root = new ConfigTreeViewItem<JObject>(0, -1, "Root", new JObject());
             var id = 0;
-            var allItems = new List<TreeViewItem>();
+            var allItems = new List<UnityEditor.IMGUI.Controls.TreeViewItem<int>>();
             Dictionary<string, JObject> settingDict = new Dictionary<string, JObject>();
 
             if (settingsList != null && ((JArray)rule["value"]).Count > 0)
@@ -487,7 +487,7 @@ namespace Unity.RemoteConfig.Editor.UIComponents
 
                 foreach (var setting in settingDict.Values)
                 {
-                    allItems.Add(new TreeViewItem<JObject>(id++, 0, setting["key"].Value<string>(), setting, setting["enabled"].Value<bool>()));
+                    allItems.Add(new ConfigTreeViewItem<JObject>(id++, 0, setting["key"].Value<string>(), setting, setting["enabled"].Value<bool>()));
                 }
             }
 
@@ -498,14 +498,14 @@ namespace Unity.RemoteConfig.Editor.UIComponents
 
         protected override void RowGUI(RowGUIArgs args)
         {
-            var item = (TreeViewItem<JObject>)args.item;
+            var item = (ConfigTreeViewItem<JObject>)args.item;
             for (int i = 0; i < args.GetNumVisibleColumns(); ++i)
             {
                 CellGUI(args.GetCellRect(i), item, args.GetColumn(i), ref args);
             }
         }
 
-        void CellGUI(Rect cellRect, TreeViewItem<JObject> item, int column, ref RowGUIArgs args)
+        void CellGUI(Rect cellRect, ConfigTreeViewItem<JObject> item, int column, ref RowGUIArgs args)
         {
             if(column <= 2)
             {

@@ -30,7 +30,7 @@ namespace Coffee.UIExtensions
 
 		public static MaterialCache Register(ulong hash, Texture texture, System.Func<Material> onCreateMaterial)
 		{
-			var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
+			var cache = materialCaches.FirstOrDefault(x => x.hash == hash && x.texture == texture);
 			if (cache != null && cache.material)
 			{
 				if (cache.material)
@@ -49,6 +49,7 @@ namespace Coffee.UIExtensions
 				cache = new MaterialCache()
 				{
 					hash = hash,
+					texture = texture,
 					material = onCreateMaterial(),
 					referenceCount = 1,
 				};
@@ -59,7 +60,7 @@ namespace Coffee.UIExtensions
 
 		public static MaterialCache Register(ulong hash, System.Func<Material> onCreateMaterial)
 		{
-			var cache = materialCaches.FirstOrDefault(x => x.hash == hash);
+			var cache = materialCaches.FirstOrDefault(x => x.hash == hash && x.texture == null);
 			if (cache != null)
 			{
 				cache.referenceCount++;

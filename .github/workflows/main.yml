@@ -1,50 +1,37 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build Project
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   schedule:
-    - cron: "0 23 * * 5"
-
-  # Allows you to run this workflow manually from the Actions tab
+    - cron: '0 23 * * 5'
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:    
-    buildforwindows:
-        name: Build for ${{ matrix.targetPlatform }}
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                targetPlatform:
-                  - StandaloneWindows # Build a Windows standalone.
-                  - StandaloneWindows64 # Build a Windows 64-bit standalone.
-        steps:
-            - uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
-                  lfs: true
-            - uses: actions/cache@v2
-              with:
-                    path: Library
-                    key: Library-FridayNight-${{ matrix.targetPlatform }}
-                    restore-keys: |
-                        Library-FridayNight-
-                        Library-
-            - uses: game-ci/unity-builder@v2
-              env:
-                    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-                    UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-              with:
-                    targetPlatform: ${{ matrix.targetPlatform }}
-                    versioning: Semantic
-                    buildName: Unity Party
-            - uses: actions/upload-artifact@v2
-              with:
-                    name: Build-${{ matrix.targetPlatform }}
-                    path: build/${{ matrix.targetPlatform }}
-                
+permissions:
+  contents: read
+
+jobs:
+  buildforwindows:
+    name: Build Windows 64-bit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v6.1.0
+        with:
+          path: Library
+          key: Library-Windows64-${{ hashFiles('ProjectSettings/ProjectVersion.txt', 'Packages/manifest.json', 'Packages/packages-lock.json') }}
+      - uses: game-ci/unity-builder@v6.0.0
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: StandaloneWindows64
+          versioning: Semantic
+          buildName: Unity Party
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: Build-StandaloneWindows64
+          path: build/StandaloneWindows64
+          if-no-files-found: error

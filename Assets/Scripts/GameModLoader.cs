@@ -14,12 +14,11 @@ public class GameModLoader : MonoBehaviour
 
     public static Dictionary<string, string> bundleModDirectories = new Dictionary<string, string>();
 
-    // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
-        ModIOUnity.EnableModManagement(ModManagementEventDelegate);
-
-        RefreshResources();
+        yield return new WaitUntil(ModIOUnity.IsInitialized);
+        if (ModIOUnity.EnableModManagement(ModManagementEventDelegate).Succeeded())
+            RefreshResources();
     }
 
     public void OpenModBrowser()
@@ -64,7 +63,12 @@ public class GameModLoader : MonoBehaviour
     public static void RefreshResources()
     {
         bundleModDirectories.Clear();
+        if (!ModIOUnity.IsInitialized())
+            return;
+
         SubscribedMod[] mods = ModIOUnity.GetSubscribedMods(out var result);
+        if (!result.Succeeded() || mods == null)
+            return;
         
         foreach (var mod in mods)
         {
