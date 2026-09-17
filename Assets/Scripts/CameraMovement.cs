@@ -29,6 +29,9 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         if (Song.instance == null) return;
+        if (Song.instance.vanillaPlayback != null && Song.instance.vanillaPlayback.MoveCamera(_camera)) return;
+        if (Song.instance.vanillaPlayback != null)
+            focusOnPlayerOne = Song.instance.vanillaPlayback.FocusOnPlayer;
         
         if (Song.instance.songStarted & !OptionsV2.LiteMode & !OptionsV2.Middlescroll)
         {

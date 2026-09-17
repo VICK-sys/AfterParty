@@ -1,4 +1,4 @@
-﻿ using System;
+ using System;
  using System.Collections;
  using System.Collections.Generic;
  using System.Diagnostics;
@@ -20,7 +20,7 @@
  // ReSharper disable IdentifierTypo
 // ReSharper disable PossibleNullReferenceException
 
-public class Song : MonoBehaviour
+public partial class Song : MonoBehaviour
 {
 
     #region Variables
@@ -208,10 +208,14 @@ public class Song : MonoBehaviour
 
     public string songsFolder;
     public string selectedSongDir;
+    public string selectedInstrumentalPath;
+    public string selectedVocalsPath;
+    public string selectedVanillaPath;
 
     public static SongMetaV2 currentSongMeta;
     public static string difficulty;
     public static int modeOfPlay;
+    public VanillaSongPlayback vanillaPlayback;
 
     [HideInInspector] public SongListObject selectedSong;
 
@@ -364,6 +368,11 @@ public class Song : MonoBehaviour
          * We'll then use it to grab the chart file.
          */
         selectedSongDir = string.IsNullOrWhiteSpace(directory) ? selectedSong.directory : directory;
+        SongMetaV2 assetMeta = currentSongMeta != null && currentSongMeta.songPath == selectedSongDir
+            ? currentSongMeta : new SongMetaV2 { songPath = selectedSongDir };
+        selectedInstrumentalPath = assetMeta.AssetPath("Inst.ogg", difficulty);
+        selectedVocalsPath = assetMeta.AssetPath("Voices.ogg", difficulty);
+        selectedVanillaPath = assetMeta.AssetPath("Vanilla.json", difficulty);
         
         jsonDir = selectedSongDir + $"/Chart-{difficulty.ToLower()}.json";
 
@@ -429,10 +438,11 @@ public class Song : MonoBehaviour
          * Once the instrumentals is loaded, we repeat the exact same thing with
          * the voices. Then, we generate the rest of the song from the chart file.
          */
-        WWW www1 = new WWW(selectedSongDir + "/Inst.ogg")
+        WWW www1 = new WWW(selectedInstrumentalPath)
         {
             threadPriority = ThreadPriority.High
         };
+        yield return www1;
         if (www1.error != null)
         {
             Debug.LogError(www1.error);
@@ -442,10 +452,11 @@ public class Song : MonoBehaviour
             musicClip = www1.GetAudioClip();
             while (musicClip.loadState != AudioDataLoadState.Loaded)
                 yield return new WaitForSeconds(0.1f);
-            if(File.Exists(selectedSongDir + "/Voices.ogg"))
+            if(File.Exists(selectedVocalsPath))
             {
             
-                WWW www2 = new WWW(selectedSongDir + "/Voices.ogg");
+                WWW www2 = new WWW(selectedVocalsPath);
+                yield return www2;
                 if (www2.error != null)
                 {
                     Debug.LogError(www2.error);
@@ -476,10 +487,14 @@ public class Song : MonoBehaviour
     public void GenerateSong()
     {
 
-        for (int i = 0; i < OptionsV2.instance.colorPickers.Length; i++)
+        var customization = JsonConvert.DeserializeObject<NoteCustomization>(PlayerPrefs.GetString("Note Customization", "{}"));
+        Color[] noteColors = customization?.savedColors;
+        if (noteColors == null || noteColors.Length != 4)
+            noteColors = NoteCustomization.defaultFnfColors;
+        for (int i = 0; i < 4; i++)
         {
-            player1NoteSprites[i].color = OptionsV2.instance.colorPickers[i].color;
-            player2NoteSprites[i].color = OptionsV2.instance.colorPickers[i].color;
+            player1NoteSprites[i].color = noteColors[i];
+            player2NoteSprites[i].color = noteColors[i];
         }
 
         /*
@@ -496,6 +511,11 @@ public class Song : MonoBehaviour
          * via the chart file.
          */
         _song = new FNFSong(jsonDir);
+        ChartScrollSpeed = ReadChartScrollSpeed(jsonDir);
+        _noteBehaviours.Clear();
+        ResetFunkinScore();
+        Player.instance.ResetSong();
+        vanillaPlayback = VanillaSongPlayback.Attach(this, ChartScrollSpeed);
 
         /*
          * We grab the BPM to calculate the BPS and the Step Crochet.
@@ -717,6 +737,8 @@ public class Song : MonoBehaviour
          */
         musicSources[0].loop = false;
         musicSources[0].volume = OptionsV2.instVolume;
+        vocalSource.volume = OptionsV2.voicesVolume;
+        vocalSource.mute = false;
         musicSources[0].Stop();
 
        /*
@@ -756,6 +778,7 @@ public class Song : MonoBehaviour
         {
             LoadOpponent();
             LoadScene();
+            vanillaPlayback?.SetupStage();
         }
 
         
@@ -787,11 +810,15 @@ public class Song : MonoBehaviour
         /*
          * Now we can fully start the song in a coroutine.
          */
+        InitializeFunkinStrums();
+        InitializeFunkinHud();
         StartCoroutine(nameof(SongStart), startSound.length);
     }
 
     void LoadOpponent()
     {
+        if (!Cache.cachedOpponents.ContainsKey(_song.Player2) && charactersDictionary.TryGetValue(_song.Player2, out Character builtInCharacter))
+            Cache.cachedOpponents.Add(_song.Player2, builtInCharacter);
         if (!OptionsV2.DesperateMode)
         {
             print("Checking for and applying " + _song.Player2 + ". Result is " +
@@ -1060,13 +1087,15 @@ public class Song : MonoBehaviour
 
         DiscordController.instance.EnableGameStateLoop = true;
 
-        yield return new WaitUntil(() => Input.GetKeyDown(Player.keybinds.startSongKeyCode));
+        if (vanillaPlayback == null)
+            yield return new WaitUntil(() => Input.GetKeyDown(Player.keybinds.startSongKeyCode));
         startSongTooltip.SetActive(false);
         /*
         * Start the countdown audio.
         *
         * Unlike FNF, this does not dynamically change based on BPM.
         */
+        BeginFunkinCountdown(delay);
         soundSource.clip = startSound;
         soundSource.Play();
         
@@ -1113,6 +1142,7 @@ public class Song : MonoBehaviour
         if(hasVoiceLoaded)
             vocalSource.Play();
 
+        IsCountingDown = false;
         songStarted = true;
         
         modInstance?.Invoke("OnSongStarted");
@@ -1135,195 +1165,20 @@ public class Song : MonoBehaviour
     }
     
     
-    public void GenNote( FNFSong.FNFSection section, List<decimal> note ) {
-        /*
-                 * The .NET FNF Chart parsing library already has something specific
-                 * to tell us if the note is a must hit.
-                 *
-                 * But previously I already kind of reverse engineered the FNF chart
-                 * parsing process so I used the "ConvertToNote" function in the .NET
-                 * library to grab "note data".
-                 */
-        GameObject newNoteObj;
-        List<decimal> data = note;
-
-        /*
-         * It sets the "must hit note" boolean depending if the note
-         * is in a section focusing on the boyfriend or not, and
-         * if the note is for the other section.
-         */
-        bool mustHitNote = section.MustHitSection;
-        if ( data[ 1 ] > 3 )
-            mustHitNote = !section.MustHitSection;
-        int noteType = Convert.ToInt32( data[ 1 ] % 4 );
-
-        /*
-         * We make a spawn pos variable to later set the spawn
-         * point of this note.
-         */
-        Vector3 spawnPos;
-
-        /*
-         * We get the length of this note's hold length.
-         */
-        float susLength = (float)data[ 2 ];
-
-        /*
-        if (susLength > 0)
-        {
-            isSusNote = true;
-
-        }
-        */
-
-        /*
-         * Then we adjust it to fit the step crochet to get the TRUE
-         * hold length.
-         */
-        susLength /= stepCrochet;
-
-        /*
-         * It checks the type of note this is and spawns in a note gameobject
-         * tailored for it then sets the spawn point for it depending on if it's
-         * a note belonging to player 1 or player 2.
-         *
-         * If somehow this is the wrong data type, it fails and stops the song generation.
-         */
-        switch ( noteType ) {
-            case 0: //Left
-                newNoteObj = leftNotesPool.GetObject();
-                spawnPos = mustHitNote ? player1Left.position : player2Left.position;
-                break;
-            case 1: //Down
-                newNoteObj = downNotesPool.GetObject();
-                spawnPos = mustHitNote ? player1Down.position : player2Down.position;
-                break;
-            case 2: //Up
-                newNoteObj = upNotesPool.GetObject();
-                spawnPos = mustHitNote ? player1Up.position : player2Up.position;
-                break;
-            case 3: //Right
-                newNoteObj = rightNotesPool.GetObject();
-                spawnPos = mustHitNote ? player1Right.position : player2Right.position;
-                break;
-            default:
-                Debug.LogError( "Invalid note data." );
-                return;
-        }
-
-        /*
-         * We then move the note to a specific position in the game world.
-         */
-        spawnPos += Vector3.down *
-                    ( Convert.ToSingle( data[ 0 ] / (decimal)notesOffset ) + ( _song.Speed * noteDelay ) );
-        spawnPos.y -= ( _song.Bpm / 60 ) * startSound.length * _song.Speed;
-        newNoteObj.transform.position = spawnPos;
-        //newNoteObj.transform.position += Vector3.down * Convert.ToSingle(secNoteData[0] / notesOffset);
-
-        /*
-         * Each note gameobject has a special component named "NoteObject".
-         * It controls the note's movement based on the data provided.
-         * It also allows Player 2 to hit their notes.
-         *
-         * Below we set this note's component data. Simple.
-         *
-         * DummyNote is always false if generated via a JSON.
-         */
-        NoteObject nObj = newNoteObj.GetComponent<NoteObject>( );
-
-        nObj.ScrollSpeed = -_song.Speed;
-        nObj.strumTime = (float)data[ 0 ];
-        nObj.type = noteType;
-        nObj.mustHit = mustHitNote;
-        nObj.dummyNote = false;
-        nObj.layer = section.MustHitSection ? 1 : 2;
-
-        /*
-         * We add this new note to a list of either player 1's notes
-         * or player 2's notes, depending on who it belongs to.
-         */
-        if ( mustHitNote )
-            player1NotesObjects[ noteType ].Add( nObj );
-        else
-            player2NotesObjects[ noteType ].Add( nObj );
-
-        /*
-         * This below is for hold notes generation. It tells the future
-         * hold note what the previous note is.
-         */
-        lastNote = nObj;
-        /*
-         * Now we generate hold notes depending on this note's hold length.
-         * The generation of hold notes is more or less the same as normal
-         * notes. Hold notes, though, use a different gameobject as it's not
-         * a normal note.
-         *
-         * If there's nothing, we skip.
-         */
-        for ( int i = 0; i < Math.Floor( susLength ); i++ ) {
-            GameObject newSusNoteObj;
-            Vector3 susSpawnPos;
-
-            bool setAsLastSus = false;
-
-            /*
-             * Math.floor returns the largest integer less than or equal to a given number.
-             *
-             * I uh... have no clue why this is needed or what it does but we need this
-             * in or else it won't do hold notes right so...
-             */
-            newSusNoteObj = holdNotesPool.GetObject();
-            if ( ( i + 1 ) == Math.Floor( susLength ) ) {
-                newSusNoteObj.GetComponent<SpriteRenderer>( ).sprite = holdNoteEnd;
-                setAsLastSus = true;
-            }
-            else
-            {
-                setAsLastSus = false;
-                newSusNoteObj.GetComponent<SpriteRenderer>().sprite = holdNoteSprite;
-            }
-
-            switch ( noteType ) {
-                case 0: //Left
-                    susSpawnPos = mustHitNote ? player1Left.position : player2Left.position;
-                    break;
-                case 1: //Down
-                    susSpawnPos = mustHitNote ? player1Down.position : player2Down.position;
-                    break;
-                case 2: //Up
-                    susSpawnPos = mustHitNote ? player1Up.position : player2Up.position;
-                    break;
-                case 3: //Right
-                    susSpawnPos = mustHitNote ? player1Right.position : player2Right.position;
-                    break;
-                default:
-                    susSpawnPos = mustHitNote ? player1Left.position : player2Left.position;
-                    break;
-            }
-
-
-            susSpawnPos += Vector3.down *
-                           ( Convert.ToSingle( data[ 0 ] / (decimal)notesOffset ) + ( _song.Speed * noteDelay ) );
-            susSpawnPos.y -= ( _song.Bpm / 60 ) * startSound.length * _song.Speed;
-            newSusNoteObj.transform.position = susSpawnPos;
-            NoteObject susObj = newSusNoteObj.GetComponent<NoteObject>( );
-            susObj.type = noteType;
-            susObj.ScrollSpeed = -_song.Speed;
-            susObj.mustHit = mustHitNote;
-            susObj.strumTime = (float)data[ 0 ] + ( stepCrochet * i ) + stepCrochet;
-            susObj.susNote = true;
-            susObj.dummyNote = false;
-            susObj.lastSusNote = setAsLastSus;
-            susObj.layer = section.MustHitSection ? 1 : 2;
-            susObj.GenerateHold( lastNote );
-            if ( mustHitNote )
-                player1NotesObjects[ noteType ].Add( susObj );
-            else
-                player2NotesObjects[ noteType ].Add( susObj );
-            lastNote = susObj;
-        }
+    public void GenNote(FNFSong.FNFSection section, List<decimal> data)
+    {
+        bool mustHit = data[1] > 3 ? !section.MustHitSection : section.MustHitSection;
+        int direction = (int)(data[1] % 4);
+        var pool = direction == 0 ? leftNotesPool : direction == 1 ? downNotesPool : direction == 2 ? upNotesPool : rightNotesPool;
+        NoteObject note = pool.GetObject().GetComponent<NoteObject>();
+        note.Initialize(this, (double)data[0], direction, mustHit, (double)data[2], ChartScrollSpeed, section.MustHitSection ? 1 : 2);
+        var lane = mustHit ? player1NotesObjects[direction] : player2NotesObjects[direction];
+        int index = lane.FindIndex(item => item.strumTime > note.strumTime);
+        if (index < 0) lane.Add(note);
+        else lane.Insert(index, note);
+        Player.instance.Strumlines[mustHit ? 0 : 1].Add(note.State);
+        lastNote = note;
     }
-    
 
     #region Pause Menu
     public void PauseSong()
@@ -1333,6 +1188,7 @@ public class Song : MonoBehaviour
         subtitleDisplayer.paused = true;
         
         stopwatch.Stop();
+        Player.instance?.ClearInput();
         beatStopwatch.Stop();
 
         foreach (AudioSource source in musicSources)
@@ -1373,6 +1229,7 @@ public class Song : MonoBehaviour
 
     public void QuitSong()
     {
+        FreeplayAborted = true;
         ContinueSong();
         subtitleDisplayer.StopSubtitles();
         foreach (AudioSource source in musicSources)
@@ -1403,6 +1260,18 @@ public class Song : MonoBehaviour
         _currentEnemyIdleTimer = enemyIdleTimer;
     }
 
+    public void PlayChartAnimation(bool player, string animationName)
+    {
+        var animator = player ? boyfriendAnimator : opponentAnimator;
+        if (!animator.spriteAnimations.Any(animation => animation.Name == animationName))
+            return;
+        animator.Play(animationName);
+        if (player)
+            _currentBoyfriendIdleTimer = 1.1f;
+        else
+            _currentEnemyIdleTimer = 1.1f;
+    }
+
     private void BoyfriendPlayAnimation(string animationName)
     {
         if (OptionsV2.DesperateMode) return;
@@ -1414,41 +1283,10 @@ public class Song : MonoBehaviour
     
     public void AnimateNote(int player, int type, string animName)
     {
-        switch (player)
-        {
-            case 1: //Boyfriend
-                
-                player1NotesAnimators[type].Play(animName,0,0);
-                player1NotesAnimators[type].speed = 0;
-                        
-                player1NotesAnimators[type].Play(animName);
-                player1NotesAnimators[type].speed = 1;
-
-                if (animName == "Activated" & !Player.twoPlayers)
-                {
-                    if(Player.demoMode)
-                        _currentDemoNoteTimers[type] = enemyNoteTimer;
-                    else if(Player.playAsEnemy)
-                        _currentEnemyNoteTimers[type] = enemyNoteTimer;
-
-                }
-
-                break;
-            case 2: //Opponent
-                
-                player2NotesAnimators[type].Play(animName,0,0);
-                player2NotesAnimators[type].speed = 0;
-                        
-                player2NotesAnimators[type].Play(animName);
-                player2NotesAnimators[type].speed = 1;
-
-                if (animName == "Activated" & !Player.twoPlayers)
-                {
-                    if(!Player.playAsEnemy)
-                        _currentEnemyNoteTimers[type] = enemyNoteTimer;
-                }
-                break;
-        }
+        if (Player.instance == null) return;
+        var animation = animName == "Activated" ? FunkinStrumline.Animation.Confirm :
+            animName == "Pressed" ? FunkinStrumline.Animation.Press : FunkinStrumline.Animation.Static;
+        Player.instance.Strumlines[player - 1].Play(type, animation);
     }
 
     #endregion
@@ -1536,395 +1374,23 @@ public class Song : MonoBehaviour
     
     public void NoteHit(NoteObject note)
     {
-        if (note == null) return;
-
-
-        var player = note.mustHit ? 1 : 2;
-    
-        
-        if(hasVoiceLoaded)
-            vocalSource.mute = false;
-
-        bool invertHealth = false;
-
-        int noteType = note.type;
-        switch (player)
-        {
-            case 1:
-                if(!Player.playAsEnemy || Player.demoMode || Player.twoPlayers)
-                    invertHealth = false;
-                switch (noteType)
-                {
-                    case 0:
-                        //Left
-                        BoyfriendPlayAnimation("Sing Left");
-                        break;
-                    case 1:
-                        //Down
-                        BoyfriendPlayAnimation("Sing Down");
-                        break;
-                    case 2:
-                        //Up
-                        BoyfriendPlayAnimation("Sing Up");
-                        break;
-                    case 3:
-                        //Right
-                        BoyfriendPlayAnimation("Sing Right");
-                        break;
-                }
-                AnimateNote(1, noteType,"Activated");
-                break;
-            case 2:
-                if(Player.playAsEnemy || Player.demoMode || Player.twoPlayers)
-                    invertHealth = true;
-                switch (noteType)
-                {
-                    case 0:
-                        //Left
-                        EnemyPlayAnimation("Sing Left");
-                        break;
-                    case 1:
-                        //Down
-                        EnemyPlayAnimation("Sing Down");
-                        break;
-                    case 2:
-                        //Up
-                        EnemyPlayAnimation("Sing Up");
-                        break;
-                    case 3:
-                        //Right
-                        EnemyPlayAnimation("Sing Right");
-                        break;
-                }
-                AnimateNote(2, noteType,"Activated");
-                break;
-        }
-
-        bool modifyScore = true;
-
-        if (player == 1 & Player.playAsEnemy & !Player.twoPlayers)
-            modifyScore = false;
-        else if (player == 2 & !Player.playAsEnemy & !Player.twoPlayers)
-            modifyScore = false;
-
-        if (Player.demoMode) modifyScore = true;
-
-        CameraMovement.instance.focusOnPlayerOne = note.layer == 1;
-
-        Rating rating;
-        if(!note.susNote & modifyScore)
-        {
-            if (player == 1)
-            {
-                playerOneStats.totalNoteHits++;
-            }
-            else
-            {
-                playerTwoStats.totalNoteHits++;
-            }
-
-            float yPos = note.transform.position.y;
-
-            var newRatingObject = player == 1 ? liteRatingObjectP1 : liteRatingObjectP2;
-            Vector3 ratingPos = newRatingObject.transform.position;
-            
-            ratingPos.y = OptionsV2.Downscroll ? 6 : 1;
-            
-            newRatingObject.transform.position = ratingPos;
-
-            var ratingObjectScript = newRatingObject.GetComponent<RatingObject>();
-
-            
-
-            /*
-             * Rating and difference calulations from FNF Week 6 update
-             */
-            
-            float noteDiff = Math.Abs(note.strumTime - stopwatch.ElapsedMilliseconds + Player.visualOffset+Player.inputOffset);
-
-            if (noteDiff > 0.9 * Player.safeZoneOffset)
-            {
-                // way early or late
-                rating = Rating.Shit;
-            }
-            else if (noteDiff > .75 * Player.safeZoneOffset)
-            {
-                // early or late
-                rating = Rating.Bad;
-            }
-            else if (noteDiff > .35 * Player.safeZoneOffset)
-            {
-                // your kinda there
-                rating = Rating.Good;
-            }
-            else
-            {
-                rating = Rating.Sick;
-            }
-
-            if (Player.demoMode)
-            {
-                rating = Rating.Sick;
-            }
-
-            switch (rating)
-            {
-                case Rating.Sick:
-                {
-                    ratingObjectScript.sprite.sprite = sickSprite;
-
-                    if(!invertHealth)
-                        health += 5;
-                    else
-                        health -= 5;
-                    if (player == 1)
-                    {
-                        playerOneStats.currentCombo++;
-                        playerOneStats.totalSicks++;
-                        playerOneStats.currentScore += 10;
-                    }
-                    else
-                    {
-                        playerTwoStats.currentCombo++;
-                        playerTwoStats.totalSicks++;
-                        playerTwoStats.currentScore += 10;
-                    }
-                    break;
-                }
-                case Rating.Good:
-                {
-                    ratingObjectScript.sprite.sprite = goodSprite;
-
-                    if (!invertHealth)
-                        health += 2;
-                    else
-                        health -= 2;
-                
-                    if (player == 1)
-                    {
-                        playerOneStats.currentCombo++;
-                        playerOneStats.totalGoods++;
-                        playerOneStats.currentScore += 5;
-                    }
-                    else
-                    {
-                        playerTwoStats.currentCombo++;
-                        playerTwoStats.totalGoods++;
-                        playerTwoStats.currentScore += 5;
-                    }
-                    break;
-                }
-                case Rating.Bad:
-                {
-                    ratingObjectScript.sprite.sprite = badSprite;
-
-                    if (!invertHealth)
-                        health += 1;
-                    else
-                        health -= 1;
-
-                    if (player == 1)
-                    {
-                        playerOneStats.currentCombo++;
-                        playerOneStats.totalBads++;
-                        playerOneStats.currentScore += 1;
-                    }
-                    else
-                    {
-                        playerTwoStats.currentCombo++;
-                        playerTwoStats.totalBads++;
-                        playerTwoStats.currentScore += 1;
-                    }
-                    break;
-                }
-                case Rating.Shit:
-                    ratingObjectScript.sprite.sprite = shitSprite;
-
-                    if (player == 1)
-                    {
-                        playerOneStats.currentCombo = 0;
-                        playerOneStats.totalShits++;
-                    }
-                    else
-                    {
-                        playerTwoStats.currentCombo = 0;
-                        playerTwoStats.totalShits++;
-                    }
-                    break;
-            }
-            ratingObjectScript.ShowRating();
-            
-            if (player == 1)
-            {
-                if (playerOneStats.highestCombo < playerOneStats.currentCombo)
-                {
-                    playerOneStats.highestCombo = playerOneStats.currentCombo;
-                }
-                playerOneStats.hitNotes++;
-
-
-                playerOneComboText.text = playerOneStats.currentCombo.ToString("000");
-
-                playerOneComboText.color = Color.white;
-                
-                playerOneDisplayComboTimer = 3f;
-
-            }
-            else
-            {
-                if (playerTwoStats.highestCombo < playerTwoStats.currentCombo)
-                {
-                    playerTwoStats.highestCombo = playerTwoStats.currentCombo;
-                }
-                playerTwoStats.hitNotes++;
-                
-
-                playerTwoComboText.text = playerTwoStats.currentCombo.ToString("000");
-                
-                playerTwoComboText.color = Color.white;
-
-                playerTwoDisplayComboTimer = 3f;
-                
-                
-            }
-
-            
-
-
-            _currentRatingLayer++;
-            ratingObjectScript.sprite.sortingOrder = _currentRatingLayer;
-            ratingLayerTimer = _ratingLayerDefaultTime;
-        }
-
-        UpdateScoringInfo();
-        if (player == 1)
-        {
-            player1NotesObjects[noteType].Remove(note);
-        }
-        else
-        {
-            player2NotesObjects[noteType].Remove(note);
-        }
-
-        if (note.susNote)
-        {
-            holdNotesPool.Release(note.gameObject);
-        } else
-        {
-
-            switch (note.type)
-            {
-                case 0:
-                    leftNotesPool.Release(note.gameObject);
-                    break;
-                case 1:
-                    downNotesPool.Release(note.gameObject);
-                    break;
-                case 2:
-                    upNotesPool.Release(note.gameObject);
-                    break;
-                case 3:
-                    rightNotesPool.Release(note.gameObject);
-                    break;
-            }
-        }
-
+        if (note == null || note.State == null || Player.instance == null) return;
+        int side = note.mustHit ? 0 : 1;
+        var line = Player.instance.Strumlines[side];
+        double position = SongPosition - Player.visualOffset;
+        line.Hit(note.State, position - note.strumTime - Player.inputOffset, !line.Controlled || Player.demoMode, position);
     }
 
     public void NoteMiss(NoteObject note)
     {
-        print("MISS!!!");
-        
-        
-        if(hasVoiceLoaded)
-            vocalSource.mute = true;
-        oopsSource.clip = noteMissClip[Random.Range(0, noteMissClip.Length)];
-        oopsSource.Play();
-
-        var player = note.mustHit ? 1 : 2;
-        
-
-        bool invertHealth = player == 2;
-
-        int noteType = note.type;
-        switch (player)
+        if (note == null) return;
+        if (note.dummyNote) ApplyFunkinGhost(note.mustHit ? 0 : 1, note.type);
+        else if (note.State != null && !note.State.HandledMiss)
         {
-            case 1:
-                switch (noteType)
-                {
-                    case 0:
-                        //Left
-                        BoyfriendPlayAnimation("Sing Left Miss");
-                        break;
-                    case 1:
-                        //Down
-                        BoyfriendPlayAnimation("Sing Down Miss");
-                        break;
-                    case 2:
-                        //Up
-                        BoyfriendPlayAnimation("Sing Up Miss");
-                        break;
-                    case 3:
-                        //Right
-                        BoyfriendPlayAnimation("Sing Right Miss");
-                        break;
-                }
-                break;
-            default:
-                switch (noteType)
-                {
-                    case 0:
-                        //Left
-                        EnemyPlayAnimation("Sing Left");
-                        break;
-                    case 1:
-                        //Down
-                        EnemyPlayAnimation("Sing Down");
-                        break;
-                    case 2:
-                        //Up
-                        EnemyPlayAnimation("Sing Up");
-                        break;
-                    case 3:
-                        //Right
-                        EnemyPlayAnimation("Sing Right");
-                        break;
-                }
-                break;
+            note.State.Missed = note.State.HandledMiss = true;
+            note.State.HoldDropped = note.State.Length > 0;
+            ApplyFunkinMiss(note);
         }
-
-        bool modifyHealth = true;
-
-        if (player == 1 & Player.playAsEnemy & !Player.twoPlayers)
-            modifyHealth = false;
-        else if (player == 2 & !Player.playAsEnemy & !Player.twoPlayers)
-            modifyHealth = false;
-
-        if (modifyHealth)
-        {
-            if (!invertHealth)
-                health -= 8;
-            else
-                health += 8;
-        }
-
-        if (player == 1)
-        {
-            playerOneStats.currentScore -= 5;
-            playerOneStats.currentCombo = 0;
-            playerOneStats.missedHits++;
-            playerOneStats.totalNoteHits++;
-        }
-        else
-        {
-            playerTwoStats.currentScore -= 5;
-            playerTwoStats.currentCombo = 0;
-            playerTwoStats.missedHits++;
-            playerTwoStats.totalNoteHits++;
-        }
-        
-        UpdateScoringInfo();
-
     }
 
     #endregion
@@ -1946,18 +1412,6 @@ public class Song : MonoBehaviour
             
             if (songStarted & musicSources[0].isPlaying)
             {
-                
-                playerOneDisplayComboTimer-=Time.deltaTime;
-                playerTwoDisplayComboTimer-=Time.deltaTime;
-                if (playerOneDisplayComboTimer <= 0)
-                {
-                    playerOneComboText.color = Color.Lerp(playerOneComboText.color, Color.clear, playerOneComboColorLerpSpeed);
-                }
-                if (playerTwoDisplayComboTimer <= 0)
-                {
-                    playerTwoComboText.color = Color.Lerp(playerTwoComboText.color, Color.clear, playerTwoComboColorLerpSpeed);
-                }
-                
                 
                 if(OptionsV2.SongDuration)
                 {
@@ -2002,10 +1456,7 @@ public class Song : MonoBehaviour
                             altDance = true;
                         }
                         
-                        boyfriendHealthIconRect.localScale = new Vector3(-1.25f, 1.25f, 1);
-                        enemyHealthIconRect.localScale = new Vector3(1.25f, 1.25f, 1);
-
-                        if (currentBeat % 4 == 0)
+                        if (currentBeat % 4 == 0 && (vanillaPlayback == null || !vanillaPlayback.IsErect))
                         {
                             mainCamera.orthographicSize = defaultGameZoom - .1f;
                             uiCamera.orthographicSize = _defaultZoom - .1f;
@@ -2013,13 +1464,11 @@ public class Song : MonoBehaviour
                     }
                 }
 
-                boyfriendHealthIconRect.localScale =
-                    Vector3.Lerp(boyfriendHealthIconRect.localScale, new Vector3(-1, 1, 1),portraitBopLerpSpeed);
-                enemyHealthIconRect.localScale = 
-                    Vector3.Lerp(enemyHealthIconRect.localScale, new Vector3(1, 1, 1),portraitBopLerpSpeed);
-
-                mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, defaultGameZoom,cameraBopLerpSpeed);
-                uiCamera.orthographicSize = Mathf.Lerp(uiCamera.orthographicSize, _defaultZoom, cameraBopLerpSpeed);
+                if (vanillaPlayback == null || !vanillaPlayback.IsErect)
+                {
+                    mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, defaultGameZoom,cameraBopLerpSpeed);
+                    uiCamera.orthographicSize = Mathf.Lerp(uiCamera.orthographicSize, _defaultZoom, cameraBopLerpSpeed);
+                }
             }
             else if (!songStarted & !musicSources[0].isPlaying)
             {
@@ -2136,39 +1585,6 @@ public class Song : MonoBehaviour
             }
             
 
-            float healthPercent = health / MAXHealth;
-            boyfriendHealthBar.fillAmount = healthPercent;
-            enemyHealthBar.fillAmount = 1 - healthPercent;
-
-            var rectTransform = enemyHealthIcon.rectTransform;
-            var anchoredPosition = rectTransform.anchoredPosition;
-            Vector2 enemyPortraitPos = anchoredPosition;
-            enemyPortraitPos.x = -(healthPercent * 394 - (200)) - 50;
-
-            Vector2 boyfriendPortraitPos = anchoredPosition;
-            boyfriendPortraitPos.x = -(healthPercent * 394 - (200)) + 50;
-            
-            if (healthPercent >= .80f)
-            {
-                enemyHealthIcon.sprite = enemy.portraitDead;
-                boyfriendHealthIcon.sprite = boyfriendPortraitNormal; 
-            } else if (healthPercent <= .20f)
-            {
-                enemyHealthIcon.sprite = enemy.portrait;
-                boyfriendHealthIcon.sprite = boyfriendPortraitDead; 
-            }
-            else
-            {
-                enemyHealthIcon.sprite = enemy.portrait;
-                boyfriendHealthIcon.sprite = boyfriendPortraitNormal; 
-            }
-
-
-
-            anchoredPosition = enemyPortraitPos;
-            rectTransform.anchoredPosition = anchoredPosition;
-            boyfriendHealthIcon.rectTransform.anchoredPosition = boyfriendPortraitPos;
-
             if (!musicSources[0].isPlaying & songStarted & !isDead & !respawning & !Pause.instance.pauseScreen.activeSelf & !Pause.instance.editingVolume)
             {
                 //Song is done.
@@ -2234,6 +1650,10 @@ public class Song : MonoBehaviour
                 string highScoreSave = currentSongMeta.songName + currentSongMeta.bundleMeta.bundleName +
                     difficulty.ToLower() +
                     modeOfPlay;
+
+                VanillaFreeplayCatalog.SaveCompletion(currentSongMeta, difficulty, modeOfPlay, playerOneStats,
+                    !FreeplayAborted && musicClip != null && SongPosition >= musicClip.length * 1000 - 100,
+                    _noteBehaviours.Count(note => note.noteData.ConvertToNote()[1] > 3 ? !note.section.MustHitSection : note.section.MustHitSection));
 
                 int overallScore = 0;
                 
@@ -2329,35 +1749,6 @@ public class Song : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < _currentEnemyNoteTimers.Length; i++)
-        {
-            if (Player.twoPlayers) continue;
-            if (!Player.playAsEnemy)
-            {
-                if (player2NotesAnimators[i].GetCurrentAnimatorStateInfo(0).IsName("Activated"))
-                {
-                    _currentEnemyNoteTimers[i] -= Time.deltaTime;
-                    if (_currentEnemyNoteTimers[i] <= 0)
-                    {
-                        AnimateNote(2, i, "Normal");
-                    }
-                }
-            } else
-            {
-                if (player1NotesAnimators[i].GetCurrentAnimatorStateInfo(0).IsName("Activated"))
-                {
-                    _currentEnemyNoteTimers[i] -= Time.deltaTime;
-                    if (_currentEnemyNoteTimers[i] <= 0)
-                    {
-                        AnimateNote(1, i, "Normal");
-                    }
-                }
-            }
-
-        }
-        
-        
-
         if (ratingLayerTimer > 0)
         {
             ratingLayerTimer -= Time.deltaTime;
@@ -2365,20 +1756,6 @@ public class Song : MonoBehaviour
                 _currentRatingLayer = 0;
         }
         
-        if(Player.demoMode)
-            for (int i = 0; i < _currentDemoNoteTimers.Length; i++)
-            {
-                if (player1NotesAnimators[i].GetCurrentAnimatorStateInfo(0).IsName("Activated"))
-                {
-                    _currentDemoNoteTimers[i] -= Time.deltaTime;
-                    if (_currentDemoNoteTimers[i] <= 0)
-                    {
-                        AnimateNote(1, i, "Normal");
-                    }
-                }
-
-            }
-
         if (OptionsV2.DesperateMode) return;
         if ((opponentAnimator.CurrentAnimation == null || !opponentAnimator.CurrentAnimation.Name.Contains("Idle")) & !songStarted)
         {

@@ -1,327 +1,248 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 
+[DefaultExecutionOrder(100)]
 public class Player : MonoBehaviour
 {
     public float safeFrames = 10;
-
-
-    public static List<KeyCode> primaryKeyCodes = new List<KeyCode> {KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.UpArrow, KeyCode.RightArrow};
-
-    public static List<KeyCode> secondaryKeyCodes = new List<KeyCode> {KeyCode.A, KeyCode.S, KeyCode.W, KeyCode.D};
-
+    public static List<KeyCode> primaryKeyCodes = new List<KeyCode> { KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.UpArrow, KeyCode.RightArrow };
+    public static List<KeyCode> secondaryKeyCodes = new List<KeyCode> { KeyCode.A, KeyCode.S, KeyCode.W, KeyCode.D };
     public static KeyCode pauseKey = KeyCode.Return;
     public static KeyCode resetKey = KeyCode.R;
     public static KeyCode startSongKey = KeyCode.Space;
-
-    public static bool demoMode = false;
-    public static bool twoPlayers = false;
-    public static bool playAsEnemy = false;
-
-    public static float maxHitRoom;
-    public static float safeZoneOffset;
+    public static bool demoMode;
+    public static bool twoPlayers;
+    public static bool playAsEnemy;
+    public static float maxHitRoom = -160;
+    public static float safeZoneOffset = 160;
     public static Player instance;
     public static float inputOffset;
     public static float visualOffset;
-
     public static KeyMode currentKeyMode = KeyMode.FourKey;
-
     public static SavedKeybinds keybinds;
-    
     public List<NoteObject> player1DummyNotes = new List<NoteObject>();
     public List<NoteObject> player2DummyNotes = new List<NoteObject>();
+    public readonly FunkinStrumline[] Strumlines = { new FunkinStrumline(), new FunkinStrumline() };
+    private readonly HashSet<int> pressedKeys = new HashSet<int>();
+    private readonly Dictionary<Key, List<(int side, int direction)>> bindings = new Dictionary<Key, List<(int, int)>>();
+    private bool accepting;
+    private Song owner;
+    public enum KeyMode { FourKey, FiveKey, SixKey, SevenKey, EightKey, NineKey }
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    private void OnEnable()
+    {
+        instance = this;
+        InputSystem.onEvent += OnInput;
+        InputSystem.onDeviceChange += OnDeviceChange;
+    }
+
+    private void OnDisable()
+    {
+        InputSystem.onEvent -= OnInput;
+        InputSystem.onDeviceChange -= OnDeviceChange;
+        ClearInput();
+        if (instance == this) instance = null;
+    }
 
     private void Start()
     {
-        instance = this;
-        maxHitRoom = -135 * Time.timeScale;
-        safeZoneOffset = safeFrames / 60 * 1000;
-
-        inputOffset = PlayerPrefs.GetFloat("Input Offset", 0f);
-        visualOffset = PlayerPrefs.GetFloat("Visual Offset", 0f);
-
-        print(keybinds.primary4K.Count);
-        foreach (KeyCode code in keybinds.primary4K)
+        owner = Song.instance;
+        inputOffset = PlayerPrefs.GetFloat("Input Offset", 0);
+        visualOffset = PlayerPrefs.GetFloat("Visual Offset", 0);
+        if (keybinds != null)
         {
-            print(code.ToString());
+            if (keybinds.primary4K.Count == 4) primaryKeyCodes = keybinds.primary4K;
+            if (keybinds.secondary4K.Count == 4) secondaryKeyCodes = keybinds.secondary4K;
         }
-        print(keybinds.secondary4K.Count);
-        foreach (KeyCode code in keybinds.secondary4K)
+        for (int side = 0; side < 2; side++)
         {
-            print(code.ToString());
+            int index = side;
+            Strumlines[side].NoteHit += (note, timing, automatic) => owner.ApplyFunkinHit((NoteObject)note.View, timing, automatic);
+            Strumlines[side].NoteMissed += note => owner.ApplyFunkinMiss((NoteObject)note.View);
+            Strumlines[side].GhostMissed += direction => owner.ApplyFunkinGhost(index, direction);
+            Strumlines[side].HoldScored += (note, elapsed) => owner.ApplyFunkinHold(index, elapsed);
+            Strumlines[side].HoldMissed += (note, penalty) => owner.ApplyFunkinDrop(index, penalty);
         }
-
-        switch (currentKeyMode)
-        {
-            case KeyMode.FourKey:
-                primaryKeyCodes = keybinds.primary4K;
-                secondaryKeyCodes = keybinds.secondary4K;
-                break;
-            case KeyMode.FiveKey:
-                break;
-            case KeyMode.SixKey:
-                break;
-            case KeyMode.SevenKey:
-                break;
-            case KeyMode.EightKey:
-                break;
-            case KeyMode.NineKey:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-        
-
-        for (var index = 0; index < primaryKeyCodes.Count; index++)
-        {
-            var dummyNote = Instantiate(Song.instance.downArrow);
-            var noteObject = dummyNote.GetComponent<NoteObject>();
-            noteObject.mustHit = true;
-            noteObject.type = index;
-            player1DummyNotes.Add(noteObject);
-        }
-        for (var index = 0; index < secondaryKeyCodes.Count; index++)
-        {
-            var dummyNote = Instantiate(Song.instance.downArrow);
-            var noteObject = dummyNote.GetComponent<NoteObject>();
-            noteObject.mustHit = true;
-            noteObject.type = index;
-            player2DummyNotes.Add(noteObject);
-            
-        }
+        ConfigureBindings();
     }
 
-    public enum KeyMode
+    public void ResetSong()
     {
-        FourKey,
-        FiveKey,
-        SixKey,
-        SevenKey,
-        EightKey,
-        NineKey
+        foreach (FunkinStrumline line in Strumlines) line.Reset();
+        pressedKeys.Clear();
+        ConfigureBindings();
     }
 
-    
+    public void ClearInput()
+    {
+        accepting = false;
+        pressedKeys.Clear();
+        foreach (FunkinStrumline line in Strumlines) line.ClearInput();
+    }
 
-    // Update is called once per frame
+    public void ConfigureBindings()
+    {
+        bindings.Clear();
+        AddBindings(primaryKeyCodes, playAsEnemy && !twoPlayers ? 1 : 0);
+        AddBindings(secondaryKeyCodes, twoPlayers || playAsEnemy ? 1 : 0);
+        Strumlines[0].Controlled = !playAsEnemy || twoPlayers || demoMode;
+        Strumlines[1].Controlled = playAsEnemy || twoPlayers;
+        foreach (FunkinStrumline line in Strumlines)
+        {
+            line.BotPlay = demoMode;
+            line.GhostTapping = OptionsV2.GhostTapping;
+        }
+    }
+
+    private void AddBindings(List<KeyCode> keys, int side)
+    {
+        for (int direction = 0; direction < Math.Min(4, keys.Count); direction++)
+        {
+            if (!TryConvertKey(keys[direction], out Key key)) continue;
+            if (!bindings.TryGetValue(key, out var targets)) bindings[key] = targets = new List<(int, int)>();
+            if (!targets.Contains((side, direction))) targets.Add((side, direction));
+        }
+    }
+
+    public static bool TryConvertKey(KeyCode code, out Key key)
+    {
+        string name = code.ToString();
+        if (name.StartsWith("Alpha", StringComparison.Ordinal)) name = "Digit" + name.Substring(5);
+        else if (name.StartsWith("Keypad", StringComparison.Ordinal)) name = "Numpad" + name.Substring(6);
+        switch (code)
+        {
+            case KeyCode.Return: name = "Enter"; break;
+            case KeyCode.KeypadPeriod: name = "NumpadPeriod"; break;
+            case KeyCode.KeypadEquals: name = "NumpadEquals"; break;
+            case KeyCode.LeftControl: name = "LeftCtrl"; break;
+            case KeyCode.RightControl: name = "RightCtrl"; break;
+            case KeyCode.LeftCommand: name = "LeftMeta"; break;
+            case KeyCode.RightCommand: name = "RightMeta"; break;
+            case KeyCode.LeftWindows: name = "LeftMeta"; break;
+            case KeyCode.RightWindows: name = "RightMeta"; break;
+            case KeyCode.Menu: name = "ContextMenu"; break;
+            case KeyCode.BackQuote: name = "Backquote"; break;
+            case KeyCode.Numlock: name = "NumLock"; break;
+            case KeyCode.Print: name = "PrintScreen"; break;
+        }
+        return Enum.TryParse(name, true, out key) && key != Key.None;
+    }
+
+    private bool CanAcceptInput()
+    {
+        return owner != null && owner.songSetupDone && (owner.songStarted || owner.IsCountingDown) && !owner.isDead &&
+            owner.stopwatch != null && (owner.stopwatch.IsRunning || owner.IsCountingDown) &&
+            (Pause.instance == null || !Pause.instance.pauseScreen.activeSelf);
+    }
+
+    private void OnInput(InputEventPtr input, InputDevice device)
+    {
+        if (!input.IsA<StateEvent>() && !input.IsA<DeltaStateEvent>()) return;
+        if (!CanAcceptInput()) return;
+        if (device is Gamepad pad)
+        {
+            int side = playAsEnemy && !twoPlayers ? 1 : 0;
+            if (twoPlayers && Gamepad.all.Count > 0 && pad != Gamepad.all[0]) side = 1;
+            CaptureButton(input, pad.dpad.left, side, 0, 512);
+            CaptureButton(input, pad.dpad.down, side, 1, 513);
+            CaptureButton(input, pad.dpad.up, side, 2, 514);
+            CaptureButton(input, pad.dpad.right, side, 3, 515);
+            CaptureButton(input, pad.buttonWest, side, 0, 516);
+            CaptureButton(input, pad.buttonSouth, side, 1, 517);
+            CaptureButton(input, pad.buttonNorth, side, 2, 518);
+            CaptureButton(input, pad.buttonEast, side, 3, 519);
+            CaptureButton(input, pad.leftStick.left, side, 0, 520);
+            CaptureButton(input, pad.leftStick.down, side, 1, 521);
+            CaptureButton(input, pad.leftStick.up, side, 2, 522);
+            CaptureButton(input, pad.leftStick.right, side, 3, 523);
+            CaptureButton(input, pad.rightStick.left, side, 0, 524);
+            CaptureButton(input, pad.rightStick.down, side, 1, 525);
+            CaptureButton(input, pad.rightStick.up, side, 2, 526);
+            CaptureButton(input, pad.rightStick.right, side, 3, 527);
+            return;
+        }
+        if (!(device is Keyboard keyboard)) return;
+        foreach (var binding in bindings)
+        {
+            var control = keyboard[binding.Key];
+            if (!control.ReadValueFromEvent(input, out float value)) continue;
+            int identity = device.deviceId * 1024 + (int)binding.Key;
+            bool down = value >= 0.5f;
+            if (down ? !pressedKeys.Add(identity) : !pressedKeys.Remove(identity)) continue;
+            foreach (var target in binding.Value)
+            {
+                var entry = new FunkinInputEvent(target.direction, identity, input.time * 1000);
+                if (down) Strumlines[target.side].Presses.Add(entry);
+                else Strumlines[target.side].Releases.Add(entry);
+            }
+        }
+    }
+
+    private void CaptureButton(InputEventPtr input, ButtonControl control, int side, int direction, int key)
+    {
+        if (!control.ReadValueFromEvent(input, out float value)) return;
+        int identity = control.device.deviceId * 1024 + key;
+        bool down = value >= 0.5f;
+        if (down ? !pressedKeys.Add(identity) : !pressedKeys.Remove(identity)) return;
+        var entry = new FunkinInputEvent(direction, identity, input.time * 1000);
+        if (down) Strumlines[side].Presses.Add(entry);
+        else Strumlines[side].Releases.Add(entry);
+    }
+
+    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        if (change == InputDeviceChange.Disconnected || change == InputDeviceChange.Removed ||
+            change == InputDeviceChange.SoftReset || change == InputDeviceChange.HardReset)
+            ClearInput();
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus) ClearInput();
+    }
+
     private void Update()
     {
-        var song = Song.instance;
-        if (!song.songSetupDone || !song.songStarted || demoMode || song.isDead || Pause.instance.pauseScreen.activeSelf)
+        if (!CanAcceptInput())
+        {
+            if (accepting) ClearInput();
             return;
-
-        var playerOneNotes = song.player1NotesObjects;
-        var playerTwoNotes = song.player2NotesObjects;
-
-        #region Player 1 Inputs
-
-        if (!playAsEnemy)
-        {
-            for (var index = 0; index < primaryKeyCodes.Count; index++)
-            {
-                print(index);
-                KeyCode key = primaryKeyCodes[index];
-                NoteObject note = player1DummyNotes[index];
-                if(playerOneNotes[index].Count != 0)
-                {
-                    note = playerOneNotes[index][0];
-                }
-
-                if (Input.GetKey(key))
-                {
-                    if (note != null)
-                    {
-                        if (note.susNote && !note.dummyNote)
-                        {
-                            if (note.strumTime + visualOffset <= song.stopwatch.ElapsedMilliseconds)
-                            {
-                                song.NoteHit(note);
-                            }
-                        }
-                    }
-                }
-
-                if (Input.GetKeyDown(key))
-                {
-                    if (CanHitNote(note))
-                    {
-                        song.NoteHit(note);
-                    }
-                    else
-                    {
-                        song.AnimateNote(1, index, "Pressed");
-                        if (!OptionsV2.GhostTapping)
-                        {
-                            song.NoteMiss(note);
-                        }
-                    }
-                }
-
-                if (Input.GetKeyUp(key))
-                {
-                    song.AnimateNote(1, index, "Normal");
-                }
-            }
         }
-
-        #endregion
-
-        #region Player 2 Inputs & Player 1 Sub-Inputs
-
-        if (twoPlayers || playAsEnemy)
-        {
-            for (var index = 0; index < secondaryKeyCodes.Count; index++)
-            {
-                KeyCode key = secondaryKeyCodes[index];
-                NoteObject note = player2DummyNotes[index];
-                if(playerTwoNotes[index].Count != 0)
-                    note = playerTwoNotes[index][0];
-
-                if (Input.GetKey(key))
-                {
-                    if (note != null)
-                    {
-                        if (note.susNote && !note.dummyNote)
-                        {
-                            if (note.strumTime + visualOffset <= song.stopwatch.ElapsedMilliseconds)
-                            {
-                                song.NoteHit(note);
-                            }
-                        }
-                    }
-                }
-
-                if (Input.GetKeyDown(key))
-                {
-                    if (CanHitNote(note))
-                    {
-                        song.NoteHit(note);
-                    }
-                    else
-                    {
-                        song.AnimateNote(2, index, "Pressed");
-                        if (!OptionsV2.GhostTapping)
-                        {
-                            song.NoteMiss(note);
-                        }
-                    }
-                }
-
-                if (Input.GetKeyUp(key))
-                {
-                    song.AnimateNote(2, index, "Normal");
-                }
-            }
-
-            if (!twoPlayers)
-            {
-                for (var index = 0; index < primaryKeyCodes.Count; index++)
-                {
-                    KeyCode key = primaryKeyCodes[index];
-                    NoteObject note = player2DummyNotes[index];
-                    if(playerTwoNotes[index].Count != 0)
-                        note = playerTwoNotes[index][0];
-
-                    if (Input.GetKey(key))
-                    {
-                        if (note != null)
-                        {
-                            if (note.susNote && !note.dummyNote)
-                            {
-                                if (note.strumTime + visualOffset <= song.stopwatch.ElapsedMilliseconds)
-                                {
-                                    song.NoteHit(note);
-                                }
-                            }
-                        }
-                    }
-
-                    if (Input.GetKeyDown(key))
-                    {
-                        if (CanHitNote(note))
-                        {
-                            song.NoteHit(note);
-                        }
-                        else
-                        {
-                            song.AnimateNote(2, index, "Pressed");
-                            if (!OptionsV2.GhostTapping)
-                            {
-                                song.NoteMiss(note);
-                            }
-                        }
-                    }
-
-                    if (Input.GetKeyUp(key))
-                    {
-                        song.AnimateNote(2, index, "Normal");
-                    }
-                }
-            }
-           
-        }
-        else
-        {
-            for (var index = 0; index < secondaryKeyCodes.Count; index++)
-            {
-                KeyCode key = secondaryKeyCodes[index];
-                NoteObject note = player1DummyNotes[index];
-                if(playerOneNotes[index].Count != 0)
-                    note = playerOneNotes[index][0];
-
-                if (Input.GetKey(key))
-                {
-                    if (note != null)
-                    {
-                        if (note.susNote && !note.dummyNote)
-                        {
-                            if (note.strumTime + visualOffset <= song.stopwatch.ElapsedMilliseconds)
-                            {
-                                song.NoteHit(note);
-                            }
-                        }
-                    }
-                }
-
-                if (Input.GetKeyDown(key))
-                {
-                    if (CanHitNote(note))
-                    {
-                        song.NoteHit(note);
-                    }
-                    else
-                    {
-                        song.AnimateNote(1, index, "Pressed");
-                        if (!OptionsV2.GhostTapping)
-                        {
-                            song.NoteMiss(note);
-                        }
-                    }
-                }
-
-                if (Input.GetKeyUp(key))
-                {
-                    song.AnimateNote(1, index, "Normal");
-                }
-            }
-
-        }
+        accepting = true;
+        double position = owner.SongPosition - visualOffset;
+        double realtime = Time.realtimeSinceStartupAsDouble * 1000;
+        AdvanceFrame(position, realtime, Time.deltaTime);
     }
-    #endregion
 
-    public bool CanHitNote(NoteObject noteObject)
+    public void AdvanceFrame(double position, double realtime, double elapsed)
     {
-        if (noteObject == null) return false;
-        /*
-        var position = noteObject.transform.position;
-        return position.y <= 4.55 + Song.instance.topSafeWindow & position.y >= 4.55 - Song.instance.bottomSafeWindow & !noteObject.dummyNote;
-    */
-        float noteDiff = noteObject.strumTime + visualOffset - Song.instance.stopwatch.ElapsedMilliseconds +
-                         inputOffset;
+        for (int side = 0; side < Strumlines.Length; side++)
+        {
+            FunkinStrumline line = Strumlines[side];
+            for (int i = 0; i < line.Presses.Count; i++)
+            {
+                FunkinInputEvent entry = line.Presses[i];
+                line.Presses[i] = new FunkinInputEvent(entry.Direction, entry.Key, position - (realtime - entry.Time) - inputOffset);
+            }
+            line.Advance(position, elapsed);
+            if (line.Notes.Exists(note => note.Hit && !note.HoldDropped && !note.HoldFinished && note.Remaining > 0))
+                owner.KeepFunkinHoldPose(side);
+        }
+        owner.RefreshFunkinStrums();
+    }
 
-        return noteDiff <= 135 * Time.timeScale & noteDiff >= -135 * Time.timeScale & !noteObject.dummyNote;
+    public bool CanHitNote(NoteObject note)
+    {
+        if (note == null || note.dummyNote || note.State == null || note.State.Hit || note.State.Missed) return false;
+        return Math.Abs(owner.SongPosition - visualOffset - note.strumTime) <= FunkinRules.HitWindow;
     }
 }

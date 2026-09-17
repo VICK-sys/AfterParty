@@ -105,6 +105,7 @@ public class Pause : MonoBehaviour
 
     public void QuitSong()
     {
+        Song.instance.FreeplayAborted = true;
         ContinueSong();
         Song.instance.subtitleDisplayer.StopSubtitles();
         foreach (AudioSource source in Song.instance.musicSources)
