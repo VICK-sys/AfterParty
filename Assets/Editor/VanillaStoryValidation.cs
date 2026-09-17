@@ -61,14 +61,13 @@ public static class VanillaStoryValidation
     private static void CheckPlaylist()
     {
         List<VanillaStoryLevel> levels = VanillaStoryCatalog.Load();
-        Require(levels.Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1", "week2", "week3", "week4", "week5", "week6", "week7", "weekend1", "sserafim" }), "Story registry order changed.");
-        Require(levels[8].songs.Length == 4 && levels[9].Tracks.Length == 3, "Scripted level track list changed.");
+        Require(levels.Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1" }), "Story Mode must only show the installed Tutorial and Week 1.");
         Require(VanillaStoryCatalog.TryPlaylist(levels[1], "hard", out var songs, out _), "Week 1 Hard is not playable.");
         Require(songs.Select(song => song.meta.songName).SequenceEqual(new[] { "Bopeebo", "Fresh", "DadBattle" }), "Playlist did not preserve source song order.");
         var missing = new VanillaStoryLevel { songs = new[] { "bopeebo", "not-installed" }, songNames = new[] { "Bopeebo", "Missing control" } };
         Require(!VanillaStoryCatalog.TryPlaylist(missing, "normal", out var partial, out string names) && partial.Count == 0 && names == "Missing control", "Partial week was accepted.");
         Require(!VanillaStoryCatalog.TryPlaylist(levels[0], "nightmare", out _, out _), "Missing difficulty control was accepted.");
-        Debug.Log("STORY CATALOG PASSED: registry order, scripted tracks, complete playlists, missing-song and missing-difficulty controls.");
+        Debug.Log("STORY CATALOG PASSED: installed week visibility and order, complete playlists, missing-song and missing-difficulty controls.");
     }
 
     private static void CheckCampaign()
@@ -188,7 +187,7 @@ public static class VanillaStoryValidation
                     story.ChangeDifficulty(-1);
                     Require(story.Difficulty == "hard", "Left did not wrap difficulty.");
                     story.ChangeLevel(-1);
-                    Require(story.SelectedLevel.id == "sserafim", "Up did not wrap to final level.");
+                    Require(story.SelectedLevel.id == "week1", "Up did not wrap to the final installed level.");
                     story.ChangeLevel(1);
                     Require(story.SelectedLevel.id == "tutorial", "Down did not wrap to Tutorial.");
                     story.ChangeLevel(1);
@@ -217,11 +216,9 @@ public static class VanillaStoryValidation
                         changed = EditorApplication.timeSinceStartup;
                         return;
                     }
-                    story.ChangeLevel(-7);
-                    Require(story.SelectedLevel.id == "week2", "Missing-week control selected the wrong level.");
-                    story.Confirm();
-                    Require(!story.Busy && story.Status.StartsWith("Songs not installed:"), "Missing songs launched an incomplete week.");
-                    story.ChangeLevel(-1);
+                    story.ChangeLevel(1);
+                    Require(story.SelectedLevel.id == "tutorial", "Down did not skip uninstalled weeks and wrap to Tutorial.");
+                    story.ChangeLevel(1);
                     story.ChangeDifficulty(1);
                     Require(story.SelectedLevel.id == "week1" && story.Difficulty == "hard", "Week 1 selection failed.");
                     story.Close();

@@ -13,7 +13,7 @@ The text renderer preserves source font metrics and the 29-pixel line spacing.
 
 ## Menu behavior
 
-The screen includes Tutorial, Weeks 1 through 7, Weekend 1, and LE SSERAFIM.
+The screen currently shows Tutorial and Week 1. Weeks 2 through 7, Weekend 1, and LE SSERAFIM are hidden until their songs are added to Freeplay.
 The menu preserves original sprite coordinates, trimmed and rotated atlas frames, indexed dances, animation offsets, and character reuse.
 Characters dance with the 102 BPM menu music.
 Level titles use the source spacing, scrolling curve, opacity, and confirmation colors.
@@ -34,8 +34,9 @@ The menu restores the selected level and difficulty after gameplay.
 ## Installed content
 
 Tutorial and Week 1 launch their installed songs in the original order.
-The other level pages retain their original artwork and track names.
-Selecting a level with missing songs displays the missing song names.
+The hidden level definitions retain their original artwork and track names.
+`VanillaStoryCatalog.Load` temporarily limits the menu to Tutorial and Week 1; extend this list when more weeks are installed.
+Selecting a visible level with missing songs displays the missing song names.
 The menu does not import additional gameplay content.
 Freeplay retains access to local bundles.
 
@@ -57,7 +58,7 @@ Set `UNITY_PARTY_BUILD_PATH` to build a Windows player after successful checks.
 
 The probe checks playlists, missing content, atlas rotation, animation frames, navigation, confirmation locks, gameplay launch, return state, and scores.
 Abort, autoplay, wrong-song, missing-difficulty, and blank-render controls detect false passes.
-The probe captures each level, confirmation, return, and alternate aspect ratios.
+The probe captures each visible level, confirmation, return, and alternate aspect ratios.
 Run `python Scripts/TestVanillaStoryAssets.py` to check imported hashes, animation definitions, atlas bounds, and font metrics.
 
 `Scripts/StoryFont` regenerates the bitmap font with Haxe, Flixel 6.2.0, OpenFL 9.5.2, and Lime 8.3.2.
