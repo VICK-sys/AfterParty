@@ -72,22 +72,7 @@ MonoBehaviour:
       - rid: 8830357484205768742
       - rid: 8830357484205768743
     m_RuntimeSettings:
-      m_List:
-      - rid: 8830357484205768708
-      - rid: 8830357484205768711
-      - rid: 8830357484205768713
-      - rid: 8830357484205768719
-      - rid: 8830357484205768721
-      - rid: 8830357484205768723
-      - rid: 8830357484205768726
-      - rid: 8830357484205768727
-      - rid: 8830357484205768728
-      - rid: 8830357484205768730
-      - rid: 8830357484205768732
-      - rid: 8830357484205768734
-      - rid: 8830357484205768735
-      - rid: 8830357484205768737
-      - rid: 8830357484205768738
+      m_List: []
   m_AssetVersion: 11
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
@@ -114,7 +99,7 @@ MonoBehaviour:
       m_Values: []
     obsoleteHasProbeVolumes:
       m_Keys: []
-      m_Values:
+      m_Values: 
   references:
     version: 2
     RefIds:
@@ -391,7 +376,7 @@ MonoBehaviour:
         m_version: 0
         m_IncludeReferencedInScenes: 0
         m_IncludeAssetsByLabel: 0
-        m_LabelToInclude:
+        m_LabelToInclude: 
     - rid: 8830357484205768734
       type: {class: RenderGraphGlobalSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
       data:
