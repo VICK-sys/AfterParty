@@ -157,15 +157,14 @@ public sealed class FunkinHud : MonoBehaviour
         popups.Add(new Popup { Renderer = sprite, State = state, Scale = scale });
     }
 
-    public void ShowRating(FunkinRules.Judgement judgement, int side)
+    public void ShowRating(FunkinRules.Judgement judgement)
     {
         if (judgement == FunkinRules.Judgement.Miss) return;
         string image = judgement.ToString().ToLowerInvariant();
         Sprite sprite = FunkinHudAssets.Image(image);
-        double offset = Player.twoPlayers ? (side == 0 ? 280 : -280) : 0;
         AddPopup(image, 0.65f, new FunkinPopupState
         {
-            X = 1280 * 0.474 - sprite.rect.width * 0.65 / 2 + offset,
+            X = 1280 * 0.474 - sprite.rect.width * 0.65 / 2,
             Y = 720 * 0.45 - 60 - sprite.rect.height * 0.65 / 2,
             VelocityY = -Random.Range(140, 176),
             VelocityX = -Random.Range(0, 11),
@@ -174,14 +173,13 @@ public sealed class FunkinHud : MonoBehaviour
         });
     }
 
-    public void ShowCombo(int combo, int side)
+    public void ShowCombo(int combo)
     {
         string digits = combo.ToString("000", CultureInfo.InvariantCulture);
-        double offset = Player.twoPlayers ? (side == 0 ? 280 : -280) : 0;
         for (int index = 0; index < digits.Length; index++)
             AddPopup("num" + digits[digits.Length - index - 1], 0.45f, new FunkinPopupState
             {
-                X = 1280 * 0.507 - 36 * (index + 1) - 65 + offset,
+                X = 1280 * 0.507 - 36 * (index + 1) - 65,
                 Y = 720 * 0.44,
                 VelocityY = -Random.Range(130, 151),
                 VelocityX = Random.Range(-5f, 5f),
@@ -231,8 +229,7 @@ public sealed class FunkinHud : MonoBehaviour
                 popup.Renderer.sprite.rect.height * popup.Scale);
         }
         string text = Player.demoMode ? "Bot Play Enabled" : "Score: " +
-            (Player.playAsEnemy && !Player.twoPlayers ? song.playerTwoStats.currentScore : song.playerOneStats.currentScore).ToString("N0", CultureInfo.InvariantCulture);
-        if (Player.twoPlayers) text += " | P2: " + song.playerTwoStats.currentScore.ToString("N0", CultureInfo.InvariantCulture);
+            (Player.playAsEnemy ? song.playerTwoStats.currentScore : song.playerOneStats.currentScore).ToString("N0", CultureInfo.InvariantCulture);
         if (ScoreText != text) BuildScore(text);
         foreach (Letter letter in letters)
             if (letter.Renderer.enabled)

@@ -122,9 +122,6 @@ public class DiscordController : MonoBehaviour
             //Opponent
             case 2:
                 return "as " + Song.instance.enemy.characterName;
-            //Local Multiplayer
-            case 3:
-                return "in Two Players Mode";
             //Auto
             case 4:
                 return "in AUTOPLAY MODE";
@@ -144,9 +141,6 @@ public class DiscordController : MonoBehaviour
                 break;
             case 2:
                 score = Song.instance.playerTwoStats.currentScore;
-                break;
-            case 3:
-                score = Song.instance.playerOneStats.currentScore + Song.instance.playerTwoStats.currentScore;
                 break;
             default:
                 score = 0;
@@ -191,19 +185,6 @@ public class DiscordController : MonoBehaviour
                 totalAccuracyScore = sickScore + goodScore + badScore + shitScore;
 
                 accuracy = totalAccuracyScore / (playerTwoStats.totalNoteHits * 4);
-                
-                accuracyPercent = (float) Math.Round(accuracy, 4);
-                accuracyPercent *= 100;
-                return accuracyPercent;
-            case 3:
-                sickScore = playerOneStats.totalSicks * 4 + playerTwoStats.totalSicks * 4;
-                goodScore = playerOneStats.totalGoods * 3 + playerTwoStats.totalGoods * 3;
-                badScore = playerOneStats.totalBads * 2 + playerTwoStats.totalBads * 2;
-                shitScore = playerTwoStats.totalShits + playerTwoStats.totalShits;
-
-                totalAccuracyScore = sickScore + goodScore + badScore + shitScore;
-
-                accuracy = totalAccuracyScore / (playerOneStats.totalNoteHits * 4 + playerTwoStats.totalNoteHits * 4);
                 
                 accuracyPercent = (float) Math.Round(accuracy, 4);
                 accuracyPercent *= 100;

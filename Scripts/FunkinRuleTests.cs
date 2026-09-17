@@ -16,6 +16,7 @@ public static class FunkinRuleTests
     public static void Run()
     {
         assertions = 0;
+        PlayModeSelection();
         Ratings();
         Windows();
         Inputs();
@@ -29,6 +30,19 @@ public static class FunkinRuleTests
     {
         assertions++;
         if (!value) throw new InvalidOperationException(message);
+    }
+
+    private static void PlayModeSelection()
+    {
+        int[] modes = Enumerable.Range(0, PlayModes.Count).Select(PlayModes.FromIndex).ToArray();
+        Require(modes.SequenceEqual(new[] { 1, 2, 4 }), "Mode selection must preserve existing single-player score IDs.");
+        Require(!modes.Contains(3), "Retired mode cannot be selected.");
+        Require(modes.Select(PlayModes.Label).SequenceEqual(new[] { "BOYFRIEND", "OPPONENT", "AUTOPLAY" }), "Mode labels match their score IDs.");
+        foreach (int mode in modes)
+            Require(PlayModes.Normalize(mode) == mode, "Valid mode survives normalization.");
+        foreach (int mode in new[] { -1, 0, 3, 5, int.MaxValue })
+            Require(PlayModes.Normalize(mode) == PlayModes.Boyfriend, "Invalid or retired mode falls back to Boyfriend.");
+        Require(PlayModes.FromIndex(PlayModes.Count) == PlayModes.Boyfriend, "Out-of-range menu selection falls back safely.");
     }
 
     private static void Hud()

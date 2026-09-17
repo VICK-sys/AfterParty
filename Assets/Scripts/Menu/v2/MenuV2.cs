@@ -234,10 +234,10 @@ public class MenuV2 : MonoBehaviour
         
         string highScoreSave = _currentMeta.songName + _currentMeta.bundleMeta.bundleName +
                                songDifficultiesDropdown.options[songDifficultiesDropdown.value].text.ToLower() +
-                               (songModeDropdown.value + 1);
+                               PlayModes.FromIndex(songModeDropdown.value);
         int highScore = PlayerPrefs.GetInt(highScoreSave, 0);
         print("High Score for " + highScoreSave + " is " + highScore);
-        if (songModeDropdown.value != 3)
+        if (PlayModes.FromIndex(songModeDropdown.value) != PlayModes.Autoplay)
         {
             LeanTween.value(_lastScore, highScore, .35f).setOnUpdate(value =>
             {
@@ -342,7 +342,7 @@ public class MenuV2 : MonoBehaviour
         if (!canChangeSongs) return;
         var difficultiesList = _currentMeta.difficulties.Keys.ToList();
         Song.difficulty = difficultiesList[songDifficultiesDropdown.value];
-        Song.modeOfPlay = songModeDropdown.value + 1;
+        Song.modeOfPlay = PlayModes.FromIndex(songModeDropdown.value);
         Song.currentSongMeta = _currentMeta;
 
         LoadingTransition.instance.Show(() => SceneManager.LoadScene("Game_Backup3"));

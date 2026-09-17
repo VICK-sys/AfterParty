@@ -214,8 +214,11 @@ public static class VanillaSongValidation
                 Require(menu.canChangeSongs && menu.musicSource.isPlaying, "Variation preview did not finish loading.");
                 bool erect = Difficulties[songIndex] != "Hard";
                 Require(menu.songNameText.text.EndsWith(" Erect") == erect, "Variation title did not update.");
-                menu.songModeDropdown.value = 3;
+                Require(menu.songModeDropdown.options.Select(option => option.text).SequenceEqual(new[] { "as Protagonist", "as Opponent", "AutoPlay" }),
+                    "Bundle picker must offer exactly the three single-player modes.");
+                menu.songModeDropdown.value = 2;
                 menu.PlaySong();
+                Require(Song.modeOfPlay == PlayModes.Autoplay, "Bundle picker launched the wrong mode.");
                 checkedEnd = false;
                 captured = false;
                 Next(3);

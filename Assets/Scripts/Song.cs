@@ -214,7 +214,7 @@ public partial class Song : MonoBehaviour
 
     public static SongMetaV2 currentSongMeta;
     public static string difficulty;
-    public static int modeOfPlay;
+    public static int modeOfPlay = PlayModes.Boyfriend;
     public VanillaSongPlayback vanillaPlayback;
 
     [HideInInspector] public SongListObject selectedSong;
@@ -312,32 +312,9 @@ public partial class Song : MonoBehaviour
 
         _defaultZoom = uiCamera.orthographicSize;
 
-        bool doAuto = false;
-        
-        switch (modeOfPlay)
-        {
-            //Boyfriend
-            case 1:
-                Player.playAsEnemy = false;
-                Player.twoPlayers = false;
-                break;
-            //Opponent
-            case 2:
-                Player.playAsEnemy = true;
-                Player.twoPlayers = false;
-                break;
-            //Local Multiplayer
-            case 3:
-                Player.playAsEnemy = false;
-                Player.twoPlayers = true;
-                break;
-            //Auto
-            case 4:
-                doAuto = true;
-                Player.playAsEnemy = false;
-                Player.twoPlayers = false;
-                break;
-        }
+        modeOfPlay = PlayModes.Normalize(modeOfPlay);
+        bool doAuto = modeOfPlay == PlayModes.Autoplay;
+        Player.playAsEnemy = modeOfPlay == PlayModes.Opponent;
         
         PlaySong(doAuto, difficulty,currentSongMeta.songPath);
     }
@@ -610,36 +587,31 @@ public partial class Song : MonoBehaviour
         
         if(OptionsV2.Middlescroll)
         {
-            if (!Player.twoPlayers)
+            if (Player.playAsEnemy)
             {
-                if (Player.playAsEnemy)
+                foreach (SpriteRenderer sprite in player1NoteSprites)
                 {
-                    foreach (SpriteRenderer sprite in player1NoteSprites)
-                    {
-                        sprite.enabled = false;
-                    }
-                    
-                    
-                    foreach (SpriteRenderer sprite in player2NoteSprites)
-                    {
-                        sprite.enabled = true;
-                    }
-
-                    player2Notes.transform.position = new Vector3(0f, 4.45f, 15);
+                    sprite.enabled = false;
                 }
-                else
+                foreach (SpriteRenderer sprite in player2NoteSprites)
                 {
-                    foreach (SpriteRenderer sprite in player1NoteSprites)
-                    {
-                        sprite.enabled = true;
-                    }
-                    foreach (SpriteRenderer sprite in player2NoteSprites)
-                    {
-                        sprite.enabled = false;
-                    }
-
-                    player1Notes.transform.position = new Vector3(0f, 4.45f, 15);
+                    sprite.enabled = true;
                 }
+
+                player2Notes.transform.position = new Vector3(0f, 4.45f, 15);
+            }
+            else
+            {
+                foreach (SpriteRenderer sprite in player1NoteSprites)
+                {
+                    sprite.enabled = true;
+                }
+                foreach (SpriteRenderer sprite in player2NoteSprites)
+                {
+                    sprite.enabled = false;
+                }
+
+                player1Notes.transform.position = new Vector3(0f, 4.45f, 15);
             }
         }
         else
@@ -666,12 +638,12 @@ public partial class Song : MonoBehaviour
         playerOneScoringObject.SetActive(false);
         playerTwoScoringObject.SetActive(false);
         
-        if (Player.playAsEnemy || Player.twoPlayers || Player.demoMode)
+        if (Player.playAsEnemy || Player.demoMode)
         {
             playerTwoScoringObject.SetActive(true);
         }
         
-        if(!Player.playAsEnemy || Player.twoPlayers || Player.demoMode)
+        if(!Player.playAsEnemy || Player.demoMode)
         {
             playerOneScoringObject.SetActive(true);
         }
@@ -1304,7 +1276,7 @@ public partial class Song : MonoBehaviour
     public void UpdateScoringInfo()
     {
         
-        if (!Player.playAsEnemy || Player.twoPlayers || Player.demoMode)
+        if (!Player.playAsEnemy || Player.demoMode)
         {
             
             float accuracyPercent;
@@ -1337,7 +1309,7 @@ public partial class Song : MonoBehaviour
             playerOneScoringText.text = string.Empty;
         }
 
-        if (Player.playAsEnemy || Player.twoPlayers || Player.demoMode)
+        if (Player.playAsEnemy || Player.demoMode)
         {
             
             float accuracyPercent;
@@ -1488,7 +1460,7 @@ public partial class Song : MonoBehaviour
             if (health <= 0)
             {
                 health = 0;
-                if(!Player.playAsEnemy & !Player.twoPlayers & !Player.demoMode)
+                if(!Player.playAsEnemy & !Player.demoMode)
                 {
                     if (isDead)
                     {
@@ -1662,19 +1634,15 @@ public partial class Song : MonoBehaviour
                 switch (modeOfPlay)
                 {
                     //Boyfriend
-                    case 1:
+                    case PlayModes.Boyfriend:
                         overallScore = playerOneStats.currentScore;
                         break;
                     //Opponent
-                    case 2:
+                    case PlayModes.Opponent:
                         overallScore = playerTwoStats.currentScore;
                         break;
-                    //Local Multiplayer
-                    case 3:
-                        overallScore = playerOneStats.currentScore + playerTwoStats.currentScore;
-                        break;
                     //Auto
-                    case 4:
+                    case PlayModes.Autoplay:
                         overallScore = 0;
                         break;
                 }

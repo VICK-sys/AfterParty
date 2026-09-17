@@ -56,7 +56,6 @@ public class Menu : MonoBehaviour
     [Space] public RectTransform songDetailsLayout;
     public RectTransform songMiscDetailsLayout;
     public RectTransform songListLayout;
-    [Space] public Button twoPlayerButton;
     public Button importButton;
 
     public static Menu instance;
@@ -90,22 +89,16 @@ public class Menu : MonoBehaviour
     public void AutoplaySingleplayer()
     {
         Player.playAsEnemy = false;
-        Player.twoPlayers = false;
+        Song.modeOfPlay = PlayModes.Autoplay;
         Song.instance.PlaySong(true);
     }
     public void PlaySingleplayer(bool asEnemy)
     {
         Player.playAsEnemy = asEnemy;
-        Player.twoPlayers = false;
+        Song.modeOfPlay = asEnemy ? PlayModes.Opponent : PlayModes.Boyfriend;
         Song.instance.PlaySong(false);
     }
 
-    public void PlayWithTwoPlayers()
-    {
-        Player.twoPlayers = true;
-        Player.playAsEnemy = false;
-        Song.instance.PlaySong(false);
-    }
     
     
     #region Song List

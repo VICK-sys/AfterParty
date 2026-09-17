@@ -226,6 +226,16 @@ public static class VanillaFreeplayValidation
                     Require(freeplay != null && !freeplay.Busy && freeplay.SongCount >= 4 && !menu.mainScreen.gameObject.activeSelf && !menu.playScreen.gameObject.activeSelf,
                         "Freeplay entry did not replace bundle picker.");
                     Require(freeplay.Difficulty == "Normal" && freeplay.SelectedSong.meta.songName == "Tutorial", "Initial selection differs from vanilla.");
+                    Button[] modes = freeplay.GetComponentsInChildren<Button>(true)
+                        .Where(button => button.name.StartsWith("Select ", StringComparison.Ordinal)).ToArray();
+                    Require(modes.Select(button => button.name).SequenceEqual(new[] { "Select BOYFRIEND", "Select OPPONENT", "Select AUTOPLAY" }),
+                        "Freeplay must offer exactly the three single-player modes.");
+                    modes[2].onClick.Invoke();
+                    Require(freeplay.Mode == PlayModes.Autoplay, "Third mode must keep the Autoplay score ID.");
+                    modes[1].onClick.Invoke();
+                    Require(freeplay.Mode == PlayModes.Opponent, "Opponent selection failed.");
+                    freeplay.SetMode(3);
+                    Require(freeplay.Mode == PlayModes.Boyfriend, "Retired mode must fall back to Boyfriend.");
                     var rankProbe = new GameObject("Rank Probe", typeof(RectTransform)).AddComponent<VanillaFreeplaySprite>();
                     foreach (string prefix in new[] { "LOSS rank", "GOOD rank", "GREAT rank", "EXCELLENT rank", "PERFECT rank0", "PERFECT rank GOLD" })
                     {

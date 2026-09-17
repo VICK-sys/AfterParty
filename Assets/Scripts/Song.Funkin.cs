@@ -86,7 +86,7 @@ public partial class Song
                 float worldScale = FunkinWorldPixelSize;
                 FunkinNoteSkin.WorldScale(sprite.transform, 100 * worldScale * 0.7f);
                 float x = (side == 0 ? 688 : 48) + 112 * direction + 52;
-                if (OptionsV2.Middlescroll && !Player.twoPlayers) x = 420 + 112 * direction + 52;
+                if (OptionsV2.Middlescroll) x = 420 + 112 * direction + 52;
                 float y = OptionsV2.Downscroll ? 720 - 24 - 82.6f : 24 + 82.6f;
                 Vector3 point = new Vector3(uiCamera.transform.position.x + (x - 640) * worldScale,
                     uiCamera.transform.position.y + (360 - y) * worldScale, sprite.transform.position.z);
@@ -121,8 +121,8 @@ public partial class Song
         else stats.currentCombo++;
         stats.highestCombo = Math.Max(stats.highestCombo, stats.currentCombo);
         AddFunkinScore(side, FunkinRules.Score(timing), FunkinRules.Health(judgement));
-        FunkinHud?.ShowRating(judgement, side);
-        if (stats.currentCombo >= 10) FunkinHud?.ShowCombo(stats.currentCombo, side);
+        FunkinHud?.ShowRating(judgement);
+        if (stats.currentCombo >= 10) FunkinHud?.ShowCombo(stats.currentCombo);
         if (judgement == FunkinRules.Judgement.Sick) strumEffects[side, note.type]?.Splash();
     }
 
@@ -176,7 +176,7 @@ public partial class Song
     private void BreakFunkinCombo(int side)
     {
         PlayerStat stats = side == 0 ? playerOneStats : playerTwoStats;
-        if (stats.currentCombo >= 10) FunkinHud?.ShowCombo(0, side);
+        if (stats.currentCombo >= 10) FunkinHud?.ShowCombo(0);
         stats.currentCombo = 0;
     }
 

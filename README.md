@@ -5,9 +5,9 @@
 Thanks to Unity, the game is able to run better on lower-end PCs than HaxeFlixel. You can modify the engine's source code to do complicated effects that might cause some lower-end PCs to struggle when done on HaxeFlixel, though you can replicate the effects in Unity and lower-end PCs will run it fine.
 ### Control Mapping
 You can remap your keybinds to any key on your keyboard, but you also have a SECONDARY keybind list that you can use to at any time without having to manually switch it all the time!
-### Two Player Mode
-The engine natively supports two-player. You and the other player play on the same keyboard. Keybinds for both players are also modifiable.
-If the game is set to Two Player Mode, primary keybinds are used for player one and secondary keybinds are used for player two.
+### Play Modes
+Play as Boyfriend or the opponent, or use AutoPlay to watch a song. Both keybind sets control the selected character.
+Online and local multiplayer are no longer supported.
 ### Song Bundles
 Bundles are a collection of songs that each can possibly contain custom scripting. Each song in a bundle can contain information such as artist name, charter name, and even an album cover. Bundles can be exported to a .ZIP format and easily shared. If applicable, users can download bundles if they have the download URL via the in-game bundle downloader. Bundles are almost always forward-compatible with future versions of the engine.
 ### AutoPlay

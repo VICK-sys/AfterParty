@@ -26537,9 +26537,6 @@ MonoBehaviour:
     - m_Text: as Opponent
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Two Players
-      m_Image: {fileID: 0}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
     - m_Text: AutoPlay
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}

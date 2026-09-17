@@ -66,7 +66,8 @@ The atlas loader preserves frame offsets and packed frame rotation.
 Sick hits create splashes, and successful holds create covers.
 Each strumline shares a pool of six splashes across its four lanes.
 
-Unity Party retains its song loader, countdown, characters, camera, options, calibration, and multiplayer extensions.
+Unity Party retains its song loader, countdown, characters, camera, options, and calibration.
+Boyfriend, Opponent, and AutoPlay are the available play modes; both keybind sets control the selected character.
 This change does not port the upstream chart format, scripted note kinds, mobile controls, or every note style.
 The built-in notes use the Funkin style.
 The existing input and visual offset preferences remain available.

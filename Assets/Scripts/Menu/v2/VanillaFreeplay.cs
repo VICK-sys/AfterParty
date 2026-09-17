@@ -239,21 +239,21 @@ public sealed class VanillaFreeplay : MonoBehaviour
         songs = VanillaFreeplayCatalog.Discover(Path.Combine(Application.streamingAssetsPath, "Bundles"), userRoot ?? Path.Combine(Application.persistentDataPath, "Bundles"));
         difficulties = VanillaFreeplayCatalog.Difficulties(songs);
         Difficulty = difficulties.FirstOrDefault(d => string.Equals(d, rememberedDifficulty, StringComparison.OrdinalIgnoreCase)) ?? difficulties.FirstOrDefault() ?? "Normal";
-        Mode = rememberedMode;
+        Mode = rememberedMode = PlayModes.Normalize(rememberedMode);
         if (!hasRememberedSelection && songs.Count > 0) rememberedSong = songs[0].id;
     }
 
     private void BuildModes(RectTransform parent)
     {
-        RectTransform panel = Rect("Play Mode", parent, 365, 220, 570, 340);
+        RectTransform panel = Rect("Play Mode", parent, 365, 220, 570, 290);
         panel.gameObject.AddComponent<Image>().color = new Color(0.04f, 0.04f, 0.09f, 0.97f);
         Label("Title", panel, "PLAY MODE", 30, 18, 500, 50, 38, vcrFont);
-        string[] modes = { "BOYFRIEND", "OPPONENT", "LOCAL MULTIPLAYER", "AUTOPLAY" };
-        for (int i = 0; i < modes.Length; i++)
+        for (int i = 0; i < PlayModes.Count; i++)
         {
-            int value = i + 1;
-            Label(modes[i], panel, (i + 1) + ". " + modes[i], 40, 78 + i * 51, 500, 45, 32, pixelFont);
-            Hit("Select " + modes[i], panel, 20, 78 + i * 51, 530, 45, () => SetMode(value));
+            int value = PlayModes.FromIndex(i);
+            string label = PlayModes.Label(value);
+            Label(label, panel, (i + 1) + ". " + label, 40, 78 + i * 51, 500, 45, 32, pixelFont);
+            Hit("Select " + label, panel, 20, 78 + i * 51, 530, 45, () => SetMode(value));
         }
         modePanel = panel.gameObject;
         modePanel.SetActive(false);
@@ -261,7 +261,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
 
     public void SetMode(int value)
     {
-        Mode = rememberedMode = Mathf.Clamp(value, 1, 4);
+        Mode = rememberedMode = PlayModes.Normalize(value);
         selectingMode = false;
         modePanel.SetActive(false);
         RebuildList(false);
@@ -288,7 +288,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
         if (Time.frameCount == openedFrame || Busy) return;
         if (selectingMode)
         {
-            for (int i = 0; i < 4; i++) if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SetMode(i + 1);
+            for (int i = 0; i < PlayModes.Count; i++) if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SetMode(PlayModes.FromIndex(i));
             if (BackPressed() || Input.GetKeyDown(KeyCode.Tab)) { selectingMode = false; modePanel.SetActive(false); }
             return;
         }
@@ -512,7 +512,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
             VanillaFreeplaySprite image = Sprite("Clear " + x, clearDigits, "fonts/freeplay-clear", x, 0, digit + "0000");
             x += image.FrameSize.x;
         }
-        modeHint.text = Mode == 1 ? "F: FAVORITE   Q/E: FILTER   TAB: PLAY MODE" : "MODE: " + new[] { "", "BOYFRIEND", "OPPONENT", "LOCAL MULTIPLAYER", "AUTOPLAY" }[Mode] + "   TAB: CHANGE";
+        modeHint.text = Mode == PlayModes.Boyfriend ? "F: FAVORITE   Q/E: FILTER   TAB: PLAY MODE" : "MODE: " + PlayModes.Label(Mode) + "   TAB: CHANGE";
         modeHint.gameObject.SetActive(Mode != 1);
         status.text = string.Empty;
         if (ready) StartPreview();
@@ -587,7 +587,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
             float progress = time < 2 ? time / 2 : time < 2.3f ? 1 : time < 4.3f ? 1 - (time - 2.3f) / 2 : 0;
             capsule.title.rectTransform.anchoredPosition = new Vector2(-excess * (1 - Mathf.Cos(progress * Mathf.PI)) / 2, 0);
         }
-        int score = SelectedSong == null || Mode == 4 ? 0 : PlayerPrefs.GetInt(SelectedSong.ScoreKey(Difficulty, Mode), 0);
+        int score = SelectedSong == null || Mode == PlayModes.Autoplay ? 0 : PlayerPrefs.GetInt(SelectedSong.ScoreKey(Difficulty, Mode), 0);
         displayedScore = Mathf.Lerp(displayedScore, score, 1 - Mathf.Pow(0.85f, delta * 60));
         int shown = Mathf.Clamp(Mathf.RoundToInt(displayedScore), 0, 9999999);
         if (shown != previousScore)

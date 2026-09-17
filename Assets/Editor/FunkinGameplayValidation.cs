@@ -162,7 +162,7 @@ public static class FunkinGameplayValidation
                 CaptureHealthStates();
                 Require(errors == 0, "Render checks reported errors.");
                 song.FunkinHud.ClearPopups();
-                song.FunkinHud.ShowRating(FunkinRules.Judgement.Sick, 0);
+                song.FunkinHud.ShowRating(FunkinRules.Judgement.Sick);
                 song.FunkinHud.Render();
                 pausePopup = song.FunkinHud.GetComponentsInChildren<SpriteRenderer>().First(sprite => sprite.enabled && sprite.sortingOrder >= 900);
                 popupPosition = pausePopup.transform.position;
@@ -397,19 +397,30 @@ public static class FunkinGameplayValidation
         line.Advance(position + 200, 0.2);
         Require(bot.State.Hit && !bot.State.HoldDropped && song.playerOneStats.currentScore == 0, "Bot hold or score mismatch.");
         Player.demoMode = false;
-        ClearCase();
-        Player.twoPlayers = true;
-        Player.instance.ConfigureBindings();
-        position = song.SongPosition;
-        clock = Time.realtimeSinceStartupAsDouble;
-        NoteObject p1 = AddNote(position, 0);
-        NoteObject p2 = AddNote(position, 0, 0, false);
-        foreach (var strum in Player.instance.Strumlines) strum.Advance(position, 0);
-        Send(clock, Key.LeftArrow, Key.A);
-        Player.instance.AdvanceFrame(position, clock * 1000, 0);
-        Require(p1.State.Hit && p2.State.Hit && song.playerOneStats.currentScore == 500 && song.playerTwoStats.currentScore == 500,
-            "Local two-player routing changed.");
-        Player.twoPlayers = false;
+        foreach (bool asEnemy in new[] { false, true })
+        {
+            Player.playAsEnemy = asEnemy;
+            foreach (Key key in new[] { Key.LeftArrow, Key.A })
+            {
+                ClearCase();
+                position = song.SongPosition;
+                clock = Time.realtimeSinceStartupAsDouble;
+                NoteObject controlled = AddNote(position, 0, 0, !asEnemy);
+                NoteObject automatic = AddNote(position, 0, 0, asEnemy);
+                int side = asEnemy ? 1 : 0;
+                Player.instance.Strumlines[side].Advance(position, 0);
+                Send(clock, key);
+                Require(Player.instance.Strumlines[side].Presses.Count == 1 &&
+                    Player.instance.Strumlines[1 - side].Presses.Count == 0,
+                    "A keybinding reached the wrong character: " + key);
+                Player.instance.AdvanceFrame(position, clock * 1000, 0);
+                Require(controlled.State.Hit && automatic.State.Hit &&
+                    (asEnemy ? song.playerTwoStats : song.playerOneStats).currentScore == 500 &&
+                    (asEnemy ? song.playerOneStats : song.playerTwoStats).currentScore == 0,
+                    "Selected character or automatic opponent scoring changed.");
+            }
+        }
+        Player.playAsEnemy = false;
         ClearCase();
         var gamepad = InputSystem.AddDevice<Gamepad>();
         InputSystem.EnableDevice(gamepad);
@@ -427,7 +438,7 @@ public static class FunkinGameplayValidation
         ClearCase();
         CheckSplashPool();
         CheckHud();
-        Debug.Log("FUNKIN INPUT CHECKS PASSED: four latency cases, negative control, dual-bind hold, release, pooling, pause, bot, and local two-player.");
+        Debug.Log("FUNKIN INPUT CHECKS PASSED: four latency cases, negative control, dual-bind hold, release, pooling, pause, bot, and single-player character routing.");
     }
 
     private static void CheckSplashPool()
@@ -467,8 +478,8 @@ public static class FunkinGameplayValidation
         Player.instance.Strumlines[1].Hit(bad.State, 100, false, position);
         futureNote = AddNote(position + 1400, 3);
         song.FunkinHud.ClearPopups();
-        song.FunkinHud.ShowRating(FunkinRules.Judgement.Sick, 0);
-        song.FunkinHud.ShowCombo(123, 0);
+        song.FunkinHud.ShowRating(FunkinRules.Judgement.Sick);
+        song.FunkinHud.ShowCombo(123);
         song.FunkinHud.Advance(0.15, position);
         song.FunkinHud.Render();
         Require(Object.FindObjectsByType<FunkinHoldMesh>(FindObjectsSortMode.None).Length >= 4, "Continuous hold meshes did not spawn.");
@@ -521,13 +532,13 @@ public static class FunkinGameplayValidation
         Require(hud.PopupCount == 3 && song.playerOneStats.currentCombo == 0, "Missed note must display only 000 for a broken combo.");
         hud.ClearPopups();
         foreach (var rating in new[] { FunkinRules.Judgement.Sick, FunkinRules.Judgement.Good, FunkinRules.Judgement.Bad, FunkinRules.Judgement.Shit })
-            hud.ShowRating(rating, 0);
+            hud.ShowRating(rating);
         Require(hud.PopupCount == 4, "Judgements must overlap instead of replacing each other.");
-        hud.ShowRating(FunkinRules.Judgement.Miss, 0);
+        hud.ShowRating(FunkinRules.Judgement.Miss);
         Require(hud.PopupCount == 4, "Miss must not create a judgement sprite.");
         hud.Advance(song.beatsPerSecond + 0.201, position);
         Require(hud.PopupCount == 0, "Judgements did not expire after one beat and 0.2 seconds.");
-        hud.ShowCombo(1000, 0);
+        hud.ShowCombo(1000);
         Require(hud.PopupCount == 4, "Four-digit combo was truncated.");
         hud.Advance(song.beatsPerSecond + 0.201, position);
         Require(hud.PopupCount == 4, "Combo digits must remain longer than judgements.");
@@ -545,8 +556,8 @@ public static class FunkinGameplayValidation
             song.health = health;
             for (int frame = 0; frame < 100; frame++) hud.Advance(0, song.SongPosition);
             hud.ClearPopups();
-            hud.ShowRating(health == 20 ? FunkinRules.Judgement.Shit : FunkinRules.Judgement.Good, 0);
-            hud.ShowCombo(health == 20 ? 0 : 456, 0);
+            hud.ShowRating(health == 20 ? FunkinRules.Judgement.Shit : FunkinRules.Judgement.Good);
+            hud.ShowCombo(health == 20 ? 0 : 456);
             hud.Render();
             Capture(health == 20 ? "hud-low-health.png" : "hud-high-health.png");
         }

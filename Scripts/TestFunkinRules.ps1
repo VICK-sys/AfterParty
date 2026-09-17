@@ -12,6 +12,7 @@ $project = @'
   <ItemGroup>
     <Compile Include="../../Assets/Scripts/FunkinRules.cs" />
     <Compile Include="../../Assets/Scripts/FunkinHudState.cs" />
+    <Compile Include="../../Assets/Scripts/PlayModes.cs" />
     <Compile Include="../../Scripts/FunkinRuleTests.cs" />
   </ItemGroup>
 </Project>

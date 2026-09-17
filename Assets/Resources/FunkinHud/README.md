@@ -43,7 +43,7 @@ Digits use the upstream random velocity and gravity ranges.
 Digits fade for 0.2 seconds after two beats.
 Pausing gameplay stops popup movement, fading, and icon bounces.
 
-Local two-player mode retains separate popup offsets and a second score.
+Boyfriend and Opponent modes show the selected character's score and centered judgement popups.
 The default Funkin judgement style and legacy icon sheets are supported.
 Animated icon sheets, scripted icon settings, and other judgement styles are outside this port.
 

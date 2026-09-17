@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     public static KeyCode resetKey = KeyCode.R;
     public static KeyCode startSongKey = KeyCode.Space;
     public static bool demoMode;
-    public static bool twoPlayers;
     public static bool playAsEnemy;
     public static float maxHitRoom = -160;
     public static float safeZoneOffset = 160;
@@ -92,10 +91,11 @@ public class Player : MonoBehaviour
     public void ConfigureBindings()
     {
         bindings.Clear();
-        AddBindings(primaryKeyCodes, playAsEnemy && !twoPlayers ? 1 : 0);
-        AddBindings(secondaryKeyCodes, twoPlayers || playAsEnemy ? 1 : 0);
-        Strumlines[0].Controlled = !playAsEnemy || twoPlayers || demoMode;
-        Strumlines[1].Controlled = playAsEnemy || twoPlayers;
+        int side = playAsEnemy ? 1 : 0;
+        AddBindings(primaryKeyCodes, side);
+        AddBindings(secondaryKeyCodes, side);
+        Strumlines[0].Controlled = !playAsEnemy || demoMode;
+        Strumlines[1].Controlled = playAsEnemy;
         foreach (FunkinStrumline line in Strumlines)
         {
             line.BotPlay = demoMode;
@@ -150,8 +150,7 @@ public class Player : MonoBehaviour
         if (!CanAcceptInput()) return;
         if (device is Gamepad pad)
         {
-            int side = playAsEnemy && !twoPlayers ? 1 : 0;
-            if (twoPlayers && Gamepad.all.Count > 0 && pad != Gamepad.all[0]) side = 1;
+            int side = playAsEnemy ? 1 : 0;
             CaptureButton(input, pad.dpad.left, side, 0, 512);
             CaptureButton(input, pad.dpad.down, side, 1, 513);
             CaptureButton(input, pad.dpad.up, side, 2, 514);

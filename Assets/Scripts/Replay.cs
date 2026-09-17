@@ -334,11 +334,7 @@ public class Replay : MonoBehaviour
         data.dateTime = now;
         data.songName = Song.instance.selectedSong.SongName;
 
-        if (Player.twoPlayers)
-        {
-            data.replayType = ReplayType.AsBoth;
-        }
-        else if (Player.playAsEnemy)
+        if (Player.playAsEnemy)
         {
             data.replayType = ReplayType.AsEnemy;
         }
@@ -376,7 +372,6 @@ public class Replay : MonoBehaviour
     {
         AsBoyfriend = 1,
         AsEnemy = 2,
-        AsBoth = 3
     }
 }
 
