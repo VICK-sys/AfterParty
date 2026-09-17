@@ -19,13 +19,14 @@ A controller can use its vertical stick, primary button, and secondary button.
 Escape closes Credits or quits from the main menu.
 In the Unity Editor, quit stops Play mode.
 
-Story Mode opens the existing local bundle picker.
+Story Mode opens the level menu from Friday Night Funkin' 0.8.6.
+See `Assets/Resources/VanillaStory/README.md` for controls, installed content, and validation.
 Freeplay opens the Boyfriend Freeplay screen from Friday Night Funkin' 0.8.6.
 See `Assets/Resources/VanillaFreeplay/README.md` for controls and validation.
 Options opens the existing settings screen.
 Merch opens the official shop URL.
 Credits shows the original credits and the Unity Party team.
-The title screen, intro, and vanilla Story Mode screens are outside this change.
+The title screen and intro retain their existing behavior.
 The serialized `flashingLights` field disables confirmation flashing.
 
 The artwork, music, sounds, font, and credits retain their upstream ownership.

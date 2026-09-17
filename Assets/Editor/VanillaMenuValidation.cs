@@ -159,9 +159,8 @@ public static class VanillaMenuValidation
                     break;
                 case 4:
                     if (sinceChange < 2) return;
-                    Require(menu.playScreen.gameObject.activeInHierarchy, "Story Mode bridge did not open song selection.");
-                    CheckBundles();
-                    menu.OpenMenuFromPlayScreen();
+                    Require(VanillaStoryMenu.Active != null && !menu.playScreen.gameObject.activeInHierarchy, "Story Mode did not open the level menu.");
+                    VanillaStoryMenu.Active.Close();
                     Require(main.SelectedIndex == 0, "Story Mode return lost selection.");
                     main.MoveSelection(1);
                     main.flashingLights = false;

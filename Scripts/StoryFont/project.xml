@@ -1,0 +1,9 @@
+<project>
+    <meta title="Story Font Export" package="local.story.font" version="1.0.0" company="Local" />
+    <app main="Main" file="StoryFont" path="../../Builds/StoryFont" />
+    <window width="1280" height="720" hidden="true" />
+    <source path="." />
+    <haxelib name="flixel" version="6.2.0" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/vcr.ttf" rename="assets/vcr.ttf" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

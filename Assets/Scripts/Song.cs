@@ -1685,9 +1685,11 @@ public partial class Song : MonoBehaviour
                     PlayerPrefs.Save();
                 }
                 
+                bool nextStorySong = VanillaStoryCampaign.CompleteSong(currentSongMeta, difficulty, modeOfPlay, overallScore,
+                    !FreeplayAborted && musicClip != null && SongPosition >= musicClip.length * 1000 - 100);
                 LoadingTransition.instance.Show(() => 
                 { 
-                    SceneManager.LoadScene("Title");
+                    SceneManager.LoadScene(nextStorySong ? "Game_Backup3" : "Title");
                     DiscordController.instance.EnableGameStateLoop = false; 
                 });
 

@@ -331,7 +331,7 @@ public static class VanillaFreeplayValidation
                     break;
                 case 7:
                     if (wait < 3) return;
-                    Require(menu.playScreen.gameObject.activeInHierarchy && menu.songListRect.GetComponentsInChildren<SongButtonV2>(true).Length >= 4, "Story Mode bundle picker regressed.");
+                    Require(VanillaStoryMenu.Active != null && !menu.playScreen.gameObject.activeInHierarchy, "Story Mode did not open after Freeplay exit.");
                     Finish(errors == 0);
                     break;
             }

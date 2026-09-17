@@ -399,8 +399,9 @@ public class MenuV2 : MonoBehaviour
     public void InitializeMenu()
     {
         Instance = this;
+        bool restoreStory = VanillaStoryCampaign.ReturnToStory;
         bool restoreFreeplay = VanillaFreeplay.ReturnToFreeplay;
-        if (restoreFreeplay) startPhase = StartPhase.Nothing;
+        if (restoreStory || restoreFreeplay) startPhase = StartPhase.Nothing;
         songDifficultiesDropdown.onValueChanged.AddListener(_ => RefreshSongVariation());
 
         LeanTween.reset();
@@ -475,7 +476,14 @@ public class MenuV2 : MonoBehaviour
         musicSource.Play();
 
         DiscordController.instance.SetMenuState("Idle");
-        if (restoreFreeplay) OpenFreeplay(true);
+        if (restoreStory) OpenStoryMode();
+        else if (restoreFreeplay) OpenFreeplay(true);
+    }
+
+    public void OpenStoryMode()
+    {
+        VanillaStoryMenu.Open(this);
+        DiscordController.instance.SetMenuState("Selecting a Level");
     }
 
     public void OpenFreeplay(bool skipIntro = false)

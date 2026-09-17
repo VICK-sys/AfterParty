@@ -2,7 +2,8 @@
 
 The main menu opens a Unity adaptation of the Boyfriend Freeplay screen from Friday Night Funkin' 0.8.6.
 It uses the original artwork, fonts, capsule animations, album animations, letter filters, and Boyfriend DJ timeline.
-The menu reads the same built-in and local bundles as the Story Mode bundle picker.
+The menu reads built-in and local bundles.
+Story Mode uses the original level order and installed vanilla songs.
 Only songs with a chart and instrumental for the selected difficulty appear.
 
 ## Controls

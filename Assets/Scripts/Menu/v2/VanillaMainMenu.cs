@@ -169,8 +169,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
         switch (SelectedIndex)
         {
             case 0:
-                menu.ReloadSongList();
-                menu.OpenPlayScreenFromMenu();
+                menu.OpenStoryMode();
                 break;
             case 1:
                 menu.OpenFreeplay();
