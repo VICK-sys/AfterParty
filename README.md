@@ -25,7 +25,8 @@ Are some voices or music too loud? What if the music is too loud but the voices 
 ## Requirements for Editing and Building
 
 Install Unity **6000.6.1f1** and Git before opening this project.
-The project uses Universal Render Pipeline 17.6 and the legacy Input Manager.
+The project uses Universal Render Pipeline 17.6 and Input System 1.19 for gameplay.
+The legacy Input Manager remains enabled for menus.
 TextMesh Pro is included through the Unity UI package.
 
 Open the project in Unity and wait for package resolution and asset import.
@@ -39,12 +40,12 @@ Run `-batchmode -quit -executeMethod UpgradeValidation.Run` to check object pool
 Keep graphics enabled for this check.
 Set `UNITY_PARTY_VALIDATION_PATH` to save the CRT control and output images.
 
-The mod.io browser requires a valid configuration for your game.
-Local startup does not require mod.io initialization.
-
 The GitHub Actions workflow builds Windows 64-bit.
 Configure `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL` repository secrets before running it.
 The workflow requires a valid Unity license and a matching GameCI editor image.
 
 Unity 2021 is no longer supported by this fork.
 Keep the package lock file when cloning or updating the project.
+
+Gameplay uses the Funkin 0.8.6 input, judgement, receptor, and sustain rules.
+See `Assets/Resources/FunkinNotes/README.md` for behavior, scope, and validation commands.
