@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04e6f6b396aaad8409ac6804e2834b12, type: 3}
+  m_Name: Boyfriend Hey
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleSpriteAnimator.SpriteAnimation
+  animationName: BF Hey
+  fps: 24
+  frames:
+  - sprite: {fileID: 8237472520571400281, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 4123218914244486081, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 1842454092389222287, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -1916145383494035461, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 7324865095072969800, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 7551863921903651508, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -842359018979315621, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 7413034868696463159, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -7861924583624462375, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -2215227320906487219, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -2095064754265058358, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 8673666860892683304, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 1760831385685206465, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -8839240746663502693, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 5352420126449980360, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 5898129410905195826, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -3758575617608886465, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 6725489795992286246, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 1445233002534908010, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -1950145364486806270, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 2735891062157753914, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -901155067934065832, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -5345479166634721636, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -6579650039586436877, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 5989811772768533889, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: -607370336508608244, guid: d15b4cadc9f82874983115e3da24f41d, type: 3}
+    offset: {x: 0, y: 0}
+  spriteAnimationType: 1

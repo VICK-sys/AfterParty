@@ -1,0 +1,89 @@
+{
+  "version": "0.8.6",
+  "assetCommit": "9300719cb261d23f72344807055be6d109c9949c",
+  "songs": [
+    {
+      "id": "tutorial",
+      "path": "00-Tutorial/01-Tutorial",
+      "bpm": 100,
+      "notes": {
+        "easy": 55,
+        "normal": 55,
+        "hard": 71
+      },
+      "instrumentalSha256": "65005187c655ab264416527bdce21e1f010330db254faa84cdf86a259c649d03"
+    },
+    {
+      "id": "bopeebo",
+      "path": "01-Week1/01-Bopeebo",
+      "bpm": 100,
+      "notes": {
+        "easy": 88,
+        "normal": 102,
+        "hard": 124
+      },
+      "instrumentalSha256": "351921763f1717f3daa98cdfeb1d58e2128ca07091ada35d989fe39e7f048e84"
+    },
+    {
+      "id": "fresh",
+      "path": "01-Week1/02-Fresh",
+      "bpm": 120,
+      "notes": {
+        "easy": 169,
+        "normal": 210,
+        "hard": 267
+      },
+      "instrumentalSha256": "fbda4084c7ed4f6dfaa4d5d5ed2b0aeadc3fb76b428c3d9a209875ae7e9d3e37"
+    },
+    {
+      "id": "dadbattle",
+      "path": "01-Week1/03-DadBattle",
+      "bpm": 180,
+      "notes": {
+        "easy": 144,
+        "normal": 263,
+        "hard": 327
+      },
+      "instrumentalSha256": "827b677f0372ad2f9c31b60b60479c2bd3fbfb2f47aa40c72ffdc2b8521005db"
+    },
+    {
+      "id": "bopeebo",
+      "variation": "erect",
+      "path": "01-Week1/01-Bopeebo",
+      "bpm": 123,
+      "notes": {
+        "erect": 532,
+        "nightmare": 558
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "2672a89f335e9fccb61f1ca7a5f6b9a90c9e120ec90c115af0989ea4637be75d"
+    },
+    {
+      "id": "fresh",
+      "variation": "erect",
+      "path": "01-Week1/02-Fresh",
+      "bpm": 125,
+      "notes": {
+        "erect": 464,
+        "nightmare": 473
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "c49ab1c6ccb1c2110eff1d867916f728defc3c99e69b1f5ec20d32c4891c71e2"
+    },
+    {
+      "id": "dadbattle",
+      "variation": "erect",
+      "path": "01-Week1/03-DadBattle",
+      "bpm": 190,
+      "notes": {
+        "erect": 948,
+        "nightmare": 951
+      },
+      "vocalOffsets": {
+        "bf": 0,
+        "dad": -8
+      },
+      "instrumentalSha256": "1a69518d3700234150ff908808de0f1de55f78c55acb39df8598b0e365ef9087"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "Song Name": "Bopeebo",
+  "Song Credits": {
+    "Composer": "Kawai Sprite",
+    "Charter": "ninjamuffin99 + MtH"
+  },
+  "Song Difficulties": {
+    "Easy": {
+      "r": 0,
+      "g": 1,
+      "b": 0,
+      "a": 1
+    },
+    "Normal": {
+      "r": 1,
+      "g": 1,
+      "b": 0,
+      "a": 1
+    },
+    "Hard": {
+      "r": 1,
+      "g": 0,
+      "b": 0,
+      "a": 1
+    },
+    "Erect": {
+      "r": 0.8,
+      "g": 0.3,
+      "b": 1,
+      "a": 1
+    },
+    "Nightmare": {
+      "r": 1,
+      "g": 0.2,
+      "b": 0.6,
+      "a": 1
+    }
+  },
+  "Song Description": "Friday Night Funkin' 0.8.6. Week 1: Daddy Dearest.",
+  "Song Variations": {
+    "Erect": {
+      "Asset Suffix": "-erect",
+      "Song Name": "Bopeebo Erect",
+      "Song Credits": {
+        "Composer": "Kawai Sprite (feat. Saruky)",
+        "Charter": "Jenny Crowe + fabs + Spazkid"
+      }
+    },
+    "Nightmare": {
+      "Asset Suffix": "-erect",
+      "Song Name": "Bopeebo Erect",
+      "Song Credits": {
+        "Composer": "Kawai Sprite (feat. Saruky)",
+        "Charter": "Jenny Crowe + fabs + Spazkid"
+      }
+    }
+  }
+}

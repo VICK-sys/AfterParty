@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04e6f6b396aaad8409ac6804e2834b12, type: 3}
+  m_Name: Girlfriend Sing Down
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleSpriteAnimator.SpriteAnimation
+  animationName: Sing Down
+  fps: 24
+  frames:
+  - sprite: {fileID: 21300000, guid: 38bca0a9b939b2a43bb7c8a43b58f517, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: a81dfd4be752c354ca041fedd47334c5, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 68449296e90695b42bed6e5324d325ad, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: b4307c6efd787894c863634d4312aa8b, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 2708858956c2b0c4ab803a58ae890804, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: dc172d3c3a5611f429370b498266d3a9, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 823758033796a5e4b8e877c62c5f890d, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 66e3e108402f97a4ebbc58ee35ec1d63, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 6bdc594d25d01314ab7386aad85f3fa3, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 948704beadc9ebf44b81d49062abeaba, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 2194b8ab49c1cf74ca97bf9689d76038, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: fc802785156f829468a2bfff615fb9dc, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: d815d97165578c8458351e1904d4bd63, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: e7c76494aa2b9f9448d859ffe0770c3f, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: be27b5640ba5eec4d9a022cb171bf078, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 323317bd0fd52aa40bb0351c303ccea4, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 500652983e186c244a66f14ee81ce8a6, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 1f33b53edb2fa5c4aa8ebfb5fa59e854, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 8d3dd1651b7867a4e8f046196ce010ac, type: 3}
+    offset: {x: 0, y: 0}
+  - sprite: {fileID: 21300000, guid: 159c2e1d3b503214e84d41e43aecb24a, type: 3}
+    offset: {x: 0, y: 0}
+  spriteAnimationType: 1
