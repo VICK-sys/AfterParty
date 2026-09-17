@@ -14,7 +14,6 @@ public class BundleButtonV2 : MonoBehaviour
     private List<SongButtonV2> songButtons;
 
     public string directory;
-    public bool isMod;
 
     public void ToggleSongsVisibility()
     {
@@ -27,16 +26,6 @@ public class BundleButtonV2 : MonoBehaviour
     public void EditBundle()
     {
         Process.Start("explorer.exe", directory);
-    }
-
-    public void DeleteBundle()
-    {
-        if (isMod)
-        {
-            MenuV2.Instance.DisplayNotification(
-                Color.red,
-                "To delete this bundle, you must unsubscribe from it via the Mod.io portal in the main menu.");
-        }
     }
 
     public string Creator

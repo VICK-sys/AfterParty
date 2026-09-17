@@ -85,33 +85,14 @@ public class DiscordController : MonoBehaviour
                 tooltip = "Icon by Uni"
             }
         };
-        if(!songMeta.isFromModPlatform)
+        presence.buttons = new[]
         {
-            presence.buttons = new[]
+            new DiscordButton
             {
-                new DiscordButton
-                {
-                    label = "Play Unity Party",
-                    url = "https://gamejolt.com/games/unityparty/632556"
-                }
-            };
-        }
-        else
-        {
-            presence.buttons = new[]
-            {
-                new DiscordButton
-                {
-                    label = "Play Unity Party",
-                    url = "https://gamejolt.com/games/unityparty/632556"
-                },
-                new DiscordButton
-                {
-                    label = "View Song Content",
-                    url = songMeta.modURL
-                }
-            };
-        }
+                label = "Play Unity Party",
+                url = "https://gamejolt.com/games/unityparty/632556"
+            }
+        };
         
         presence.startTime = Song.instance.musicSources[0].isPlaying ? DiscordTimestamp.ToUnixMilliseconds(_startDateTime) : 0;
         presence.endTime = Song.instance.musicSources[0].isPlaying ? DiscordTimestamp.ToUnixMilliseconds(GetEndTime()) : 0;

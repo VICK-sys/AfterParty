@@ -6,7 +6,6 @@ using Epic.OnlineServices.Lobby;
 using Epic.OnlineServices.UserInfo;
 using EpicTransport;
 using Mirror;
-using ModIO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -62,10 +61,6 @@ public class MultiplayerMenu : MonoBehaviour
         _manager.networkAddress = _lobby.ConnectedLobbyDetails.GetLobbyOwner(new LobbyDetailsGetLobbyOwnerOptions())
             .ToString();
 
-        print(attributes.Find(x => x.Data.Key == "Using ModIO").Data.Value == (AttributeDataValue)false
-            ? "WE ARE NOT USING MOD.IO"
-            : "We ARE USING MOD.IO");
-
         UpdateMultiplayerUsername();
 
         _manager.onStartClientEvent.AddListener(() =>
@@ -104,7 +99,6 @@ public class MultiplayerMenu : MonoBehaviour
         _manager.onStartHostEvent.AddListener(() =>
         {
             isHost = true;
-            _lobby.UpdateLobbyAttribute("Using ModIO", false);
 
             _manager.onStartHostEvent.RemoveAllListeners();
         });

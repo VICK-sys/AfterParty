@@ -16,12 +16,6 @@ public static class UpgradeValidation
     {
         ValidatePool();
         ValidateMaterialCache();
-        if (!ModIO.ModIOUnity.IsInitialized())
-        {
-            GameModLoader.bundleModDirectories["validation"] = "validation";
-            GameModLoader.RefreshResources();
-            Require(GameModLoader.bundleModDirectories.Count == 0, "Unavailable mod.io retained stale bundles.");
-        }
         ValidateRendering();
         Debug.Log("UPGRADE VALIDATION PASSED: object reuse, component identity, material isolation, CRT rendering and control.");
     }

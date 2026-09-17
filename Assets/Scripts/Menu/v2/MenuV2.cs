@@ -14,6 +14,7 @@ using UnityEngine.UI;
 public class MenuV2 : MonoBehaviour
 {
     public RectTransform mainScreen;
+    public VanillaMainMenu vanillaMenu;
 
     public RectTransform playScreen;
     public RectTransform optionsScreen;
@@ -59,6 +60,9 @@ public class MenuV2 : MonoBehaviour
     
     private SongMetaV2 _currentMeta;
     private string _songsFolder;
+    private string previewPath;
+    private string loadedPreviewPath;
+    private int previewRequest;
     
     public static MenuV2 Instance;
     public static int lastSelectedBundle;
@@ -83,6 +87,7 @@ public class MenuV2 : MonoBehaviour
     {
         selectSongScreen.SetActive(true);
         songInfoScreen.SetActive(false);
+        bundles.Clear();
         
         if (songListRect.childCount != 0)
         {
@@ -102,9 +107,11 @@ public class MenuV2 : MonoBehaviour
         SearchOption option = SearchOption.TopDirectoryOnly;
 
         List<string> allDirectories = new List<string>();
-        allDirectories.AddRange(Directory.GetDirectories(_songsFolder, "*", option));
+        string builtInBundles = Path.Combine(Application.streamingAssetsPath, "Bundles");
+        if (Directory.Exists(builtInBundles))
+            allDirectories.AddRange(Directory.GetDirectories(builtInBundles, "*", option).OrderBy(path => path, StringComparer.Ordinal));
+        allDirectories.AddRange(Directory.GetDirectories(_songsFolder, "*", option).OrderBy(path => path, StringComparer.Ordinal));
         
-        allDirectories.AddRange(GameModLoader.bundleModDirectories.Keys);
         
         foreach (string dir in allDirectories)
         {
@@ -124,13 +131,12 @@ public class MenuV2 : MonoBehaviour
                 newWeek.Creator = bundleMeta.authorName;
                 newWeek.Name = bundleMeta.bundleName;
                 newWeek.directory = dir;
-                newWeek.isMod = GameModLoader.bundleModDirectories.Keys.Contains(dir);
                 newWeek.SongButtons = new List<SongButtonV2>();
                 print("Searching in " + dir);
 
                 List<SongButtonV2> songButtons = new List<SongButtonV2>();
 
-                foreach (string songDir in Directory.GetDirectories(dir, "*", option))
+                foreach (string songDir in Directory.GetDirectories(dir, "*", option).OrderBy(path => path, StringComparer.Ordinal))
                 {
                     print("We got " + songDir);
                     if (File.Exists(songDir + "/meta.json") & File.Exists(songDir + "/Inst.ogg"))
@@ -144,11 +150,6 @@ public class MenuV2 : MonoBehaviour
                         }
 
                         meta.bundleMeta = bundleMeta;
-                        meta.isFromModPlatform = newWeek.isMod;
-                        if (meta.isFromModPlatform)
-                        {
-                            meta.modURL = GameModLoader.bundleModDirectories[dir];
-                        }
                         
                         SongButtonV2 newSong = Instantiate(songButtonPrefab,songListRect).GetComponent<SongButtonV2>();
                         
@@ -210,12 +211,19 @@ public class MenuV2 : MonoBehaviour
 
             LoadingTransition.instance.Hide();
 
+            if (bundles.Count == 0)
+                return;
+            lastSelectedBundle = Mathf.Clamp(lastSelectedBundle, 0, bundles.Count - 1);
             BundleButtonV2 bundleButton = bundles.Keys.ElementAt(lastSelectedBundle);
             bundleButton.ToggleSongsVisibility();
 
             musicSource.volume = OptionsV2.menuVolume;
             
-            ChangeSong(bundles[bundleButton][lastSelectedSong].Meta);
+            if (bundles[bundleButton].Count > 0)
+            {
+                lastSelectedSong = Mathf.Clamp(lastSelectedSong, 0, bundles[bundleButton].Count - 1);
+                ChangeSong(bundles[bundleButton][lastSelectedSong].Meta);
+            }
             
         }
     }
@@ -265,6 +273,8 @@ public class MenuV2 : MonoBehaviour
     {
         print("Checking if we can change songs. It is " + canChangeSongs);
         if (!canChangeSongs) return;
+        canChangeSongs = false;
+        _currentMeta = null;
         print("Updating info");
         songNameText.text = meta.songName;
         songDescriptionText.text = "<color=yellow>Description:</color> " + meta.songDescription;
@@ -282,6 +292,7 @@ public class MenuV2 : MonoBehaviour
         songDifficultiesDropdown.ClearOptions();
 
         songDifficultiesDropdown.AddOptions(meta.difficulties.Keys.ToList());
+        songDifficultiesDropdown.SetValueWithoutNotify(0);
         
         loadingSongScreen.SetActive(true);
 
@@ -290,7 +301,7 @@ public class MenuV2 : MonoBehaviour
 
         LeanTween.value(musicSource.gameObject, musicSource.volume, 0, 1f).setOnComplete(() =>
         {
-            StartCoroutine(nameof(LoadSongAudio), meta.songPath+"/Inst.ogg");
+            RefreshSongVariation();
         }).setOnUpdate(value =>
         {
             musicSource.volume = value;
@@ -300,8 +311,35 @@ public class MenuV2 : MonoBehaviour
         _currentMeta = meta;
     }
 
+    public void RefreshSongVariation()
+    {
+        if (_currentMeta == null || songDifficultiesDropdown.options.Count == 0) return;
+        string difficulty = songDifficultiesDropdown.options[songDifficultiesDropdown.value].text;
+        SongVariation variation = _currentMeta.GetVariation(difficulty);
+        songNameText.text = variation?.songName ?? _currentMeta.songName;
+        songCreditsText.text = string.Empty;
+        foreach (var credit in variation?.credits ?? _currentMeta.credits)
+            songCreditsText.text += $"<color=yellow>{credit.Key}:</color> {credit.Value}\n";
+        string path = _currentMeta.AssetPath("Inst.ogg", difficulty);
+        if (path == previewPath)
+        {
+            if (loadedPreviewPath == path)
+            {
+                canChangeSongs = true;
+                loadingSongScreen.SetActive(false);
+                songInfoScreen.SetActive(true);
+                musicSource.volume = OptionsV2.instVolume;
+                UpdateScoreText();
+            }
+            return;
+        }
+        previewPath = path;
+        StartCoroutine(LoadSongAudio(path));
+    }
+
     public void PlaySong()
     {
+        if (!canChangeSongs) return;
         var difficultiesList = _currentMeta.difficulties.Keys.ToList();
         Song.difficulty = difficultiesList[songDifficultiesDropdown.value];
         Song.modeOfPlay = songModeDropdown.value + 1;
@@ -312,17 +350,38 @@ public class MenuV2 : MonoBehaviour
 
     IEnumerator LoadSongAudio(string path)
     {
+        int request = ++previewRequest;
+        canChangeSongs = false;
         WWW www = new WWW(path);
+        yield return www;
+        if (request != previewRequest) { www.Dispose(); yield break; }
         if (www.error != null)
         {
             Debug.LogError(www.error);
+            previewPath = null;
+            canChangeSongs = true;
         }
         else
         {
             canChangeSongs = false;
-            musicSource.clip = www.GetAudioClip();
-            while (musicSource.clip.loadState != AudioDataLoadState.Loaded)
+            AudioClip clip = www.GetAudioClip();
+            while (clip.loadState != AudioDataLoadState.Loaded && clip.loadState != AudioDataLoadState.Failed)
                 yield return new WaitForSeconds(0.1f);
+            if (request != previewRequest) { Destroy(clip); www.Dispose(); yield break; }
+            if (clip.loadState == AudioDataLoadState.Failed)
+            {
+                Debug.LogError("Failed to decode song preview: " + path);
+                Destroy(clip);
+                previewPath = null;
+                canChangeSongs = true;
+                www.Dispose();
+                yield break;
+            }
+            AudioClip previous = musicSource.clip;
+            musicSource.clip = clip;
+            loadedPreviewPath = path;
+            if (previous != null && previous != menuClip) Destroy(previous);
+            LeanTween.cancel(musicSource.gameObject);
             musicSource.Play();
             LeanTween.value(musicSource.gameObject, musicSource.volume, OptionsV2.instVolume, 1f).setOnUpdate(value =>
             {
@@ -333,12 +392,16 @@ public class MenuV2 : MonoBehaviour
             songInfoScreen.SetActive(true);
             UpdateScoreText();
         }
+        www.Dispose();
     }
 
     
     public void InitializeMenu()
     {
         Instance = this;
+        bool restoreFreeplay = VanillaFreeplay.ReturnToFreeplay;
+        if (restoreFreeplay) startPhase = StartPhase.Nothing;
+        songDifficultiesDropdown.onValueChanged.AddListener(_ => RefreshSongVariation());
 
         LeanTween.reset();
 
@@ -360,6 +423,14 @@ public class MenuV2 : MonoBehaviour
         switch (startPhase)
         {
             case StartPhase.Nothing:
+                if (vanillaMenu != null)
+                {
+                    if (backgroundSprite != null) backgroundSprite.color = Color.white;
+                    inputBlocker.enabled = false;
+                    mainScreen.gameObject.SetActive(true);
+                    LoadingTransition.instance.Hide();
+                    break;
+                }
                 backgroundSprite.color = Color.clear;
                 inputBlocker.enabled = true;
 
@@ -399,9 +470,18 @@ public class MenuV2 : MonoBehaviour
         }
         musicSource.clip = menuClip;
         musicSource.volume = OptionsV2.menuVolume;
+        if (vanillaMenu != null && mainScreen.gameObject.activeSelf)
+            musicSource.volume = 0;
         musicSource.Play();
 
         DiscordController.instance.SetMenuState("Idle");
+        if (restoreFreeplay) OpenFreeplay(true);
+    }
+
+    public void OpenFreeplay(bool skipIntro = false)
+    {
+        VanillaFreeplay.Open(this, skipIntro);
+        DiscordController.instance.SetMenuState("Selecting a Song");
     }
 
     public void OptionsScreenTransition(bool toOptions)
@@ -420,6 +500,15 @@ public class MenuV2 : MonoBehaviour
         }
     }
     
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
     public void OpenPlayScreenFromMenu()
     {
         TransitionScreen(mainScreen, playScreen, () => DiscordController.instance.SetMenuState("Selecting a Song"));
@@ -433,7 +522,10 @@ public class MenuV2 : MonoBehaviour
         if (musicSource.clip != menuClip)
         {
             musicSource.Stop();
+            AudioClip previous = musicSource.clip;
             musicSource.clip = menuClip;
+            if (previous != null) Destroy(previous);
+            previewPath = loadedPreviewPath = null;
             musicSource.volume = OptionsV2.menuVolume;
             musicSource.Play();
         }
@@ -441,6 +533,15 @@ public class MenuV2 : MonoBehaviour
 
     public void TransitionScreen(RectTransform oldScreen, RectTransform newScreen, Action onComplete = null)
     {
+        if (vanillaMenu != null && (oldScreen == mainScreen || newScreen == mainScreen))
+        {
+            oldScreen.gameObject.SetActive(false);
+            newScreen.anchoredPosition = Vector2.zero;
+            newScreen.gameObject.SetActive(true);
+            inputBlocker.enabled = false;
+            onComplete?.Invoke();
+            return;
+        }
         inputBlocker.enabled = true;
         oldScreen.LeanMoveY(-720,1f).setEaseOutExpo().setOnComplete(() =>
         {
