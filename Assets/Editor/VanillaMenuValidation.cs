@@ -57,7 +57,7 @@ public static class VanillaMenuValidation
             credits = new Dictionary<string, string> { { "Composer", "Validation" } },
             difficulties = new Dictionary<string, Color> { { "Normal", Color.white } }
         }));
-        File.Copy("Songs/Test/Inst.ogg", Path.Combine(song, "Inst.ogg"), true);
+        File.Copy(Path.Combine(Application.streamingAssetsPath, "Bundles", "00-Tutorial", "01-Tutorial", "Inst.ogg"), Path.Combine(song, "Inst.ogg"), true);
         EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
         beginAt = EditorApplication.timeSinceStartup + 5;
         EditorApplication.update += BeginWhenReady;
