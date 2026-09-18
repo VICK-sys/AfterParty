@@ -1,0 +1,198 @@
+{
+  "characters/bf/character.json": {
+    "source": "data/characters/bf.json",
+    "sha256": "76c1d7c48f384b8c55b0cbac24ddcf7a9e4e905f5ee5430e610e0514278b39b9"
+  },
+  "characters/bf/Animation.json": {
+    "source": "shared/images/characters/bf/Animation.json",
+    "sha256": "010a656d2e3d5669fa630f2b380346a367598fbc8739da3c07125b98e018b8d7"
+  },
+  "characters/bf/spritemap1.json": {
+    "source": "shared/images/characters/bf/spritemap1.json",
+    "sha256": "354862ae6fc430130f5424c54f2bbe7ba7b556381fe8cd29ebceb8952c7fc5cb"
+  },
+  "characters/bf/spritemap1.png": {
+    "source": "shared/images/characters/bf/spritemap1.png",
+    "sha256": "bc29a4de45a5fde7ad7f5e403f6862758f289041783e6165470604b3ad4ee888"
+  },
+  "characters/bf-dark/character.json": {
+    "source": "data/characters/bf-dark.json",
+    "sha256": "01535d8a1bcb32536d1031a67eb077c39e0e5675e419802f8e80c36cada766d8"
+  },
+  "characters/bf-dark/Animation.json": {
+    "source": "shared/images/characters/bf-dark/Animation.json",
+    "sha256": "29c4b3815dc8d3af483bac4a01d209985750d3a72dcef6f131cb8ded0885ccad"
+  },
+  "characters/bf-dark/spritemap1.json": {
+    "source": "shared/images/characters/bf-dark/spritemap1.json",
+    "sha256": "c322669a69f615c07e950e8ffcef0f335ead79d259ce9af1a82af1b9ee9ea517"
+  },
+  "characters/bf-dark/spritemap1.png": {
+    "source": "shared/images/characters/bf-dark/spritemap1.png",
+    "sha256": "93f895012c191488f780a5167c1a1a64a3a269af089b88628b692a7282a5235d"
+  },
+  "characters/gf/character.json": {
+    "source": "data/characters/gf.json",
+    "sha256": "962d22ed64216602716cc57815f847b68cf699621710be1d4429575118f0a58c"
+  },
+  "characters/gf/Animation.json": {
+    "source": "shared/images/characters/gf/Animation.json",
+    "sha256": "df0e37e75232ff197705a0443c9e9491679f6b5a4fe2957e8fab8650ef136338"
+  },
+  "characters/gf/spritemap1.json": {
+    "source": "shared/images/characters/gf/spritemap1.json",
+    "sha256": "ab739d49ef1b2def78baf825247276cd3b22b2b8536449eb7f2bd1d9892fa3e4"
+  },
+  "characters/gf/spritemap1.png": {
+    "source": "shared/images/characters/gf/spritemap1.png",
+    "sha256": "cbfe8ddcbcd1b9a3e780e95f68863fb656a53cd6304e792e0088544e6d605a20"
+  },
+  "characters/gf-dark/character.json": {
+    "source": "data/characters/gf-dark.json",
+    "sha256": "33283c44c9aa02c9ef449550765b9fa620ee011b30fe7b228e2ead03b0d36e54"
+  },
+  "characters/gf-dark/Animation.json": {
+    "source": "shared/images/characters/gf-dark/Animation.json",
+    "sha256": "eec4a03359d323bade0d24e27478fd757810b511237f9ae197965ea683941593"
+  },
+  "characters/gf-dark/spritemap1.json": {
+    "source": "shared/images/characters/gf-dark/spritemap1.json",
+    "sha256": "ae674f44439b008e0ea33067c895c109535c11dd7491308ca6afd1579ee66122"
+  },
+  "characters/gf-dark/spritemap1.png": {
+    "source": "shared/images/characters/gf-dark/spritemap1.png",
+    "sha256": "2c927dac627611b32460c3bbf9a699876b50da4544de005854986e7ad59dea79"
+  },
+  "characters/spooky/character.json": {
+    "source": "data/characters/spooky.json",
+    "sha256": "221116bd576de5ebd2798d739a01146ddd219c96f5211bc530b787dc6eb8880a"
+  },
+  "characters/spooky/SpookyKids.png": {
+    "source": "shared/images/characters/SpookyKids.png",
+    "sha256": "6ce5e2b4ce0575adbc0d458e78f491c729ddeff34597c38a694b94f26b87df05"
+  },
+  "characters/spooky/SpookyKids.xml": {
+    "source": "shared/images/characters/SpookyKids.xml",
+    "sha256": "ebe2cf2f2e7748667e4ebdddd3817bf83e8b4c3df918d4d9bab30080a7f51916"
+  },
+  "characters/spooky-dark/character.json": {
+    "source": "data/characters/spooky-dark.json",
+    "sha256": "1ed894708c9bed7fe80dd39e5eab12bfb800413ca5f5f97192196e1c101470fa"
+  },
+  "characters/spooky-dark/spooky_dark.png": {
+    "source": "shared/images/characters/spooky_dark.png",
+    "sha256": "f919a8e52ff782dca42ff81c40cca1f85b5f3e2d5d4248bf0759f34e5869c44d"
+  },
+  "characters/spooky-dark/spooky_dark.xml": {
+    "source": "shared/images/characters/spooky_dark.xml",
+    "sha256": "baf88a0e24bf28c212a291dd15a51d6e649cd12d005276c6062d466584d0b4cc"
+  },
+  "characters/monster/character.json": {
+    "source": "data/characters/monster.json",
+    "sha256": "2f7ba1085170f9a2630423a874326247ad820a06acbb54aefd0f747c1788c591"
+  },
+  "characters/monster/Animation.json": {
+    "source": "shared/images/characters/monster/Animation.json",
+    "sha256": "7a6eb591409b66fbf332e20b3c5d4dcf64e39b61a9fb59a0bd932395deec2b93"
+  },
+  "characters/monster/spritemap1.json": {
+    "source": "shared/images/characters/monster/spritemap1.json",
+    "sha256": "cdd4661477baa38c8c588fb01cc9cc4675729248cb23c7f519d4f970113dea28"
+  },
+  "characters/monster/spritemap1.png": {
+    "source": "shared/images/characters/monster/spritemap1.png",
+    "sha256": "463798097256e2f6dbd2e2546b3302308922e84003db4da7a3410caf21e0d5d0"
+  },
+  "characters/bf-death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/bf-death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/bf-death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "stages/spookyMansion/stage.json": {
+    "source": "data/stages/spookyMansion.json",
+    "sha256": "ae7dacc1edda1b33fb7d4482eaea87ac9116b0f19a2aa3435a178e2c21fb8cfc"
+  },
+  "stages/spookyMansion/halloweenBG/Animation.json": {
+    "source": "week2/images/halloween_bg/Animation.json",
+    "sha256": "95f1768fd50930297a0048154c2cfacc0dd13a3f2a5cc0bcdcd0aceb54c99d56"
+  },
+  "stages/spookyMansion/halloweenBG/spritemap1.json": {
+    "source": "week2/images/halloween_bg/spritemap1.json",
+    "sha256": "267e9b5c8873f39aa75ff7bd0da7fddb39d19e1a44fe0d4b7642766d721eae41"
+  },
+  "stages/spookyMansion/halloweenBG/spritemap1.png": {
+    "source": "week2/images/halloween_bg/spritemap1.png",
+    "sha256": "d7fc099b502f720fdc9c12c959ca7892c94fb1f31d5574cdc475f3ade810e63f"
+  },
+  "Source/spookyMansion.hxc": {
+    "source": "scripts/stages/spookyMansion.hxc",
+    "sha256": "0a2450d16d67bc68f18a86f0c91080720ccd5dca769a4ebbd10a68d312a80228"
+  },
+  "stages/spookyMansionErect/stage.json": {
+    "source": "data/stages/spookyMansionErect.json",
+    "sha256": "56d58e3b43eda16483687d35243bdd7c132462e6fc3fcea2c211f85a3e8afa20"
+  },
+  "stages/spookyMansionErect/bgTrees/bgtrees.png": {
+    "source": "week2/images/erect/bgtrees.png",
+    "sha256": "1393d2d38a63e13914508d88a92e818a32b9b54be99fa520cf16fecaa580e463"
+  },
+  "stages/spookyMansionErect/bgTrees/bgtrees.xml": {
+    "source": "week2/images/erect/bgtrees.xml",
+    "sha256": "26bd2352eb5947ab42d2f16e052befaf1292a0e618934986de3ebe213c72c06c"
+  },
+  "stages/spookyMansionErect/bgDark/bgDark.png": {
+    "source": "week2/images/erect/bgDark.png",
+    "sha256": "6d914ce1fd977ab29e1526a6ad4fc46c6a16b827fef57984d6ec84d55aab1df1"
+  },
+  "stages/spookyMansionErect/bgLight/bgLight.png": {
+    "source": "week2/images/erect/bgLight.png",
+    "sha256": "312ac03b281a2d7d27608efddaadef25d2904972ea8207363f89fb035fc27f22"
+  },
+  "stages/spookyMansionErect/stairsDark/stairsDark.png": {
+    "source": "week2/images/erect/stairsDark.png",
+    "sha256": "ba8aecb30b0d651377afc5b8cf8d056fb28e8e2092db7cce117ae78aae0b5eb1"
+  },
+  "stages/spookyMansionErect/stairsLight/stairsLight.png": {
+    "source": "week2/images/erect/stairsLight.png",
+    "sha256": "84f30046184afb74ba08e5258aa5c41c395a233069ecf3a8f9c2b3bc356de591"
+  },
+  "Source/spookyMansionErect.hxc": {
+    "source": "scripts/stages/spookyMansionErect.hxc",
+    "sha256": "ae9d7abc8192376c2cbc50b971e9b1dc839a654b6ad5daccebf0c23dbb5d125b"
+  },
+  "thunder_1.ogg": {
+    "source": "week2/sounds/thunder_1.ogg",
+    "sha256": "94d5fdb5ca415869fca62764d993a083d467f5d2285c48eb281e6200c4e6f57c"
+  },
+  "thunder_2.ogg": {
+    "source": "week2/sounds/thunder_2.ogg",
+    "sha256": "4619f567a28c5eddf0067c9c296510c52511b18671592798ed8890d0efbef103"
+  },
+  "Source/rain.frag": {
+    "source": "shaders/rain.frag",
+    "sha256": "325ddf60b4b2e9d4ce3370151be09277dd66d47ffec82d2e123c05622ea0525e"
+  },
+  "Source/bf-dark.hxc": {
+    "source": "scripts/characters/bf-dark.hxc",
+    "sha256": "689049f8f737b512c878bd26d48515b308bf0234ff0d255158184d596ac18fee"
+  },
+  "Source/gf-dark.hxc": {
+    "source": "scripts/characters/gf-dark.hxc",
+    "sha256": "57f0f8f6b2c4ed5243f1f0a2a63ed89329280ecf99c3f300624120236cd1dece"
+  },
+  "Source/spooky-dark.hxc": {
+    "source": "scripts/characters/spooky-dark.hxc",
+    "sha256": "f0cfa621bd590a621c2ede31e32fde6c73d9a5086d1dd674d67712bb9304c8e6"
+  },
+  "Source/monster.hxc": {
+    "source": "scripts/characters/monster.hxc",
+    "sha256": "b8686ff83a725859928cf3ad21bc9364b93ca8c9f8259e40819e89d82f6c4315"
+  }
+}

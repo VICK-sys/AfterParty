@@ -4,13 +4,17 @@ Shader "UnityParty/FunkinNote"
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Saturation ("Saturation", Float) = 1
+        _Screen ("Screen Blend", Float) = 0
+        _HudOpacity ("HUD Opacity", Float) = 1
+        _SrcBlend ("Source Blend", Float) = 5
+        _DstBlend ("Destination Blend", Float) = 10
     }
     SubShader
     {
         Tags { "Queue"="Transparent" "RenderType"="Transparent" "CanUseSpriteAtlas"="True" }
         Cull Off
         ZWrite Off
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend [_SrcBlend] [_DstBlend]
         Pass
         {
             HLSLPROGRAM
@@ -19,6 +23,8 @@ Shader "UnityParty/FunkinNote"
             #include "UnityCG.cginc"
             sampler2D _MainTex;
             float _Saturation;
+            float _Screen;
+            float _HudOpacity;
             struct Attributes
             {
                 float4 position : POSITION;
@@ -44,7 +50,10 @@ Shader "UnityParty/FunkinNote"
                 float4 color = tex2D(_MainTex, input.uv);
                 float value = max(color.r, max(color.g, color.b));
                 color.rgb = lerp(value.xxx, color.rgb, _Saturation);
-                return color * input.color;
+                color *= input.color;
+                color.a *= _HudOpacity;
+                if (_Screen > 0) color.rgb *= color.a;
+                return color;
             }
             ENDHLSL
         }

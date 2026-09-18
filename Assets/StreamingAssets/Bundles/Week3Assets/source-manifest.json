@@ -1,0 +1,146 @@
+{
+  "characters/bf/character.json": {
+    "source": "data/characters/bf.json",
+    "sha256": "76c1d7c48f384b8c55b0cbac24ddcf7a9e4e905f5ee5430e610e0514278b39b9"
+  },
+  "characters/bf/Animation.json": {
+    "source": "shared/images/characters/bf/Animation.json",
+    "sha256": "010a656d2e3d5669fa630f2b380346a367598fbc8739da3c07125b98e018b8d7"
+  },
+  "characters/bf/spritemap1.json": {
+    "source": "shared/images/characters/bf/spritemap1.json",
+    "sha256": "354862ae6fc430130f5424c54f2bbe7ba7b556381fe8cd29ebceb8952c7fc5cb"
+  },
+  "characters/bf/spritemap1.png": {
+    "source": "shared/images/characters/bf/spritemap1.png",
+    "sha256": "bc29a4de45a5fde7ad7f5e403f6862758f289041783e6165470604b3ad4ee888"
+  },
+  "characters/gf/character.json": {
+    "source": "data/characters/gf.json",
+    "sha256": "962d22ed64216602716cc57815f847b68cf699621710be1d4429575118f0a58c"
+  },
+  "characters/gf/Animation.json": {
+    "source": "shared/images/characters/gf/Animation.json",
+    "sha256": "df0e37e75232ff197705a0443c9e9491679f6b5a4fe2957e8fab8650ef136338"
+  },
+  "characters/gf/spritemap1.json": {
+    "source": "shared/images/characters/gf/spritemap1.json",
+    "sha256": "ab739d49ef1b2def78baf825247276cd3b22b2b8536449eb7f2bd1d9892fa3e4"
+  },
+  "characters/gf/spritemap1.png": {
+    "source": "shared/images/characters/gf/spritemap1.png",
+    "sha256": "cbfe8ddcbcd1b9a3e780e95f68863fb656a53cd6304e792e0088544e6d605a20"
+  },
+  "characters/pico/character.json": {
+    "source": "data/characters/pico.json",
+    "sha256": "eafd3aff7f99d339636a17ee3781476dec06b60e21d550f7dd42bbbe9730dbeb"
+  },
+  "characters/pico/Animation.json": {
+    "source": "shared/images/characters/pico/basic-animations/Animation.json",
+    "sha256": "975b5e7b260888950d9fcf8c29bab7f6e6e4f5025cfdddd75926fb77a700caa7"
+  },
+  "characters/pico/spritemap1.json": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.json",
+    "sha256": "7f86756c1557d3f90c006db5b90cc74239058b14e1ae2737db9e2e46913cbd01"
+  },
+  "characters/pico/spritemap1.png": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.png",
+    "sha256": "9a9cde5b96b9e677490cde81c6f0aafccb5582e4048cbed3ed966f23f6624f53"
+  },
+  "characters/bf-death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/bf-death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/bf-death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "stages/phillyTrain/stage.json": {
+    "source": "data/stages/phillyTrain.json",
+    "sha256": "96ede5ea783b3a6a58dce3f872d78b9df190abebc57ff8723dc8bc46c7001f26"
+  },
+  "stages/phillyTrain/sky/sky.png": {
+    "source": "week3/images/philly/sky.png",
+    "sha256": "90ee92a472861976a54a57a5419e40c3beb6d172eae03fd2e580306a2eb9601c"
+  },
+  "stages/phillyTrain/city/city.png": {
+    "source": "week3/images/philly/city.png",
+    "sha256": "dfe1fc9e7992b9bb0b65d69f80c0cbccbed88d43a4b45db530d6611688124738"
+  },
+  "stages/phillyTrain/lights/win.png": {
+    "source": "week3/images/philly/win.png",
+    "sha256": "dd3ece9741bf14111d7d175805e199736b64b4f54749569ed7baf1726f1f74f4"
+  },
+  "stages/phillyTrain/behindTrain/behindTrain.png": {
+    "source": "week3/images/philly/behindTrain.png",
+    "sha256": "03c501c5170e0d9125feacc9888ba3f40a66c4aeeae3f45d435f15a33b85f780"
+  },
+  "stages/phillyTrain/train/train.png": {
+    "source": "week3/images/philly/train.png",
+    "sha256": "895c6bca700bb58023be9b841089ecfb61175e5870d55260b930e2f661b47674"
+  },
+  "stages/phillyTrain/street/street.png": {
+    "source": "week3/images/philly/street.png",
+    "sha256": "221f8bc47216f857aaf5605159b07f4888a4773651242af85156ead1d8c80b86"
+  },
+  "Source/phillyTrain.hxc": {
+    "source": "scripts/stages/phillyTrain.hxc",
+    "sha256": "a95f90437f8f7e4f2329c59cadaa358049d79022d19a73d8f791c25ac84a5b37"
+  },
+  "stages/phillyTrainErect/stage.json": {
+    "source": "data/stages/phillyTrainErect.json",
+    "sha256": "e7a8b21e6f6e1858d924b24f471a183db276050ae2c5e3895977802d3d899110"
+  },
+  "stages/phillyTrainErect/sky/sky.png": {
+    "source": "week3/images/philly/erect/sky.png",
+    "sha256": "07bb8171ed9ba0cdf770f211c544d6237e5e9502859bf0d7d19087ad80a7a342"
+  },
+  "stages/phillyTrainErect/city/city.png": {
+    "source": "week3/images/philly/erect/city.png",
+    "sha256": "8bdd179155976dc7e7915f8203c2f4b7fe4cfa59cd69a445ad010b67c1bbafdc"
+  },
+  "stages/phillyTrainErect/lights/win.png": {
+    "source": "week3/images/philly/win.png",
+    "sha256": "dd3ece9741bf14111d7d175805e199736b64b4f54749569ed7baf1726f1f74f4"
+  },
+  "stages/phillyTrainErect/behindTrain/behindTrain.png": {
+    "source": "week3/images/philly/erect/behindTrain.png",
+    "sha256": "ae3b74d926e1a3c0d58f4ec2a08de540d319fbe622b47f873534abc91220abe9"
+  },
+  "stages/phillyTrainErect/train/train.png": {
+    "source": "week3/images/philly/train.png",
+    "sha256": "895c6bca700bb58023be9b841089ecfb61175e5870d55260b930e2f661b47674"
+  },
+  "stages/phillyTrainErect/street/street.png": {
+    "source": "week3/images/philly/erect/street.png",
+    "sha256": "c759bd4bc2036ce77f9aee6643aa45fc884f7d8fec69803d9668a3a2713583d7"
+  },
+  "Source/phillyTrainErect.hxc": {
+    "source": "scripts/stages/phillyTrainErect.hxc",
+    "sha256": "ade383819af3e5d96b07dbe7c100ccf2751171ad86825b59aa34e93815fc3547"
+  },
+  "train_passes.ogg": {
+    "source": "week3/sounds/train_passes.ogg",
+    "sha256": "bfa61cb6f27aadfc5da86d1868ac0db7bcdf51c2ddbbff79bc7eac8f9c7d6113"
+  },
+  "Source/building.frag": {
+    "source": "shaders/building.frag",
+    "sha256": "061cf33dbc4cf088ebc65fed9d2dd7de83c3d033a3b122846d75ee19ff9bbaf5"
+  },
+  "Source/BuildingEffectShader.hxc": {
+    "source": "scripts/shaders/BuildingEffectShader.hxc",
+    "sha256": "25fbeecb5b537da723090735afae43bde5f23c6cc581d20e773e2e87915b789e"
+  },
+  "Source/adjustColor.frag": {
+    "source": "shaders/adjustColor.frag",
+    "sha256": "17625bfbbea5291525f3a44f279f6d0ed0c110c376ef1dd1e34b294a72ea300a"
+  },
+  "Source/gf.hxc": {
+    "source": "scripts/characters/gf.hxc",
+    "sha256": "3741785164a025c795b4a5c429fa1d268a07e32da08466e5639abf82ad254aa3"
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "song": "senpai",
+  "variation": "",
+  "bpm": 144,
+  "stage": "school",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 144,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "senpai",
+  "characters": {
+    "player": "bf-pixel",
+    "girlfriend": "gf-pixel",
+    "opponent": "senpai",
+    "altInstrumentals": [
+      "pico"
+    ],
+    "opponentVocals": [
+      "senpai"
+    ],
+    "playerVocals": [
+      "bf-pixel"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 3333,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 6666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 8333,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 10000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 11666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 13750,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 20000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 26666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 28333,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 30000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 31666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 40000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 46666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 53333,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 56666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 60000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 61666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 63333,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 65000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 66666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 70000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 73333,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 76666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 80000,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 86666,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    }
+  ],
+  "noteStyle": "pixel",
+  "noteKinds": {
+    "easy": [],
+    "normal": [],
+    "hard": []
+  }
+}

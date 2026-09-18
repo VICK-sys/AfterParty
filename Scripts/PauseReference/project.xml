@@ -1,0 +1,12 @@
+<project>
+    <meta title="Pause Reference" package="local.pause.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="PauseReference" path="../../Builds/PauseReference/compiled" />
+    <window width="1280" height="720" hidden="true" />
+    <source path="." />
+    <source path="../../Temp/PauseReferenceSource" />
+    <haxelib name="flixel" version="6.2.0" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/vcr.ttf" rename="assets/vcr.ttf" />
+    <assets path="../../Assets/Resources/FunkinPause/bold.png" rename="assets/fonts/bold.png" />
+    <assets path="../../Assets/Resources/FunkinPause/bold.xml" rename="assets/fonts/bold.xml" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

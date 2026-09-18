@@ -1,0 +1,237 @@
+{
+  "song": "spookeez",
+  "variation": "",
+  "bpm": 150,
+  "stage": "spookyMansion",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 150,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "spooky",
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf",
+    "opponent": "spooky",
+    "altInstrumentals": [
+      "pico"
+    ],
+    "opponentVocals": [
+      "spooky"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 6400,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 9600,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 12800,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 15583.3333333333,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "cheer",
+        "force": true,
+        "target": "dad"
+      }
+    },
+    {
+      "t": 16000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 18783.3333333333,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "cheer",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 19200,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 25600,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 32000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 35200,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 38400,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 41183.3333333333,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "cheer",
+        "force": true,
+        "target": "dad"
+      }
+    },
+    {
+      "t": 41600,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 44383.3333333333,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "cheer",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 44800,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 51200,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 57600,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 64000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 70400,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 76800,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 83200,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 89600,
+      "e": "FocusCamera",
+      "v": 0
+    }
+  ],
+  "noteKinds": {
+    "easy": [
+      {
+        "t": 15600,
+        "d": 6,
+        "k": "noanim"
+      },
+      {
+        "t": 18800,
+        "d": 2,
+        "k": "noanim"
+      },
+      {
+        "t": 41200,
+        "d": 6,
+        "k": "noanim"
+      },
+      {
+        "t": 44400,
+        "d": 2,
+        "k": "noanim"
+      }
+    ],
+    "normal": [
+      {
+        "t": 15600,
+        "d": 6,
+        "k": "noanim"
+      },
+      {
+        "t": 18800,
+        "d": 2,
+        "k": "noanim"
+      },
+      {
+        "t": 41200,
+        "d": 6,
+        "k": "noanim"
+      },
+      {
+        "t": 44400,
+        "d": 2,
+        "k": "noanim"
+      }
+    ],
+    "hard": [
+      {
+        "t": 15600,
+        "d": 6,
+        "k": "noanim"
+      },
+      {
+        "t": 18800,
+        "d": 2,
+        "k": "noanim"
+      },
+      {
+        "t": 41200,
+        "d": 6,
+        "k": "noanim"
+      },
+      {
+        "t": 44400,
+        "d": 2,
+        "k": "noanim"
+      }
+    ]
+  }
+}

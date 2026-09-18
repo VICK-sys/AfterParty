@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,3102,0,3102,1840,0,1840],"rect":[0,0,3102,1840],"image":"bgWalls.png","rotated":false,"alpha":1}]],"bounds":[0,0,3102,1840],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

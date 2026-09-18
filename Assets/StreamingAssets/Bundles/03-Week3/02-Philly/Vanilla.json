@@ -1,0 +1,243 @@
+{
+  "song": "philly-nice",
+  "variation": "",
+  "bpm": 175,
+  "stage": "phillyTrain",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 175,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "pico",
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf",
+    "opponent": "pico",
+    "altInstrumentals": [
+      "pico"
+    ],
+    "opponentVocals": [
+      "pico"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 2914,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 8400,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 13714.2857142857,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "hey",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 13714.2857142857,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "cheer",
+        "force": true,
+        "target": "gf"
+      }
+    },
+    {
+      "t": 13885.7142857143,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 19371.4285714286,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 24685,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 24685.7142857143,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "hey",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 30171,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 35657,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 35657.1428571429,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "hey",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 41142,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 46628,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 46628.5714285714,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "hey",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 52114,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 57600,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "hey",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 57600,
+      "e": "ZoomCamera",
+      "v": {
+        "duration": 12,
+        "ease": "expoOut",
+        "mode": "stage",
+        "zoom": 1.05
+      }
+    },
+    {
+      "t": 57600,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 63085,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 68571,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 74057,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 79542,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 79542.8571428571,
+      "e": "ZoomCamera",
+      "v": {
+        "duration": 24,
+        "ease": "expoOut",
+        "mode": "stage",
+        "zoom": 1
+      }
+    },
+    {
+      "t": 79542.8571428571,
+      "e": "PlayAnimation",
+      "v": {
+        "anim": "hey",
+        "force": true,
+        "target": "boyfriend"
+      }
+    },
+    {
+      "t": 85028,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    }
+  ],
+  "noteKinds": {
+    "easy": [],
+    "normal": [],
+    "hard": []
+  }
+}

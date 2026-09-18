@@ -1,0 +1,149 @@
+{
+  "song": "satin-panties",
+  "variation": "",
+  "bpm": 110,
+  "stage": "limoRide",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 110,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "mom-car",
+  "characters": {
+    "player": "bf-car",
+    "girlfriend": "gf-car",
+    "opponent": "mom-car",
+    "opponentVocals": [
+      "mom-car"
+    ],
+    "playerVocals": [
+      "bf-car"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 2181,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 4636,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 8727,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 13090,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 17454,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 21818,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 26181,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 30545,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 34909,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 39272,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 43636,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 48272,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 52363,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 56727,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 61090,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 65454,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 69818,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 74181,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 78545,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 82909,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 85363,
+      "e": "FocusCamera",
+      "v": 0
+    }
+  ],
+  "noteStyle": "funkin",
+  "noteKinds": {
+    "easy": [],
+    "normal": [],
+    "hard": []
+  }
+}

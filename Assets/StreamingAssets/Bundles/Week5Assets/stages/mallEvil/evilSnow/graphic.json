@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,3000,0,3000,262,0,262],"rect":[0,0,3000,262],"image":"evilSnow.png","rotated":false,"alpha":1}]],"bounds":[0,0,3000,262],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

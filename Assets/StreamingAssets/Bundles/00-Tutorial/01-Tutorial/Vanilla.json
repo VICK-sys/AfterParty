@@ -217,5 +217,29 @@
         "strumline": "both"
       }
     }
+  ],
+  "characters": {
+    "player": "bf",
+    "opponent": "gf",
+    "opponentVocals": [
+      "gf"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "stage": "mainStage",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 100,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
   ]
 }

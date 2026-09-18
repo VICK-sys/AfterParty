@@ -84,6 +84,345 @@
         "dad": -8
       },
       "instrumentalSha256": "1a69518d3700234150ff908808de0f1de55f78c55acb39df8598b0e365ef9087"
+    },
+    {
+      "id": "spookeez",
+      "variation": "",
+      "path": "02-Week2/01-Spookeez",
+      "bpm": 150,
+      "notes": {
+        "easy": 273,
+        "normal": 347,
+        "hard": 406
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "2dcf761220eb6e60d5a107efe36895d77334ccdb604207dc594a43223bd7e8e3"
+    },
+    {
+      "id": "spookeez",
+      "variation": "erect",
+      "path": "02-Week2/01-Spookeez",
+      "bpm": 166,
+      "notes": {
+        "erect": 1190,
+        "nightmare": 1216
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "1d612e568f989584df8c5c1e25f3a8c594afe924ba13df8e6f089c7572637354"
+    },
+    {
+      "id": "south",
+      "variation": "",
+      "path": "02-Week2/02-South",
+      "bpm": 165,
+      "notes": {
+        "easy": 206,
+        "normal": 312,
+        "hard": 350
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "da8feda3fcb0f36a5ee51baf84620422a431b3f126e5fac3ed0f996d9e0c4057"
+    },
+    {
+      "id": "south",
+      "variation": "erect",
+      "path": "02-Week2/02-South",
+      "bpm": 177,
+      "notes": {
+        "erect": 742,
+        "nightmare": 746
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "48c1334850d4bc9fb55d33569c39bc8838fad39c2da9723e9c6c8f94a1e7cfea"
+    },
+    {
+      "id": "monster",
+      "variation": "",
+      "path": "02-Week2/03-Monster",
+      "bpm": 95,
+      "notes": {
+        "easy": 395,
+        "normal": 419,
+        "hard": 443
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "a1cf295b94a7064dfe2fd1f4885b4ff436443ab78461c479a418fa595121f456"
+    },
+    {
+      "id": "pico",
+      "variation": "",
+      "path": "03-Week3/01-Pico",
+      "bpm": 150,
+      "notes": {
+        "easy": 170,
+        "normal": 263,
+        "hard": 327
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "4425724069d168b2be31c48922b3a9bf16749d7d3e3bde9bab5760b9f57959ba"
+    },
+    {
+      "id": "pico",
+      "variation": "erect",
+      "path": "03-Week3/01-Pico",
+      "bpm": 162,
+      "notes": {
+        "erect": 702,
+        "nightmare": 827
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "0d4711e7298f2014668d3a0d6ef448e8a507182515eb914898c5d689b277a3ab"
+    },
+    {
+      "id": "philly-nice",
+      "variation": "",
+      "path": "03-Week3/02-Philly",
+      "bpm": 175,
+      "notes": {
+        "easy": 227,
+        "normal": 323,
+        "hard": 451
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "ddfe8270bffafe1cbe15876f5a40ecc951ffc3dbc2b4e6bba5c73a637b96fa2f"
+    },
+    {
+      "id": "philly-nice",
+      "variation": "erect",
+      "path": "03-Week3/02-Philly",
+      "bpm": 175,
+      "notes": {
+        "erect": 782,
+        "nightmare": 792
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "90cb9071dcd3334ba10e996464194f3db4c0719bc2e2a0110297e411548d9681"
+    },
+    {
+      "id": "blammed",
+      "variation": "",
+      "path": "03-Week3/03-Blammed",
+      "bpm": 165,
+      "notes": {
+        "easy": 235,
+        "normal": 301,
+        "hard": 398
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "1cbabd3dcf0de4c6e74667eb69853bded9522566990ea534fa2224fcb56ea07f"
+    },
+    {
+      "id": "blammed",
+      "variation": "erect",
+      "path": "03-Week3/03-Blammed",
+      "bpm": 170,
+      "notes": {
+        "erect": 575,
+        "nightmare": 649
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "c700e92977cce273757d41b464a31f8f7105c674bab8aca6d720c10256e488b9"
+    },
+    {
+      "id": "satin-panties",
+      "variation": "",
+      "path": "04-Week4/01-SatinPanties",
+      "bpm": 110,
+      "notes": {
+        "easy": 313,
+        "normal": 428,
+        "hard": 525
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "8bcd10ce0d6d6e6479f7c77dc2be5e6c3e1d1ec9f238d09de4d9faeb6cadff02"
+    },
+    {
+      "id": "satin-panties",
+      "variation": "erect",
+      "path": "04-Week4/01-SatinPanties",
+      "bpm": 135,
+      "notes": {
+        "erect": 1125,
+        "nightmare": 1151
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "555a97da9f1c57373efd17aaa3119e1e328e919492e13c14c0bf9f591ecc4503"
+    },
+    {
+      "id": "high",
+      "variation": "",
+      "path": "04-Week4/02-High",
+      "bpm": 125,
+      "notes": {
+        "easy": 319,
+        "normal": 382,
+        "hard": 491
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "7cbaca80b063c49bf335fbd55389faece36b71fd1ba561be42159c4dcdcafb44"
+    },
+    {
+      "id": "high",
+      "variation": "erect",
+      "path": "04-Week4/02-High",
+      "bpm": 125,
+      "notes": {
+        "erect": 636,
+        "nightmare": 641
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "a88ec2d75bffa85abbb894d8d9d5f26836674c95bf136c1150d9215c23026e9d"
+    },
+    {
+      "id": "milf",
+      "variation": "",
+      "path": "04-Week4/03-MILF",
+      "bpm": 180,
+      "notes": {
+        "easy": 397,
+        "normal": 518,
+        "hard": 674
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "3f2c602eb1c00ab84f3ec10b9ff5c777c528fe347b589a58705441b05d827515"
+    },
+    {
+      "id": "cocoa",
+      "variation": "",
+      "path": "05-Week5/01-Cocoa",
+      "bpm": 100,
+      "notes": {
+        "easy": 279,
+        "normal": 324,
+        "hard": 447
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "c8940ce046981266caa691efafc3b8fa2aa41abf312ee687b85cdc3ba2f66834"
+    },
+    {
+      "id": "cocoa",
+      "variation": "erect",
+      "path": "05-Week5/01-Cocoa",
+      "bpm": 174,
+      "notes": {
+        "erect": 617,
+        "nightmare": 647
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "0f4b6f43b9bd18497f59858488e7946460730fe031fffff01819c2651d64f981"
+    },
+    {
+      "id": "eggnog",
+      "variation": "",
+      "path": "05-Week5/02-Eggnog",
+      "bpm": 150,
+      "notes": {
+        "easy": 288,
+        "normal": 354,
+        "hard": 458
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "d8ecb652fd95530ef2b7f0044db27c7b94f0f10c9a886ee5da42d77b8e73a076"
+    },
+    {
+      "id": "eggnog",
+      "variation": "erect",
+      "path": "05-Week5/02-Eggnog",
+      "bpm": 140,
+      "notes": {
+        "erect": 809,
+        "nightmare": 814
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "88d2f84c9efa1c0c78d14605767cc56968ea30a680542fd6891c82018c2f6af9"
+    },
+    {
+      "id": "winter-horrorland",
+      "variation": "",
+      "path": "05-Week5/03-WinterHorrorland",
+      "bpm": 159,
+      "notes": {
+        "easy": 372,
+        "normal": 414,
+        "hard": 445
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "11e59c159fb1743a5791eee04bb1e228529a223eeb8ede342f5d9010fbc98c7b"
+    },
+    {
+      "id": "senpai",
+      "variation": "",
+      "path": "06-Week6/01-Senpai",
+      "bpm": 144,
+      "notes": {
+        "easy": 285,
+        "normal": 341,
+        "hard": 385
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "e65ad04679d955f9bfc766529c28d2fbf0fd06aa51c9e462318c5a53a22c0024"
+    },
+    {
+      "id": "senpai",
+      "variation": "erect",
+      "path": "06-Week6/01-Senpai",
+      "bpm": 158,
+      "notes": {
+        "erect": 598,
+        "nightmare": 661
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "dbe059806c5146a15812e02198e5ba4fa2387d91622876233a9fd3745a101a27"
+    },
+    {
+      "id": "roses",
+      "variation": "",
+      "path": "06-Week6/02-Roses",
+      "bpm": 120,
+      "notes": {
+        "easy": 255,
+        "normal": 382,
+        "hard": 465
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "0d2a00e7c140e88ae87bfa716a4fa6c5103ffecc41b66e382cd752402de2e6be"
+    },
+    {
+      "id": "roses",
+      "variation": "erect",
+      "path": "06-Week6/02-Roses",
+      "bpm": 128,
+      "notes": {
+        "erect": 720,
+        "nightmare": 744
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "629ee3e2cbd69eb34fa6b6db80c21ceef4e073f0004f3fd4e6e84954725b3805"
+    },
+    {
+      "id": "thorns",
+      "variation": "",
+      "path": "06-Week6/03-Thorns",
+      "bpm": 190,
+      "notes": {
+        "easy": 309,
+        "normal": 417,
+        "hard": 557
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "4ba336c91f8b365274c398bc111a4855504baf868085cb2078ab80bed874bb13"
+    },
+    {
+      "id": "thorns",
+      "variation": "erect",
+      "path": "06-Week6/03-Thorns",
+      "bpm": 190,
+      "notes": {
+        "erect": 859,
+        "nightmare": 876
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "5fe92f283c728f2f2da7e62126e6ca56cece926b734bbd71bddc07e45bc14580"
     }
   ]
 }

@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,13,0,13,35,0,35],"rect":[0,0,13,35],"image":"backSpike.png","rotated":false,"alpha":1}]],"bounds":[0,0,13,35],"fps":24,"pixel":true,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

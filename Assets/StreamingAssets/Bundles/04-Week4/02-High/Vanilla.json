@@ -1,0 +1,106 @@
+{
+  "song": "high",
+  "variation": "",
+  "bpm": 125,
+  "stage": "limoRide",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 125,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "mom-car",
+  "characters": {
+    "player": "bf-car",
+    "girlfriend": "gf-car",
+    "opponent": "mom-car",
+    "opponentVocals": [
+      "mom-car"
+    ],
+    "playerVocals": [
+      "bf-car"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 3840,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 11520,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 19200,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 26880,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 34560,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 42240,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 49920,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 57600,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 65280,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 72960,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 90240,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 92160,
+      "e": "FocusCamera",
+      "v": 0
+    }
+  ],
+  "noteStyle": "funkin",
+  "noteKinds": {
+    "easy": [],
+    "normal": [],
+    "hard": []
+  }
+}

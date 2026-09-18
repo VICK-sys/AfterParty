@@ -595,5 +595,30 @@
         "rate": 4
       }
     }
+  ],
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf",
+    "opponent": "dad",
+    "instrumental": "erect",
+    "opponentVocals": [
+      "dad"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 123,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
   ]
 }

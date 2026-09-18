@@ -1,0 +1,230 @@
+{
+  "characters/bf-car/character.json": {
+    "source": "data/characters/bf-car.json",
+    "sha256": "21b4a2fc7a343b2aaa48caa9be86d481a8c483dc7b2f7cbd47e0b2671261898a"
+  },
+  "characters/bf-car/Animation.json": {
+    "source": "shared/images/characters/bf-car/Animation.json",
+    "sha256": "914da50b8e72fdff9c958981e88e2bd0ed3474877ab9bcb50d462754f5f0d6f0"
+  },
+  "characters/bf-car/spritemap1.json": {
+    "source": "shared/images/characters/bf-car/spritemap1.json",
+    "sha256": "dc3c5f3ddbae2a7d2e59ea720b44eae5f63f641d93a59edbf33282f8faf64590"
+  },
+  "characters/bf-car/spritemap1.png": {
+    "source": "shared/images/characters/bf-car/spritemap1.png",
+    "sha256": "4fd14814303f04dcbf7116052e13a2b0af7b35528e3f4799384a924b49921d31"
+  },
+  "characters/bf-car/death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/bf-car/death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/bf-car/death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "characters/gf-car/character.json": {
+    "source": "data/characters/gf-car.json",
+    "sha256": "505a3335721467b1ac48e7034b6bc9be2b52644671734491ce9fd26bd42b9788"
+  },
+  "characters/gf-car/Animation.json": {
+    "source": "shared/images/characters/gfCar/Animation.json",
+    "sha256": "c8fc01e78e5c88c0f589c3d497b435ce49be9c4d41ade193472f80537e11619d"
+  },
+  "characters/gf-car/spritemap1.json": {
+    "source": "shared/images/characters/gfCar/spritemap1.json",
+    "sha256": "f82455013869c581928c535efadbe9525ccd445e02e5b8eceff0f32bd5c1f958"
+  },
+  "characters/gf-car/spritemap1.png": {
+    "source": "shared/images/characters/gfCar/spritemap1.png",
+    "sha256": "89d30f248ff4e3516c348b9349ce355c27f6403b61c8cb34ec3038b5b1f80707"
+  },
+  "characters/mom-car/character.json": {
+    "source": "data/characters/mom-car.json",
+    "sha256": "78d1e141d25e514211138885fe84d983d02a3bac485761e7549d238dae6174c4"
+  },
+  "characters/mom-car/Animation.json": {
+    "source": "shared/images/characters/momCar/Animation.json",
+    "sha256": "2da78cfa1235c077991c850a23ef428f59607693ffb4c9546fefc92cff84dee4"
+  },
+  "characters/mom-car/spritemap1.json": {
+    "source": "shared/images/characters/momCar/spritemap1.json",
+    "sha256": "4e6a0bacd27ef9cb6ce74967338c8afd045d5781f495e90c8b115e3cb4c390e4"
+  },
+  "characters/mom-car/spritemap1.png": {
+    "source": "shared/images/characters/momCar/spritemap1.png",
+    "sha256": "d44e7119f39b0e6059cbcc3c00533613978449bb6d95f151b152de29088e7332"
+  },
+  "stages/limoRide/stage.json": {
+    "source": "data/stages/limoRide.json",
+    "sha256": "8e71d6488aba193a9ac225d91f9afd281eecc16af92f9e48b1413ec110f15bdf"
+  },
+  "stages/limoRide/limoSunset/limoSunset.png": {
+    "source": "week4/images/limo/limoSunset.png",
+    "sha256": "ed357ced687af22f5e6f2c4b487ff3ba7eb815614031d8f268434462a531e58f"
+  },
+  "stages/limoRide/bgLimo/bgLimo.png": {
+    "source": "week4/images/limo/bgLimo.png",
+    "sha256": "57fbc6cdb25a753d95b7b92f7ac8c8d1bef85579f9388beb6f14ccb9b9ba632d"
+  },
+  "stages/limoRide/bgLimo/bgLimo.xml": {
+    "source": "week4/images/limo/bgLimo.xml",
+    "sha256": "62ed4a483158d86529b980c2c29a519a76055f561f236ac6fcf6f1f6e46549c1"
+  },
+  "stages/limoRide/limo/limoDrive.png": {
+    "source": "week4/images/limo/limoDrive.png",
+    "sha256": "c4711b57c83fbbc345b0166661a7ad6f79fdfd9197fb0725cc9a258dd679705d"
+  },
+  "stages/limoRide/limo/limoDrive.xml": {
+    "source": "week4/images/limo/limoDrive.xml",
+    "sha256": "c85510447a1d6192a50d323d7e30075bd2bc798de02e7e79c9c890d8ce443e8e"
+  },
+  "stages/limoRide/fastCar/fastCarLol.png": {
+    "source": "week4/images/limo/fastCarLol.png",
+    "sha256": "fcc3084d77bd95a10e02b5e9f2eb6806d4166b45ae95ff5cf73dc80e24550bd7"
+  },
+  "stages/limoRide/limoDancer1/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRide/limoDancer1/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRide/limoDancer2/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRide/limoDancer2/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRide/limoDancer3/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRide/limoDancer3/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRide/limoDancer4/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRide/limoDancer4/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRide/limoDancer5/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRide/limoDancer5/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "Source/stages/limoRide.hxc": {
+    "source": "scripts/stages/limoRide.hxc",
+    "sha256": "39f90e41d9c4e0d7fea8b300b41325f52775057e74736d6f792161ce0e9747e2"
+  },
+  "stages/limoRideErect/stage.json": {
+    "source": "data/stages/limoRideErect.json",
+    "sha256": "179f3dda841e1dbd1990c5270ab6a10b89ffdab2559304c217fab37c32de4f9a"
+  },
+  "stages/limoRideErect/limoSunset/limoSunset.png": {
+    "source": "week4/images/limo/erect/limoSunset.png",
+    "sha256": "e538343ff60d05211d156946b6182cabae5858d9634596d5ec06b6aefb4ed70c"
+  },
+  "stages/limoRideErect/shootingStar/shooting star.png": {
+    "source": "week4/images/limo/erect/shooting star.png",
+    "sha256": "2adac42b8f46f7f8aea268a108b48822a23b7d3a0cb44a42eb6ef677a97abea2"
+  },
+  "stages/limoRideErect/shootingStar/shooting star.xml": {
+    "source": "week4/images/limo/erect/shooting star.xml",
+    "sha256": "454bb3651d9974adb7e21e6d91a1ebc69357ca07b28e26a777568bd89d4508fc"
+  },
+  "stages/limoRideErect/bgLimo/bgLimo.png": {
+    "source": "week4/images/limo/erect/bgLimo.png",
+    "sha256": "fa79f3cbc01e2a04c8bf3e99ea33e454f3d37e84348c1b38177503a3f8bf1f31"
+  },
+  "stages/limoRideErect/bgLimo/bgLimo.xml": {
+    "source": "week4/images/limo/erect/bgLimo.xml",
+    "sha256": "da9c6ecaa48c09526265328e22cebc74c511185e2c01fa4c31bbe3a89ba0f3f1"
+  },
+  "stages/limoRideErect/limo/limoDrive.png": {
+    "source": "week4/images/limo/erect/limoDrive.png",
+    "sha256": "8d1b8091112c8ef4ed097c57b15d7486a1082f5e3c8049d380e8d8cb42858377"
+  },
+  "stages/limoRideErect/limo/limoDrive.xml": {
+    "source": "week4/images/limo/erect/limoDrive.xml",
+    "sha256": "4ed8de923dba92f7b5a62cc92d1566e9cd0bdfea3e92455ede779b30d2253957"
+  },
+  "stages/limoRideErect/fastCar/fastCarLol.png": {
+    "source": "week4/images/limo/fastCarLol.png",
+    "sha256": "fcc3084d77bd95a10e02b5e9f2eb6806d4166b45ae95ff5cf73dc80e24550bd7"
+  },
+  "stages/limoRideErect/limoDancer1/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRideErect/limoDancer1/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRideErect/limoDancer2/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRideErect/limoDancer2/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRideErect/limoDancer3/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRideErect/limoDancer3/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRideErect/limoDancer4/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRideErect/limoDancer4/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "stages/limoRideErect/limoDancer5/henchmen.png": {
+    "source": "week4/images/limo/henchmen.png",
+    "sha256": "81dff3658e850b253ff3106c3c84cf73c25e4d254f62128d16d28977d90a571f"
+  },
+  "stages/limoRideErect/limoDancer5/henchmen.xml": {
+    "source": "week4/images/limo/henchmen.xml",
+    "sha256": "b6344c9873727c2575ffea80152fcd5906957fdca253b75444fc6f42cec6bcfb"
+  },
+  "Source/stages/limoRideErect.hxc": {
+    "source": "scripts/stages/limoRideErect.hxc",
+    "sha256": "34415414cc7d955759869ad2e32fb3dab2535a2db3815f741de43e28d3d84616"
+  },
+  "effects/mistMid/mistMid.png": {
+    "source": "week4/images/limo/erect/mistMid.png",
+    "sha256": "ef17a79e0baff24dc8492c7338fbf13d46bdf6c25b0ffa568b4a8dac72a26666"
+  },
+  "effects/mistBack/mistBack.png": {
+    "source": "week4/images/limo/erect/mistBack.png",
+    "sha256": "40b21211d304dc67e64d12b965529bb6409f46f68acf9376455834b337d00559"
+  },
+  "audio/carPass0.ogg": {
+    "source": "week4/sounds/carPass0.ogg",
+    "sha256": "22d9e6d6a29b06f2c61e60c8eef384d085f7ef0ab03ddf0431c4ba356e575f93"
+  },
+  "audio/carPass1.ogg": {
+    "source": "week4/sounds/carPass1.ogg",
+    "sha256": "0db95e94c24eda22dfa7e9bdfdf4e8d2cf116b9acfd2f9eff2f3c555bc9036d0"
+  }
+}

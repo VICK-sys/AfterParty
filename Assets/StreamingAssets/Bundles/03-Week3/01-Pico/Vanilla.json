@@ -1,0 +1,159 @@
+{
+  "song": "pico",
+  "variation": "",
+  "bpm": 150,
+  "stage": "phillyTrain",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 150,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "pico",
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf",
+    "opponent": "pico",
+    "altInstrumentals": [
+      "pico"
+    ],
+    "opponentVocals": [
+      "pico"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 3799,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 10200,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 16199,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 22600,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 28999,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 35400,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 41800,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 48200,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 54400,
+      "e": "ZoomCamera",
+      "v": {
+        "duration": 16,
+        "ease": "quart",
+        "easeDir": "Out",
+        "mode": "direct",
+        "zoom": 1
+      }
+    },
+    {
+      "t": 54400,
+      "e": "FocusCamera",
+      "v": {
+        "char": 2,
+        "duration": 4,
+        "ease": "CLASSIC",
+        "easeDir": "In",
+        "x": 0,
+        "y": 100
+      }
+    },
+    {
+      "t": 60800,
+      "e": "ZoomCamera",
+      "v": {
+        "duration": 16,
+        "ease": "quart",
+        "easeDir": "Out",
+        "mode": "direct",
+        "zoom": 1.1
+      }
+    },
+    {
+      "t": 60800,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    },
+    {
+      "t": 67400,
+      "e": "FocusCamera",
+      "v": {
+        "char": 1
+      }
+    },
+    {
+      "t": 73800,
+      "e": "FocusCamera",
+      "v": {
+        "char": 0
+      }
+    }
+  ],
+  "noteKinds": {
+    "easy": [],
+    "normal": [],
+    "hard": []
+  }
+}

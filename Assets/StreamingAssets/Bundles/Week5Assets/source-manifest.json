@@ -1,0 +1,254 @@
+{
+  "characters/bf-christmas/character.json": {
+    "source": "data/characters/bf-christmas.json",
+    "sha256": "8c294cdc7edf9d31a6b533ba0fbc29f89de57fbd1aa49225c298d5875f5b1686"
+  },
+  "characters/bf-christmas/bfChristmas.png": {
+    "source": "shared/images/characters/bfChristmas.png",
+    "sha256": "2e24cf8cbb045bc5423427fab1e12cf2337fad01bdfc0aff16bb6bc7368d9101"
+  },
+  "characters/bf-christmas/bfChristmas.xml": {
+    "source": "shared/images/characters/bfChristmas.xml",
+    "sha256": "7bd7a198bebbe0a3db05bf1744455b056c62cc43e0695d221075e55893f5979e"
+  },
+  "characters/bf-christmas/censor/bfChristmas_Censored.png": {
+    "source": "shared/images/characters/bfChristmas_Censored.png",
+    "sha256": "24fb17b1fc521b0759a68977ae6a6bdabece9e89f3b11d5443d3c0493f27ddec"
+  },
+  "characters/bf-christmas/censor/bfChristmas_Censored.xml": {
+    "source": "shared/images/characters/bfChristmas_Censored.xml",
+    "sha256": "8bc785b05a09b405108ef7533e7e101e58f962f342dec344d9787c6e19e31fd4"
+  },
+  "characters/bf-christmas/death/BOYFRIEND.png": {
+    "source": "shared/images/characters/BOYFRIEND.png",
+    "sha256": "5186ed54e2480e2f40100564fddbac29bcbdbdcbeb2446e16b5b84e7e0431ad1"
+  },
+  "characters/bf-christmas/death/BOYFRIEND.xml": {
+    "source": "shared/images/characters/BOYFRIEND.xml",
+    "sha256": "500af873318041099cffc3df17b6217a004727ec5fa0ea55c121c904ec56ecbb"
+  },
+  "Source/characters/bf-christmas.hxc": {
+    "source": "scripts/characters/bf-christmas.hxc",
+    "sha256": "05b10c537dc1d24c21b967026cb04c045a764a4c35c3d2ece441e2a06750bc96"
+  },
+  "characters/gf-christmas/character.json": {
+    "source": "data/characters/gf-christmas.json",
+    "sha256": "ca22f1793290c46e9db6bee5606785dfd92e4e0cb3bd71a2518d57da55789a86"
+  },
+  "characters/gf-christmas/Animation.json": {
+    "source": "shared/images/characters/gf-christmas/Animation.json",
+    "sha256": "3955d7bf373f8efa47727c2eed9889d0567a621daba166900d26b1d26ef4ecc3"
+  },
+  "characters/gf-christmas/spritemap1.json": {
+    "source": "shared/images/characters/gf-christmas/spritemap1.json",
+    "sha256": "14b176c0fb7f6824099169a050796b730076988ba56e0716a77f42bd5b7233a3"
+  },
+  "characters/gf-christmas/spritemap1.png": {
+    "source": "shared/images/characters/gf-christmas/spritemap1.png",
+    "sha256": "9a3601bd8959b93f9a2370e15d2064fcb0920618d2fae503a3ae500b884ef280"
+  },
+  "characters/parents-christmas/character.json": {
+    "source": "data/characters/parents-christmas.json",
+    "sha256": "3c3cb3ad4835d0c5e2ada01fbe5966c85a0f9d0447c9f79ac3072099042f3b8d"
+  },
+  "characters/parents-christmas/Animation.json": {
+    "source": "shared/images/characters/parents-christmas/Animation.json",
+    "sha256": "94756bbc9b94f81c4442f79f06dcb5c6b42bad7d29454a84d645846c866dce54"
+  },
+  "characters/parents-christmas/spritemap1.json": {
+    "source": "shared/images/characters/parents-christmas/spritemap1.json",
+    "sha256": "84b586feae86c2b4fc6dd951ebad1e509997f8e2affc1ffd02224000e905a9e5"
+  },
+  "characters/parents-christmas/spritemap1.png": {
+    "source": "shared/images/characters/parents-christmas/spritemap1.png",
+    "sha256": "43e93f28ca541bb29c5c1faaefd71116f3111c42a69ec066d50a45fdcfd1d69e"
+  },
+  "Source/characters/parents-christmas.hxc": {
+    "source": "scripts/characters/parents-christmas.hxc",
+    "sha256": "015ad18dd3ed647685ba5d29e2f75a7efbf293ce015dbd8ddb3909ecadcffcc2"
+  },
+  "characters/monster-christmas/character.json": {
+    "source": "data/characters/monster-christmas.json",
+    "sha256": "97212730b557a3b8d9385e0ae3aee2200dbfd00677a0e4d8f694c13d3c57c580"
+  },
+  "characters/monster-christmas/Animation.json": {
+    "source": "shared/images/characters/monster/Animation.json",
+    "sha256": "7a6eb591409b66fbf332e20b3c5d4dcf64e39b61a9fb59a0bd932395deec2b93"
+  },
+  "characters/monster-christmas/spritemap1.json": {
+    "source": "shared/images/characters/monster/spritemap1.json",
+    "sha256": "cdd4661477baa38c8c588fb01cc9cc4675729248cb23c7f519d4f970113dea28"
+  },
+  "characters/monster-christmas/spritemap1.png": {
+    "source": "shared/images/characters/monster/spritemap1.png",
+    "sha256": "463798097256e2f6dbd2e2546b3302308922e84003db4da7a3410caf21e0d5d0"
+  },
+  "stages/mallXmas/stage.json": {
+    "source": "data/stages/mallXmas.json",
+    "sha256": "5760ba37c064f09ad3629eb55071a95bfeafd4569b4ab74081e4e52845956a85"
+  },
+  "stages/mallXmas/bgWalls/bgWalls.png": {
+    "source": "week5/images/christmas/bgWalls.png",
+    "sha256": "f9d91424cec70aa111792fea0a26df81d6179991e9849791158d185d7f679a0a"
+  },
+  "stages/mallXmas/upperBoppers/upperBop.png": {
+    "source": "week5/images/christmas/upperBop.png",
+    "sha256": "4b919de07e25177f4037f100fd0adb096236e3f72b1ab1a156ff11dcfc858406"
+  },
+  "stages/mallXmas/upperBoppers/upperBop.xml": {
+    "source": "week5/images/christmas/upperBop.xml",
+    "sha256": "41390cc52a01c0e71c536aedd0757894b10a2fc6f16d40476f13606614e1a7bd"
+  },
+  "stages/mallXmas/bgEscalator/bgEscalator.png": {
+    "source": "week5/images/christmas/bgEscalator.png",
+    "sha256": "33d64c3e8113e4a8cd2d364bec068eda5b179044d6499af3490257d43b5b8e66"
+  },
+  "stages/mallXmas/christmasTree/christmasTree.png": {
+    "source": "week5/images/christmas/christmasTree.png",
+    "sha256": "84d1dba9c8f4058dff4df3e63798cd1d2e7873e2ca07237ae056a30192ecf167"
+  },
+  "stages/mallXmas/bottomBoppers/bottomBop.png": {
+    "source": "week5/images/christmas/bottomBop.png",
+    "sha256": "98d97b846b022a4da7ada871bfe9dded6548c2bd05a13f78d462d2eb833f69f3"
+  },
+  "stages/mallXmas/bottomBoppers/bottomBop.xml": {
+    "source": "week5/images/christmas/bottomBop.xml",
+    "sha256": "6f3d461486002eb06461973f78cb664c3d1f59a7ae24100f50b9c810c523a5f6"
+  },
+  "stages/mallXmas/fgSnow/fgSnow.png": {
+    "source": "week5/images/christmas/fgSnow.png",
+    "sha256": "39314e1a7d6805fad490e8f5fe1bdcd9a76e22022d969a10d1329dd9248bb0c3"
+  },
+  "stages/mallXmas/santa/santa.png": {
+    "source": "week5/images/christmas/santa.png",
+    "sha256": "28ef6ab0173f9995c25669424d11bc019196ea64d3455b9bc9e92add9b63d810"
+  },
+  "stages/mallXmas/santa/santa.xml": {
+    "source": "week5/images/christmas/santa.xml",
+    "sha256": "c0691c24e8adbf70ef023cb5261cdb82dec960c5b198c628ac23968559f684be"
+  },
+  "stages/mallXmasErect/stage.json": {
+    "source": "data/stages/mallXmasErect.json",
+    "sha256": "8b0ed8667ccd25a15ab6695416b445d28df4c85201b749277c757ace94229ea7"
+  },
+  "stages/mallXmasErect/bgWalls/bgWalls.png": {
+    "source": "week5/images/christmas/erect/bgWalls.png",
+    "sha256": "3d4c914bf8f5eb2ad2ca5c20c53d81b50878a39b7b14d3ad60353863a72fb2e3"
+  },
+  "stages/mallXmasErect/upperBoppers/upperBop.png": {
+    "source": "week5/images/christmas/erect/upperBop.png",
+    "sha256": "4c2b0bcf1b6073ce3223847c6ed9a9d6c9973a0787ac19d9ff72b4c1841adb18"
+  },
+  "stages/mallXmasErect/upperBoppers/upperBop.xml": {
+    "source": "week5/images/christmas/erect/upperBop.xml",
+    "sha256": "e6905ce529335800e5e455d64adf1a47f2b8449e1d37e24e3e4dfda38029dd0d"
+  },
+  "stages/mallXmasErect/bgEscalator/bgEscalator.png": {
+    "source": "week5/images/christmas/erect/bgEscalator.png",
+    "sha256": "e33743cb12841d1ce7ced76721c8e1d71c2ca1f9203327bdb2311a3af63641f8"
+  },
+  "stages/mallXmasErect/christmasTree/christmasTree.png": {
+    "source": "week5/images/christmas/erect/christmasTree.png",
+    "sha256": "129205a20bbd872248b804443f3d16fd2002304e511816736cc4886bad303d7a"
+  },
+  "stages/mallXmasErect/bottomBoppers/Animation.json": {
+    "source": "week5/images/christmas/erect/bottomBop/Animation.json",
+    "sha256": "e4c6f3675402df2fafbb552b8fc668600aab1bdac4e01621cb316612f8d7dc62"
+  },
+  "stages/mallXmasErect/bottomBoppers/spritemap1.json": {
+    "source": "week5/images/christmas/erect/bottomBop/spritemap1.json",
+    "sha256": "91a90fed79cc322edc5a0d42ddea1272602efcc9e45ff8f527894c1bcf321a3a"
+  },
+  "stages/mallXmasErect/bottomBoppers/spritemap1.png": {
+    "source": "week5/images/christmas/erect/bottomBop/spritemap1.png",
+    "sha256": "4ef31282788e99f45a9b9c1498cca3d7d4eea947a9bb4315e98afcd68d793603"
+  },
+  "stages/mallXmasErect/fog/white.png": {
+    "source": "week5/images/christmas/erect/white.png",
+    "sha256": "e7e0600c7efaaadaa48b3ba41dbcd3539de91b1b9cf3cc52a3bbc854c4e7fbf0"
+  },
+  "stages/mallXmasErect/fgSnow/fgSnow.png": {
+    "source": "week5/images/christmas/fgSnow.png",
+    "sha256": "39314e1a7d6805fad490e8f5fe1bdcd9a76e22022d969a10d1329dd9248bb0c3"
+  },
+  "stages/mallXmasErect/santa/santa.png": {
+    "source": "week5/images/christmas/santa.png",
+    "sha256": "28ef6ab0173f9995c25669424d11bc019196ea64d3455b9bc9e92add9b63d810"
+  },
+  "stages/mallXmasErect/santa/santa.xml": {
+    "source": "week5/images/christmas/santa.xml",
+    "sha256": "c0691c24e8adbf70ef023cb5261cdb82dec960c5b198c628ac23968559f684be"
+  },
+  "Source/stages/mallXmasErect.hxc": {
+    "source": "scripts/stages/mallXmasErect.hxc",
+    "sha256": "e92312f01f772bf82d5cef0d84d7bed3c9b45befc3de617e2b83b910692bd95e"
+  },
+  "stages/mallEvil/stage.json": {
+    "source": "data/stages/mallEvil.json",
+    "sha256": "7351f56b004c7193b870d5533b95d4eb407d25251bd29386db0e6e0a96d6de70"
+  },
+  "stages/mallEvil/bg/evilBG.png": {
+    "source": "week5/images/christmas/evilBG.png",
+    "sha256": "bbbf020f99a880e1f874e75c0646f725be1ff9ff0c9eb979dcef306a82bcde47"
+  },
+  "stages/mallEvil/evilTree/evilTree.png": {
+    "source": "week5/images/christmas/evilTree.png",
+    "sha256": "e8ff8143d19932656b4f3440bda3207f0aac92343db8bb41f3fdc31974ba9ff7"
+  },
+  "stages/mallEvil/evilSnow/evilSnow.png": {
+    "source": "week5/images/christmas/evilSnow.png",
+    "sha256": "507da3d7ba329f25a35cd90d44df49d789b6400227987e68a06e81251ada59e8"
+  },
+  "cutscene/santa_speaks_assets/Animation.json": {
+    "source": "week5/images/christmas/santa_speaks_assets/Animation.json",
+    "sha256": "dd38ed7c373c00c58f1a7aed71dfe0f1d815a05257d997435565eb04f78bf364"
+  },
+  "cutscene/santa_speaks_assets/spritemap1.json": {
+    "source": "week5/images/christmas/santa_speaks_assets/spritemap1.json",
+    "sha256": "be1323923ea876c8dcc837eb97f5d6d31eeacd65cd7481c615d18562995466f4"
+  },
+  "cutscene/santa_speaks_assets/spritemap1.png": {
+    "source": "week5/images/christmas/santa_speaks_assets/spritemap1.png",
+    "sha256": "ac8a93ed97db2421e4ac62419b751f0f73269c26f413408921bd0b13bcd498b5"
+  },
+  "cutscene/parents_shoot_assets/Animation.json": {
+    "source": "week5/images/christmas/parents_shoot_assets/Animation.json",
+    "sha256": "8a2978ceba4bfd0a8c0c65852dc5a3f415565efea050d15561c9a2289435c5e0"
+  },
+  "cutscene/parents_shoot_assets/spritemap1.json": {
+    "source": "week5/images/christmas/parents_shoot_assets/spritemap1.json",
+    "sha256": "2794e686bf86d3b58a97768329245e59a783623f930bfc98519b7c4c5416b7ff"
+  },
+  "cutscene/parents_shoot_assets/spritemap1.png": {
+    "source": "week5/images/christmas/parents_shoot_assets/spritemap1.png",
+    "sha256": "cfc687920795d4ad43647eac59c95a2392b08c7963748ce95b2250e114a148dd"
+  },
+  "audio/Lights_Turn_On.ogg": {
+    "source": "week5/sounds/Lights_Turn_On.ogg",
+    "sha256": "e66fc84ff14a5e78770c4e4353a0a55053c8631695980a9fddb3e0a32928ff9f"
+  },
+  "audio/santa_emotion.ogg": {
+    "source": "week5/sounds/santa_emotion.ogg",
+    "sha256": "ee24961e4a8e95abda249f33c23cfa8e6f320b49ac5ec4d669560e96dca35164"
+  },
+  "audio/santa_shot_n_falls.ogg": {
+    "source": "week5/sounds/santa_shot_n_falls.ogg",
+    "sha256": "eae61efd15f986f75c74b09d6eec4a5f5c9a4adbc09ed8545bca012ef503de91"
+  },
+  "Source/songs/cocoa.hxc": {
+    "source": "scripts/songs/cocoa.hxc",
+    "sha256": "6e001def8fb048d608eaaba119ee42ff53c75adf290abcf7c976bbdf0c60d333"
+  },
+  "Source/songs/eggnog.hxc": {
+    "source": "scripts/songs/eggnog.hxc",
+    "sha256": "c9af0a74068ca86f34a1eb0a38061a2d47118948d18649eecd015e59b7fef055"
+  },
+  "Source/songs/eggnog-erect.hxc": {
+    "source": "scripts/songs/eggnog-erect.hxc",
+    "sha256": "cedfa0e777f998a6f2496825ddfee23b3d4d1fc8184956ae999cb464ab2bdd5f"
+  },
+  "Source/songs/winter-horrorland.hxc": {
+    "source": "scripts/songs/winter-horrorland.hxc",
+    "sha256": "b0b7cdb109258f3fecebea3043022b4efecefbe0646a4dd56daabf6e58d976f3"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "characters/bf-pixel/character.json": {
+    "source": "data/characters/bf-pixel.json",
+    "sha256": "643f43dd9c091ebff875c06dc66e9522e9525aee16a723bfc335a5c89a1e7a43"
+  },
+  "characters/bf-pixel/bfPixel.png": {
+    "source": "shared/images/characters/bfPixel.png",
+    "sha256": "7b0e9bb054ee096bf9f77195ba65096ed35a0debe177a37936a466ad2c474be3"
+  },
+  "characters/bf-pixel/bfPixel.xml": {
+    "source": "shared/images/characters/bfPixel.xml",
+    "sha256": "ca6f8b617f93bdf0981e73af9993345cb701382ef89cc1ea574f60436054c940"
+  },
+  "characters/bf-pixel/death/bfPixelsDEAD.png": {
+    "source": "shared/images/characters/bfPixelsDEAD.png",
+    "sha256": "7bdf2ac90b1bf96c7fafe70e16201c1f2378fc25ff850c079b9d577a67f29ade"
+  },
+  "characters/bf-pixel/death/bfPixelsDEAD.xml": {
+    "source": "shared/images/characters/bfPixelsDEAD.xml",
+    "sha256": "5ccf2c26aee964256724d17077fe4df3bdec839794900f985f19f3debf755069"
+  },
+  "Source/characters/bf-pixel.hxc": {
+    "source": "scripts/characters/bf-pixel.hxc",
+    "sha256": "b63bb6f1e1f9366b5a9fd1b33df8a548c3916deaba9773b464aa527aa608704c"
+  },
+  "characters/gf-pixel/character.json": {
+    "source": "data/characters/gf-pixel.json",
+    "sha256": "09710a368cc66c199c2d64f4c2f5d40ad7ea01fa11f6d790cf5c8f0cabf82a64"
+  },
+  "characters/gf-pixel/gfPixel.png": {
+    "source": "shared/images/characters/gfPixel.png",
+    "sha256": "60f8bd4581db79d14ea539d8668dc283f7cd1cbf74fb83346a3503c34b6742f1"
+  },
+  "characters/gf-pixel/gfPixel.xml": {
+    "source": "shared/images/characters/gfPixel.xml",
+    "sha256": "b191523654c90f2db4c4b3796fdb316f79a6856b86f13fb02e0584912edf4cdc"
+  },
+  "characters/senpai/character.json": {
+    "source": "data/characters/senpai.json",
+    "sha256": "c54ce0120d667779f722400d85832b4ecab9a21bbd9ab70af4ffbe15600b16f9"
+  },
+  "characters/senpai/senpai.png": {
+    "source": "shared/images/characters/senpai.png",
+    "sha256": "77616f7b701c451d27d9a080809066548fe6213ce4d6eeae06ce6ba79a1bef62"
+  },
+  "characters/senpai/senpai.xml": {
+    "source": "shared/images/characters/senpai.xml",
+    "sha256": "d30ede30e1a43df378a95ae675586975e19971546e463062582f799501bb1167"
+  },
+  "characters/senpai-angry/character.json": {
+    "source": "data/characters/senpai-angry.json",
+    "sha256": "9526a8664f116a94e0beb98ed2240c3341fad26c7c32fbbc90535369dd6a4845"
+  },
+  "characters/senpai-angry/senpai.png": {
+    "source": "shared/images/characters/senpai.png",
+    "sha256": "77616f7b701c451d27d9a080809066548fe6213ce4d6eeae06ce6ba79a1bef62"
+  },
+  "characters/senpai-angry/senpai.xml": {
+    "source": "shared/images/characters/senpai.xml",
+    "sha256": "d30ede30e1a43df378a95ae675586975e19971546e463062582f799501bb1167"
+  },
+  "characters/spirit/character.json": {
+    "source": "data/characters/spirit.json",
+    "sha256": "72ef83e478d0ee821736025d571a327718bd5fa704c5f2764bd707d69deaad20"
+  },
+  "characters/spirit/spirit.png": {
+    "source": "shared/images/characters/spirit.png",
+    "sha256": "c3041498dde38a8f9d7b30113f375c28c7f34e193b1fb26639c53c3ee926d58d"
+  },
+  "characters/spirit/spirit.txt": {
+    "source": "shared/images/characters/spirit.txt",
+    "sha256": "5656300c04444477def82615a2dcf0de9be7a7377db326bb8ec30ef21e9dd8a7"
+  },
+  "Source/characters/spirit.hxc": {
+    "source": "scripts/characters/spirit.hxc",
+    "sha256": "3fb8d4709cc5f5ab57400cc000af345a6f3186b4d53aa695ff6bfa321ac71066"
+  },
+  "stages/school/stage.json": {
+    "source": "data/stages/school.json",
+    "sha256": "7018592b33635131cbc04f840aaacd006ba5c2fa5e21aaad0da6a265dda3d034"
+  },
+  "stages/school/sky/weebSky.png": {
+    "source": "week6/images/weeb/weebSky.png",
+    "sha256": "bae7fd405d0db324bf856b9cc5f592554481ead285125511c286722bbf2ccd83"
+  },
+  "stages/school/school/weebSchool.png": {
+    "source": "week6/images/weeb/weebSchool.png",
+    "sha256": "e5be03cef483a4c768a285ff1a3d1e1839214e184d73502947de55e6daddb8c0"
+  },
+  "stages/school/backTrees/weebBackTrees.png": {
+    "source": "week6/images/weeb/weebBackTrees.png",
+    "sha256": "087001c7e789f8aae54d726a1c4b93cbf8fcc5ecaeadd93391f90f92bb551bf4"
+  },
+  "stages/school/street/weebStreet.png": {
+    "source": "week6/images/weeb/weebStreet.png",
+    "sha256": "24d4287e2f8144d00016d0dabaec833f8e671b6a107d7de3f79b9916b2d48c4b"
+  },
+  "stages/school/treesFG/weebTreesBack.png": {
+    "source": "week6/images/weeb/weebTreesBack.png",
+    "sha256": "7da441563109265fe32a831a9d32d680ad86f3ecdec1cd6b84dd1d1e58d3bcb1"
+  },
+  "stages/school/treesBG/weebTrees.png": {
+    "source": "week6/images/weeb/weebTrees.png",
+    "sha256": "6cf12b99b6a07a7ce94cdbc106b40236c5694f71b0ca2e93092b88cd6a93d04c"
+  },
+  "stages/school/treesBG/weebTrees.txt": {
+    "source": "week6/images/weeb/weebTrees.txt",
+    "sha256": "f8454afda72090ea5e11b1ce7e562f968f2037a2eebf74f21287d8aff8ce7fec"
+  },
+  "stages/school/petals/petals.png": {
+    "source": "week6/images/weeb/petals.png",
+    "sha256": "f027973ccd2277c57e6b5c1eea48defad44636c2a5608fc83b4238f35f1b5997"
+  },
+  "stages/school/petals/petals.xml": {
+    "source": "week6/images/weeb/petals.xml",
+    "sha256": "c052fb431145b5dc915e46d6d16d5439bc6b7d93a3f659a125d987e00448aab2"
+  },
+  "stages/school/freaks/bgFreaks.png": {
+    "source": "week6/images/weeb/bgFreaks.png",
+    "sha256": "3826087ca10f0ff91dc118e9b76a44d2e1130f852cd60c324230fe081c3fb07a"
+  },
+  "stages/school/freaks/bgFreaks.xml": {
+    "source": "week6/images/weeb/bgFreaks.xml",
+    "sha256": "2b163cece46b83c6616fb4ddeab4ddb21776939add30a65e86c2b3c4e1eee66e"
+  },
+  "Source/stages/school.hxc": {
+    "source": "scripts/stages/school.hxc",
+    "sha256": "c3013c1ad99f3ee9bf2102c7b3c87a7bedad21284501828f8ecc00c75bf8f156"
+  },
+  "stages/schoolErect/stage.json": {
+    "source": "data/stages/schoolErect.json",
+    "sha256": "0de37dc1316a931b7ad7f2437a283222266400236127229aa91e9c91c681757a"
+  },
+  "stages/schoolErect/sky/weebSky.png": {
+    "source": "week6/images/weeb/erect/weebSky.png",
+    "sha256": "d2c7fda9f64ef2aaddd29c9860504e19b1732f97a9d9764797ac37fd596461c4"
+  },
+  "stages/schoolErect/school/weebSchool.png": {
+    "source": "week6/images/weeb/erect/weebSchool.png",
+    "sha256": "981153c8335edbfc92fa4f9a9e1594833346364e52c4fd2ef68a996fe22f27a6"
+  },
+  "stages/schoolErect/backTrees/weebBackTrees.png": {
+    "source": "week6/images/weeb/erect/weebBackTrees.png",
+    "sha256": "ad8205cc733444c1d741eb703b0b61ee9e8d9f6ad40fad760e1d34a6285a7db7"
+  },
+  "stages/schoolErect/street/weebStreet.png": {
+    "source": "week6/images/weeb/erect/weebStreet.png",
+    "sha256": "62052f8454b19c074e0f79ac5a33ba6f714259dddba056d4b6995130389ffe5d"
+  },
+  "stages/schoolErect/treesFG/weebTreesBack.png": {
+    "source": "week6/images/weeb/erect/weebTreesBack.png",
+    "sha256": "b9ee7feb4c084105c954a76555fce45f0fd61cd3dfa7e0662f753bf0a76abb22"
+  },
+  "stages/schoolErect/treesBG/weebTrees.png": {
+    "source": "week6/images/weeb/erect/weebTrees.png",
+    "sha256": "02e7af749502405e33aa4ff60760b302927eb2a098d2de3e75f974833b692e7f"
+  },
+  "stages/schoolErect/treesBG/weebTrees.txt": {
+    "source": "week6/images/weeb/erect/weebTrees.txt",
+    "sha256": "f8454afda72090ea5e11b1ce7e562f968f2037a2eebf74f21287d8aff8ce7fec"
+  },
+  "stages/schoolErect/petals/petals.png": {
+    "source": "week6/images/weeb/erect/petals.png",
+    "sha256": "a9a4a0a3922a9690f43bfa592df12b77dd779f5789b7160d2f741eba7aab9c89"
+  },
+  "stages/schoolErect/petals/petals.xml": {
+    "source": "week6/images/weeb/erect/petals.xml",
+    "sha256": "c052fb431145b5dc915e46d6d16d5439bc6b7d93a3f659a125d987e00448aab2"
+  },
+  "stages/schoolErect/freaks/bgFreaks.png": {
+    "source": "week6/images/weeb/bgFreaks.png",
+    "sha256": "3826087ca10f0ff91dc118e9b76a44d2e1130f852cd60c324230fe081c3fb07a"
+  },
+  "stages/schoolErect/freaks/bgFreaks.xml": {
+    "source": "week6/images/weeb/bgFreaks.xml",
+    "sha256": "2b163cece46b83c6616fb4ddeab4ddb21776939add30a65e86c2b3c4e1eee66e"
+  },
+  "Source/stages/schoolErect.hxc": {
+    "source": "scripts/stages/schoolErect.hxc",
+    "sha256": "9649a2683542241e48e8fdedf8d71da455add0c94405286ff043a264ba1c23e7"
+  },
+  "stages/schoolEvil/stage.json": {
+    "source": "data/stages/schoolEvil.json",
+    "sha256": "9dd1b129377610143e4193f1ba0abc47ebe2b085eebf40a14f2de96ce2857b4d"
+  },
+  "stages/schoolEvil/school/weebSchool.png": {
+    "source": "week6/images/weeb/evil/weebSchool.png",
+    "sha256": "302ae2fe403835509dd7b124ac5e223a81249236ce8a0a90d639a3f438c34299"
+  },
+  "stages/schoolEvil/backTrees/weebBackTrees.png": {
+    "source": "week6/images/weeb/evil/weebBackTrees.png",
+    "sha256": "1e1db3ec37e29f0c0e2b43ae531b8ddaf59838fd45dba0287ce4d35b84c81a3d"
+  },
+  "stages/schoolEvil/street/weebStreet.png": {
+    "source": "week6/images/weeb/evil/weebStreet.png",
+    "sha256": "44a07528f6763e3c12cd1c700b40f8e4a2691d6f82c8052fe277e2533b08c312"
+  },
+  "stages/schoolEvil/trees/weebTrees.png": {
+    "source": "week6/images/weeb/evil/weebTrees.png",
+    "sha256": "97d804549f304a3019865114550e4700212fb021bd71b7ab78afb532b2a7156a"
+  },
+  "Source/stages/schoolEvil.hxc": {
+    "source": "scripts/stages/schoolEvil.hxc",
+    "sha256": "4aebf4d55a7929a510e0210dcb0be41e3fd96b1701422621499312a47b43638f"
+  },
+  "stages/schoolEvilErect/stage.json": {
+    "source": "data/stages/schoolEvilErect.json",
+    "sha256": "731a813ff5c0050b0364b0c6c465fe234f336fbea2f4972e76f31b8878960937"
+  },
+  "stages/schoolEvilErect/school/weebSchool.png": {
+    "source": "week6/images/weeb/erect/evil/weebSchool.png",
+    "sha256": "86382fa430addf84b4021526c3ca745ecbd1624556d7d343d54baddce5a5749d"
+  },
+  "stages/schoolEvilErect/backspike/backSpike.png": {
+    "source": "week6/images/weeb/erect/evil/backSpike.png",
+    "sha256": "56aef9cceeb90d219ce9fcc390d39371772ddef028ebb4bbd177c6c1e7e75834"
+  },
+  "stages/schoolEvilErect/backspikes/weebBackSpikes.png": {
+    "source": "week6/images/weeb/erect/evil/weebBackSpikes.png",
+    "sha256": "1c6e0cd14f7eae9c6c77d8a7bab285c44353dc80c109ccd75048617d5b9c33b5"
+  },
+  "stages/schoolEvilErect/evilstreet/weebStreet.png": {
+    "source": "week6/images/weeb/erect/evil/weebStreet.png",
+    "sha256": "ec1fb250e0ff3ade78c09529d6040bd34367d819a384db1a132d1e9199fdcef0"
+  },
+  "Source/stages/schoolEvilErect.hxc": {
+    "source": "scripts/stages/schoolEvilErect.hxc",
+    "sha256": "09640a4b44c65023751c592013a098cb24620a85f4cd2d47f6473d30a423b516"
+  },
+  "effects/bfPixel_mask.png": {
+    "source": "week6/images/weeb/erect/masks/bfPixel_mask.png",
+    "sha256": "4e1e5c697c4a0441543ba9e7894540d66aff806b7b44591447476b0869f8ef9a"
+  },
+  "effects/gfPixel_mask.png": {
+    "source": "week6/images/weeb/erect/masks/gfPixel_mask.png",
+    "sha256": "8df02f010954fe13c2964489e84ee213e89b724689df4671f667e183c1225375"
+  },
+  "effects/senpai_mask.png": {
+    "source": "week6/images/weeb/erect/masks/senpai_mask.png",
+    "sha256": "4feedc21b7916efbe8022fa3303cbaffca1dc95f28df68b5389b8cf8bc6c98c6"
+  },
+  "pixel.json": {
+    "source": "data/notestyles/pixel.json",
+    "sha256": "3b7c308d6c18150109b2ed652e3b98183eb455a6739c163b8dda2000ebfc7664"
+  },
+  "dialogue/senpai.json": {
+    "source": "data/dialogue/conversations/senpai.json",
+    "sha256": "6f977c10d34b7ceadfbe8754a603a1f96d50f2a37fcacdf6a76307c2e4097b7b"
+  },
+  "dialogue/roses.json": {
+    "source": "data/dialogue/conversations/roses.json",
+    "sha256": "89cede3ce3935806718842afa1060c9cf4496f5f2c1a93c3fcb1915f846b18a2"
+  },
+  "dialogue/thorns.json": {
+    "source": "data/dialogue/conversations/thorns.json",
+    "sha256": "40179e2cfbb8da5db1dfc5712e387009984e6d8e0c62467374cc06e94fa3ee04"
+  },
+  "dialogue/boxes/roses/data.json": {
+    "source": "data/dialogue/boxes/roses.json",
+    "sha256": "3d271ab9575e52a70f25d67532f8dd3e9215c51fd02626f3d464d9f4d6c9c32c"
+  },
+  "dialogue/boxes/roses/dialogueBox-new.png": {
+    "source": "week6/images/weeb/pixelUI/dialogueBox-new.png",
+    "sha256": "73655a6b1edd7e666d2046349d5fdd9777a4d7f91b185fe11df11b9d3892d373"
+  },
+  "dialogue/boxes/roses/dialogueBox-new.xml": {
+    "source": "week6/images/weeb/pixelUI/dialogueBox-new.xml",
+    "sha256": "3e0142d604e3abe038279feaac3845826b58e1dac63eb833cad2a2c958ba715f"
+  },
+  "dialogue/boxes/thorns/data.json": {
+    "source": "data/dialogue/boxes/thorns.json",
+    "sha256": "95dbd3e013ee5e200dcdf579145d34fbfc6809ca67984bd6edd552ab30e35133"
+  },
+  "dialogue/boxes/thorns/dialogueBox-evilNew.png": {
+    "source": "week6/images/weeb/pixelUI/dialogueBox-evilNew.png",
+    "sha256": "b42ed1c003d485ad02a7ab19b8f4cc201d2c8a79e0c29862abcb619f10a7ab62"
+  },
+  "dialogue/boxes/thorns/dialogueBox-evilNew.xml": {
+    "source": "week6/images/weeb/pixelUI/dialogueBox-evilNew.xml",
+    "sha256": "22ea4f1d0ddbdb6071d21f254b65cc53a621ffec648d3b085ae1a51b03cbd76a"
+  },
+  "dialogue/speakers/senpai/data.json": {
+    "source": "data/dialogue/speakers/senpai.json",
+    "sha256": "e4d6cd94f8cf60e99823a1eef7cd86749d56b31235afc0dfed408287718c8bf3"
+  },
+  "dialogue/speakers/senpai/portrait-senpai.png": {
+    "source": "week6/images/weeb/portrait-senpai.png",
+    "sha256": "348b81bb610ebb74173e312e24fb6f7f59c7bd7e8873bad338316af9eecce28b"
+  },
+  "dialogue/speakers/senpai/portrait-senpai.xml": {
+    "source": "week6/images/weeb/portrait-senpai.xml",
+    "sha256": "d712c6d0067667db9de496d293b313d57432317d2a8a7e5de3110e8104d00de9"
+  },
+  "dialogue/speakers/senpai-angry/data.json": {
+    "source": "data/dialogue/speakers/senpai-angry.json",
+    "sha256": "137ebdc3ec3ec0996a35e39254b700f5f21ec8b089e9ca34db376a0aee39b05c"
+  },
+  "dialogue/speakers/senpai-angry/portrait-senpai-angry.png": {
+    "source": "week6/images/weeb/portrait-senpai-angry.png",
+    "sha256": "7acf78cea6cb169260da07495bca84221b0d80e5c9269c8f78a72ddcb71ed1f5"
+  },
+  "dialogue/speakers/senpai-angry/portrait-senpai-angry.xml": {
+    "source": "week6/images/weeb/portrait-senpai-angry.xml",
+    "sha256": "de27079642c27cfd2622878e90f599ed7cd67431431f1987e8c45dfe765d1f7a"
+  },
+  "dialogue/speakers/bf-pixel/data.json": {
+    "source": "data/dialogue/speakers/bf-pixel.json",
+    "sha256": "f569337085b6987b98e743aa0e69d5b02c7e0dccb1b8ac2aa490aa844a272183"
+  },
+  "dialogue/speakers/bf-pixel/portrait-boyfriend.png": {
+    "source": "week6/images/weeb/portrait-boyfriend.png",
+    "sha256": "40aae6aa45542754b295102e5a0082d7fdaa858c16dee32b3ac4f4322d657314"
+  },
+  "dialogue/speakers/bf-pixel/portrait-boyfriend.xml": {
+    "source": "week6/images/weeb/portrait-boyfriend.xml",
+    "sha256": "10ecdbdaf800b0edc8ed26d4b365494afcc7fe474dd75b7b78245fdb01e4e8c5"
+  },
+  "dialogue/speakers/spirit/data.json": {
+    "source": "data/dialogue/speakers/spirit.json",
+    "sha256": "83a0ff1c8dd96f33ec815d0a5e94fa79ccfb6ade9680035b756866cb3f87d7f3"
+  },
+  "dialogue/speakers/spirit/spiritFaceForward.png": {
+    "source": "week6/images/weeb/spiritFaceForward.png",
+    "sha256": "b85f089a0f1b1289042282aecba3b7f03b3c06610d78e4ed02f736a1971c152a"
+  },
+  "dialogue/speakers/spirit/spiritFaceForward.xml": {
+    "source": "week6/images/weeb/spiritFaceForward.xml",
+    "sha256": "f02f05d75ae47472ed5991671705a6c63474973a16e6c7b75edbe99127684a69"
+  },
+  "dialogue/explosion/senpaiCrazy.png": {
+    "source": "week6/images/weeb/senpaiCrazy.png",
+    "sha256": "08b1d2fdfb587b224835e220043fcd2798b773d411c2c5ba4d71b12f4643ee12"
+  },
+  "dialogue/explosion/senpaiCrazy.xml": {
+    "source": "week6/images/weeb/senpaiCrazy.xml",
+    "sha256": "5daf8cf185ff06eb30f36347509956f06e050a27fcb13c5b120ec283dbb244b9"
+  },
+  "audio/Senpai_Dies.ogg": {
+    "source": "week6/sounds/Senpai_Dies.ogg",
+    "sha256": "2cd47eda44f0dc2bfb3191188b5335802a7de2af3b1928da5262d331da2c0b1d"
+  },
+  "audio/ANGRY_TEXT_BOX.ogg": {
+    "source": "shared/sounds/ANGRY_TEXT_BOX.ogg",
+    "sha256": "3c056a4dac4c1286dc083b7a7872e8658211f43089fd2216f3c23da7e97ef56c"
+  },
+  "audio/pixelText.ogg": {
+    "source": "week6/sounds/pixelText.ogg",
+    "sha256": "83f784f993ad2a6773804ea6a9e851a1bc74d6a4944c01378d955965efba94e3"
+  },
+  "audio/textboxClick.ogg": {
+    "source": "week6/sounds/textboxClick.ogg",
+    "sha256": "eeeda4f3e2f56b0b6f9ff5ded001bc05e27230b78706670630f3cd85c640d910"
+  },
+  "audio/Lunchbox.ogg": {
+    "source": "week6/music/Lunchbox.ogg",
+    "sha256": "da3c87875cc8f633107272acddbafdd08b96eede18aac290d513d365f0079c1f"
+  },
+  "audio/LunchboxScary.ogg": {
+    "source": "week6/music/LunchboxScary.ogg",
+    "sha256": "989bbc1f47f39187a411e8b6bd0bd9920461351d3233617bb0717ee3059f19c1"
+  },
+  "Source/songs/senpai.hxc": {
+    "source": "scripts/songs/senpai.hxc",
+    "sha256": "61120dbd572e5fff28e8c8abaa8ec4769b6faab8e1d4ae4a98d7af41854f7e60"
+  },
+  "Source/songs/roses.hxc": {
+    "source": "scripts/songs/roses.hxc",
+    "sha256": "2569138f37f4bb35d0f05d75e373bd3687d522b45cc75e257361cb69cc7bd567"
+  },
+  "Source/songs/thorns.hxc": {
+    "source": "scripts/songs/thorns.hxc",
+    "sha256": "8a9f00bc3bce38f3de91940ffd0f868a1c8b32f89eb7aa2d921eae77a9e242fd"
+  }
+}

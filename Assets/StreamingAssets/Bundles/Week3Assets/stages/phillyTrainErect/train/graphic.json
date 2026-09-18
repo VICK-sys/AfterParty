@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,4096,0,4096,512,0,512],"rect":[0,0,4096,512],"image":"train.png","rotated":false,"alpha":1}]],"bounds":[0,0,4096,512],"fps":24,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

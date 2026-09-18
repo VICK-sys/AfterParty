@@ -121,5 +121,33 @@
       "e": "FocusCamera",
       "v": 0
     }
+  ],
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf",
+    "opponent": "dad",
+    "altInstrumentals": [
+      "pico"
+    ],
+    "opponentVocals": [
+      "dad"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "stage": "mainStage",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 180,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
   ]
 }

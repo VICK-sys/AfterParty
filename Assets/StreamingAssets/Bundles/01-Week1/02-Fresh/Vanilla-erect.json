@@ -584,5 +584,30 @@
         "zoom": 1.1
       }
     }
+  ],
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf",
+    "opponent": "dad",
+    "instrumental": "erect",
+    "opponentVocals": [
+      "dad"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 125,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
   ]
 }

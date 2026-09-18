@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,2560,0,2560,581,0,581],"rect":[0,0,2560,581],"image":"stagefront.png","rotated":false,"alpha":1}]],"bounds":[0,0,2560,581],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

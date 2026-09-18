@@ -1,0 +1,134 @@
+{
+  "characters/bf/character.json": {
+    "source": "data/characters/bf.json",
+    "sha256": "76c1d7c48f384b8c55b0cbac24ddcf7a9e4e905f5ee5430e610e0514278b39b9"
+  },
+  "characters/bf/Animation.json": {
+    "source": "shared/images/characters/bf/Animation.json",
+    "sha256": "010a656d2e3d5669fa630f2b380346a367598fbc8739da3c07125b98e018b8d7"
+  },
+  "characters/bf/spritemap1.json": {
+    "source": "shared/images/characters/bf/spritemap1.json",
+    "sha256": "354862ae6fc430130f5424c54f2bbe7ba7b556381fe8cd29ebceb8952c7fc5cb"
+  },
+  "characters/bf/spritemap1.png": {
+    "source": "shared/images/characters/bf/spritemap1.png",
+    "sha256": "bc29a4de45a5fde7ad7f5e403f6862758f289041783e6165470604b3ad4ee888"
+  },
+  "characters/bf/death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/bf/death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/bf/death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "Source/characters/bf.hxc": {
+    "source": "scripts/characters/bf.hxc",
+    "sha256": "5199ae05e96dd9f3ec8bed83aa068a7bb00858dfb5de83a13fd8d836292ea1cc"
+  },
+  "characters/dad/character.json": {
+    "source": "data/characters/dad.json",
+    "sha256": "a963407c463c8e5bf63e90a591ab5cfbe98c15446bba29c56512a53332fa7ba8"
+  },
+  "characters/dad/Animation.json": {
+    "source": "shared/images/characters/dad/Animation.json",
+    "sha256": "ac2f23c54ee9c344c6c609c5e144df001d6d29cc81232b73bd25de94ee945b87"
+  },
+  "characters/dad/spritemap1.json": {
+    "source": "shared/images/characters/dad/spritemap1.json",
+    "sha256": "83f5737ec52c4dcc49a008dd9aedf5ebda7f30be18d1a952148e993517ba8a38"
+  },
+  "characters/dad/spritemap1.png": {
+    "source": "shared/images/characters/dad/spritemap1.png",
+    "sha256": "b444e7a39ce11f17724595ed906fa668e3eb4b13f7ae4423e154949b7197e0e6"
+  },
+  "characters/gf/character.json": {
+    "source": "data/characters/gf.json",
+    "sha256": "962d22ed64216602716cc57815f847b68cf699621710be1d4429575118f0a58c"
+  },
+  "characters/gf/Animation.json": {
+    "source": "shared/images/characters/gf/Animation.json",
+    "sha256": "df0e37e75232ff197705a0443c9e9491679f6b5a4fe2957e8fab8650ef136338"
+  },
+  "characters/gf/spritemap1.json": {
+    "source": "shared/images/characters/gf/spritemap1.json",
+    "sha256": "ab739d49ef1b2def78baf825247276cd3b22b2b8536449eb7f2bd1d9892fa3e4"
+  },
+  "characters/gf/spritemap1.png": {
+    "source": "shared/images/characters/gf/spritemap1.png",
+    "sha256": "cbfe8ddcbcd1b9a3e780e95f68863fb656a53cd6304e792e0088544e6d605a20"
+  },
+  "Source/characters/gf.hxc": {
+    "source": "scripts/characters/gf.hxc",
+    "sha256": "3741785164a025c795b4a5c429fa1d268a07e32da08466e5639abf82ad254aa3"
+  },
+  "stages/mainStage/stage.json": {
+    "source": "data/stages/mainStage.json",
+    "sha256": "b128e7062f4ae6245d5dead388ef53a928ee2b077aa98c4933c70ed22bc4875b"
+  },
+  "stages/mainStage/stageBack/stageback.png": {
+    "source": "shared/images/stageback.png",
+    "sha256": "a1293a1d7b44e603109bb107b300e3a1b99569c5eb852b75439f6207627fe42c"
+  },
+  "stages/mainStage/stageFront/stagefront.png": {
+    "source": "shared/images/stagefront.png",
+    "sha256": "fd0831a02e81e84a21dee92bfc6afbc7503c64a727b4381a0cffb554e47a3473"
+  },
+  "stages/mainStage/stageCurtains/stagecurtains.png": {
+    "source": "shared/images/stagecurtains.png",
+    "sha256": "fa41d17025b662f86192762bcab39309db9a0e9898feec6d8cda7ff16a738b10"
+  },
+  "stages/mainStageErect/stage.json": {
+    "source": "data/stages/mainStageErect.json",
+    "sha256": "9d01936b8d1d5bdf04ade4542b7b6b1c5f799309392fc01b3b2dda8c1d30fe67"
+  },
+  "stages/mainStageErect/brightLightSmall/brightLightSmall.png": {
+    "source": "week1/images/erect/brightLightSmall.png",
+    "sha256": "493d14f1c7e008920e43dcb84e7992b35bcf81537c456de1feebcfd41fbd9c15"
+  },
+  "stages/mainStageErect/crowd/crowd.png": {
+    "source": "week1/images/erect/crowd.png",
+    "sha256": "54181bbf94de870ff048910928a8e2f272d9d71f388c4495c1c46e5ae224a692"
+  },
+  "stages/mainStageErect/crowd/crowd.xml": {
+    "source": "week1/images/erect/crowd.xml",
+    "sha256": "a62c274245e9deb5dbfe1cd327b566439c800fec387a708d1a98fdb2af0f7212"
+  },
+  "stages/mainStageErect/bg/bg.png": {
+    "source": "week1/images/erect/bg.png",
+    "sha256": "306f106531ffc928345353129993d653a85a042d3bda016936653bdd5772f044"
+  },
+  "stages/mainStageErect/server/server.png": {
+    "source": "week1/images/erect/server.png",
+    "sha256": "8b816234b9a797e312ecede9140bc56dfd5666d4834e11d3ead548d18fe58d1f"
+  },
+  "stages/mainStageErect/lights/lights.png": {
+    "source": "week1/images/erect/lights.png",
+    "sha256": "fd8db80fc99d3740f1a62de69d23ef1641a8158b055d25f5d1c9b932613775f8"
+  },
+  "stages/mainStageErect/orangeLight/orangeLight.png": {
+    "source": "week1/images/erect/orangeLight.png",
+    "sha256": "2219005eb008a463a01e86953fe299ced55df885e26ae43d55412077882296fb"
+  },
+  "stages/mainStageErect/lightgreen/lightgreen.png": {
+    "source": "week1/images/erect/lightgreen.png",
+    "sha256": "1ee51e99b6996da38c15c50a0b4bb189c0ac8d25551d201dcc14e5aa737eeb93"
+  },
+  "stages/mainStageErect/lightred/lightred.png": {
+    "source": "week1/images/erect/lightred.png",
+    "sha256": "db4a5ab1dd7b789998435b20e50870702451da07cab9011b58ad08adb113ab71"
+  },
+  "stages/mainStageErect/lightAbove/lightAbove.png": {
+    "source": "week1/images/erect/lightAbove.png",
+    "sha256": "7d3bdddbdf29f57b2d83527464a30fcba3b47d254978c5ff647511eaeb7487ae"
+  },
+  "Source/stages/mainStageErect.hxc": {
+    "source": "scripts/stages/mainStageErect.hxc",
+    "sha256": "ae68afc76580f7d4b0f9b20352da295f45ffe62b2a9825d685eb8f2eeafa00ed"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "source": "Funkin-0.8.6",
+  "sourceFiles": {
+    "play/PauseSubState.hx": "397c5b102cc810990d007fde55ef20effba0c3abcaa728a4ae6e5afb457e9980",
+    "ui/AtlasText.hx": "cc8316dedd0673b65215fc78fb3ab44b8f9a2cf56bce6ec71a998faee1bd2aa4",
+    "ui/transition/stickers/StickerSubState.hx": "f2db7275a8b08df9863e9061ecde055e9f1b37d255a66f73ed21d5488a23e448"
+  },
+  "releaseFiles": {
+    "bold.png": {
+      "source": "images/fonts/bold.png",
+      "sha256": "9a7ba6c9a41cbeeeffe73794953699afbd463671a01a7fecc017e4a0f473dfe2"
+    },
+    "bold.xml": {
+      "source": "images/fonts/bold.xml",
+      "sha256": "3f766fd6fb36f375f0e989224903e9fea58977c45c2dac9d922010eee0e7830a"
+    },
+    "breakfast.ogg": {
+      "source": "shared/music/breakfast/breakfast.ogg",
+      "sha256": "ef98010b857f8dcd5083417a6ebfe81ad473b47f2e331e5e5403e0f3bba935d8"
+    },
+    "scrollMenu.ogg": {
+      "source": "sounds/scrollMenu.ogg",
+      "sha256": "ed2468c8977630867663409dfacf99a38d7fcd2a00f57204d021d607d09530c4"
+    },
+    "stickers/bfSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/bfSticker1.png",
+      "sha256": "cfd4f08f10e0cb95dc8b7f8e749d5ab4a9e820c602440fa8ad19cd87c1a726e5"
+    },
+    "stickers/bfSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/bfSticker2.png",
+      "sha256": "1fc82fa6c2d205c51d7d7862536f7c259e33426abbdb4a60f8ac11b055d30bd0"
+    },
+    "stickers/bfSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/bfSticker3.png",
+      "sha256": "4c09b0fac08cf3cc7e3f3bb8a216cc75e56c63ab12d69f2498bcb515ffdab0da"
+    },
+    "stickerSounds/keyClick1.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick1.ogg",
+      "sha256": "867dc404ffa971926d449c24f799567c67e3edba45da6464dc68c7efa30ba51e"
+    },
+    "stickerSounds/keyClick2.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick2.ogg",
+      "sha256": "9fe8a3d51401af70ae2e9806841ef8444877077c932bb40ac7d55401bbebc6e9"
+    },
+    "stickerSounds/keyClick3.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick3.ogg",
+      "sha256": "564d1624cebeaefcf69e52fe00ce8e03fa40b8a2d11880f064ba48963eebfafc"
+    },
+    "stickerSounds/keyClick4.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick4.ogg",
+      "sha256": "7085608bb222c81c75df0ee550f8c82245307cb9528d920ee9d241d5e7668ba4"
+    },
+    "stickerSounds/keyClick5.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick5.ogg",
+      "sha256": "f98f920db6f28eb99cb895669dd736cde07fdf10c25e72ddafae9827aeef79cc"
+    },
+    "stickerSounds/keyClick7.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick7.ogg",
+      "sha256": "eee54dc447aa48ec862f5fd65c8fea1f3074e988fb86b29b4a05b4f7e3084a05"
+    },
+    "stickerSounds/keyClick8.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick8.ogg",
+      "sha256": "6ba61e4f9423469d8209b913e755be6375792baf237924306a527bc96ecf32e1"
+    },
+    "stickerSounds/keyClick9.ogg": {
+      "source": "shared/sounds/stickersounds/keys/keyClick9.ogg",
+      "sha256": "96df3088fabbc3c0cd58c3a40477e36be2b2ce0bdf81cf1d8a6a5e744e502a7f"
+    }
+  },
+  "bitmapFonts": {
+    "vcr16.json": "85b5743dffe74a37be1ba131ad77ddaabe7bb0be92b3289e4dae43926df33a94",
+    "vcr16.png": "2c4e8e481c59f92649d1fd81f3ace117639d659eaa022a777233a144634494f7",
+    "vcr32.json": "a127fac7db2cb0a77bf2292b815f1f494ac216b9db664b2dcbc0761df7aa18da",
+    "vcr32.png": "e923c80c945bdc615f4aa06d480e6595804d5c5ac2f39ff8b7543c0777a3d84b"
+  }
+}

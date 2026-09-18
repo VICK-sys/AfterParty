@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,3300,0,3300,252,0,252],"rect":[0,0,3300,252],"image":"fgSnow.png","rotated":false,"alpha":1}]],"bounds":[0,0,3300,252],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}
