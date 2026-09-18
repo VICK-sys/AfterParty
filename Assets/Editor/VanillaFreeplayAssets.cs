@@ -22,7 +22,7 @@ public sealed class VanillaFreeplayAssets : AssetPostprocessor
         if (!assetPath.StartsWith("Assets/Resources/VanillaFreeplay/", System.StringComparison.Ordinal)) return;
         var importer = (AudioImporter)assetImporter;
         AudioImporterSampleSettings settings = importer.defaultSampleSettings;
-        settings.loadType = assetPath.Contains("freeplayRandom") ? AudioClipLoadType.Streaming : AudioClipLoadType.DecompressOnLoad;
+        settings.loadType = assetPath.Contains("freeplayRandom") || assetPath.Contains("/cartoons/") ? AudioClipLoadType.Streaming : AudioClipLoadType.DecompressOnLoad;
         importer.defaultSampleSettings = settings;
     }
 }

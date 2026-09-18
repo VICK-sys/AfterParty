@@ -34,12 +34,15 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
     private bool playing, looping;
     public bool Finished { get; private set; }
     public int CurrentFrame => frame;
+    public string CurrentLabel { get; private set; }
+    public int LabelFrame => CurrentLabel != null ? frame - clips[CurrentLabel].start : frame;
+    public int CompletedLoops { get; private set; }
     public Vector2 BoundsSize { get; private set; }
     public override Texture mainTexture => replacement != null ? replacement : atlas != null ? atlas : Texture2D.whiteTexture;
 
-    public void Initialize(string path, bool useStagePosition = true)
+    public void Initialize(string path, bool useStagePosition = true, string resourceRoot = "VanillaFreeplay")
     {
-        string prefix = "VanillaFreeplay/" + path.Trim('/');
+        string prefix = resourceRoot + "/" + path.Trim('/');
         assetPath = prefix;
         TextAsset animation = Resources.Load<TextAsset>(prefix + "/Animation");
         TextAsset spriteData = Resources.Load<TextAsset>(prefix + "/spritemap1");
@@ -86,15 +89,8 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
     public void Play(string label, bool loop)
     {
         if (!clips.TryGetValue(label, out Clip clip)) throw new ArgumentException("Unknown Animate label: " + label);
-        firstFrame = clip.start;
-        clipLength = clip.length;
-        looping = loop;
-        playing = true;
-        Finished = false;
-        clock = 0;
-        lastUpdateTime = Time.realtimeSinceStartupAsDouble;
-        frame = firstFrame;
-        SetVerticesDirty();
+        PlayFrames(clip.start, clip.length, loop);
+        CurrentLabel = label;
     }
 
     public void SetFrame(int value)
@@ -102,6 +98,8 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         frame = Mathf.Clamp(value, 0, Math.Max(0, totalFrames - 1));
         playing = false;
         Finished = false;
+        CurrentLabel = null;
+        CompletedLoops = 0;
         clock = 0;
         lastUpdateTime = Time.realtimeSinceStartupAsDouble;
         SetVerticesDirty();
@@ -111,6 +109,7 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
     {
         if (!clips.TryGetValue(label, out Clip clip)) throw new ArgumentException("Unknown Animate label: " + label);
         PlayFrames(clip.start + start, length < 0 ? clip.length - start : length, loop);
+        CurrentLabel = label;
     }
 
     public void PlayFrames(int start, int length, bool loop)
@@ -120,10 +119,20 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         looping = loop;
         playing = true;
         Finished = false;
+        CurrentLabel = null;
+        CompletedLoops = 0;
         clock = 0;
         lastUpdateTime = Time.realtimeSinceStartupAsDouble;
         frame = firstFrame;
         SetVerticesDirty();
+    }
+
+    public int GetSymbolFrameLabel(string symbol, string label)
+    {
+        foreach (JToken layer in symbols[symbol]["L"])
+            foreach (JToken key in layer["FR"])
+                if ((string)key["N"] == label) return Integer(key["I"]);
+        throw new ArgumentException("Unknown Animate symbol label: " + symbol + "/" + label);
     }
 
     public void PlaySymbol(string name, bool loop)
@@ -187,7 +196,7 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         if (!playing || root == null || clipLength <= 0) return;
         clock += delta * frameRate;
         int next = Mathf.FloorToInt(clock);
-        if (looping) next %= clipLength;
+        if (looping) { CompletedLoops = next / clipLength; next %= clipLength; }
         else if (next >= clipLength) { next = clipLength - 1; playing = false; Finished = true; }
         next += firstFrame;
         if (next == frame) return;

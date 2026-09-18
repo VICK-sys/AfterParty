@@ -50,7 +50,9 @@ def run(source, target):
         files.append((source / 'assets/images' / name, target / name))
     for name in ['freeplayRandom/freeplayRandom.ogg']:
         files.append((source / 'assets/music' / name, target / 'audio' / Path(name).name))
-    for name in ['fav', 'unfav', 'confirmMenu', 'scrollMenu', 'cancelMenu',
+    for path in (source / 'assets/sounds/cartoons').glob('*.ogg'):
+        files.append((path, target / 'audio/cartoons' / path.name))
+    for name in ['fav', 'unfav', 'confirmMenu', 'scrollMenu', 'cancelMenu', 'remote_click', 'tv_on', 'channel_switch',
                  'ranks/loss', 'ranks/good', 'ranks/great', 'ranks/excellent', 'ranks/perfect',
                  'ranks/rankinbad', 'ranks/rankinnormal', 'ranks/rankinperfect']:
         path = source / f'assets/sounds/{name}.ogg'

@@ -204,6 +204,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         confirmText = Sprite("Confirm Text", content, "freeplay/glowingText", -8, 115);
         confirmText.gameObject.SetActive(false);
         dj = Animate("Boyfriend DJ", content, "freeplay/freeplay-boyfriend", 0, 0, true);
+        InitializeDJ();
         backing = Sprite("Dad Backdrop", content, "freeplay/freeplayBGweek1-bf", 387.76f, 0);
         backing.centerScale = false;
         backing.drawScale = 721f / backing.FrameSize.y;
@@ -277,6 +278,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public void SetMode(int value)
     {
         if (Busy) return;
+        DJPlayerAction();
         Mode = rememberedMode = PlayModes.Normalize(value);
         selectingMode = false;
         modePanel.SetActive(false);
@@ -301,18 +303,20 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         }
         Draw(delta);
         DrawRankAnimation(delta);
+        UpdateDJ(delta);
         UpdatePreview(delta);
         if (Time.frameCount == openedFrame || Busy || VanillaPauseStickers.Active) return;
         if (selectingMode)
         {
             for (int i = 0; i < PlayModes.Count; i++) if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SetMode(PlayModes.FromIndex(i));
-            if (BackPressed() || Input.GetKeyDown(KeyCode.Tab)) { selectingMode = false; modePanel.SetActive(false); }
+            if (BackPressed() || Input.GetKeyDown(KeyCode.Tab)) { DJPlayerAction(); selectingMode = false; modePanel.SetActive(false); }
             return;
         }
         if (BackPressed()) { Close(); return; }
-        if (Input.GetKeyDown(KeyCode.Tab)) { selectingMode = true; modePanel.SetActive(true); return; }
+        if (Input.GetKeyDown(KeyCode.Tab)) { DJPlayerAction(); selectingMode = true; modePanel.SetActive(true); return; }
         float vertical = Input.GetAxisRaw("Vertical");
         int direction = vertical > 0.5f ? -1 : vertical < -0.5f ? 1 : 0;
+        if (direction != 0) DJPlayerAction();
         if (direction != heldDirection)
         {
             heldDirection = direction;
@@ -343,6 +347,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public void MoveSelection(int change)
     {
         if (Busy || selectingMode) return;
+        DJPlayerAction();
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
         SelectedIndex = (SelectedIndex + change % (filtered.Count + 1) + filtered.Count + 1) % (filtered.Count + 1);
         if (change != 0) Sound("scrollMenu", 0.4f);
@@ -352,6 +357,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public void ChangeDifficulty(int change)
     {
         if (Busy || selectingMode || difficulties.Count == 0) return;
+        DJPlayerAction();
         string selected = SelectedSong?.id;
         int index = difficulties.IndexOf(Difficulty);
         Difficulty = rememberedDifficulty = difficulties[(index + change % difficulties.Count + difficulties.Count) % difficulties.Count];
@@ -363,6 +369,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public void ChangeFilter(int change)
     {
         if (Busy || selectingMode) return;
+        DJPlayerAction();
         filterIndex = (filterIndex + change % Filters.Length + Filters.Length) % Filters.Length;
         rememberedSong = SelectedSong?.id;
         Sound("scrollMenu", 0.4f);
@@ -372,6 +379,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public void ToggleFavorite()
     {
         if (Busy || selectingMode || SelectedSong == null) return;
+        DJPlayerAction();
         SelectedSong.ToggleFavorite();
         Sound(SelectedSong.Favorite ? "fav" : "unfav", 1);
         rememberedSong = SelectedSong.id;
@@ -765,12 +773,13 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             previewFade = 0;
             preview.Play();
         }
-        preview.volume = 0.7f * OptionsV2.menuVolume * Mathf.Clamp01(previewFade / 2) * Mathf.Clamp01((previewEnd - preview.time) / 2);
+        preview.volume = 0.7f * OptionsV2.menuVolume * cartoonPreviewVolume * Mathf.Clamp01(previewFade / 2) * Mathf.Clamp01((previewEnd - preview.time) / 2);
     }
 
     public void ConfirmSelection()
     {
         if (Busy || selectingMode || filtered.Count == 0) return;
+        StopCartoon(true);
         if (SelectedSong == null)
         {
             SelectedIndex = Random.Range(1, filtered.Count + 1);
@@ -820,6 +829,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public void Close()
     {
         if (Busy || selectingMode) return;
+        StopCartoon(true);
         closing = true;
         exitAge = 0;
         Sound("cancelMenu", 1);
@@ -915,6 +925,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void OnDestroy()
     {
+        StopCartoon(false);
         CancelPreview();
         if (rankAdditive != null) Destroy(rankAdditive);
         if (Active == this) Active = null;

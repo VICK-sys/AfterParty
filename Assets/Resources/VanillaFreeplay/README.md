@@ -29,6 +29,14 @@ Entry keeps the main menu visible behind the moving card, backdrop, and capsules
 Exit moves the screen elements separately and restores main menu input after 0.5 seconds.
 Song confirmation plays the selected icon animation at 10 frames per second, then holds its confirmation pose.
 
+The DJ plays the AFK animation after 60 idle seconds, at the end of an idle loop.
+The DJ returns to idle, then watches TV after another 120 idle seconds.
+Menu actions reset the idle timer and allow the AFK animation to play again.
+Browsing does not interrupt an active AFK or TV animation.
+TV playback uses the original remote sounds, cartoon audio, random blinks, and channel changes.
+Cartoon audio streams from disk. Song preview volume falls to 15 percent while cartoons play.
+Song confirmation and menu exit fade cartoon audio over 0.25 seconds.
+
 ## Scores
 
 The score display reads existing Unity Party high scores.
@@ -86,3 +94,8 @@ Use `-executeMethod VanillaFreeplayRankValidation.Begin` to check rank return be
 This probe checks six ranks, upgrades, first clears, animation timing, input locks, preview audio, and actual gameplay return.
 Negative controls cover equal ranks, lower ranks, aborted runs, autoplay, Opponent mode, empty charts, and mismatched song or difficulty.
 It captures badge impact, capsule recoil, the restored menu, widescreen output, and a blank control.
+
+Use `-executeMethod VanillaFreeplayDJValidation.Begin` to check DJ behavior in the isolated project.
+This probe checks idle thresholds, loop boundaries, activity resets, TV frame cues, streamed audio, preview volume, and exit cleanup.
+Controls verify that AFK stays inactive before its threshold and does not replace rank reactions.
+The probe observes the 60-second idle trigger in Play mode and captures AFK and TV frames.
