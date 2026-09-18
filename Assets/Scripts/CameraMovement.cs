@@ -28,6 +28,7 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Pause.instance != null && (Pause.instance.IsPaused || Pause.instance.Transitioning)) return;
         if (Song.instance == null) return;
         if (Song.instance.vanillaPlayback != null && Song.instance.vanillaPlayback.MoveCamera(_camera)) return;
         if (Song.instance.vanillaPlayback != null)

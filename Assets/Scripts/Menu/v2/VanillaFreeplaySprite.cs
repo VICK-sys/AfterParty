@@ -25,22 +25,26 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
     private float clock;
     private double lastUpdateTime;
     private int index;
+    private bool frozen;
     public float fps = 24;
     public bool loop = true;
     public float drawScale = 1;
     public bool flipX;
     public bool centerScale = true;
     public float leftSlant;
+    public float angle;
     public Vector2 stretch = Vector2.one;
     public override Texture mainTexture => atlas;
     public Vector2 FrameSize => frames == null || frames.Length == 0 ? Vector2.zero : frames[0].full;
     public int FrameCount => frames?.Length ?? 0;
+    public int FrameIndex => index;
     public string CurrentFrameName => frames == null || frames.Length == 0 ? null : frames[index].name;
 
     public void Load(string path, string prefix = "", bool repeat = true)
     {
         assetPath = path;
         nextPrefix = null;
+        frozen = false;
         atlas = Resources.Load<Texture2D>("VanillaFreeplay/" + path);
         if (atlas == null) throw new InvalidOperationException("Missing Freeplay texture: " + path);
         string key = path + ":" + prefix;
@@ -87,7 +91,7 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
 
     public void Tick(float delta)
     {
-        if (frames == null || frames.Length == 0) return;
+        if (frozen || frames == null || frames.Length == 0) return;
         clock += delta;
         if (!loop && nextPrefix != null && clock * fps >= frames.Length)
         {
@@ -99,6 +103,13 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
         int next = loop ? (int)(clock * fps) % frames.Length : Mathf.Min((int)(clock * fps), frames.Length - 1);
         if (index == next) return;
         index = next;
+        SetVerticesDirty();
+    }
+
+    public void FreezeFrame(int frame)
+    {
+        index = Mathf.Clamp(frame, 0, frames.Length - 1);
+        frozen = true;
         SetVerticesDirty();
     }
 
@@ -133,5 +144,17 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
         vh.AddVert(new Vector3(x + leftSlant, y - height), color, new Vector2(Mathf.Lerp(u0, u1, leftSlant / width), frame.uv.yMin));
         vh.AddTriangle(0, 1, 2);
         vh.AddTriangle(0, 2, 3);
+        if (angle != 0)
+        {
+            Vector3 center = new Vector3(frame.full.x / 2, -frame.full.y / 2);
+            Quaternion rotation = Quaternion.Euler(0, 0, -angle);
+            UIVertex vertex = default;
+            for (int i = 0; i < 4; i++)
+            {
+                vh.PopulateUIVertex(ref vertex, i);
+                vertex.position = center + rotation * (vertex.position - center);
+                vh.SetUIVertex(vertex, i);
+            }
+        }
     }
 }

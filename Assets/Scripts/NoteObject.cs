@@ -58,6 +58,7 @@ public class NoteObject : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (Pause.instance != null && (Pause.instance.IsPaused || Pause.instance.Transitioning)) return;
         if (!dummyNote && song != null && State != null) Render();
     }
 
@@ -69,7 +70,7 @@ public class NoteObject : MonoBehaviour
         Vector3 center = receptor.transform.position;
         double distance = FunkinRules.NoteDistance(State.Time, position, song.FunkinScrollSpeed, OptionsV2.Downscroll);
         transform.position = center + new Vector3(-2 * pixel, (float)distance * pixel, 0);
-        FunkinNoteSkin.WorldScale(sprite.transform, pixel * 100 * 0.7f);
+        FunkinNoteSkin.WorldScale(sprite.transform, pixel * 100 * FunkinNoteSkin.Scale);
         sprite.enabled = receptor.enabled && State.HeadVisible;
         if (State.Hit && State.HeadVisible)
         {

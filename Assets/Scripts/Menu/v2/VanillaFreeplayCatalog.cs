@@ -80,6 +80,11 @@ public static class VanillaFreeplayCatalog
                         }
                         if (Path.GetFileName(bundlePath) == "00-Tutorial") song.week = "Tutorial";
                         if (Path.GetFileName(bundlePath) == "01-Week1") song.week = "Week 1";
+                        if (Path.GetFileName(bundlePath) == "02-Week2") song.week = "Week 2";
+                        if (Path.GetFileName(bundlePath) == "03-Week3") song.week = "Week 3";
+                        if (Path.GetFileName(bundlePath) == "04-Week4") song.week = "Week 4";
+                        if (Path.GetFileName(bundlePath) == "05-Week5") song.week = "Week 5";
+                        if (Path.GetFileName(bundlePath) == "06-Week6") song.week = "Week 6";
                         songs.Add(song);
                     }
                     catch (Exception e) { Debug.LogWarning("Cannot read Freeplay song " + path + ": " + e.Message); }
@@ -105,15 +110,20 @@ public static class VanillaFreeplayCatalog
         return first >= filter[0] && first <= filter[filter.Length - 1];
     }
 
-    public static void SaveCompletion(SongMetaV2 meta, string difficulty, int mode, PlayerStat stats, bool completed, int totalNotes)
+    public static VanillaFreeplayRankChange SaveCompletion(SongMetaV2 meta, string difficulty, int mode, PlayerStat stats, bool completed, int totalNotes)
     {
-        if (!completed || mode != 1 || totalNotes <= 0) return;
+        if (!completed || mode != 1 || totalNotes <= 0) return null;
         string key = meta.songName + meta.bundleMeta.bundleName + difficulty.ToLowerInvariant() + mode;
         int missed = stats.missedHits + Mathf.Max(0, totalNotes - stats.totalNoteHits);
         float clear = Mathf.Clamp01((stats.totalSicks + stats.totalGoods - missed) / (float)totalNotes);
         int rank = stats.totalSicks == totalNotes ? 5 : clear >= 1 ? 4 : clear >= 0.9f ? 3 : clear >= 0.8f ? 2 : clear >= 0.6f ? 1 : 0;
+        int oldRank = PlayerPrefs.GetInt("Freeplay.Rank." + key, -1);
         PlayerPrefs.SetFloat("Freeplay.Clear." + key, Mathf.Max(clear, PlayerPrefs.GetFloat("Freeplay.Clear." + key, 0)));
-        PlayerPrefs.SetInt("Freeplay.Rank." + key, Mathf.Max(rank, PlayerPrefs.GetInt("Freeplay.Rank." + key, -1)));
+        PlayerPrefs.SetInt("Freeplay.Rank." + key, Mathf.Max(rank, oldRank));
         PlayerPrefs.Save();
+        return rank > oldRank ? new VanillaFreeplayRankChange
+        {
+            songPath = meta.songPath, difficulty = difficulty, mode = mode, oldRank = oldRank, newRank = rank
+        } : null;
     }
 }

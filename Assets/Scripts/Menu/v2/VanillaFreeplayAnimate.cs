@@ -107,6 +107,12 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         SetVerticesDirty();
     }
 
+    public void PlayRange(string label, int start, int length, bool loop)
+    {
+        if (!clips.TryGetValue(label, out Clip clip)) throw new ArgumentException("Unknown Animate label: " + label);
+        PlayFrames(clip.start + start, length < 0 ? clip.length - start : length, loop);
+    }
+
     public void PlayFrames(int start, int length, bool loop)
     {
         firstFrame = start;
@@ -173,6 +179,11 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         double now = Time.realtimeSinceStartupAsDouble;
         float delta = (float)(now - lastUpdateTime);
         lastUpdateTime = now;
+        Tick(delta);
+    }
+
+    public void Tick(float delta)
+    {
         if (!playing || root == null || clipLength <= 0) return;
         clock += delta * frameRate;
         int next = Mathf.FloorToInt(clock);

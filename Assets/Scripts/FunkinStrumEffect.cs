@@ -60,9 +60,10 @@ public sealed class FunkinStrumEffect : MonoBehaviour
             effect.Sprite.transform.SetParent(transform, false);
         }
         effect.Sprite.enabled = true;
+        effect.Sprite.sharedMaterial = splash && FunkinNoteSkin.Pixel ? FunkinNoteSkin.ScreenMaterial : receptor.sharedMaterial;
         effect.Sprite.sortingLayerID = receptor.sortingLayerID;
         effect.Sprite.sortingOrder = splash ? 50 : 40;
-        effect.Sprite.color = new Color(1, 1, 1, splash ? 0.8f : 1);
+        effect.Sprite.color = new Color(1, 1, 1, splash && !FunkinNoteSkin.Pixel ? 0.8f : 1);
         effect.Time = 0;
         effect.Phase = 0;
         effect.Hold = null;
@@ -72,6 +73,13 @@ public sealed class FunkinStrumEffect : MonoBehaviour
     public void Splash()
     {
         Effect effect = NewEffect(true);
+        if (FunkinNoteSkin.Pixel)
+        {
+            string pixelColor = new[] { "purple", "blue", "green", "orange" }[direction];
+            effect.Frames = FunkinNoteSkin.Frames("Pixel/pixelNoteSplash", pixelColor + Random.Range(1, 4));
+            effect.Rate = Random.Range(31, 36);
+            return;
+        }
         int variant = Random.Range(1, 3);
         string color = FunkinNoteSkin.Colors[direction].ToLowerInvariant();
         string prefix = "note impact " + variant + " " + (direction == 1 && variant == 1 ? " " : "") + color + "0";
@@ -89,6 +97,8 @@ public sealed class FunkinStrumEffect : MonoBehaviour
 
     private Sprite[] CoverFrames(string phase)
     {
+        if (FunkinNoteSkin.Pixel)
+            return FunkinNoteSkin.Frames("Pixel/pixelNoteHoldCover", phase == "Start" ? "loop0000" : phase == "End" ? "explode" : "loop");
         string color = FunkinNoteSkin.Colors[direction];
         return FunkinNoteSkin.Frames("holdCover" + color, "holdCover" + phase + color + "0");
     }
@@ -140,8 +150,9 @@ public sealed class FunkinStrumEffect : MonoBehaviour
             FunkinNoteSkin.ApplyFrame(effect.Sprite, effect.Frames[index]);
             float pixel = song.FunkinWorldPixelSize;
             Vector3 offset = effect.Hold == null ? new Vector3(-4.2f, -0.6f) : new Vector3(-12.6f, -44.8f);
+            if (FunkinNoteSkin.Pixel) offset = effect.Hold == null ? new Vector3(-2.6f, 14) : new Vector3(163.6f, 2.6f);
             effect.Sprite.transform.position = transform.position + offset * pixel;
-            FunkinNoteSkin.WorldScale(effect.Sprite.transform, pixel * 100);
+            FunkinNoteSkin.WorldScale(effect.Sprite.transform, pixel * 100 * (FunkinNoteSkin.Pixel ? effect.Hold == null ? 4 : 6 : 1));
         }
     }
 }

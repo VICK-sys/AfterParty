@@ -17,14 +17,27 @@ using Object = UnityEngine.Object;
 [InitializeOnLoad]
 public static class VanillaSongValidation
 {
-    private static readonly string[] Ids = { "bopeebo", "fresh", "dadbattle", "bopeebo", "fresh", "dadbattle", "tutorial", "bopeebo", "fresh", "dadbattle" };
-    private static readonly string[] Difficulties = { "Erect", "Erect", "Erect", "Nightmare", "Nightmare", "Nightmare", "Hard", "Hard", "Hard", "Hard" };
+    private static bool Week2Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEK2_TEST") == "1";
+    private static bool Week3Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEK3_TEST") == "1";
+    private static bool Weeks456Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEKS456_TEST") == "1";
+    private static bool StageOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_STAGE_ONLY") == "1";
+    private static int RunLimit => int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_LIMIT"), out int limit) && limit > 0 ? limit : int.MaxValue;
+    private static int RunStart => int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_START"), out int start) ? start : 0;
+    private static readonly string[] Ids = (Weeks456Only ? new[] { "satin-panties", "high", "milf", "cocoa", "eggnog", "winter-horrorland", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns" }
+        : Week3Only ? new[] { "pico", "philly-nice", "blammed", "pico", "philly-nice", "blammed", "pico", "philly-nice", "blammed" }
+        : Week2Only ? new[] { "spookeez", "south", "monster", "spookeez", "south", "spookeez", "south" }
+        : new[] { "bopeebo", "fresh", "dadbattle", "bopeebo", "fresh", "dadbattle", "tutorial", "bopeebo", "fresh", "dadbattle" }).Skip(RunStart).Take(RunLimit).ToArray();
+    private static readonly string[] Difficulties = (Weeks456Only ? Enumerable.Repeat("Hard", 9).Concat(Enumerable.Repeat("Erect", 7)).Concat(Enumerable.Repeat("Nightmare", 7)).ToArray()
+        : Week3Only ? new[] { "Erect", "Erect", "Erect", "Hard", "Hard", "Hard", "Nightmare", "Nightmare", "Nightmare" }
+        : Week2Only ? new[] { "Erect", "Erect", "Hard", "Hard", "Hard", "Nightmare", "Nightmare" }
+        : new[] { "Erect", "Erect", "Erect", "Nightmare", "Nightmare", "Nightmare", "Hard", "Hard", "Hard", "Hard" }).Skip(RunStart).Take(RunLimit).ToArray();
     private static double beginAt;
     private static double changedAt;
     private static double started;
     private static int phase;
     private static int songIndex;
     private static int errors;
+    private static int editorWarnings;
     private static bool finishing;
     private static Song activeSong;
     private static int headsPlayer;
@@ -46,11 +59,16 @@ public static class VanillaSongValidation
 
     public static void Begin()
     {
+        if (!Application.isBatchMode) throw new InvalidOperationException("Run song validation in an isolated batch editor.");
+        PlayerSettings.companyName = "UnityPartyValidation";
+        PlayerSettings.productName = "SongValidation";
         Directory.CreateDirectory(Output);
         try
         {
             CheckCharts();
             CheckEasing();
+            if (Week3Only) VanillaWeek3Validation.CheckAssets();
+            if (Weeks456Only) VanillaWeeks456Validation.CheckAssets();
             EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
             beginAt = EditorApplication.timeSinceStartup + 5;
             EditorApplication.update += BeginWhenReady;
@@ -62,7 +80,7 @@ public static class VanillaSongValidation
         }
     }
 
-    private static void CheckCharts()
+    public static void CheckCharts()
     {
         string root = Path.Combine(Application.streamingAssetsPath, "Bundles");
         int chartCount = 0;
@@ -93,14 +111,15 @@ public static class VanillaSongValidation
                 chartCount++;
             }
         }
-        Require(chartCount == 18 && control && speedControl, "Expected eighteen charts and rejected side and integer-speed controls.");
-        Debug.Log("SONG CHARTS PASSED: all 18 charts preserve timing, note sides, directions, sustains, and speeds. Swapped-side control rejected.");
+        Require(chartCount == 87 && control && speedControl, "Expected 87 charts and rejected side and integer-speed controls.");
+        Debug.Log("SONG CHARTS PASSED: all 87 charts preserve timing, note sides, directions, sustains, and speeds. Swapped-side control rejected.");
     }
 
     private static void CheckEasing()
     {
         Type type = typeof(VanillaSongPlayback).GetNestedType("Transition", BindingFlags.NonPublic);
-        foreach (var sample in new[] { ("expoOut", 0.5f, 0.96875f), ("quadInOut", 0.25f, 0.125f), ("smoothStepInOut", 0.25f, 0.15625f) })
+        foreach (var sample in new[] { ("expoOut", 0.5f, 0.96875f), ("quadInOut", 0.25f, 0.125f), ("smoothStepInOut", 0.25f, 0.15625f),
+            ("quartOut", 0.5f, 0.9375f), ("sineInOut", 0.25f, 0.1464466f), ("quadOut", .5f, .75f), ("sineOut", .5f, .70710678f) })
         {
             object transition = Activator.CreateInstance(type);
             type.GetField("duration").SetValue(transition, 1f);
@@ -142,6 +161,12 @@ public static class VanillaSongValidation
 
     private static void OnLog(string message, string stack, LogType type)
     {
+        if (type == LogType.Exception && message.StartsWith("ArgumentOutOfRangeException", StringComparison.Ordinal)
+            && stack.Contains("UnityEditor.Search.SearchDatabase") && stack.Contains("UnityEditor.Search.SearchInit.IndexationOnStartup"))
+        {
+            editorWarnings++;
+            return;
+        }
         if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
             errors++;
     }
@@ -190,7 +215,7 @@ public static class VanillaSongValidation
                 if (elapsed < 1) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 var bundles = menu.songListRect.GetComponentsInChildren<BundleButtonV2>(true);
-                Require(bundles.Length == 2 && bundles.Sum(b => b.SongButtons.Count) == 4, "Built-in Tutorial and Week 1 did not appear in the song picker.");
+                Require(bundles.Length == 7 && bundles.Sum(b => b.SongButtons.Count) == 19, "Built-in Tutorial and Weeks 1 through 6 did not appear in the song picker.");
                 SongButtonV2 button = bundles.SelectMany(b => b.SongButtons).Single(b =>
                     (string)JObject.Parse(File.ReadAllText(Path.Combine(b.Meta.songPath, "Vanilla.json")))["song"] == Ids[songIndex]);
                 button.GetComponent<Button>().onClick.Invoke();
@@ -201,7 +226,7 @@ public static class VanillaSongValidation
                 if (elapsed < 3) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 Require(menu.songInfoScreen.activeInHierarchy && menu.canChangeSongs && menu.musicSource.isPlaying, "Bundled song preview did not load.");
-                string[] options = Ids[songIndex] == "tutorial" ? new[] { "Easy", "Normal", "Hard" }
+                string[] options = new[] { "tutorial", "monster", "milf", "winter-horrorland" }.Contains(Ids[songIndex]) ? new[] { "Easy", "Normal", "Hard" }
                     : new[] { "Easy", "Normal", "Hard", "Erect", "Nightmare" };
                 Require(menu.songDifficultiesDropdown.options.Select(o => o.text).SequenceEqual(options), "Difficulty order is incorrect.");
                 menu.songDifficultiesDropdown.value = Array.IndexOf(options, Difficulties[songIndex]);
@@ -236,23 +261,27 @@ public static class VanillaSongValidation
                 Require(activeSong.selectedInstrumentalPath.EndsWith("Inst-erect.ogg") == erect, "Wrong instrumental variation loaded.");
                 Require(activeSong.selectedVocalsPath.EndsWith("Voices-erect.ogg") == erect, "Wrong vocal variation loaded.");
                 Require(activeSong.vanillaPlayback.IsErect == erect, "Wrong chart events loaded.");
-                if (erect)
+                if (erect && !Week2Only && !Week3Only && !Weeks456Only)
                 {
-                    Require(activeSong.vanillaPlayback.Stage != null && activeSong.vanillaPlayback.Stage.PropCount == 10, "Erect stage did not load.");
+                    Require(activeSong.vanillaPlayback.CampaignStage != null && activeSong.vanillaPlayback.CampaignStage.PropCount == 9, "Erect stage did not load.");
                     Require(activeSong.defaultSceneObjects.All(item => !item.activeSelf), "Original stage overlaps Erect stage.");
                     Vector3 position = activeSong.mainCamera.transform.position;
                     OptionsV2.Middlescroll = true;
                     activeSong.vanillaPlayback.MoveCamera(activeSong.mainCamera);
-                    Vector3 target = activeSong.vanillaPlayback.Stage.CameraTargets[2];
+                    Vector3 target = activeSong.vanillaPlayback.CampaignStage.CameraTargets[2];
                     Require(Vector3.Distance(activeSong.mainCamera.transform.position, target) < 0.001f, "Middlescroll camera left the Erect stage.");
-                    Require(Vector3.Distance(target, activeSong.vanillaPlayback.Stage.CameraTargets[1]) > 1, "Girlfriend focus incorrectly uses Dad.");
+                    Require(Vector3.Distance(target, activeSong.vanillaPlayback.CampaignStage.CameraTargets[1]) > 1, "Girlfriend focus incorrectly uses Dad.");
                     OptionsV2.Middlescroll = false;
                     activeSong.mainCamera.transform.position = position;
                 }
                 string sourceName = erect ? "chart-erect.json" : "chart.json";
                 sourceEvents = JObject.Parse(File.ReadAllText(Path.Combine(activeSong.selectedSongDir, "Source", sourceName)))["events"]
                     .OrderBy(entry => (double)entry["t"]).ToArray();
-                Require(activeSong.enemy.characterName == (Ids[songIndex] == "tutorial" ? "Girlfriend" : "Dad"), "Wrong opponent loaded.");
+                Require(activeSong.enemy.characterName == (Weeks456Only ? activeSong.vanillaPlayback.OpponentId : Week3Only ? "Pico" : Week2Only ? Ids[songIndex] == "monster" ? "Monster" : "Spooky Kids"
+                    : Ids[songIndex] == "tutorial" ? "Girlfriend" : "Dad"), "Wrong opponent loaded.");
+                if (Week2Only) VanillaWeek2Validation.CheckStage(activeSong);
+                if (Week3Only) VanillaWeek3Validation.CheckStage(activeSong);
+                if (Weeks456Only) VanillaWeeks456Validation.CheckStage(activeSong);
                 if (Ids[songIndex] == "tutorial")
                     Require(!activeSong.girlfriendObject.activeSelf, "Tutorial displays a duplicate Girlfriend.");
                 var chart = (FNFSong)typeof(Song).GetField("_song", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeSong);
@@ -262,7 +291,14 @@ public static class VanillaSongValidation
                 var behaviors = (List<NoteBehaviour>)typeof(Song).GetField("_noteBehaviours", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeSong);
                 Require(behaviors.Count == notes.Length, "Note scheduler contains missing or duplicate heads.");
                 Debug.Log("SONG RUNNING: " + Ids[songIndex] + " " + Difficulties[songIndex] + ", " + notes.Length + " heads, opponent=" + activeSong.enemy.characterName + ", duration=" + activeSong.musicClip.length);
-                Next(4);
+                if (StageOnly)
+                {
+                    CaptureStage(Ids[songIndex] + "-" + Difficulties[songIndex].ToLowerInvariant() + ".png");
+                    Debug.Log("SONG STAGE COMPLETED: " + Ids[songIndex] + " " + Difficulties[songIndex]);
+                    Pause.instance.QuitSong();
+                    Next(7);
+                }
+                else Next(4);
             }
             else if (phase == 4)
             {
@@ -296,11 +332,23 @@ public static class VanillaSongValidation
                     Require(activeSong.playerOneStats.missedHits == 0 && activeSong.playerTwoStats.missedHits == 0, "Autoplay missed notes.");
                     int events = JObject.Parse(File.ReadAllText(activeSong.selectedVanillaPath))["events"].Count();
                     Require(activeSong.vanillaPlayback.EventsApplied == events, "Song ended before all chart events were consumed.");
+                    if (Week2Only)
+                    {
+                        int noAnimation = JObject.Parse(File.ReadAllText(activeSong.selectedVanillaPath))["noteKinds"][Difficulties[songIndex].ToLowerInvariant()].Count();
+                        Require(activeSong.vanillaPlayback.Week2Stage.NoAnimationHits == noAnimation, "Noanim hits did not preserve chart animation events.");
+                    }
                     checkedEnd = true;
                     Debug.Log("SONG COMPLETED: " + Ids[songIndex] + " " + Difficulties[songIndex] + ", all heads hit, all events consumed, zero misses.");
                 }
                 if (SceneManager.GetActiveScene().name != "Title") return;
                 Require(checkedEnd, "Song returned to menu before its completion checks.");
+                songIndex++;
+                Next(0);
+            }
+            else if (phase == 7)
+            {
+                Require(elapsed < 15, "Stage probe did not return to the menu.");
+                if (SceneManager.GetActiveScene().name != "Title") return;
                 songIndex++;
                 Next(0);
             }
@@ -318,12 +366,17 @@ public static class VanillaSongValidation
             EditorApplication.delayCall += () => Finish(phase == 5 && songIndex == Ids.Length && errors == 0);
     }
 
-    private static void CaptureStage(string name)
+    public static void CaptureStage(string name)
+    {
+        CaptureStage(activeSong, Path.Combine(Output, name));
+    }
+
+    public static void CaptureStage(Song song, string path)
     {
         var cameraObject = new GameObject("Stage validation camera");
         Camera camera = cameraObject.AddComponent<Camera>();
-        camera.CopyFrom(activeSong.mainCamera);
-        camera.transform.SetPositionAndRotation(activeSong.mainCamera.transform.position, activeSong.mainCamera.transform.rotation);
+        camera.CopyFrom(song.mainCamera);
+        camera.transform.SetPositionAndRotation(song.mainCamera.transform.position, song.mainCamera.transform.rotation);
         camera.GetUniversalAdditionalCameraData().renderType = CameraRenderType.Base;
         camera.GetUniversalAdditionalCameraData().SetRenderer(0);
         camera.clearFlags = CameraClearFlags.SolidColor;
@@ -346,8 +399,8 @@ public static class VanillaSongValidation
                 image.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
                 image.Apply();
                 int visible = image.GetPixels32().Count(pixel => pixel.r > 40 || pixel.g > 40 || pixel.b > 40);
-                Require(pass == 0 ? visible > 10000 : visible == 0, "Stage render or blank control failed: " + name);
-                if (pass == 0) File.WriteAllBytes(Path.Combine(Output, name), image.EncodeToPNG());
+                if (pass == 0) File.WriteAllBytes(path, image.EncodeToPNG());
+                Require(pass == 0 ? visible > 10000 : visible == 0, "Stage render or blank control failed: " + path + ", pass=" + pass + ", visible=" + visible);
                 Object.DestroyImmediate(image);
             }
         }
@@ -366,8 +419,10 @@ public static class VanillaSongValidation
         finishing = true;
         SessionState.SetBool("VanillaSongValidation.Active", false);
         Debug.Log("SONG VALIDATION FINISHED: passed=" + success + ", errors=" + errors + ", completed=" + songIndex);
-        File.WriteAllText(Path.Combine(Output, "result.json"), new JObject { ["passed"] = success, ["errors"] = errors, ["completed"] = songIndex }.ToString());
-        if (success)
+        File.WriteAllText(Path.Combine(Output, "result.json"), new JObject { ["passed"] = success, ["errors"] = errors, ["completed"] = songIndex,
+            ["editorWarnings"] = editorWarnings,
+            ["mode"] = StageOnly ? "stage" : "full" }.ToString());
+        if (success && Environment.GetEnvironmentVariable("UNITY_PARTY_SKIP_BUILD") != "1")
         {
             try { BuildAutomation.BuildWindows(); }
             catch (Exception exception) { Debug.LogException(exception); success = false; }

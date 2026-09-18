@@ -309,7 +309,7 @@ public static class FunkinRuleTests
                 heads += entries.Length;
             }
         }
-        Require(charts == 18 && heads == 5801, "Expected all eighteen bundled charts and 5,801 note heads.");
+        Require(charts == 87 && heads == 41590, "Expected all 87 bundled charts and 41,590 note heads.");
         Console.WriteLine("FUNKIN CHART TESTS PASSED: " + charts + " charts, " + heads + " heads, 30/60/144 FPS.");
     }
 }

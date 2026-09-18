@@ -12,6 +12,26 @@ public sealed class VanillaSongPlayback : MonoBehaviour
     public string SongId { get; private set; }
     public bool IsErect { get; private set; }
     public VanillaErectStage Stage { get; private set; }
+    public VanillaWeek2Stage Week2Stage { get; private set; }
+    public VanillaWeek3Stage Week3Stage { get; private set; }
+    public VanillaCampaignStage CampaignStage { get; private set; }
+    public VanillaCampaignPresentation Presentation { get; private set; }
+    public IVanillaCharacterStage CharacterStage => (IVanillaCharacterStage)CampaignStage ?? (IVanillaCharacterStage)Week3Stage ?? Week2Stage;
+    public bool IsCampaign { get; private set; }
+    public bool IsMainStage { get; private set; }
+    public bool IsPixel { get; private set; }
+    public string PlayerId => (string)sourceData?["characters"]?["player"] ?? "bf";
+    public string OpponentId => (string)sourceData?["opponent"];
+    public bool IsWeek2 { get; private set; }
+    public bool IsWeek3 { get; private set; }
+    public bool UsesSourceCamera => IsErect || IsWeek2 || IsWeek3 || IsCampaign || IsMainStage;
+    public Vector3 CameraFocusTarget => OptionsV2.LiteMode || OptionsV2.Middlescroll ? CameraTargets[2] : cameraTo;
+    public float CameraSize => 3.6f / Mathf.Max(.1f, zoom) / gameBop;
+    private Vector3[] CameraTargets => CampaignStage != null ? CampaignStage.CameraTargets : Week3Stage != null ? Week3Stage.CameraTargets : Week2Stage != null ? Week2Stage.CameraTargets : Stage.CameraTargets;
+    private float stageZoom;
+    private JObject sourceData;
+    private JToken[] timeChanges;
+    private Character week2Opponent;
     public int FocusCharacter { get; private set; }
     public Vector2 FocusOffset { get; private set; }
     public float BopRate { get; private set; } = 4;
@@ -58,6 +78,18 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                 case "quadInOut":
                     eased = t <= 0.5f ? 2 * t * t : 1 - 2 * (t - 1) * (t - 1);
                     break;
+                case "quadOut":
+                    eased = 1 - (1-t)*(1-t);
+                    break;
+                case "sineOut":
+                    eased = Mathf.Sin(t * Mathf.PI / 2);
+                    break;
+                case "quartOut":
+                    eased = 1 - Mathf.Pow(1 - t, 4);
+                    break;
+                case "sineInOut":
+                    eased = (1 - Mathf.Cos(Mathf.PI * t)) / 2;
+                    break;
                 case "smoothStepInOut":
                     eased = t * t * (3 - 2 * t);
                     break;
@@ -102,6 +134,28 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         enabled = true;
         SongId = (string)data["song"];
         IsErect = (string)data["variation"] == "erect";
+        IsWeek2 = ((string)data["stage"])?.StartsWith("spookyMansion") == true;
+        IsWeek3 = ((string)data["stage"])?.StartsWith("phillyTrain") == true;
+        string stageId = (string)data["stage"] ?? "";
+        IsMainStage = stageId.StartsWith("mainStage");
+        IsCampaign = stageId.StartsWith("limo") || stageId.StartsWith("mall") || stageId.StartsWith("school");
+        IsPixel = (string)data["noteStyle"] == "pixel";
+        sourceData = data;
+        if (IsCampaign && Presentation == null) Presentation = song.gameObject.AddComponent<VanillaCampaignPresentation>();
+        if (IsPixel)
+        {
+            song.deadNoise = Resources.Load<AudioClip>("FunkinHud/Pixel/loss");
+            song.deadTheme = Resources.Load<AudioClip>("FunkinHud/Pixel/gameOver");
+            song.deadConfirm = Resources.Load<AudioClip>("FunkinHud/Pixel/gameOverEnd");
+        }
+        timeChanges = data["timeChanges"]?.ToArray();
+        stageZoom = IsWeek3 ? 1.1f : IsWeek2 ? 1 : IsErect ? 0.85f : 1.1f;
+        if (IsCampaign || IsMainStage)
+        {
+            int week = IsMainStage ? 1 : stageId.StartsWith("limo") ? 4 : stageId.StartsWith("mall") ? 5 : 6;
+            string path = Path.Combine(Application.streamingAssetsPath, "Bundles/Week" + week + "Assets/stages", stageId, "stage.json");
+            stageZoom = (float)JObject.Parse(File.ReadAllText(path))["cameraZoom"];
+        }
         BopRate = 4;
         BopIntensity = 1;
         bopOffset = 0;
@@ -112,10 +166,20 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         EventsApplied = 0;
         stepMilliseconds = 15000 / (float)data["bpm"];
         baseSpeed = scroll = speed;
-        zoom = IsErect ? 0.85f : 1.1f;
+        zoom = stageZoom;
         zoomTransition = new Transition { from = zoom, to = zoom };
         scrollTransition = new Transition { from = scroll, to = scroll };
         song.speedDifference = 0;
+        if ((IsWeek2 || IsWeek3 || IsCampaign) && week2Opponent == null)
+        {
+            string id = (string)data["opponent"];
+            week2Opponent = Instantiate(song.enemy);
+            week2Opponent.characterName = IsCampaign ? id : IsWeek3 ? "Pico" : id == "monster" ? "Monster" : "Spooky Kids";
+            week2Opponent.portrait = FunkinHudAssets.Icon(id == "spooky-dark" ? "spooky" : id)[0];
+            week2Opponent.portraitDead = week2Opponent.portrait;
+            song.charactersDictionary[id] = week2Opponent;
+            Cache.cachedOpponents[id] = week2Opponent;
+        }
         var hey = Resources.Load<SpriteAnimation>("VanillaSongs/Boyfriend Hey");
         if (hey != null && song.boyfriendAnimator.spriteAnimations.All(a => a.Name != hey.Name))
             song.boyfriendAnimator.spriteAnimations.Add(hey);
@@ -131,14 +195,29 @@ public sealed class VanillaSongPlayback : MonoBehaviour
             opponentRenderer.sortingOrder = playerRenderer.sortingOrder - 1;
             song.girlfriendObject.SetActive(false);
         }
-        if (!IsErect) ApplyUntil(0);
+        if (!UsesSourceCamera) ApplyUntil(0);
     }
 
     public void SetupStage()
     {
-        if (!IsErect || OptionsV2.DesperateMode) return;
-        if (Stage == null) Stage = VanillaErectStage.Create(song);
-        cameraTo = Stage.CameraTargets[2];
+        if (!UsesSourceCamera || OptionsV2.DesperateMode) return;
+        if (IsCampaign || IsMainStage)
+        {
+            if (CampaignStage == null) CampaignStage = VanillaCampaignStage.Create(song, sourceData);
+            else CampaignStage.ResetStage();
+        }
+        else if (IsWeek3)
+        {
+            if (Week3Stage == null) Week3Stage = VanillaWeek3Stage.Create(song, sourceData);
+            else Week3Stage.ResetStage();
+        }
+        else if (IsWeek2)
+        {
+            if (Week2Stage == null) Week2Stage = VanillaWeek2Stage.Create(song, sourceData);
+            else Week2Stage.ResetStage();
+        }
+        else if (Stage == null) Stage = VanillaErectStage.Create(song);
+        cameraTo = CameraTargets[2];
         song.mainCamera.transform.position = cameraTo;
         song.mainCamera.orthographicSize = 3.6f / zoom;
         ApplyUntil(0);
@@ -146,10 +225,11 @@ public sealed class VanillaSongPlayback : MonoBehaviour
 
     public bool MoveCamera(Camera camera)
     {
-        if (!IsErect || Stage == null) return false;
+        if (!UsesSourceCamera || Stage == null && CharacterStage == null) return false;
+        if (Presentation != null && Presentation.OwnsCamera) return true;
         if (OptionsV2.LiteMode || OptionsV2.Middlescroll)
         {
-            camera.transform.position = Stage.CameraTargets[2];
+            camera.transform.position = CameraTargets[2];
             return true;
         }
         if (!song.songStarted) return true;
@@ -166,14 +246,21 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         if (song == null || !song.songStarted || !song.musicSources[0].isPlaying)
             return;
         float time = song.stopwatch.ElapsedMilliseconds;
+        if (IsWeek2 || IsWeek3 || IsCampaign || IsMainStage)
+        {
+            JToken tempo = TempoAt(time);
+            stepMilliseconds = tempo == null ? stepMilliseconds : 15000 / (float)tempo["bpm"];
+            song.stepCrochet = stepMilliseconds;
+            song.beatsPerSecond = stepMilliseconds * 4 / 1000;
+        }
         ApplyUntil(time);
         zoom = zoomTransition.Value(time);
         scroll = scrollTransition.Value(time);
-        song.defaultGameZoom = (IsErect ? 3.6f : baseZoom * 1.1f) / Mathf.Max(0.1f, zoom);
+        song.defaultGameZoom = (UsesSourceCamera ? 3.6f : baseZoom * 1.1f) / Mathf.Max(0.1f, zoom);
         song.speedDifference = (baseSpeed - scroll) / 100;
-        if (IsErect)
+        if (UsesSourceCamera)
         {
-            int step = Mathf.FloorToInt(time / stepMilliseconds);
+            int step = Mathf.FloorToInt(BeatAt(time) * 4);
             while (lastStep < step)
             {
                 lastStep++;
@@ -186,7 +273,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
             float decay = Mathf.Pow(0.95f, Time.deltaTime * 60);
             gameBop = Mathf.Lerp(1, gameBop, decay);
             hudBop = Mathf.Lerp(1, hudBop, decay);
-            song.mainCamera.orthographicSize = song.defaultGameZoom / gameBop;
+            if (Presentation == null || !Presentation.OwnsCamera) song.mainCamera.orthographicSize = song.defaultGameZoom / gameBop;
             song.uiCamera.orthographicSize = hudSize / hudBop;
         }
     }
@@ -203,12 +290,12 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                 case "FocusCamera":
                     FocusCharacter = value.Type == JTokenType.Object ? (int?)value["char"] ?? 0 : (int)value;
                     FocusOnPlayer = FocusCharacter == 0;
-                    if (IsErect && Stage != null)
+                    if (UsesSourceCamera && (Stage != null || CharacterStage != null))
                     {
                         FocusOffset = value.Type == JTokenType.Object
                             ? new Vector2((float?)value["x"] ?? 0, (float?)value["y"] ?? 0) : Vector2.zero;
                         cameraFrom = song.mainCamera.transform.position;
-                        cameraTo = (FocusCharacter < 0 ? new Vector3(0, 0, -10) : Stage.CameraTargets[FocusCharacter])
+                        cameraTo = (FocusCharacter < 0 ? new Vector3(0, 0, -10) : CameraTargets[FocusCharacter])
                             + new Vector3(FocusOffset.x / 100, -FocusOffset.y / 100, 0);
                         string ease = value.Type == JTokenType.Object ? (string)value["ease"] ?? "CLASSIC" : "CLASSIC";
                         classicCamera = ease == "CLASSIC";
@@ -217,7 +304,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                     break;
                 case "ZoomCamera":
                     zoom = zoomTransition.Value(eventTime);
-                    float zoomTarget = (float)value["zoom"] * ((string)value["mode"] == "stage" ? (IsErect ? 0.85f : 1.1f) : 1);
+                    float zoomTarget = (float)value["zoom"] * ((string)value["mode"] == "stage" ? stageZoom : 1);
                     zoomTransition = MakeTransition(value, eventTime, zoom, zoomTarget);
                     break;
                 case "SetCameraBop":
@@ -231,12 +318,39 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                     scrollTransition = MakeTransition(value, eventTime, scroll, target);
                     break;
                 case "PlayAnimation":
+                    if (CharacterStage != null)
+                    {
+                        CharacterStage.PlayAnimation((string)value["target"], (string)value["anim"]);
+                        break;
+                    }
                     string character = (string)value["target"];
                     bool player = character == "bf" || character == "boyfriend";
                     string animation = (string)value["anim"];
                     song.PlayChartAnimation(player, player && animation == "hey" ? "BF Hey" : animation == "cheer" ? "Cheer" : animation);
                     break;
             }
+        }
+    }
+
+    private JToken TempoAt(double time) => timeChanges?.LastOrDefault(change => (double)change["t"] <= time) ?? timeChanges?.FirstOrDefault();
+
+    public float BeatAt(double time)
+    {
+        JToken change = TempoAt(time);
+        return change == null ? (float)(time / (stepMilliseconds * 4))
+            : (float)((double?)change["b"] ?? 0) + (float)((time - (double)change["t"]) * (double)change["bpm"] / 60000);
+    }
+
+    private void OnDestroy()
+    {
+        if (Week2Stage != null) Destroy(Week2Stage.gameObject);
+        if (Week3Stage != null) Destroy(Week3Stage.gameObject);
+        if (CampaignStage != null) Destroy(CampaignStage.gameObject);
+        if (week2Opponent != null)
+        {
+            string id = (string)sourceData["opponent"];
+            if (Cache.cachedOpponents.TryGetValue(id, out Character cached) && cached == week2Opponent) Cache.cachedOpponents.Remove(id);
+            Destroy(week2Opponent);
         }
     }
 

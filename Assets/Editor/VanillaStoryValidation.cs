@@ -61,7 +61,9 @@ public static class VanillaStoryValidation
     private static void CheckPlaylist()
     {
         List<VanillaStoryLevel> levels = VanillaStoryCatalog.Load();
-        Require(levels.Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1" }), "Story Mode must only show the installed Tutorial and Week 1.");
+        Require(levels.Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1", "week2", "week3", "week4", "week5", "week6" }), "Story Mode must show the installed Tutorial and Weeks 1 through 6.");
+        Require(VanillaStoryCatalog.TryPlaylist(levels[2], "hard", out var week2, out _)
+            && week2.Select(song => song.meta.songName).SequenceEqual(new[] { "Spookeez", "South", "Monster" }), "Week 2 playlist is incomplete or out of order.");
         Require(VanillaStoryCatalog.TryPlaylist(levels[1], "hard", out var songs, out _), "Week 1 Hard is not playable.");
         Require(songs.Select(song => song.meta.songName).SequenceEqual(new[] { "Bopeebo", "Fresh", "DadBattle" }), "Playlist did not preserve source song order.");
         var missing = new VanillaStoryLevel { songs = new[] { "bopeebo", "not-installed" }, songNames = new[] { "Bopeebo", "Missing control" } };
@@ -187,7 +189,7 @@ public static class VanillaStoryValidation
                     story.ChangeDifficulty(-1);
                     Require(story.Difficulty == "hard", "Left did not wrap difficulty.");
                     story.ChangeLevel(-1);
-                    Require(story.SelectedLevel.id == "week1", "Up did not wrap to the final installed level.");
+                    Require(story.SelectedLevel.id == "week6", "Up did not wrap to the final installed level.");
                     story.ChangeLevel(1);
                     Require(story.SelectedLevel.id == "tutorial", "Down did not wrap to Tutorial.");
                     story.ChangeLevel(1);

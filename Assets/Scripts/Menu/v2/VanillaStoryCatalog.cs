@@ -63,9 +63,9 @@ public static class VanillaStoryCatalog
 {
     public static List<VanillaStoryLevel> Load()
     {
-        // Keep uninstalled weeks hidden until their songs are added to Freeplay.
         return JsonConvert.DeserializeObject<List<VanillaStoryLevel>>(Resources.Load<TextAsset>("VanillaStory/levels").text)
-            .Where(level => level.visible && (level.id == "tutorial" || level.id == "week1")).ToList();
+            .Where(level => level.visible && (level.id == "tutorial" || level.id == "week1" || level.id == "week2" || level.id == "week3"
+                || level.id == "week4" || level.id == "week5" || level.id == "week6")).ToList();
     }
 
     public static bool TryPlaylist(VanillaStoryLevel level, string difficulty, out List<VanillaFreeplaySong> playlist, out string missing)

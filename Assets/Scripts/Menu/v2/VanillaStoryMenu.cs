@@ -213,7 +213,7 @@ public sealed class VanillaStoryMenu : MonoBehaviour
         float delta = (float)(now - lastUpdate);
         lastUpdate = now;
         Draw(delta);
-        if (Time.frameCount == enabledFrame || closing) return;
+        if (Time.frameCount == enabledFrame || closing || VanillaPauseStickers.Active) return;
         if (menu.musicSource.volume < OptionsV2.menuVolume * 0.8f)
             menu.musicSource.volume = Mathf.MoveTowards(menu.musicSource.volume, OptionsV2.menuVolume * 0.8f, delta * 0.5f);
         int step = Mathf.FloorToInt(menu.musicSource.time * 102 / 60 * 4);

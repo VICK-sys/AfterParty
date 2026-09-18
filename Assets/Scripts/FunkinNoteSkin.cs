@@ -14,9 +14,28 @@ public static class FunkinNoteSkin
     private static Material holdMaterial;
     private static Material noteMaterial;
     private static Material desaturatedMaterial;
+    private static Material pixelHoldMaterial;
+    private static Material screenMaterial;
+    public static bool Pixel => Song.instance != null && Song.instance.vanillaPlayback != null && Song.instance.vanillaPlayback.IsPixel;
+    public static float Scale => Pixel ? 6 : .7f;
 
     public static Material NoteMaterial => noteMaterial != null ? noteMaterial :
         noteMaterial = new Material(Resources.Load<Shader>("FunkinNotes/FunkinNote"));
+
+    public static Material ScreenMaterial
+    {
+        get
+        {
+            if (screenMaterial == null)
+            {
+                screenMaterial = new Material(NoteMaterial);
+                screenMaterial.SetFloat("_Screen", 1);
+                screenMaterial.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.One);
+                screenMaterial.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcColor);
+            }
+            return screenMaterial;
+        }
+    }
 
     public static Material DesaturatedMaterial
     {
@@ -35,6 +54,15 @@ public static class FunkinNoteSkin
     {
         get
         {
+            if (Pixel)
+            {
+                if (pixelHoldMaterial == null)
+                {
+                    pixelHoldMaterial = new Material(Shader.Find("Sprites/Default"));
+                    pixelHoldMaterial.mainTexture = Resources.Load<Texture2D>("FunkinNotes/Pixel/arrowEndsNew");
+                }
+                return pixelHoldMaterial;
+            }
             if (holdMaterial == null)
             {
                 holdMaterial = new Material(Shader.Find("Sprites/Default"));
@@ -81,7 +109,7 @@ public static class FunkinNoteSkin
         return frames;
     }
 
-    public static Sprite Head(int direction) => Frames("notes", "note" + Directions[direction])[0];
+    public static Sprite Head(int direction) => Frames(Pixel ? "Pixel/arrows-pixels" : "notes", "note" + Directions[direction])[0];
 
     public static void ApplyFrame(SpriteRenderer renderer, Sprite sprite)
     {
@@ -89,12 +117,13 @@ public static class FunkinNoteSkin
         renderer.transform.localRotation = Quaternion.Euler(0, 0, rotatedFrames.Contains(sprite) ? 90 : 0);
     }
 
-    public static double ConfirmDuration(int direction) => Frames("noteStrumline", "confirm" + Directions[direction] + "0").Length / 24.0;
+    public static double ConfirmDuration(int direction) => Frames(Pixel ? "Pixel/arrows-pixels" : "noteStrumline", "confirm" + Directions[direction] + "0").Length / 24.0;
 
     public static Sprite Receptor(int direction, FunkinStrumline.Animation animation, double time)
     {
         string prefix = animation == FunkinStrumline.Animation.Static ? "static" : animation == FunkinStrumline.Animation.Press ? "press" : "confirm";
-        Sprite[] frames = Frames("noteStrumline", prefix + Directions[direction] + "0");
+        if (Pixel && prefix == "press") prefix = "pressed";
+        Sprite[] frames = Frames(Pixel ? "Pixel/arrows-pixels" : "noteStrumline", prefix + Directions[direction] + "0");
         return frames[Math.Min((int)(time * 24), frames.Length - 1)];
     }
 

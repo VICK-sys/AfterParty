@@ -266,7 +266,7 @@ public static class VanillaFreeplayValidation
                     if (wait < 3) return;
                     Require(freeplay.PreviewPath == Path.Combine(songPath, "Inst.ogg") && freeplay.PreviewSource.isPlaying, "Rapid selection loaded stale preview.");
                     freeplay.ChangeDifficulty(2);
-                    Require(freeplay.Difficulty == "Erect" && freeplay.VisibleSongCount == 3 && freeplay.SelectedSong.meta.songPath == songPath, "Erect filtering lost selection or kept Tutorial.");
+                    Require(freeplay.Difficulty == "Erect" && freeplay.VisibleSongCount == 15 && freeplay.SelectedSong.meta.songPath == songPath, "Erect filtering lost selection or kept a song without a remix.");
                     Next();
                     break;
                 case 3:
@@ -349,7 +349,7 @@ public static class VanillaFreeplayValidation
         catch (Exception exception) { Debug.LogException(exception); Finish(false); }
     }
 
-    private static void Capture(string filename, int width, int height, bool blank)
+    private static void Capture(string filename, int width, int height, bool blank, float minimumLight = 0.3f)
     {
         Canvas parentCanvas = menu.mainScreen.gameObject.activeSelf && !blank ? menu.mainScreen.GetComponent<Canvas>() : null;
         var canvases = parentCanvas == null ? new[] { freeplay.GetComponent<Canvas>() } : new[] { parentCanvas, freeplay.GetComponent<Canvas>() };
@@ -393,7 +393,7 @@ public static class VanillaFreeplayValidation
             image.Apply();
             RenderTexture.active = previous;
             float light = image.GetPixels().Average(c => c.r + c.g + c.b);
-            Require(blank ? light < 0.01f : light > 0.3f, "Freeplay render or blank control failed: " + light);
+            Require(blank ? light < 0.01f : light > minimumLight, "Freeplay render or blank control failed: " + light);
             File.WriteAllBytes(Path.Combine(Output, filename), image.EncodeToPNG());
             Object.DestroyImmediate(image);
         }

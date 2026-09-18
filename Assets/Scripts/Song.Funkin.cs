@@ -1,16 +1,63 @@
 using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public partial class Song
 {
+    public AudioSource OpponentVocals { get; private set; }
+    public string SplitPlayerVocalsPath { get; private set; }
+
+    private IEnumerator LoadSplitVocals()
+    {
+        string player = Path.Combine(selectedSongDir, Path.GetFileName(selectedVocalsPath).Replace("Voices", "Voices-player"));
+        string opponent = Path.Combine(selectedSongDir, Path.GetFileName(selectedVocalsPath).Replace("Voices", "Voices-opponent"));
+        SplitPlayerVocalsPath = null;
+        if (OpponentVocals != null) OpponentVocals.Stop();
+        if (!File.Exists(player) || !File.Exists(opponent))
+        {
+            if (OpponentVocals != null)
+            {
+                musicSources = musicSources.Where(source => source != OpponentVocals).ToArray();
+                if (OpponentVocals.clip != null) Destroy(OpponentVocals.clip);
+                Destroy(OpponentVocals);
+                OpponentVocals = null;
+            }
+            yield break;
+        }
+        using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(new Uri(opponent).AbsoluteUri, AudioType.OGGVORBIS))
+        {
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success) throw new IOException(request.error);
+            if (OpponentVocals == null)
+            {
+                OpponentVocals = gameObject.AddComponent<AudioSource>();
+                OpponentVocals.playOnAwake = false;
+                OpponentVocals.outputAudioMixerGroup = vocalSource.outputAudioMixerGroup;
+                musicSources = musicSources.Concat(new[] { OpponentVocals }).ToArray();
+            }
+            else if (OpponentVocals.clip != null) Destroy(OpponentVocals.clip);
+            OpponentVocals.clip = DownloadHandlerAudioClip.GetContent(request);
+            SplitPlayerVocalsPath = player;
+        }
+    }
+
+    private void SetFunkinVocalMuted(int side, bool muted)
+    {
+        if (OpponentVocals != null && SplitPlayerVocalsPath != null)
+            (side == 0 ? vocalSource : OpponentVocals).mute = muted;
+        else if (hasVoiceLoaded) vocalSource.mute = muted;
+    }
     private readonly double[] funkinScores = new double[2];
     private double countdownEnd;
+    private double? countdownPausedAt;
     public bool IsCountingDown { get; private set; }
     public bool FreeplayAborted { get; set; }
-    public double SongPosition => IsCountingDown ? (Time.realtimeSinceStartupAsDouble - countdownEnd) * 1000 :
-        stopwatch == null ? 0 : stopwatch.Elapsed.TotalMilliseconds;
+    public double SongPosition => IsCountingDown ? ((countdownPausedAt ?? Time.realtimeSinceStartupAsDouble) - countdownEnd) * 1000 + Pause.GlobalOffset :
+        stopwatch == null ? 0 : stopwatch.Elapsed.TotalMilliseconds + Pause.GlobalOffset;
     public float ChartScrollSpeed { get; private set; } = 1;
     public float FunkinScrollSpeed => Math.Max(0.01f, ChartScrollSpeed - speedDifference * 100);
     public static float ReadChartScrollSpeed(string path)
@@ -21,7 +68,7 @@ public partial class Song
     private readonly FunkinStrumEffect[,] strumEffects = new FunkinStrumEffect[2, 4];
     public FunkinHud FunkinHud { get; private set; }
     public float HudReferenceOrthographicSize => _defaultZoom;
-    public float FunkinWorldPixelSize => (vanillaPlayback != null && vanillaPlayback.IsErect
+    public float FunkinWorldPixelSize => (vanillaPlayback != null && vanillaPlayback.UsesSourceCamera
         ? HudReferenceOrthographicSize : uiCamera.orthographicSize) * 2 / 720;
 
     private void InitializeFunkinHud()
@@ -40,12 +87,24 @@ public partial class Song
         FreeplayAborted = false;
         funkinScores[0] = funkinScores[1] = 0;
         IsCountingDown = false;
+        countdownPausedAt = null;
     }
 
-    private void BeginFunkinCountdown(double seconds)
+    public void BeginFunkinCountdown(double seconds)
     {
         countdownEnd = Time.realtimeSinceStartupAsDouble + seconds;
         IsCountingDown = true;
+    }
+
+    public void SetCountdownPaused(bool paused)
+    {
+        if (!IsCountingDown) return;
+        if (paused && countdownPausedAt == null) countdownPausedAt = Time.realtimeSinceStartupAsDouble;
+        else if (!paused && countdownPausedAt != null)
+        {
+            countdownEnd += Time.realtimeSinceStartupAsDouble - countdownPausedAt.Value;
+            countdownPausedAt = null;
+        }
     }
 
     public void InitializeFunkinStrums()
@@ -84,7 +143,7 @@ public partial class Song
                 SpriteRenderer sprite = sprites[direction];
                 sprite.sprite = FunkinNoteSkin.Receptor(direction, line.Animations[direction], line.AnimationTimes[direction]);
                 float worldScale = FunkinWorldPixelSize;
-                FunkinNoteSkin.WorldScale(sprite.transform, 100 * worldScale * 0.7f);
+                FunkinNoteSkin.WorldScale(sprite.transform, 100 * worldScale * FunkinNoteSkin.Scale);
                 float x = (side == 0 ? 688 : 48) + 112 * direction + 52;
                 if (OptionsV2.Middlescroll) x = 420 + 112 * direction + 52;
                 float y = OptionsV2.Downscroll ? 720 - 24 - 82.6f : 24 + 82.6f;
@@ -99,8 +158,9 @@ public partial class Song
     {
         if (note == null) return;
         int side = note.mustHit ? 0 : 1;
-        PlayFunkinCharacter(side, note.type, false);
-        if (hasVoiceLoaded) vocalSource.mute = false;
+        if (vanillaPlayback?.CharacterStage != null) vanillaPlayback.CharacterStage.Hit(side, note.type, note.State.Time);
+        else PlayFunkinCharacter(side, note.type, false);
+        SetFunkinVocalMuted(side, false);
         if (CameraMovement.instance != null) CameraMovement.instance.focusOnPlayerOne = note.layer == 1;
         RemoveFunkinHead(note);
         if (note.State.Length > 0) strumEffects[side, note.type]?.Cover(note.State);
@@ -119,6 +179,7 @@ public partial class Song
         }
         if (FunkinRules.BreaksCombo(judgement)) BreakFunkinCombo(side);
         else stats.currentCombo++;
+        if (side == 0) vanillaPlayback?.CharacterStage?.Combo(stats.currentCombo, false);
         stats.highestCombo = Math.Max(stats.highestCombo, stats.currentCombo);
         AddFunkinScore(side, FunkinRules.Score(timing), FunkinRules.Health(judgement));
         FunkinHud?.ShowRating(judgement);
@@ -136,14 +197,14 @@ public partial class Song
         BreakFunkinCombo(side);
         AddFunkinScore(side, -100, -8);
         PlayFunkinCharacter(side, note.type, true);
-        PlayFunkinMissSound(0.5f, 0.6f);
+        PlayFunkinMissSound(side, 0.5f, 0.6f);
     }
 
     public void ApplyFunkinGhost(int side, int direction)
     {
         AddFunkinScore(side, -10, -8);
         PlayFunkinCharacter(side, direction, true);
-        PlayFunkinMissSound(0.1f, 0.2f);
+        PlayFunkinMissSound(side, 0.1f, 0.2f);
     }
 
     public void ApplyFunkinHold(int side, double elapsed)
@@ -154,6 +215,7 @@ public partial class Song
 
     public void KeepFunkinHoldPose(int side)
     {
+        vanillaPlayback?.CharacterStage?.Hold(side);
         if (side == 0) _currentBoyfriendIdleTimer = boyfriendIdleTimer;
         else _currentEnemyIdleTimer = enemyIdleTimer;
     }
@@ -162,7 +224,7 @@ public partial class Song
     {
         BreakFunkinCombo(side);
         AddFunkinScore(side, penalty, 0);
-        PlayFunkinMissSound(0.5f, 0.6f);
+        PlayFunkinMissSound(side, 0.5f, 0.6f);
     }
 
     private void AddFunkinScore(int side, double score, double healthChange)
@@ -176,20 +238,26 @@ public partial class Song
     private void BreakFunkinCombo(int side)
     {
         PlayerStat stats = side == 0 ? playerOneStats : playerTwoStats;
+        if (side == 0) vanillaPlayback?.CharacterStage?.Combo(stats.currentCombo, true);
         if (stats.currentCombo >= 10) FunkinHud?.ShowCombo(0);
         stats.currentCombo = 0;
     }
 
     private void PlayFunkinCharacter(int side, int direction, bool miss)
     {
+        if (vanillaPlayback?.CharacterStage != null)
+        {
+            vanillaPlayback.CharacterStage.Sing(side, direction, miss);
+            return;
+        }
         string[] directions = { "Left", "Down", "Up", "Right" };
         if (side == 0) BoyfriendPlayAnimation("Sing " + directions[direction] + (miss ? " Miss" : ""));
         else EnemyPlayAnimation("Sing " + directions[direction]);
     }
 
-    private void PlayFunkinMissSound(float min, float max)
+    private void PlayFunkinMissSound(int side, float min, float max)
     {
-        if (hasVoiceLoaded) vocalSource.mute = true;
+        SetFunkinVocalMuted(side, true);
         if (noteMissClip.Length > 0) oopsSource.PlayOneShot(noteMissClip[UnityEngine.Random.Range(0, noteMissClip.Length)], UnityEngine.Random.Range(min, max));
     }
 

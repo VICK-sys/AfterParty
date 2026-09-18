@@ -46,7 +46,7 @@ public sealed class FunkinHud : MonoBehaviour
         DisplayHealth = 100;
         previousStep = int.MinValue;
         oldPlayerIcon = false;
-        iconFrames[0] = FunkinHudAssets.Icon("bf");
+        iconFrames[0] = FunkinHudAssets.Icon(song.vanillaPlayback?.PlayerId ?? "bf");
         iconFrames[1] = FunkinHudAssets.Icon(opponent);
         foreach (var icon in Icons) icon.Reset();
         if (background == null)
@@ -117,7 +117,9 @@ public sealed class FunkinHud : MonoBehaviour
             Icons[side].Advance(elapsed);
             Icons[side].UpdateFace(side == 0 ? song.health : 200 - song.health, iconFrames[side].Length >= 3);
         }
-        int step = (int)System.Math.Floor(position / System.Math.Max(1, song.stepCrochet));
+        int step = song.vanillaPlayback != null && song.vanillaPlayback.UsesSourceCamera
+            ? Mathf.FloorToInt(song.vanillaPlayback.BeatAt(position) * 4)
+            : (int)System.Math.Floor(position / System.Math.Max(1, song.stepCrochet));
         if (step != previousStep && step % 4 == 0)
             foreach (var icon in Icons) icon.Bop(song.stepCrochet);
         previousStep = step;
@@ -161,11 +163,14 @@ public sealed class FunkinHud : MonoBehaviour
     {
         if (judgement == FunkinRules.Judgement.Miss) return;
         string image = judgement.ToString().ToLowerInvariant();
+        bool isPixel = song.vanillaPlayback != null && song.vanillaPlayback.IsPixel;
+        if (isPixel) image = "Pixel/" + image;
+        float scale = isPixel ? 4.2f : .65f;
         Sprite sprite = FunkinHudAssets.Image(image);
-        AddPopup(image, 0.65f, new FunkinPopupState
+        AddPopup(image, scale, new FunkinPopupState
         {
-            X = 1280 * 0.474 - sprite.rect.width * 0.65 / 2,
-            Y = 720 * 0.45 - 60 - sprite.rect.height * 0.65 / 2,
+            X = 1280 * 0.474 - sprite.rect.width * scale / 2,
+            Y = 720 * 0.45 - 60 - sprite.rect.height * scale / 2,
             VelocityY = -Random.Range(140, 176),
             VelocityX = -Random.Range(0, 11),
             Gravity = 550,
@@ -176,8 +181,9 @@ public sealed class FunkinHud : MonoBehaviour
     public void ShowCombo(int combo)
     {
         string digits = combo.ToString("000", CultureInfo.InvariantCulture);
+        bool isPixel = song.vanillaPlayback != null && song.vanillaPlayback.IsPixel;
         for (int index = 0; index < digits.Length; index++)
-            AddPopup("num" + digits[digits.Length - index - 1], 0.45f, new FunkinPopupState
+            AddPopup((isPixel ? "Pixel/num" : "num") + digits[digits.Length - index - 1], isPixel ? 4.2f : .45f, new FunkinPopupState
             {
                 X = 1280 * 0.507 - 36 * (index + 1) - 65,
                 Y = 720 * 0.44,

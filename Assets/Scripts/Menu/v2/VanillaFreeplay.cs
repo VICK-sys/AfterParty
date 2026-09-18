@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public sealed class VanillaFreeplay : MonoBehaviour
+public sealed partial class VanillaFreeplay : MonoBehaviour
 {
     private sealed class Capsule
     {
@@ -21,6 +21,11 @@ public sealed class VanillaFreeplay : MonoBehaviour
         public Outline glow;
         public VanillaFreeplaySong song;
         public CanvasGroup detail;
+        public VanillaFreeplaySprite rank;
+        public VanillaFreeplaySprite rankGlow;
+        public VanillaFreeplaySprite sparkle;
+        public float sparkleAge;
+        public float sparkleNext = 1;
         public int index;
     }
 
@@ -37,6 +42,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
     private static string rememberedSong;
     private static bool hasRememberedSelection;
     private static string rememberedDifficulty = "Normal";
+    public static void RememberDifficulty(string difficulty) => rememberedDifficulty = difficulty;
     private static int rememberedMode = 1;
     private static readonly string[] Filters = { "#", "fav", "ALL", "A-B", "C-D", "E-H", "I-L", "M-N", "O-R", "S", "T", "U-Z" };
     private static readonly string[] Numbers = { "ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE" };
@@ -109,7 +115,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
     public int SelectedIndex { get; private set; }
     public string Difficulty { get; private set; }
     public int Mode { get; private set; }
-    public bool Busy => !ready || closing;
+    public bool Busy => !ready || closing || RankAnimationPlaying;
     public int SongCount => songs?.Count ?? 0;
     public int VisibleSongCount => filtered?.Count ?? 0;
     public VanillaFreeplaySong SelectedSong => SelectedIndex > 0 && SelectedIndex <= filtered.Count ? filtered[SelectedIndex - 1] : null;
@@ -139,6 +145,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
         freeplay.RebuildList(true);
         freeplay.dj.Play(skipIntro ? "Idle" : "Intro", skipIntro);
         freeplay.Draw(0);
+        freeplay.ConsumeRankReturn(skipIntro);
         freeplay.lastUpdateTime = Time.realtimeSinceStartupAsDouble;
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
         return freeplay;
@@ -261,6 +268,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
 
     public void SetMode(int value)
     {
+        if (Busy) return;
         Mode = rememberedMode = PlayModes.Normalize(value);
         selectingMode = false;
         modePanel.SetActive(false);
@@ -284,8 +292,9 @@ public sealed class VanillaFreeplay : MonoBehaviour
             StartPreview();
         }
         Draw(delta);
+        DrawRankAnimation(delta);
         UpdatePreview(delta);
-        if (Time.frameCount == openedFrame || Busy) return;
+        if (Time.frameCount == openedFrame || Busy || VanillaPauseStickers.Active) return;
         if (selectingMode)
         {
             for (int i = 0; i < PlayModes.Count; i++) if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SetMode(PlayModes.FromIndex(i));
@@ -422,9 +431,15 @@ public sealed class VanillaFreeplay : MonoBehaviour
             if (song.Favorite) Sprite("Favorite", detail, "freeplay/favHeart", rank >= 0 ? 370 : 405, 40, "favorite heart").loop = false;
             if (rank >= 0)
             {
-                var badge = Sprite("Rank", detail, "freeplay/rankbadges", 420, 41, Ranks[Mathf.Clamp(rank, 0, 5)]);
-                badge.drawScale = 0.9f;
-                badge.loop = false;
+                capsule.rank = RankBadge("Rank", detail, rank);
+                capsule.rankGlow = RankBadge("Rank Glow", detail, rank);
+                if (rank == 5)
+                {
+                    capsule.sparkle = Sprite("Rank Sparkle", detail, "freeplay/sparkle", 420, 41, "sparkle Export0");
+                    capsule.sparkle.drawScale = 0.8f;
+                    capsule.sparkle.loop = false;
+                    capsule.sparkle.material = RankMaterial;
+                }
             }
         }
         Hit("Select", root, 70, 15, 475, 105, () =>
@@ -577,6 +592,8 @@ public sealed class VanillaFreeplay : MonoBehaviour
         foreach (Capsule capsule in capsules)
         {
             SetCapsuleStretch(capsule, capsuleAge);
+            DrawRankSparkle(capsule, delta);
+            if (RankControlsCapsule(capsule)) continue;
             Vector2 target = ToUI(Target(capsule.index));
             if (confirmAge >= 0 && capsule.index != SelectedIndex) target.x = Mathf.Lerp(target.x, 1536, Mathf.Clamp01(confirmAge / 0.3f));
             Vector2 current = capsule.root.anchoredPosition;
@@ -605,6 +622,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
 
     private void StartPreview()
     {
+        if (RankAnimationPlaying) return;
         CancelPreview();
         previewRoutine = StartCoroutine(LoadPreview());
     }
@@ -719,6 +737,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
         Song.currentSongMeta = song.meta;
         Song.difficulty = song.Difficulty(Difficulty);
         Song.modeOfPlay = Mode;
+        ArmRankReturn(song.meta, Song.difficulty, Mode);
         ReturnToFreeplay = true;
         LoadingTransition.instance.Show(() => SceneManager.LoadScene("Game_Backup3"));
     }
@@ -731,6 +750,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
         Sound("cancelMenu", 1);
         CancelPreview();
         ReturnToFreeplay = false;
+        ClearRankReturn();
         MenuV2.startPhase = MenuV2.StartPhase.Nothing;
         menu.mainScreen.gameObject.SetActive(true);
         menu.vanillaMenu?.SetFreeplaySuspended(true);
@@ -821,6 +841,7 @@ public sealed class VanillaFreeplay : MonoBehaviour
     private void OnDestroy()
     {
         CancelPreview();
+        if (rankAdditive != null) Destroy(rankAdditive);
         if (Active == this) Active = null;
     }
 
