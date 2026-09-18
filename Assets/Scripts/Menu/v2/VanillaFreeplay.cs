@@ -651,6 +651,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         {
             string path = song.meta.AssetPath("Inst.ogg", Difficulty);
             previewLoad = UnityWebRequestMultimedia.GetAudioClip(new Uri(path).AbsoluteUri, AudioType.OGGVORBIS);
+            ((DownloadHandlerAudioClip)previewLoad.downloadHandler).streamAudio = true;
             yield return previewLoad.SendWebRequest();
             if (previewLoad.result != UnityWebRequest.Result.Success)
             {

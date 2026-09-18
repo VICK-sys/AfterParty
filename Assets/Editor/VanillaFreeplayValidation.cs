@@ -265,6 +265,8 @@ public static class VanillaFreeplayValidation
                 case 2:
                     if (wait < 3) return;
                     Require(freeplay.PreviewPath == Path.Combine(songPath, "Inst.ogg") && freeplay.PreviewSource.isPlaying, "Rapid selection loaded stale preview.");
+                    Require(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(freeplay.PreviewSource.clip)
+                        < (long)freeplay.PreviewSource.clip.samples * freeplay.PreviewSource.clip.channels * 2, "Preview retained the complete decoded instrumental.");
                     freeplay.ChangeDifficulty(2);
                     Require(freeplay.Difficulty == "Erect" && freeplay.VisibleSongCount == 15 && freeplay.SelectedSong.meta.songPath == songPath, "Erect filtering lost selection or kept a song without a remix.");
                     Next();
@@ -272,6 +274,8 @@ public static class VanillaFreeplayValidation
                 case 3:
                     if (wait < 3) return;
                     Require(freeplay.PreviewPath == Path.Combine(songPath, "Inst-erect.ogg") && freeplay.PreviewSource.isPlaying, "Erect preview played original instrumental.");
+                    Require(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(freeplay.PreviewSource.clip)
+                        < (long)freeplay.PreviewSource.clip.samples * freeplay.PreviewSource.clip.channels * 2, "Erect preview retained the complete decoded instrumental.");
                     Capture("freeplay-erect.png", 1280, 720, false);
                     favoriteKey = freeplay.SelectedSong.FavoriteKey;
                     favoriteValue = PlayerPrefs.GetInt(favoriteKey, 0);
