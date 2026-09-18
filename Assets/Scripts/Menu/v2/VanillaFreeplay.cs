@@ -18,12 +18,18 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         public VanillaFreeplaySprite body;
         public VanillaFreeplaySprite icon;
         public Text title;
+        public RectTransform titleMask;
         public Outline glow;
         public VanillaFreeplaySong song;
         public CanvasGroup detail;
         public VanillaFreeplaySprite rank;
         public VanillaFreeplaySprite rankGlow;
         public VanillaFreeplaySprite sparkle;
+        public VanillaFreeplaySprite favorite;
+        public VanillaFreeplaySprite[] bpmDigits;
+        public VanillaFreeplaySprite[] ratingDigits;
+        public string iconPath;
+        public int rankValue = -2;
         public float sparkleAge;
         public float sparkleNext = 1;
         public int index;
@@ -70,6 +76,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private RectTransform cardRoot;
     private CanvasGroup chrome;
     private readonly List<Capsule> capsules = new List<Capsule>();
+    private readonly Dictionary<string, Capsule> capsulePool = new Dictionary<string, Capsule>();
     private readonly List<ExitTween> exitTweens = new List<ExitTween>();
     private readonly List<Text> marquees = new List<Text>();
     private readonly List<float> marqueeSpeeds = new List<float>();
@@ -104,6 +111,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private int previousScore = -1;
     private float displayedScore;
     private int filterIndex = 2;
+    private int displayedFilter = -1;
     private bool ready;
     private bool closing;
     private bool selectingMode;
@@ -372,33 +380,53 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void RebuildList(bool initial)
     {
-        capsuleAge = initial && ready ? 2 : 0;
+        bool animateList = initial || displayedFilter != filterIndex;
+        if (animateList) capsuleAge = initial && ready ? 2 : 0;
         filtered = songs.Where(s => s.Difficulty(Difficulty) != null && VanillaFreeplayCatalog.Matches(s, Filters[filterIndex])).ToList();
         SelectedIndex = rememberedSong == null ? 0 : filtered.FindIndex(s => s.id == rememberedSong) + 1;
         if (SelectedIndex == 0 && rememberedSong != null && filtered.Count > 0) SelectedIndex = 1;
-        Clear(list);
+        foreach (Capsule capsule in capsules)
+            if (capsule.song != null && !filtered.Contains(capsule.song)) capsule.root.gameObject.SetActive(false);
         capsules.Clear();
-        for (int i = 0; i <= filtered.Count; i++) BuildCapsule(i, i == 0 ? null : filtered[i - 1]);
-        RebuildFilters();
+        for (int i = 0; i <= filtered.Count; i++)
+        {
+            VanillaFreeplaySong song = i == 0 ? null : filtered[i - 1];
+            string key = song?.id ?? string.Empty;
+            if (!capsulePool.TryGetValue(key, out Capsule capsule))
+            {
+                capsule = BuildCapsule(song);
+                capsulePool.Add(key, capsule);
+                capsule.root.anchoredPosition = ToUI(Target(i));
+            }
+            capsule.index = i;
+            capsule.root.SetSiblingIndex(i);
+            capsule.root.gameObject.SetActive(true);
+            UpdateCapsule(capsule);
+            capsules.Add(capsule);
+        }
+        if (displayedFilter != filterIndex)
+        {
+            RebuildFilters();
+            displayedFilter = filterIndex;
+        }
         RebuildDifficulty();
         emptyText.gameObject.SetActive(filtered.Count == 0);
         emptyText.text = songs.Count == 0 ? "NO PLAYABLE SONGS" : "NO SONGS IN THIS FILTER";
         RefreshSelection();
-        foreach (Capsule capsule in capsules)
-            capsule.root.anchoredPosition = initial && ready ? ToUI(Target(capsule.index)) : new Vector2(1280, -130 - 115.6f * capsule.index);
+        if (animateList)
+            foreach (Capsule capsule in capsules)
+                capsule.root.anchoredPosition = initial && ready ? ToUI(Target(capsule.index)) : new Vector2(1280, -130 - 115.6f * capsule.index);
     }
 
-    private void BuildCapsule(int index, VanillaFreeplaySong song)
+    private Capsule BuildCapsule(VanillaFreeplaySong song)
     {
         RectTransform root = Rect(song?.meta.songName ?? "Random", list, 0, 0, 612, 132);
-        var capsule = new Capsule { root = root, song = song, index = index };
+        var capsule = new Capsule { root = root, song = song };
         capsule.body = Sprite("Capsule", root, "freeplay/freeplayCapsule/capsule/freeplayCapsule", 0, 0, "mp3 capsule w backing NOT SELECTED");
         capsule.body.drawScale = 0.8f;
         RectTransform detail = Rect("Details", root, 0, 0, 612, 132);
         capsule.detail = detail.gameObject.AddComponent<CanvasGroup>();
-        int rank = song == null ? -1 : PlayerPrefs.GetInt("Freeplay.Rank." + song.ScoreKey(Difficulty, Mode), -1);
-        int titleSlots = (rank >= 0 ? 1 : 0) + (song != null && song.Favorite ? 1 : 0);
-        RectTransform titleMask = Rect("Title Clip", detail, 159.12f, 43, titleSlots == 2 ? 210 : titleSlots == 1 ? 245 : 290, 42);
+        RectTransform titleMask = capsule.titleMask = Rect("Title Clip", detail, 159.12f, 43, 290, 42);
         titleMask.gameObject.AddComponent<RectMask2D>();
         capsule.title = Label("Title", titleMask, song?.Title(Difficulty) ?? "Random", 0, 0, 1000, 42, 32, pixelFont);
         capsule.glow = capsule.title.gameObject.AddComponent<Outline>();
@@ -406,49 +434,95 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         capsule.glow.effectDistance = new Vector2(1, -1);
         if (song != null)
         {
-            string character = song.Icon(Difficulty);
-            string icon = "freeplay/icons/" + character + "pixel";
-            while (Resources.Load<Texture2D>("VanillaFreeplay/" + icon) == null && character.Contains("-"))
-            {
-                character = character.Substring(0, character.LastIndexOf('-'));
-                icon = "freeplay/icons/" + character + "pixel";
-            }
-            if (Resources.Load<Texture2D>("VanillaFreeplay/" + icon) != null)
-            {
-                capsule.icon = Sprite("Icon", detail, icon, 60, 16, "idle0");
-                capsule.icon.drawScale = 2;
-                capsule.icon.centerScale = false;
-                capsule.icon.fps = 10;
-                float originX = character == "parents-christmas" ? 140 : character == "sserafim-kazuha" ? 195 : 100;
-                capsule.icon.rectTransform.anchoredPosition = ToUI(new Vector2(160 - originX, 35 - capsule.icon.FrameSize.y / 2));
-            }
             Sprite("BPM", detail, "freeplay/freeplayCapsule/bpmtext", 144, 87).drawScale = 0.9f;
-            NumberSprites(detail, "BPM Digits", "freeplay/freeplayCapsule/smallnumbers", Mathf.RoundToInt(song.Bpm(Difficulty)), 3, 185, 88.5f, 11, 0.9f);
+            capsule.bpmDigits = NumberSprites(detail, "BPM Digits", "freeplay/freeplayCapsule/smallnumbers", Mathf.RoundToInt(song.Bpm(Difficulty)), 3, 185, 88.5f, 11, 0.9f);
             Text week = Label("Week", detail, song.week, 291, 87, 118, 27, 18, weekFont);
             week.color = Hex("21242E");
             Sprite("Difficulty Label", detail, "freeplay/freeplayCapsule/difficultytext", 414, 87).drawScale = 0.9f;
-            NumberSprites(detail, "Rating", "freeplay/freeplayCapsule/bignumbers", song.Rating(Difficulty), 2, 466, 32, 30, 0.9f);
-            if (song.Favorite) Sprite("Favorite", detail, "freeplay/favHeart", rank >= 0 ? 370 : 405, 40, "favorite heart").loop = false;
-            if (rank >= 0)
-            {
-                capsule.rank = RankBadge("Rank", detail, rank);
-                capsule.rankGlow = RankBadge("Rank Glow", detail, rank);
-                if (rank == 5)
-                {
-                    capsule.sparkle = Sprite("Rank Sparkle", detail, "freeplay/sparkle", 420, 41, "sparkle Export0");
-                    capsule.sparkle.drawScale = 0.8f;
-                    capsule.sparkle.loop = false;
-                    capsule.sparkle.material = RankMaterial;
-                }
-            }
+            capsule.ratingDigits = NumberSprites(detail, "Rating", "freeplay/freeplayCapsule/bignumbers", song.Rating(Difficulty), 2, 466, 32, 30, 0.9f);
         }
         Hit("Select", root, 70, 15, 475, 105, () =>
         {
             if (Busy || selectingMode) return;
-            if (SelectedIndex == index) ConfirmSelection();
-            else MoveSelection(index - SelectedIndex);
+            if (SelectedIndex == capsule.index) ConfirmSelection();
+            else MoveSelection(capsule.index - SelectedIndex);
         });
-        capsules.Add(capsule);
+        return capsule;
+    }
+
+    private void UpdateCapsule(Capsule capsule)
+    {
+        VanillaFreeplaySong song = capsule.song;
+        if (song == null) return;
+        RectTransform detail = (RectTransform)capsule.detail.transform;
+        int rank = PlayerPrefs.GetInt("Freeplay.Rank." + song.ScoreKey(Difficulty, Mode), -1);
+        bool favorite = song.Favorite;
+        int titleSlots = (rank >= 0 ? 1 : 0) + (favorite ? 1 : 0);
+        capsule.titleMask.sizeDelta = new Vector2(titleSlots == 2 ? 210 : titleSlots == 1 ? 245 : 290, 42);
+        capsule.title.text = song.Title(Difficulty);
+        string character = song.Icon(Difficulty);
+        string icon = "freeplay/icons/" + character + "pixel";
+        while (Resources.Load<Texture2D>("VanillaFreeplay/" + icon) == null && character.Contains("-"))
+        {
+            character = character.Substring(0, character.LastIndexOf('-'));
+            icon = "freeplay/icons/" + character + "pixel";
+        }
+        if (Resources.Load<Texture2D>("VanillaFreeplay/" + icon) != null)
+        {
+            if (capsule.icon == null) capsule.icon = Sprite("Icon", detail, icon, 60, 16, "idle0");
+            else if (capsule.iconPath != icon) capsule.icon.Load(icon, "idle0");
+            capsule.iconPath = icon;
+            capsule.icon.transform.SetSiblingIndex(1);
+            capsule.icon.gameObject.SetActive(true);
+            capsule.icon.drawScale = 2;
+            capsule.icon.centerScale = false;
+            capsule.icon.fps = 10;
+            float originX = character == "parents-christmas" ? 140 : character == "sserafim-kazuha" ? 195 : 100;
+            capsule.icon.rectTransform.anchoredPosition = ToUI(new Vector2(160 - originX, 35 - capsule.icon.FrameSize.y / 2));
+        }
+        else if (capsule.icon != null) capsule.icon.gameObject.SetActive(false);
+        UpdateNumberSprites(capsule.bpmDigits, "freeplay/freeplayCapsule/smallnumbers", Mathf.RoundToInt(song.Bpm(Difficulty)), 185, 88.5f, 11);
+        UpdateNumberSprites(capsule.ratingDigits, "freeplay/freeplayCapsule/bignumbers", song.Rating(Difficulty), 466, 32, 30);
+        if (favorite && capsule.favorite == null)
+        {
+            capsule.favorite = Sprite("Favorite", detail, "freeplay/favHeart", 405, 40, "favorite heart");
+            capsule.favorite.loop = false;
+        }
+        if (capsule.favorite != null)
+        {
+            capsule.favorite.gameObject.SetActive(favorite);
+            capsule.favorite.rectTransform.anchoredPosition = new Vector2(rank >= 0 ? 370 : 405, -40);
+        }
+        if (rank >= 0)
+        {
+            if (capsule.rank == null)
+            {
+                capsule.rank = RankBadge("Rank", detail, rank);
+                capsule.rankGlow = RankBadge("Rank Glow", detail, rank);
+            }
+            else if (capsule.rankValue != rank)
+            {
+                foreach (var badge in new[] { capsule.rank, capsule.rankGlow })
+                {
+                    badge.Load("freeplay/rankbadges", Ranks[Mathf.Clamp(rank, 0, 5)], false);
+                    badge.rectTransform.anchoredPosition = new Vector2(420 - badge.FrameSize.x * .05f, -41 + badge.FrameSize.y * .05f);
+                }
+            }
+            if (rank == 5 && capsule.sparkle == null)
+            {
+                capsule.sparkle = Sprite("Rank Sparkle", detail, "freeplay/sparkle", 420, 41, "sparkle Export0");
+                capsule.sparkle.drawScale = 0.8f;
+                capsule.sparkle.loop = false;
+                capsule.sparkle.material = RankMaterial;
+            }
+        }
+        if (capsule.rank != null)
+        {
+            capsule.rank.gameObject.SetActive(rank >= 0);
+            capsule.rankGlow.gameObject.SetActive(rank >= 0);
+        }
+        if (capsule.sparkle != null) capsule.sparkle.gameObject.SetActive(rank == 5);
+        capsule.rankValue = rank;
     }
 
     private void RebuildFilters()
@@ -853,15 +927,29 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (clip != null) effects.PlayOneShot(clip, OptionsV2.miscVolume * volume);
     }
 
-    private static void NumberSprites(RectTransform parent, string name, string atlas, int value, int count, float x, float y, float step, float scale)
+    private static VanillaFreeplaySprite[] NumberSprites(RectTransform parent, string name, string atlas, int value, int count, float x, float y, float step, float scale)
     {
+        var digits = new VanillaFreeplaySprite[count];
         string text = Mathf.Clamp(value, 0, (int)Mathf.Pow(10, count) - 1).ToString("D" + count);
         for (int i = 0; i < count; i++)
         {
             var digit = Sprite(name + i, parent, atlas, x + i * step + (text[i] == '1' ? 4 : text[i] == '3' ? 1 : 0), y, Numbers[text[i] - '0']);
+            digits[i] = digit;
             digit.drawScale = scale;
             digit.centerScale = false;
             digit.loop = false;
+        }
+        return digits;
+    }
+
+    private static void UpdateNumberSprites(VanillaFreeplaySprite[] digits, string atlas, int value, float x, float y, float step)
+    {
+        string text = Mathf.Clamp(value, 0, (int)Mathf.Pow(10, digits.Length) - 1).ToString("D" + digits.Length);
+        for (int i = 0; i < digits.Length; i++)
+        {
+            string prefix = Numbers[text[i] - '0'];
+            if (!digits[i].CurrentFrameName.StartsWith(prefix, StringComparison.Ordinal)) digits[i].Load(atlas, prefix, false);
+            digits[i].rectTransform.anchoredPosition = new Vector2(x + i * step + (text[i] == '1' ? 4 : text[i] == '3' ? 1 : 0), -y);
         }
     }
 

@@ -386,7 +386,7 @@ public sealed partial class VanillaFreeplay
 
     private void DrawRankSparkle(Capsule capsule, float delta)
     {
-        if (capsule.sparkle == null) return;
+        if (capsule.sparkle == null || !capsule.sparkle.gameObject.activeSelf) return;
         capsule.sparkleAge += delta;
         if (capsule.sparkleAge >= capsule.sparkleNext)
         {
