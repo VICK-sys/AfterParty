@@ -37,6 +37,12 @@ Clear percentage uses `(Sick + Good - Miss) / chart note count`, clamped between
 Skipped chart notes count as misses for this display.
 Aborted runs and autoplay do not save ranks.
 Older scores have no rank until a completed run records one.
+Freeplay celebrates the first saved rank and each higher rank when gameplay returns to the menu.
+The sequence uses the 0.8.6 badge animations, sparks, rank colors, sounds, camera timing, capsule recoil, and DJ reactions.
+The badge lands after 0.6 seconds. The capsule returns after 1.6 seconds. Menu input resumes after 2.2 seconds.
+The previous rank remains visible until the new badge lands.
+Song previews resume when the menu accepts input.
+Equal or lower ranks, aborted runs, autoplay, and Opponent mode do not trigger the sequence.
 
 ## Assets and scope
 
@@ -46,6 +52,9 @@ The importer extracts four embedded fonts and normalizes the letter animation JS
 `VanillaFreeplayAssets.cs` sets texture and audio import properties.
 
 The screen supports the songs and variations installed in Unity Party.
+Song previews stream audio to avoid decoding complete instrumentals during selection.
+Difficulty changes reuse song rows and update their titles, icons, BPM, ratings, ranks, and favorites.
+The screen retains unchanged filters and does not replay the list entrance when the difficulty changes.
 It does not import additional charts, Pico gameplay, character selection, unlock screens, or result-screen celebrations.
 Tab opens Unity Party play modes in place of character selection.
 The Animate renderer preserves affine transforms, frame labels, atlas rotation, and the color multipliers used by these assets.
@@ -66,3 +75,14 @@ Set `UNITY_PARTY_BUILD_PATH` to build a Windows player after successful checks.
 The probe checks catalog controls, score formulas, rank assets, menu entry, preview cancellation, difficulty filtering, favorites, gameplay return, and the bundle picker.
 The probe also checks entry and exit motion, transition input locks, and all 13 imported icon confirmation sequences.
 It captures entry, confirmation, exit, normal, Erect, return, widescreen, and blank-control images.
+
+Set `UNITY_PARTY_FREEPLAY_PERFORMANCE_PATH` and run `VanillaFreeplayPerformanceValidation.Begin` to measure song selection and preview frame gaps.
+The probe checks streamed playback, seeking, preview loops, and rapid selection cancellation.
+It saves timing and audio memory measurements in `result.json`.
+Set `UNITY_PARTY_FREEPLAY_DIFFICULTY_TEST=1` to measure difficulty changes with the same probe.
+This mode checks row reuse, difficulty details, rank visibility, remapped buttons, unavailable remixes, and empty filters.
+
+Use `-executeMethod VanillaFreeplayRankValidation.Begin` to check rank return behavior in the isolated project.
+This probe checks six ranks, upgrades, first clears, animation timing, input locks, preview audio, and actual gameplay return.
+Negative controls cover equal ranks, lower ranks, aborted runs, autoplay, Opponent mode, empty charts, and mismatched song or difficulty.
+It captures badge impact, capsule recoil, the restored menu, widescreen output, and a blank control.

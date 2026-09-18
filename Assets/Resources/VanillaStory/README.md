@@ -13,7 +13,8 @@ The text renderer preserves source font metrics and the 29-pixel line spacing.
 
 ## Menu behavior
 
-The screen currently shows Tutorial and Week 1. Weeks 2 through 7, Weekend 1, and LE SSERAFIM are hidden until their songs are added to Freeplay.
+The screen currently shows Tutorial and Weeks 1 through 3.
+Weeks 4 through 7, Weekend 1, and LE SSERAFIM remain hidden until their songs are added to Freeplay.
 The menu preserves original sprite coordinates, trimmed and rotated atlas frames, indexed dances, animation offsets, and character reuse.
 Characters dance with the 102 BPM menu music.
 Level titles use the source spacing, scrolling curve, opacity, and confirmation colors.
@@ -33,9 +34,10 @@ The menu restores the selected level and difficulty after gameplay.
 
 ## Installed content
 
-Tutorial and Week 1 launch their installed songs in the original order.
+Tutorial and Weeks 1 through 6 launch their installed songs in the original order.
 The hidden level definitions retain their original artwork and track names.
-`VanillaStoryCatalog.Load` temporarily limits the menu to Tutorial and Week 1; extend this list when more weeks are installed.
+`VanillaStoryCatalog.Load` limits the menu to Tutorial and Weeks 1 through 6.
+Extend this list when more weeks are installed.
 Selecting a visible level with missing songs displays the missing song names.
 The menu does not import additional gameplay content.
 Freeplay retains access to local bundles.

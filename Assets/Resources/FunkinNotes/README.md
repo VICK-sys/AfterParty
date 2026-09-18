@@ -68,8 +68,10 @@ Each strumline shares a pool of six splashes across its four lanes.
 
 Unity Party retains its song loader, countdown, characters, camera, options, and calibration.
 Boyfriend, Opponent, and AutoPlay are the available play modes; both keybind sets control the selected character.
-This change does not port the upstream chart format, scripted note kinds, mobile controls, or every note style.
-The built-in notes use the Funkin style.
+Imported bundles convert the upstream chart format and retain supported scripted note kinds.
+Week 6 uses the Pixel style.
+Other songs use the Funkin style.
+Mobile controls and other note styles are not included.
 The existing input and visual offset preferences remain available.
 Hardware latency and cross-engine pixel parity require comparison with a running upstream build.
 
@@ -81,7 +83,7 @@ Do not pass `-quit` to the gameplay validation command.
 The harness exits after checking the gameplay scene and saving two renders under `Validation`.
 The harness changes play mode and temporary runtime options.
 
-Rule checks cover input and HUD behavior, plus 18 bundled charts with 5,801 note heads at 30, 60, and 144 frames per second.
+Rule checks cover input and HUD behavior, plus 87 bundled charts with 41,590 note heads at 30, 60, and 144 frames per second.
 Runtime checks cover countdown input, event latency, keyboard and controller bindings, hold release, pooling, bot play, and both scroll directions.
 Negative controls check incorrect event timestamps, blank renders, and separate strumline splash pools.
 
