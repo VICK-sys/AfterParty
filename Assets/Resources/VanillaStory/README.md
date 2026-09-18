@@ -1,6 +1,6 @@
-# Story Mode
+# AfterParty Story Mode
 
-Story Mode uses the desktop level menu from Friday Night Funkin' 0.8.6.
+AfterParty Story Mode uses the desktop level menu from Friday Night Funkin' 0.8.6.
 The reference source is the local `Funkin-0.8.6` checkout.
 The artwork and level data come from the local Funkin Windows release.
 
@@ -56,7 +56,7 @@ Run validation in a separate project copy with graphics enabled.
 Set `UNITY_PARTY_STORY_TEST_PATH` to the output directory.
 Use Unity batch mode with `-executeMethod VanillaStoryValidation.Begin`.
 Do not add `-quit`. The probe exits after its checks.
-Set `UNITY_PARTY_BUILD_PATH` to build a Windows player after successful checks.
+Set `AFTERPARTY_BUILD_PATH` to build a Windows player after successful checks.
 
 The probe checks playlists, missing content, atlas rotation, animation frames, navigation, confirmation locks, gameplay launch, return state, and scores.
 Abort, autoplay, wrong-song, missing-difficulty, and blank-render controls detect false passes.
@@ -67,7 +67,7 @@ Run `python Scripts/TestVanillaStoryAssets.py` to check imported hashes, animati
 Build its project with `haxelib run lime build project.xml neko -64` from that directory.
 Set `UNITY_PARTY_STORY_FONT_PATH` to this asset directory before running the exported executable.
 The screen retains a 1280 by 720 viewport with letterboxing at other aspect ratios.
-Gameplay scenes and loading screens retain Unity Party behavior.
+Gameplay scenes and loading screens retain the behavior inherited from Unity Party.
 
 The artwork and fonts retain their upstream ownership.
 `LICENSE.md` contains the asset license.

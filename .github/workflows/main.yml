@@ -1,4 +1,4 @@
-name: Build Project
+name: Build AfterParty
 
 on:
   schedule:
@@ -29,9 +29,9 @@ jobs:
         with:
           targetPlatform: StandaloneWindows64
           versioning: Semantic
-          buildName: Unity Party
+          buildName: AfterParty
       - uses: actions/upload-artifact@v7.0.1
         with:
-          name: Build-StandaloneWindows64
+          name: AfterParty-Windows64
           path: build/StandaloneWindows64
           if-no-files-found: error

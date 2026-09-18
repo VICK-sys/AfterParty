@@ -1,28 +1,22 @@
-**Unity Party** is an FNF' engine created using the Unity game engine focused on allowing lower-end PCs to play FNF'.
+# AfterParty Engine
 
-## Note Worthy Features
-### High FPS
-Thanks to Unity, the game is able to run better on lower-end PCs than HaxeFlixel. You can modify the engine's source code to do complicated effects that might cause some lower-end PCs to struggle when done on HaxeFlixel, though you can replicate the effects in Unity and lower-end PCs will run it fine.
-### Control Mapping
-You can remap your keybinds to any key on your keyboard, but you also have a SECONDARY keybind list that you can use to at any time without having to manually switch it all the time!
-### Play Modes
-Play as Boyfriend or the opponent, or use AutoPlay to watch a song. Both keybind sets control the selected character.
-Online and local multiplayer are no longer supported.
-### Song Bundles
-Bundles are a collection of songs that each can possibly contain custom scripting. Each song in a bundle can contain information such as artist name, charter name, and even an album cover. Bundles can be exported to a .ZIP format and easily shared. If applicable, users can download bundles if they have the download URL via the in-game bundle downloader. Bundles are almost always forward-compatible with future versions of the engine.
-### AutoPlay
-You just wanna see how that one song is played out? The engine can autoplay any song for you. This depends on your PC's performance, however. Meaning lower performance, the less accurate the AutoPlay will be, but usually AutoPlay will be precise.
-### Note Color Customization
-This is also a kind of support for the colorblind! You can customize the color of each of the 4 note keys to any color you want, even pure black!
-### Offset System
-You can test and change your offset for both inputs and notes.
-### Sound Channels
-Are some voices or music too loud? What if the music is too loud but the voices are not? That's okay, you can choose which sound to turn down separately!
+**Friday Night Funkin’: AfterParty** is a Unity-based Friday Night Funkin' engine.
+AfterParty forks [Unity Party](https://github.com/Team-Determination/Unity-Party), created by Team Determination.
+Repository: [VICK-sys/AfterParty](https://github.com/VICK-sys/AfterParty).
 
-## Special Thanks
-**raonyreis13** - Procedural Notes Spawning
+## Features
 
-## Requirements for Editing and Building
+- Intro, title, menus, credits, and gameplay behavior adapted from Friday Night Funkin' 0.8.6.
+- Tutorial and Weeks 1 through 6, with available Erect and Nightmare charts.
+- Boyfriend, Opponent, and AutoPlay modes.
+- Primary and secondary control bindings.
+- Song bundles with custom scripts, song metadata, and album artwork.
+- Note colors, input and note offsets, and separate volume controls.
+
+Online and local multiplayer are not supported.
+The port documentation describes supported content, behavior, and remaining differences.
+
+## Open and build
 
 Install Unity **6000.6.1f1** and Git before opening this project.
 The project uses Universal Render Pipeline 17.6 and Input System 1.19 for gameplay.
@@ -32,20 +26,61 @@ TextMesh Pro is included through the Unity UI package.
 Open the project in Unity and wait for package resolution and asset import.
 Open `Assets/Scenes/Title.unity` to start the game in the editor.
 
-Select **Build > Windows 64-bit** to create `Builds/Windows/Unity Party.exe`.
+Select **Build > Windows 64-bit** to create `Builds/Windows/AfterParty.exe`.
 For command-line builds, use Unity batch mode with `-executeMethod BuildAutomation.BuildWindows`.
-Set `UNITY_PARTY_BUILD_PATH` to select another output executable path.
+Set `AFTERPARTY_BUILD_PATH` to select another output executable path.
+The build also accepts `UNITY_PARTY_BUILD_PATH` for existing automation.
+`AFTERPARTY_BUILD_PATH` takes precedence when both variables have values.
 
-Run `-batchmode -quit -executeMethod UpgradeValidation.Run` to check object pools, material caching, and CRT rendering.
-Keep graphics enabled for this check.
-Set `UNITY_PARTY_VALIDATION_PATH` to save the CRT control and output images.
-
-The GitHub Actions workflow builds Windows 64-bit.
+The GitHub Actions workflow builds Windows 64-bit and uploads the `AfterParty-Windows64` artifact.
 Configure `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL` repository secrets before running it.
 The workflow requires a valid Unity license and a matching GameCI editor image.
 
-Unity 2021 is no longer supported by this fork.
+Unity 2021 is not supported.
 Keep the package lock file when cloning or updating the project.
 
-Gameplay uses the Funkin 0.8.6 input, judgement, receptor, and sustain rules.
-See `Assets/Resources/FunkinNotes/README.md` for behavior, scope, and validation commands.
+## Validation
+
+Run Unity with `-batchmode -quit -executeMethod UpgradeValidation.Run` to check object pools, material caching, and CRT rendering.
+Keep graphics enabled for this check.
+Set `UNITY_PARTY_VALIDATION_PATH` to save the CRT control and output images.
+The validation tools retain their `UNITY_PARTY_*` variables for compatibility.
+Each port document lists its validation commands and control cases.
+
+## Documentation
+
+- [Intro, title, and diamond transitions](Assets/Resources/VanillaTitle/README.md)
+- [Main menu](Assets/VanillaMenu/README.md)
+- [Story Mode](Assets/Resources/VanillaStory/README.md)
+- [Freeplay](Assets/Resources/VanillaFreeplay/README.md)
+- [Credits](Assets/Resources/VanillaCredits/README.md)
+- [Songs, characters, and stages](Assets/StreamingAssets/Bundles/README.md)
+- [Input, judgement, and notes](Assets/Resources/FunkinNotes/README.md)
+- [Healthbar and judgements](Assets/Resources/FunkinHud/README.md)
+- [Pause menu](Assets/Resources/FunkinPause/README.md)
+
+## Save compatibility
+
+AfterParty retains the Unity company and product identifiers `Rei` and `FridayNight`.
+These identifiers preserve existing settings, scores, songs, bundles, characters, scenes, and replays.
+Windows data remains in `%USERPROFILE%\AppData\LocalLow\Rei\FridayNight`.
+Player preferences retain the registry key `HKEY_CURRENT_USER\Software\Rei\FridayNight`.
+The Windows caption displays **Friday Night Funkin’: AfterParty**.
+Internal shader identifiers and validation variables also retain their existing names.
+
+## Credits and licenses
+
+The in-game credits preserve the Friday Night Funkin' 0.8.6 credits and the original Unity Party developers.
+
+| Original Unity Party contributor | Role |
+| --- | --- |
+| Team Determination | Original Unity Party team |
+| Rei the Goat | Engine Developer |
+| UniBrine | Engine Designer |
+| St4bility aka Thesnakerox | Engine Music Composer and Engine Advisor |
+
+Special thanks to **raonyreis13** for procedural note spawning.
+
+[LICENSE](LICENSE) contains the repository license.
+Imported source and assets retain their upstream ownership and licenses.
+The port directories contain the applicable license files.

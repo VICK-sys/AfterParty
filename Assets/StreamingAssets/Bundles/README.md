@@ -1,4 +1,4 @@
-# Tutorial and Weeks 1 through 6
+# AfterParty Tutorial and Weeks 1 through 6
 
 These bundles contain the original Tutorial, Bopeebo, Fresh, and DadBattle charts from Friday Night Funkin' 0.8.6.
 Each song includes Easy, Normal, and Hard.
@@ -118,12 +118,12 @@ Add `--week2-only` to import only Week 2.
 Add `--week3-only` to import only Week 3.
 Add `--weeks456-only` to import only Weeks 4 through 6.
 The importer overwrites these generated bundles.
-Select `Tools > Unity Party > Build Tutorial Character` to regenerate the character animation assets.
+Select `Tools > AfterParty > Build Tutorial Character` to regenerate the character animation assets.
 
 ## Validation
 
 Set `UNITY_PARTY_SONG_TEST_PATH` to an empty output directory.
-Set `UNITY_PARTY_BUILD_PATH` to the output executable path.
+Set `AFTERPARTY_BUILD_PATH` to the output executable path.
 Run Unity with `-batchmode -executeMethod VanillaSongValidation.Begin`.
 The probe checks all 87 charts through the gameplay parser.
 It rejects controls for swapped note sides, rounded scroll speeds, and incorrect linear camera easing.

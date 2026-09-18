@@ -1,6 +1,6 @@
-# Funkin healthbar and judgements
+# AfterParty healthbar and judgements
 
-This HUD adapts Friday Night Funkin' 0.8.6 behavior to Unity.
+The AfterParty HUD adapts Friday Night Funkin' 0.8.6 behavior to Unity.
 The reference files are `PlayState.hx`, `HealthIcon.hx`, `PopUpStuff.hx`, and `NoteStyle.hx`.
 The Flixel reference revision is `141f23c400c0508c76d5a09a143f5ce6790f8122`.
 

@@ -8,12 +8,21 @@ using UnityEngine;
 
 public static class BuildAutomation
 {
+    public static string OutputOverride
+    {
+        get
+        {
+            string output = Environment.GetEnvironmentVariable("AFTERPARTY_BUILD_PATH");
+            return string.IsNullOrWhiteSpace(output) ? Environment.GetEnvironmentVariable("UNITY_PARTY_BUILD_PATH") : output;
+        }
+    }
+
     [MenuItem("Build/Windows 64-bit")]
     public static void BuildWindows()
     {
-        string output = Environment.GetEnvironmentVariable("UNITY_PARTY_BUILD_PATH");
+        string output = OutputOverride;
         if (string.IsNullOrWhiteSpace(output))
-            output = "Builds/Windows/Unity Party.exe";
+            output = "Builds/Windows/AfterParty.exe";
 
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(output)));
         BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions

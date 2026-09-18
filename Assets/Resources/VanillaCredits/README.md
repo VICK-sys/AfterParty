@@ -1,6 +1,6 @@
-# Credits
+# AfterParty credits
 
-The credits follow `CreditsState.hx` from Friday Night Funkin' 0.8.6.
+The AfterParty credits follow `CreditsState.hx` from Friday Night Funkin' 0.8.6.
 The original sections retain their text and order.
 The data matches `FunkinCrew/funkin.assets` commit `9300719cb261d23f72344807055be6d109c9949c`.
 The original Unity Party section follows the original credits.
@@ -25,7 +25,7 @@ The menu also returns when the final line leaves the screen.
 Music uses `VanillaFreeplay/audio/freeplayRandom` and fades from silence to 80 percent of the menu volume over six seconds.
 Returning restores `freakyMenu` and the selected menu entry.
 
-`unity-party.json` contains the original Unity Party section.
+`unity-party.json` preserves the original Unity Party section after the AfterParty rename.
 `credits.json` preserves the imported original data.
 `lines.json` contains text metrics and atlas coordinates for logical widths from 1280 through 1600.
 Rebuild the text after changing either credit document.

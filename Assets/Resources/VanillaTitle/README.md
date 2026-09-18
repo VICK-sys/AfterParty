@@ -1,6 +1,6 @@
-# Vanilla intro and title
+# AfterParty intro and title
 
-The Title scene starts with the desktop intro from Friday Night Funkin' 0.8.6.
+The AfterParty Title scene starts with the desktop intro from Friday Night Funkin' 0.8.6.
 The source reference is the local `Funkin-0.8.6` checkout.
 The artwork, audio, splash text, and videos come from the local Funkin Windows distribution.
 The import manifest records the source and asset hashes.

@@ -59,8 +59,8 @@ public class DiscordController : MonoBehaviour
             {
                 new DiscordButton
                 {
-                    label = "Play Unity Party",
-                    url = "https://gamejolt.com/games/unityparty/632556"
+                    label = "AfterParty repository",
+                    url = "https://github.com/VICK-sys/AfterParty"
                 }
             }
         };
@@ -89,8 +89,8 @@ public class DiscordController : MonoBehaviour
         {
             new DiscordButton
             {
-                label = "Play Unity Party",
-                url = "https://gamejolt.com/games/unityparty/632556"
+                label = "AfterParty repository",
+                url = "https://github.com/VICK-sys/AfterParty"
             }
         };
         

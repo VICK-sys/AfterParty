@@ -10233,7 +10233,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'This bundle either does not mean the requirements for Unity Party or there
+  m_text: 'This bundle either does not meet the requirements for AfterParty or there
     has been an issue during extraction.
 
 
@@ -17069,9 +17069,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <color=yellow>Unity Party</color> is a Unity game that attempts to port
-    some gameplay elements and mechanics from the popular game, Friday Night Funkin'.
-    This game is created by one developer with support from others.
+  m_text: <color=yellow>AfterParty Engine</color> is a Unity-based Friday Night
+    Funkin' engine. It forks Unity Party, created by Team Determination.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e452243aafef5e47be6fa4e393ab840, type: 2}
   m_sharedMaterial: {fileID: -8575267411286935687, guid: 5e452243aafef5e47be6fa4e393ab840,
@@ -23092,25 +23091,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<color=yellow>WARNING!</color> You are playing an <color=red>unfinished,
-    potentially unstable and buggy</color> build of Unity Party. There might be game-breaking
-    bugs, performance issues, features not working as intended, and other issues.
-
-
-    <color=green>If
-    you encounter any issues, please report it in-game by pressing "Left-Shift +
-    Left-Alt + B".</color> This is so we get additional critical information such
-    as <color=yellow>game logs and basic system information.</color>
-
-
-    If you
-    encounter an issue that prevents you from using the in-game reporting system,
-    please join our Discord server to report the issue. The invite is available on
-    the Game Jolt page. A button to join is also available in the game options.
-
-
-    Thank
-    you for playing the early build of Unity Party.'
+  m_text: "This AfterParty build is in development.\n\nProject repository: https://github.com/VICK-sys/AfterParty"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e452243aafef5e47be6fa4e393ab840, type: 2}
   m_sharedMaterial: {fileID: -8575267411286935687, guid: 5e452243aafef5e47be6fa4e393ab840,

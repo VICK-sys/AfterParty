@@ -12,7 +12,7 @@ public static class VanillaMenuBuilder
 {
     private const string Root = "Assets/VanillaMenu/";
 
-    [MenuItem("Tools/Unity Party/Rebuild Vanilla Main Menu")]
+    [MenuItem("Tools/AfterParty/Rebuild Vanilla Main Menu")]
     public static void Build()
     {
         if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())

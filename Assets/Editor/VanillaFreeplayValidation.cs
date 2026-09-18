@@ -426,7 +426,7 @@ public static class VanillaFreeplayValidation
         string result = "FREEPLAY VALIDATION: passed=" + passed + ", errors=" + errors + ", editorSearchWarnings=" + editorWarnings + ", phase=" + phase;
         File.WriteAllText(Path.Combine(Output, "result.txt"), result + "\n");
         Debug.Log(result);
-        if (passed && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("UNITY_PARTY_BUILD_PATH")))
+        if (passed && !string.IsNullOrWhiteSpace(BuildAutomation.OutputOverride))
         {
             try { BuildAutomation.BuildWindows(); }
             catch (Exception exception) { Debug.LogException(exception); passed = false; }

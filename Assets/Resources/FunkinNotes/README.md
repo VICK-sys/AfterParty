@@ -1,4 +1,4 @@
-# Funkin note behavior
+# AfterParty note behavior
 
 The behavior reference is Friday Night Funkin' v0.8.6.
 The source reference is the local `Funkin-0.8.6` checkout.
@@ -66,7 +66,7 @@ The atlas loader preserves frame offsets and packed frame rotation.
 Sick hits create splashes, and successful holds create covers.
 Each strumline shares a pool of six splashes across its four lanes.
 
-Unity Party retains its song loader, countdown, characters, camera, options, and calibration.
+AfterParty retains its song loader, countdown, characters, camera, options, and calibration.
 Boyfriend, Opponent, and AutoPlay are the available play modes; both keybind sets control the selected character.
 Imported bundles convert the upstream chart format and retain supported scripted note kinds.
 Week 6 uses the Pixel style.
