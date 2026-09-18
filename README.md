@@ -2,7 +2,6 @@
 
 **Friday Night Funkin’: AfterParty** is a Unity-based Friday Night Funkin' engine.
 AfterParty forks [Unity Party](https://github.com/Team-Determination/Unity-Party), created by Team Determination.
-Repository: [VICK-sys/AfterParty](https://github.com/VICK-sys/AfterParty).
 
 ## Features
 
