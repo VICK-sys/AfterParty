@@ -50,8 +50,25 @@ public sealed class VanillaPauseText : MaskableGraphic
     private float age;
     private int frameIndex;
     public bool rightAligned;
+    public bool centered;
     public override Texture mainTexture => texture;
     public string Text => value;
+
+    public float TextWidth
+    {
+        get
+        {
+            float width = 0;
+            foreach (char character in value)
+            {
+                if (character == ' ') { width += 40; continue; }
+                string prefix = character.ToString();
+                if (Symbols.TryGetValue(prefix, out string symbol)) prefix = symbol;
+                if (boldFrames != null && boldFrames.TryGetValue(prefix, out Frame[] frames)) width += frames[0].full.x;
+            }
+            return width;
+        }
+    }
 
     public void Initialize(bool animated, int size = 32)
     {
@@ -101,7 +118,7 @@ public sealed class VanillaPauseText : MaskableGraphic
     {
         mesh.Clear();
         if (texture == null) return;
-        float x = 0;
+        float x = centered && bold ? (rectTransform.rect.width - TextWidth) / 2 : 0;
         float y = 0;
         if (bold)
         {

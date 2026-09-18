@@ -149,10 +149,9 @@ public static class VanillaMenuValidation
                     break;
                 case 3:
                     if (sinceChange < 2) return;
-                    Require(main.creditsPanel.activeInHierarchy && main.creditsScroll.content.rect.height > 510, "Credits content did not open.");
-                    Capture("credits.png", false, 1280, 720);
-                    main.CloseCredits();
-                    Require(!main.creditsPanel.activeSelf && main.SelectedIndex == 4, "Credits did not close.");
+                    Require(VanillaCreditsScreen.Active != null && VanillaCreditsScreen.Active.TotalLineCount >= 207, "Credits content did not open.");
+                    VanillaCreditsScreen.Active.Close(false);
+                    Require(VanillaCreditsScreen.Active == null && main.gameObject.activeSelf && main.SelectedIndex == 4, "Credits did not close.");
                     main.MoveSelection(1);
                     main.ConfirmSelection();
                     Next();

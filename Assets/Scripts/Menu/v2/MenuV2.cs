@@ -401,6 +401,8 @@ public class MenuV2 : MonoBehaviour
         Instance = this;
         bool restoreStory = VanillaStoryCampaign.ReturnToStory;
         bool restoreFreeplay = VanillaFreeplay.ReturnToFreeplay;
+        bool showTitle = vanillaMenu != null && !VanillaTitleScreen.EnteredMainMenu
+            && !restoreStory && !restoreFreeplay && startPhase == StartPhase.Nothing;
         if (restoreStory || restoreFreeplay) startPhase = StartPhase.Nothing;
         songDifficultiesDropdown.onValueChanged.AddListener(_ => RefreshSongVariation());
 
@@ -476,7 +478,8 @@ public class MenuV2 : MonoBehaviour
         musicSource.Play();
 
         DiscordController.instance.SetMenuState("Idle");
-        if (restoreStory) OpenStoryMode();
+        if (showTitle) VanillaTitleScreen.Open(this);
+        else if (restoreStory) OpenStoryMode();
         else if (restoreFreeplay) OpenFreeplay(true);
     }
 

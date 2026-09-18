@@ -1,0 +1,10 @@
+<project>
+    <meta title="Credits Reference" package="local.credits.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="CreditsReference" path="../../Builds/CreditsReference/compiled" />
+    <window width="1280" height="720" hidden="true" />
+    <source path="." />
+    <source path="../../Temp/CreditsReferenceSource" />
+    <haxelib name="flixel" version="6.2.0" />
+    <haxelib name="flixel-addons" version="3.3.0" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

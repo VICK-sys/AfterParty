@@ -1,0 +1,16 @@
+{
+  "source": "Friday Night Funkin' 0.8.6 Windows credits",
+  "sourceCodeSHA256": "97f67affc21e723ddc79f0a0523e504ac2a335f63b2b63f0444a0b874e635982",
+  "originalEntries": 39,
+  "lineCount": 207,
+  "minimumWidth": 1280,
+  "maximumWidth": 1600,
+  "files": {
+    "credits.json": "9409ac11c97f5674c81dd204b2d2b3cab058420094fd125897bd75dee2c6182d",
+    "unity-party.json": "b33c502c20469880fbbaf9bee1cc2a95c13939ff20abaafdf9ac5c770e69d770",
+    "lines.json": "d0c9c6ad8f64c065373dac6de5851b65ce43ddff8a6ede5eb977d00aa58d69bc",
+    "credits-0.png": "cc96ea8e798217f080488965fd42dab2fec7b7f4869b7cc203c24bffc9b19609",
+    "fade-cover.png": "4620ad1f3d1c0f4b10c844e8e57e756d8b23fe125cb5b18fcdf2bf35f7a3ed4c",
+    "fade-reveal.png": "cdde4442403de6bce45d739a78537e9a7f02184dd97ab8ddad8ea161afbd8a65"
+  }
+}

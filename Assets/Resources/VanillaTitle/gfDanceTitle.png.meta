@@ -1,0 +1,652 @@
+fileFormatVersion: 2
+guid: 7a3394a65aab8fd4d82e3b565c454a10
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2616423655936760011
+    second: gfDanceTitle_0
+  - first:
+      213: 3601287655818028722
+    second: gfDanceTitle_1
+  - first:
+      213: -5457031584035685030
+    second: gfDanceTitle_2
+  - first:
+      213: -3957801015362407366
+    second: gfDanceTitle_3
+  - first:
+      213: 2712039596056370274
+    second: gfDanceTitle_4
+  - first:
+      213: 8112744535564468773
+    second: gfDanceTitle_5
+  - first:
+      213: -3135598902614711558
+    second: gfDanceTitle_6
+  - first:
+      213: 2560847487762707990
+    second: gfDanceTitle_7
+  - first:
+      213: 3346327203307386365
+    second: gfDanceTitle_8
+  - first:
+      213: -1021433083195559960
+    second: gfDanceTitle_9
+  - first:
+      213: -1526567879481376503
+    second: gfDanceTitle_10
+  - first:
+      213: 7041470420420955669
+    second: gfDanceTitle_11
+  - first:
+      213: 7496905063943439906
+    second: gfDanceTitle_12
+  - first:
+      213: 3473003694072279687
+    second: gfDanceTitle_13
+  - first:
+      213: 7163847682532705389
+    second: gfDanceTitle_14
+  - first:
+      213: 3686738038771930043
+    second: gfDanceTitle_15
+  - first:
+      213: -6589388183230762602
+    second: gfDanceTitle_16
+  - first:
+      213: 8698180709779507172
+    second: gfDanceTitle_17
+  - first:
+      213: 8765991744939122715
+    second: gfDanceTitle_18
+  - first:
+      213: -4113028687990221451
+    second: gfDanceTitle_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: gfDanceTitle_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3447
+        width: 717
+        height: 649
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 537e5fd1c8890bbd0800000000000000
+      internalID: -2616423655936760011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_1
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 3447
+        width: 724
+        height: 649
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b66803ea085af130800000000000000
+      internalID: 3601287655818028722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_2
+      rect:
+        serializedVersion: 2
+        x: 1456
+        y: 3449
+        width: 724
+        height: 647
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5d3779dfaab444b0800000000000000
+      internalID: -5457031584035685030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_3
+      rect:
+        serializedVersion: 2
+        x: 2187
+        y: 3449
+        width: 719
+        height: 647
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a34b4a322f01319c0800000000000000
+      internalID: -3957801015362407366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_4
+      rect:
+        serializedVersion: 2
+        x: 2914
+        y: 3446
+        width: 719
+        height: 650
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26cdbb3c4a913a520800000000000000
+      internalID: 2712039596056370274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2787
+        width: 717
+        height: 651
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 522cfc30c22469070800000000000000
+      internalID: 8112744535564468773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_6
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 2786
+        width: 719
+        height: 652
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af2ab83496d1c74d0800000000000000
+      internalID: -3135598902614711558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_7
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 2775
+        width: 720
+        height: 663
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6163c00e835f98320800000000000000
+      internalID: 2560847487762707990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_8
+      rect:
+        serializedVersion: 2
+        x: 2179
+        y: 2774
+        width: 719
+        height: 664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df5fc5f9cda807e20800000000000000
+      internalID: 3346327203307386365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_9
+      rect:
+        serializedVersion: 2
+        x: 2906
+        y: 2775
+        width: 719
+        height: 663
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8efeb4ac50423d1f0800000000000000
+      internalID: -1021433083195559960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2114
+        width: 717
+        height: 652
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 901cdf90a9a80dae0800000000000000
+      internalID: -1526567879481376503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_11
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 2114
+        width: 724
+        height: 652
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51e8c914a0458b160800000000000000
+      internalID: 7041470420420955669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_12
+      rect:
+        serializedVersion: 2
+        x: 1456
+        y: 2114
+        width: 724
+        height: 652
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2260d237f6b5a0860800000000000000
+      internalID: 7496905063943439906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_13
+      rect:
+        serializedVersion: 2
+        x: 2187
+        y: 2114
+        width: 719
+        height: 652
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7823cc08576923030800000000000000
+      internalID: 3473003694072279687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_14
+      rect:
+        serializedVersion: 2
+        x: 2914
+        y: 2113
+        width: 719
+        height: 653
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d640e56f2891b6360800000000000000
+      internalID: 7163847682532705389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1452
+        width: 717
+        height: 653
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb3dbec86bce92330800000000000000
+      internalID: 3686738038771930043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_16
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 1451
+        width: 719
+        height: 654
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 691bf530c5acd84a0800000000000000
+      internalID: -6589388183230762602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_17
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 1446
+        width: 720
+        height: 659
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e70096454526b870800000000000000
+      internalID: 8698180709779507172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_18
+      rect:
+        serializedVersion: 2
+        x: 2179
+        y: 1447
+        width: 719
+        height: 658
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b106a1d3c0f07a970800000000000000
+      internalID: 8765991744939122715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gfDanceTitle_19
+      rect:
+        serializedVersion: 2
+        x: 2906
+        y: 1447
+        width: 719
+        height: 658
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5751a5533369be6c0800000000000000
+      internalID: -4113028687990221451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      gfDanceTitle_0: -2616423655936760011
+      gfDanceTitle_1: 3601287655818028722
+      gfDanceTitle_10: -1526567879481376503
+      gfDanceTitle_11: 7041470420420955669
+      gfDanceTitle_12: 7496905063943439906
+      gfDanceTitle_13: 3473003694072279687
+      gfDanceTitle_14: 7163847682532705389
+      gfDanceTitle_15: 3686738038771930043
+      gfDanceTitle_16: -6589388183230762602
+      gfDanceTitle_17: 8698180709779507172
+      gfDanceTitle_18: 8765991744939122715
+      gfDanceTitle_19: -4113028687990221451
+      gfDanceTitle_2: -5457031584035685030
+      gfDanceTitle_3: -3957801015362407366
+      gfDanceTitle_4: 2712039596056370274
+      gfDanceTitle_5: 8112744535564468773
+      gfDanceTitle_6: -3135598902614711558
+      gfDanceTitle_7: 2560847487762707990
+      gfDanceTitle_8: 3346327203307386365
+      gfDanceTitle_9: -1021433083195559960
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

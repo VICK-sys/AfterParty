@@ -78,13 +78,16 @@ public sealed class VanillaMainMenu : MonoBehaviour
         if (menu.musicSource.clip == menu.menuClip)
             menu.musicSource.volume = Mathf.MoveTowards(menu.musicSource.volume, OptionsV2.menuVolume * 0.8f, delta * 0.5f);
         float axis = Input.GetAxisRaw("Vertical");
+        if (VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput)
+        {
+            previousAxis = axis;
+            return;
+        }
         bool back = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.JoystickButton1);
         if (showingCredits)
         {
             if (back)
                 CloseCredits();
-            else
-                creditsScroll.verticalNormalizedPosition = Mathf.Clamp01(creditsScroll.verticalNormalizedPosition + axis * delta * 0.15f);
         }
         else if (!Busy)
         {
@@ -95,7 +98,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
                 ConfirmSelection();
             else if (back)
-                menu.QuitGame();
+                ReturnToTitle();
         }
         previousAxis = axis;
     }
@@ -110,7 +113,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
 
     public void MoveSelection(int change)
     {
-        if (Busy || showingCredits || freeplaySuspended)
+        if (Busy || showingCredits || freeplaySuspended || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput)
             return;
         items[SelectedIndex].Select(false);
         SelectedIndex = (SelectedIndex + change % items.Length + items.Length) % items.Length;
@@ -121,11 +124,18 @@ public sealed class VanillaMainMenu : MonoBehaviour
 
     public void ConfirmSelection()
     {
-        if (Busy || showingCredits || freeplaySuspended)
+        if (Busy || showingCredits || freeplaySuspended || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput)
             return;
         Busy = true;
         effects.PlayOneShot(confirmSound, OptionsV2.miscVolume);
         StartCoroutine(Confirm());
+    }
+
+    public void ReturnToTitle()
+    {
+        if (Busy || showingCredits || freeplaySuspended || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
+        if (!VanillaTitleTransition.Begin(() => VanillaTitleScreen.Open(menu))) return;
+        effects.PlayOneShot(cancelSound, OptionsV2.miscVolume);
     }
 
     private IEnumerator Confirm()
@@ -179,16 +189,13 @@ public sealed class VanillaMainMenu : MonoBehaviour
                 break;
             case 4:
                 showingCredits = true;
-                creditsPanel.SetActive(true);
-                creditsScroll.verticalNormalizedPosition = 1;
-                Busy = false;
+                VanillaCreditsTransition.Begin(() => VanillaCreditsScreen.Open(menu));
                 break;
         }
     }
 
     public void CloseCredits()
     {
-        effects.PlayOneShot(cancelSound, OptionsV2.miscVolume);
-        OnEnable();
+        if (VanillaCreditsScreen.Active != null) VanillaCreditsScreen.Active.Close();
     }
 }

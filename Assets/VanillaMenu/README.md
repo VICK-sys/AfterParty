@@ -10,13 +10,13 @@ The implementation uses 24 FPS animation, 160-pixel spacing, and the original ca
 
 Select `Tools > Unity Party > Rebuild Vanilla Main Menu` to regenerate the main menu in the Title scene.
 This action replaces the main menu scene objects.
-The scene contains editable backgrounds, animated entries, a version label, and a credits panel.
+The scene contains editable backgrounds, animated entries, and a version label.
 The version label identifies the visual reference.
 
 Use Up and Down or W and S to select an entry.
 Use Enter or Space to confirm.
 A controller can use its vertical stick, primary button, and secondary button.
-Escape closes Credits or quits from the main menu.
+Escape closes Credits or returns to the title from the main menu.
 In the Unity Editor, quit stops Play mode.
 
 Story Mode opens the level menu from Friday Night Funkin' 0.8.6.
@@ -26,7 +26,9 @@ See `Assets/Resources/VanillaFreeplay/README.md` for controls and validation.
 Options opens the existing settings screen.
 Merch opens the official shop URL.
 Credits shows the original credits and the Unity Party team.
-The title screen and intro retain their existing behavior.
+See `Assets/Resources/VanillaCredits/README.md` for controls and validation.
+The intro and title screen follow Friday Night Funkin' 0.8.6.
+See `Assets/Resources/VanillaTitle/README.md` for controls and validation.
 The serialized `flashingLights` field disables confirmation flashing.
 
 The artwork, music, sounds, font, and credits retain their upstream ownership.

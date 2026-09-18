@@ -1,0 +1,3985 @@
+{
+  "lines": [
+    {
+      "text": "Friday Night Funkin'",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 2,
+          "width": 296,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "A video game created by",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 302,
+          "y": 2,
+          "width": 243,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "The Funkin' Crew Inc.",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 549,
+          "y": 2,
+          "width": 218,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "The Funkin' Crew Inc. Shareholders",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 771,
+          "y": 2,
+          "width": 501,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "ninjamuffin99",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1276,
+          "y": 2,
+          "width": 139,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "PhantomArcade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1419,
+          "y": 2,
+          "width": 157,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Kawai Sprite",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1580,
+          "y": 2,
+          "width": 128,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "evilsk8r",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1712,
+          "y": 2,
+          "width": 81,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Direction and Art Lead",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 36,
+          "width": 322,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "PhantomArcade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 328,
+          "y": 36,
+          "width": 157,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Music Lead",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 489,
+          "y": 36,
+          "width": 162,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Isaac “Kawai Sprite” Garcia",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 655,
+          "y": 36,
+          "width": 278,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Co-Direction and Programming Lead",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 937,
+          "y": 36,
+          "width": 515,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "ninjamuffin99",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1456,
+          "y": 36,
+          "width": 139,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Mobile Lead",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1599,
+          "y": 36,
+          "width": 175,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "MoonDroid (Zack)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1778,
+          "y": 36,
+          "width": 185,
+          "height": 25
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Production Manager",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 70,
+          "width": 287,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Hundrec",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 293,
+          "y": 70,
+          "width": 84,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Team Organizers",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 381,
+          "y": 70,
+          "width": 236,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Hundrec",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 621,
+          "y": 70,
+          "width": 84,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "AbnormalPoof",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 709,
+          "y": 70,
+          "width": 146,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Producer",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 859,
+          "y": 70,
+          "width": 129,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Kawa Teaño",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 992,
+          "y": 70,
+          "width": 123,
+          "height": 18
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Artists",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1119,
+          "y": 70,
+          "width": 94,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "PhantomArcade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1217,
+          "y": 70,
+          "width": 157,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "evilsk8r",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1378,
+          "y": 70,
+          "width": 81,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "beck",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1463,
+          "y": 70,
+          "width": 50,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Pixel Art",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1517,
+          "y": 70,
+          "width": 126,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "moawling",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1647,
+          "y": 70,
+          "width": 99,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "IGJHSpritin",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1750,
+          "y": 70,
+          "width": 119,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Cutscene Storyboards & SFX",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 104,
+          "width": 406,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "PhantomArcade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 412,
+          "y": 104,
+          "width": 157,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Additional Background Design",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 573,
+          "y": 104,
+          "width": 424,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Red Minus",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1001,
+          "y": 104,
+          "width": 108,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Cutscene Animation",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1113,
+          "y": 104,
+          "width": 279,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Figburn",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1396,
+          "y": 104,
+          "width": 78,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Sade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1478,
+          "y": 104,
+          "width": 47,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Topium",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1529,
+          "y": 104,
+          "width": 77,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "BlairTheUnseriousGuy",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1610,
+          "y": 104,
+          "width": 227,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Cutscene Cleanup",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 139,
+          "width": 248,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "PennilessRagamuffin",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 254,
+          "y": 139,
+          "width": 208,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "beck",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 466,
+          "y": 139,
+          "width": 50,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Cutscene Background Art",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 520,
+          "y": 139,
+          "width": 357,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "beck",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 881,
+          "y": 139,
+          "width": 50,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Additional Art",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 935,
+          "y": 139,
+          "width": 205,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Jeff Bandelin",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1144,
+          "y": 139,
+          "width": 131,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Mogy64",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1279,
+          "y": 139,
+          "width": 83,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "ChipsGoWoah",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1366,
+          "y": 139,
+          "width": 143,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Min Ho Kim (Deegeemin)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1513,
+          "y": 139,
+          "width": 258,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "PKettles",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1775,
+          "y": 139,
+          "width": 84,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "peepo173",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1863,
+          "y": 139,
+          "width": 95,
+          "height": 23
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Additional Character Design",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 174,
+          "width": 395,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Tom Fulp - Pico School Characters",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 401,
+          "y": 174,
+          "width": 342,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "JohnnyUtah - Tankman",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 747,
+          "y": 174,
+          "width": 228,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "SrPelo - Skid and Pump",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 979,
+          "y": 174,
+          "width": 232,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Magna - Otis",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1215,
+          "y": 174,
+          "width": 129,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "gacktenzo - Preppy Otis",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1348,
+          "y": 174,
+          "width": 235,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Music Production",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1587,
+          "y": 174,
+          "width": 245,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Saruky",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1836,
+          "y": 174,
+          "width": 69,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "crisp",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1909,
+          "y": 174,
+          "width": 49,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Featured Guest Musicians (thus far)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 209,
+          "width": 497,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Bassetfilms",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 503,
+          "y": 209,
+          "width": 115,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Kohta Takahashi",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 622,
+          "y": 209,
+          "width": 165,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Lotus Juice",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 791,
+          "y": 209,
+          "width": 112,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "METAROOM",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 907,
+          "y": 209,
+          "width": 139,
+          "height": 18
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "nuphory",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1050,
+          "y": 209,
+          "width": 82,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Saster",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1136,
+          "y": 209,
+          "width": 61,
+          "height": 18
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "six impala",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1201,
+          "y": 209,
+          "width": 102,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "TeraVex",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1307,
+          "y": 209,
+          "width": 82,
+          "height": 18
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "That Andy Guy",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1393,
+          "y": 209,
+          "width": 153,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "tsuyunoshi",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1550,
+          "y": 209,
+          "width": 106,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Xploshi",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1660,
+          "y": 209,
+          "width": 78,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Tee Lopes",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1742,
+          "y": 209,
+          "width": 102,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "RRThiel",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1848,
+          "y": 209,
+          "width": 84,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Programming",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 244,
+          "width": 194,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Eric \"EliteMasterEric\" Myllyoja",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 200,
+          "y": 244,
+          "width": 319,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "fabs",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 523,
+          "y": 244,
+          "width": 42,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "KadeDev",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 569,
+          "y": 244,
+          "width": 93,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Additional Programming",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 666,
+          "y": 244,
+          "width": 349,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Jenny Crowe",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1019,
+          "y": 244,
+          "width": 127,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "ember ana",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1150,
+          "y": 244,
+          "width": 103,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Mike Welsh",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1257,
+          "y": 244,
+          "width": 119,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Saharan",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1380,
+          "y": 244,
+          "width": 79,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Ian Harrigan",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1463,
+          "y": 244,
+          "width": 125,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Osaka Red LLC: Thomas J Webb",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1592,
+          "y": 244,
+          "width": 327,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Emma (MtH)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 279,
+          "width": 132,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "George Kurelic",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 138,
+          "y": 279,
+          "width": 150,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Will Blanton",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 292,
+          "y": 279,
+          "width": 128,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Victor - Cheemsandfriends",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 424,
+          "y": 279,
+          "width": 262,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Hundrec",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 690,
+          "y": 279,
+          "width": 84,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "AbnormalPoof",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 778,
+          "y": 279,
+          "width": 146,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "MaybeMaru",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 928,
+          "y": 279,
+          "width": 121,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Mobile Porting",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1053,
+          "y": 279,
+          "width": 210,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "MAJigsaw77",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1267,
+          "y": 279,
+          "width": 128,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Luckydog7",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1399,
+          "y": 279,
+          "width": 111,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Karim Akra",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1514,
+          "y": 279,
+          "width": 118,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "sector_5",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1636,
+          "y": 279,
+          "width": 82,
+          "height": 23
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Devops and Additional Internal Tooling",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 313,
+          "width": 546,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "ember ana",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 552,
+          "y": 313,
+          "width": 103,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Gameplay Design",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 659,
+          "y": 313,
+          "width": 241,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "PhantomArcade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 904,
+          "y": 313,
+          "width": 157,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Cameron Taylor",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1065,
+          "y": 313,
+          "width": 161,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Jenny Crowe",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1230,
+          "y": 313,
+          "width": 127,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Spazkid",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1361,
+          "y": 313,
+          "width": 80,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "fabs",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1445,
+          "y": 313,
+          "width": 42,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Emma (MtH)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1491,
+          "y": 313,
+          "width": 132,
+          "height": 25
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Kickstarter Backer Portal Programming",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 348,
+          "width": 558,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Shingai Shamu",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 564,
+          "y": 348,
+          "width": 148,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Merchandise Partners and Designers",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 716,
+          "y": 348,
+          "width": 505,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Needlejuice Records: Jace McLain",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1225,
+          "y": 348,
+          "width": 343,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Needlejuice Records: Brandon Brown",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1572,
+          "y": 348,
+          "width": 372,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Type-4: Coby Win",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 382,
+          "width": 182,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "IvanAlmighty",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 188,
+          "y": 382,
+          "width": 138,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Mogy64",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 6,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 330,
+          "y": 382,
+          "width": 83,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "ChipsGoWoah",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 417,
+          "y": 382,
+          "width": 143,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Min Ho Kim",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 564,
+          "y": 382,
+          "width": 126,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "PKettles",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 694,
+          "y": 382,
+          "width": 84,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Jeff Bandelin",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 782,
+          "y": 382,
+          "width": 131,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "PhantomArcade",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 917,
+          "y": 382,
+          "width": 157,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "evilsk8r",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1078,
+          "y": 382,
+          "width": 81,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "beck",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1163,
+          "y": 382,
+          "width": 50,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Makeship: Seebs",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1217,
+          "y": 382,
+          "width": 166,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Makeship: Anna N",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1387,
+          "y": 382,
+          "width": 185,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Production and Business Development Partner - Windflower Games",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 2,
+          "fullHeight": 76,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 410,
+          "width": 527,
+          "height": 59
+        },
+        {
+          "minWidth": 1336,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 2,
+          "fullHeight": 76,
+          "atlas": "credits-0",
+          "x": 533,
+          "y": 410,
+          "width": 642,
+          "height": 59
+        },
+        {
+          "minWidth": 1374,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 2,
+          "fullHeight": 76,
+          "atlas": "credits-0",
+          "x": 1179,
+          "y": 410,
+          "width": 659,
+          "height": 59
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Sunni Pavlovic",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1842,
+          "y": 410,
+          "width": 147,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Kristen Lynch",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 473,
+          "width": 139,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Additional Administrative Assistance",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 145,
+          "y": 473,
+          "width": 513,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "moawling",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 662,
+          "y": 473,
+          "width": 99,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Quality Assurance - Indium Play",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 765,
+          "y": 473,
+          "width": 452,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Lead Tester: Mihajlo Vuković",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1221,
+          "y": 473,
+          "width": 292,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Tester: Andrej Naumovski",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1517,
+          "y": 473,
+          "width": 258,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Dajana Dimovska",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1779,
+          "y": 473,
+          "width": 176,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Accounting: Molinari Oswald",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 508,
+          "width": 410,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Francis Molinari",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 416,
+          "y": 508,
+          "width": 164,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Aaron Hofmann",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 584,
+          "y": 508,
+          "width": 159,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Katherine Stauffer",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 747,
+          "y": 508,
+          "width": 182,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Jane Haring",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 933,
+          "y": 508,
+          "width": 118,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "US Legal: Odin Law",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1055,
+          "y": 508,
+          "width": 284,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Brandon Huffman",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1343,
+          "y": 508,
+          "width": 177,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Michele Robichaux",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1524,
+          "y": 508,
+          "width": 193,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Connor Richards",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1721,
+          "y": 508,
+          "width": 166,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Pam Driver",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1891,
+          "y": 508,
+          "width": 115,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Jacob Barefoot",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 543,
+          "width": 148,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "CA Legal: DLA Piper",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 154,
+          "y": 543,
+          "width": 296,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Ryan Black",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 454,
+          "y": 543,
+          "width": 116,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Brian Wong",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 574,
+          "y": 543,
+          "width": 119,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Special Thanks",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 697,
+          "y": 543,
+          "width": 210,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Tom Fulp",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 911,
+          "y": 543,
+          "width": 96,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Jeff Bandelin",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1011,
+          "y": 543,
+          "width": 131,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "The entire Molinari Oswald Crew",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1146,
+          "y": 543,
+          "width": 331,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "The entire Odin Law function",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1481,
+          "y": 543,
+          "width": 292,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "SrPelo",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1777,
+          "y": 543,
+          "width": 65,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Cameron would like to specially thank",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 578,
+          "width": 528,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "henry, snackers, digi, joemega, caddy, pewpew",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 534,
+          "y": 578,
+          "width": 456,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "milkhead jack",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 994,
+          "y": 578,
+          "width": 141,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "katt",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1139,
+          "y": 578,
+          "width": 39,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "arko, pepe, cashu, ookiyo",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1182,
+          "y": 578,
+          "width": 249,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Krystin, Kaye-lyn, and Cassidy, Mack, Levi, and Jasmine.",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1435,
+          "y": 578,
+          "width": 563,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Laurel",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 612,
+          "width": 66,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Clone Hero",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 72,
+          "y": 612,
+          "width": 114,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Innersloth, Puffballs, Forest and Victoria",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 190,
+          "y": 612,
+          "width": 396,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "StuffedWombat",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 590,
+          "y": 612,
+          "width": 153,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "mmatt_ugh",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 747,
+          "y": 612,
+          "width": 113,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "lucas and jack taterguy and marty emrox",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 864,
+          "y": 612,
+          "width": 397,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Luis",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1265,
+          "y": 612,
+          "width": 45,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "GeoKureli, Will Blanton, Austin East, Squidly",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1314,
+          "y": 612,
+          "width": 453,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "fizzd",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1771,
+          "y": 612,
+          "width": 52,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "bbpanzu",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1827,
+          "y": 612,
+          "width": 85,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Etika",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1916,
+          "y": 612,
+          "width": 54,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Foamymuffin (insert travis scott lyrics here)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 640,
+          "width": 429,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "SiIvaGunner",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 435,
+          "y": 640,
+          "width": 125,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Freddie Dredd",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 564,
+          "y": 640,
+          "width": 143,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Kawa would like to specially thank",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 711,
+          "y": 640,
+          "width": 482,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Alexei Pepers",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1197,
+          "y": 640,
+          "width": 137,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Xalavier Nelson Jr.",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1338,
+          "y": 640,
+          "width": 186,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Eric would like to specially thank",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1528,
+          "y": 640,
+          "width": 460,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Rob and Jill Myllyoja",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 674,
+          "width": 214,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "KadeDev",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 220,
+          "y": 674,
+          "width": 93,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Shadow Mario",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 317,
+          "y": 674,
+          "width": 143,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Hazel (Ravy) would like to specially thank",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 464,
+          "y": 674,
+          "width": 581,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "d1ggo",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1049,
+          "y": 674,
+          "width": 62,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Mobile Team special thanks",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1115,
+          "y": 674,
+          "width": 382,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "cub, setai",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1501,
+          "y": 674,
+          "width": 94,
+          "height": 23
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "GalacticBaguette, Yowze, Snovi",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1599,
+          "y": 674,
+          "width": 316,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "AguaCrunch, pb_lauro, Rulet, Rusron, Megalo_palewhite, Serizyu",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 2,
+          "fullHeight": 58,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 709,
+          "width": 567,
+          "height": 51
+        },
+        {
+          "minWidth": 1348,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 573,
+          "y": 709,
+          "width": 648,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "8-bitryan",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1225,
+          "y": 709,
+          "width": 90,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Stax, NoraYotsu, AndroidSharky, IdioticLuwuke",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1319,
+          "y": 709,
+          "width": 471,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "PeppyWall, Klavier, Roadr, Limon",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 764,
+          "width": 339,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Koniro, Key, Zuki, LunaMyria, Rattatuwu, ToffeeCaramel",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 345,
+          "y": 764,
+          "width": 569,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Ninkey, Snak, Codist",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 0,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 918,
+          "y": 764,
+          "width": 207,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "ValenPratama",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1129,
+          "y": 764,
+          "width": 137,
+          "height": 19
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "yetet (June), IDontCareAbtKaz",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1270,
+          "y": 764,
+          "width": 305,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Schepka",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1579,
+          "y": 764,
+          "width": 83,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Amari, DatRand (Vlad), Ressu2, Kekkra, CaptainRoku",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 793,
+          "width": 535,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "cat (Ariel), deathgobrr",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 541,
+          "y": 793,
+          "width": 221,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Mario Master (MasterX)",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 766,
+          "y": 793,
+          "width": 239,
+          "height": 25
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "richTrash21, PurSnake, Naisonji, HopKa, Matr4ss",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1009,
+          "y": 793,
+          "width": 486,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "Redar13, Sirox, Shufa, D.Dregz, Sodaree",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1499,
+          "y": 793,
+          "width": 399,
+          "height": 24
+        }
+      ],
+      "endEntry": false,
+      "header": false
+    },
+    {
+      "text": "dUmer, G0lda, Voodoo, Vemer, Sadshrimp",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 822,
+          "width": 414,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Unity Party",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 420,
+          "y": 822,
+          "width": 164,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Team Determination",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 588,
+          "y": 822,
+          "width": 203,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Engine Developer",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 795,
+          "y": 822,
+          "width": 244,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "Rei the Goat",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1043,
+          "y": 822,
+          "width": 125,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Engine Designer",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 1172,
+          "y": 822,
+          "width": 226,
+          "height": 30
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "UniBrine",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 1402,
+          "y": 822,
+          "width": 91,
+          "height": 19
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    },
+    {
+      "text": "Engine Music Composer and Engine Advisor",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 1,
+          "trimY": 8,
+          "numLines": 2,
+          "fullHeight": 76,
+          "atlas": "credits-0",
+          "x": 1497,
+          "y": 822,
+          "width": 500,
+          "height": 59
+        },
+        {
+          "minWidth": 1285,
+          "trimX": 1,
+          "trimY": 7,
+          "numLines": 1,
+          "fullHeight": 40,
+          "atlas": "credits-0",
+          "x": 2,
+          "y": 885,
+          "width": 616,
+          "height": 31
+        }
+      ],
+      "endEntry": false,
+      "header": true
+    },
+    {
+      "text": "St4bility aka Thesnakerox",
+      "variants": [
+        {
+          "minWidth": 1280,
+          "trimX": 2,
+          "trimY": 5,
+          "numLines": 1,
+          "fullHeight": 31,
+          "atlas": "credits-0",
+          "x": 622,
+          "y": 885,
+          "width": 256,
+          "height": 24
+        }
+      ],
+      "endEntry": true,
+      "header": false
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "version": "0.8.6",
+  "sourceFiles": {
+    "ui/title/TitleState.hx": "82519df622ef9093743563835517b0241dbcde135d34037d8d983c811826b9e8",
+    "ui/title/AttractState.hx": "957accbe8e8ab40c93347dbfae27d36ce1100ae09eacc1caf1fad6ada08f7f7d",
+    "ui/AtlasText.hx": "cc8316dedd0673b65215fc78fb3ab44b8f9a2cf56bce6ec71a998faee1bd2aa4",
+    "graphics/shaders/ColorSwap.hx": "7f8b84d4c1b3c571bf93ca29ff18f7ba3970aafbdc3017f6230e29234d3c6a6e"
+  },
+  "assets": {
+    "images/logoBumpin.png": {
+      "path": "Resources/VanillaTitle/logoBumpin.png",
+      "sha256": "3cfeb06323fbf5587ec48e944fd549a8280a0fc0eeca54d05d1ca4df0938ff35"
+    },
+    "images/logoBumpin.xml": {
+      "path": "Resources/VanillaTitle/logoBumpin.xml",
+      "sha256": "d46740e2b104c6d6879a8e2f5a25aa26ad01fca769ab27e67e5d8a288aa01365"
+    },
+    "images/gfDanceTitle.png": {
+      "path": "Resources/VanillaTitle/gfDanceTitle.png",
+      "sha256": "b2877600d6a836cecc5d06e41796694db4a2d9ebca067f67f93b978c929342d6"
+    },
+    "images/gfDanceTitle.xml": {
+      "path": "Resources/VanillaTitle/gfDanceTitle.xml",
+      "sha256": "1fe55e9af5a29827840a835dbc5feeb02d0d83b15eac71ef5561ff07839454f6"
+    },
+    "images/newgrounds_logo.png": {
+      "path": "Resources/VanillaTitle/newgrounds_logo.png",
+      "sha256": "e9507ee5f3b48c14f007c2adc7363426e3c6169a148b5cd196441d676501d3b7"
+    },
+    "images/newgrounds_logo_classic.png": {
+      "path": "Resources/VanillaTitle/newgrounds_logo_classic.png",
+      "sha256": "92f153818fe045a2a761fb0bc7d7afe0d0f5124ff3fe843b83514818b38ca797"
+    },
+    "images/newgrounds_logo_animated.png": {
+      "path": "Resources/VanillaTitle/newgrounds_logo_animated.png",
+      "sha256": "41ced7bc8c5cdc34afbaab3e3afbee8f6d7dd8ca2e4866f28f1c8a8fe5867f28"
+    },
+    "images/fonts/bold.png": {
+      "path": "Resources/VanillaTitle/fonts/bold.png",
+      "sha256": "9a7ba6c9a41cbeeeffe73794953699afbd463671a01a7fecc017e4a0f473dfe2"
+    },
+    "images/fonts/bold.xml": {
+      "path": "Resources/VanillaTitle/fonts/bold.xml",
+      "sha256": "3f766fd6fb36f375f0e989224903e9fea58977c45c2dac9d922010eee0e7830a"
+    },
+    "images/title-screen-text/Animation.json": {
+      "path": "Resources/VanillaTitle/title-screen-text/Animation.json",
+      "sha256": "a93448ce097b8ad91fb132db116f696fbe221737610263f5327a53094e0db09c"
+    },
+    "images/title-screen-text/spritemap1.json": {
+      "path": "Resources/VanillaTitle/title-screen-text/spritemap1.json",
+      "sha256": "f62feb783656be1d60b3567a2ac30fecaa8dd2bb4aa52ca31f99e231afa87812"
+    },
+    "images/title-screen-text/spritemap1.png": {
+      "path": "Resources/VanillaTitle/title-screen-text/spritemap1.png",
+      "sha256": "a2733fabae5af917b4e02a11c7d20c5c11834e239aeba06f718820c3b26fab56"
+    },
+    "data/introText.txt": {
+      "path": "Resources/VanillaTitle/introText.txt",
+      "sha256": "b8915c7b9d4ab087578eeea0ebac5aef35259af68909d968e4069d3224691ad8"
+    },
+    "music/freakyMenu/freakyMenu.ogg": {
+      "path": "Resources/VanillaTitle/audio/freakyMenu.ogg",
+      "sha256": "e5bc4414fce554434d07ae343b767f68b6c000b9d4c0d489acb5c9db1c4b2d60"
+    },
+    "music/freakyMenu/freakyMenu-metadata.json": {
+      "path": "Resources/VanillaTitle/audio/freakyMenu-metadata.json",
+      "sha256": "ca547f0bf78400f877982934cf9fe7bd277e7c09914e91ca6dbacb8ef8eaf427"
+    },
+    "music/girlfriendsRingtone/girlfriendsRingtone.ogg": {
+      "path": "Resources/VanillaTitle/audio/girlfriendsRingtone.ogg",
+      "sha256": "0d6da6e0b70986f1e5bf6a658d32a1b15e9f2e15d41b3fed05fafee1fb292b2a"
+    },
+    "music/girlfriendsRingtone/girlfriendsRingtone-metadata.json": {
+      "path": "Resources/VanillaTitle/audio/girlfriendsRingtone-metadata.json",
+      "sha256": "e9fb003df2968f92ea44267befd5feeb9657cb0f3af685648c188122e1ed6609"
+    },
+    "sounds/confirmMenu.ogg": {
+      "path": "Resources/VanillaTitle/audio/confirmMenu.ogg",
+      "sha256": "aa884bea3e4ab2d32525ccf4e319afb7fc2a9ec5989e800fa3ba06d03bd867bb"
+    },
+    "videos/videos/riftCollabTrailer.mp4": {
+      "path": "StreamingAssets/VanillaTitle/riftCollabTrailer.mp4",
+      "sha256": "0c74b52388136ed9308a1c75595bb95c2bb1e5d8dde24919bb6715a38985c9df"
+    },
+    "videos/videos/mobileRelease.mp4": {
+      "path": "StreamingAssets/VanillaTitle/mobileRelease.mp4",
+      "sha256": "21b8dc3e2d7b61c1f2f7f450141bfb50b1e6d98e8bd1dcac5bc7fa09287796bf"
+    },
+    "videos/videos/boyfriendEverywhere.mp4": {
+      "path": "StreamingAssets/VanillaTitle/boyfriendEverywhere.mp4",
+      "sha256": "d7e817b749e03ce620f7eab4cccd3868c05a18fb673ecec28e0eec7f6645c995"
+    }
+  }
+}

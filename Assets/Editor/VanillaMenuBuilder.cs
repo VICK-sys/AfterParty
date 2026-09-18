@@ -2,9 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Newtonsoft.Json.Linq;
 using UnityEditor;
-using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -128,41 +126,8 @@ public static class VanillaMenuBuilder
 
     private static void BuildCredits(VanillaMainMenu main, RectTransform parent, Font font)
     {
-        RectTransform panel = Rect("Credits", parent, new Vector2(1280, 720), Vector2.zero);
-        panel.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.04f, 0.12f, 0.97f);
-        Text("Heading", panel, font, "CREDITS", 40, new Vector2(900, 55), new Vector2(0, 295));
-        RectTransform scroll = Rect("Scroll", panel, new Vector2(1100, 510), new Vector2(0, -5));
-        scroll.gameObject.AddComponent<RectMask2D>();
-        scroll.gameObject.AddComponent<Image>().color = Color.clear;
-        ScrollRect scrollRect = scroll.gameObject.AddComponent<ScrollRect>();
-        scrollRect.horizontal = false;
-        scrollRect.movementType = ScrollRect.MovementType.Clamped;
-        scrollRect.scrollSensitivity = 45;
-        string credits = "UNITY PARTY\nTeam Determination\n\nVANILLA MAIN MENU\nFriday Night Funkin' 0.8.6\n\n";
-        JObject data = JObject.Parse(File.ReadAllText(Root + "credits.json"));
-        foreach (JToken entry in data["entries"])
-        {
-            credits += (string)entry["header"] + "\n";
-            foreach (JToken line in entry["body"])
-                credits += (string)line["line"] + "\n";
-            credits += "\n";
-        }
-        Text text = Text("Content", scroll, font, credits.TrimEnd(), 24, new Vector2(1050, 0), Vector2.zero);
-        text.rectTransform.anchorMin = new Vector2(0.5f, 1);
-        text.rectTransform.anchorMax = new Vector2(0.5f, 1);
-        text.rectTransform.pivot = new Vector2(0.5f, 1);
-        text.alignment = TextAnchor.UpperCenter;
-        text.horizontalOverflow = HorizontalWrapMode.Wrap;
-        text.rectTransform.sizeDelta = new Vector2(1050, text.preferredHeight + 24);
-        scrollRect.content = text.rectTransform;
-        scrollRect.viewport = scroll;
-        Text back = Text("Back", panel, font, "BACK [ESC]", 24, new Vector2(300, 50), new Vector2(0, -308));
-        back.raycastTarget = true;
-        Button button = back.gameObject.AddComponent<Button>();
-        UnityEventTools.AddPersistentListener(button.onClick, main.CloseCredits);
-        main.creditsPanel = panel.gameObject;
-        main.creditsScroll = scrollRect;
-        panel.gameObject.SetActive(false);
+        main.creditsPanel = Rect("Credits", parent, new Vector2(1280, 720), Vector2.zero).gameObject;
+        main.creditsPanel.SetActive(false);
     }
 
     private static RawImage Image(string name, RectTransform parent, string path)

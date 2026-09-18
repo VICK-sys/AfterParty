@@ -37,14 +37,15 @@ public sealed class VanillaStorySprite : MaskableGraphic
     public bool Finished => !loop && clock * fps >= FrameCount;
     public override Texture mainTexture => atlas;
 
-    public void Load(string path, string prefix = "", int[] indices = null)
+    public void Load(string path, string prefix = "", int[] indices = null, string resourceRoot = "VanillaStory")
     {
         AssetPath = path;
-        atlas = Resources.Load<Texture2D>("VanillaStory/" + path);
+        string resourcePath = resourceRoot + "/" + path;
+        atlas = Resources.Load<Texture2D>(resourcePath);
         if (atlas == null) throw new InvalidOperationException("Missing Story Mode texture: " + path);
-        if (!Atlases.TryGetValue(path, out Frame[] all))
+        if (!Atlases.TryGetValue(resourcePath, out Frame[] all))
         {
-            TextAsset xml = Resources.Load<TextAsset>("VanillaStory/" + path);
+            TextAsset xml = Resources.Load<TextAsset>(resourcePath);
             all = xml == null
                 ? new[] { new Frame { name = path, uv = new Rect(0, 0, 1, 1), size = new Vector2(atlas.width, atlas.height), full = new Vector2(atlas.width, atlas.height) } }
                 : XDocument.Parse(xml.text).Root.Elements("SubTexture").OrderBy(e => (string)e.Attribute("name"), StringComparer.Ordinal).Select(e =>
@@ -61,7 +62,7 @@ public sealed class VanillaStorySprite : MaskableGraphic
                         rotated = rotated
                     };
                 }).ToArray();
-            Atlases[path] = all;
+            Atlases[resourcePath] = all;
         }
         frames = all.Where(f => f.name.StartsWith(prefix, StringComparison.Ordinal)).ToArray();
         if (indices != null && indices.Length > 0)
