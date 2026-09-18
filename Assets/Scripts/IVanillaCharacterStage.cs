@@ -2,6 +2,7 @@ public interface IVanillaCharacterStage
 {
     void Hit(int side, int direction, double time);
     void Sing(int side, int direction, bool miss);
+    void Press(int side);
     void Hold(int side);
     void Combo(int count, bool dropped);
     void PlayAnimation(string target, string animation);

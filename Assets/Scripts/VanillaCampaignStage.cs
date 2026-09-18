@@ -53,7 +53,7 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
         public VanillaWeek2Graphic graphic;
         public VanillaWeek2Graphic censor;
         public VanillaWeek2Graphic current;
-        public float singing;
+        public float holdTimer;
         public bool alternate;
         public bool locked;
 
@@ -68,10 +68,18 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             locked = protect;
         }
 
-        public void Dance()
+        public void Dance(bool force = false)
         {
-            string name = VanillaCharacterTiming.DanceAnimation(current, singing, locked, ref alternate);
+            string name = VanillaCharacterTiming.DanceAnimation(current, force, locked, ref alternate);
             if (name != null) Play(name);
+        }
+
+        public void UpdateSinging(float delta, float stepMilliseconds, bool held)
+        {
+            if (!VanillaCharacterTiming.AdvanceSinging(data, current.Animation, ref holdTimer, delta, stepMilliseconds, held)) return;
+            string end = VanillaCharacterTiming.SingEndAnimation(current);
+            if (end != null) Play(end);
+            else Dance(true);
         }
     }
 
@@ -266,7 +274,7 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             }
         foreach (Actor actor in actors)
         {
-            actor.singing = 0;
+            actor.holdTimer = 0;
             actor.locked = actor.alternate = false;
             actor.Play((string)actor.data["startingAnimation"] ?? "idle");
         }
@@ -291,7 +299,7 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             + (kind == "mom" ? "-alt" : kind == "censor" ? "-censor" : "");
         if (!actor.graphic.Has(name) && (actor.censor == null || !actor.censor.Has(name))) name = name.Replace("miss", "");
         actor.Play(name);
-        actor.singing = ((float?)actor.data["singTime"] ?? 8) * song.stepCrochet / 1000 * (miss ? 2 : 1);
+        if (!miss) actor.holdTimer = 0;
     }
 
     public void Hit(int side, int direction, double time)
@@ -301,10 +309,15 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
         SingKind(side, direction, false, kind);
     }
 
+    public void Press(int side)
+    {
+        if (VanillaCharacterTiming.IsManualSide(side)) actors[side].holdTimer = 0;
+    }
+
     public void Hold(int side)
     {
-        if (actors[side].current.Animation.StartsWith("sing"))
-            actors[side].singing = ((float?)actors[side].data["singTime"] ?? 8) * song.stepCrochet / 1000;
+        if (!VanillaCharacterTiming.IsManualSide(side) && VanillaCharacterTiming.IsSinging(actors[side].current.Animation))
+            actors[side].holdTimer = 0;
     }
 
     public void Combo(int count, bool dropped)
@@ -412,17 +425,16 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             carAge += delta;
             if (carAge >= 2) ResetCar();
         }
-        foreach (Actor actor in actors)
+        for (int index = 0; index < actors.Length; index++)
         {
-            bool singing = actor.singing > 0;
-            actor.singing -= delta;
+            Actor actor = actors[index];
             if (actor.current.Finished)
             {
                 string hold = actor.current.Animation + "-hold";
                 if (actor.current.Has(hold)) actor.Play(hold);
                 else if (actor.id == "gf-car" && actor.current.Has("idle-hold")) actor.Play("idle-hold");
             }
-            if (singing && actor.singing <= 0) actor.Dance();
+            actor.UpdateSinging(delta, song.stepCrochet, VanillaCharacterTiming.IsHoldingInput(index));
         }
         VanillaCharacterTiming.Advance(song, ref lastDanceStep, step =>
         {

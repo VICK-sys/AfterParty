@@ -232,6 +232,7 @@ public class Player : MonoBehaviour
                 FunkinInputEvent entry = line.Presses[i];
                 line.Presses[i] = new FunkinInputEvent(entry.Direction, entry.Key, position - (realtime - entry.Time) - inputOffset);
             }
+            if (line.Presses.Count > 0) owner.vanillaPlayback?.CharacterStage?.Press(side);
             line.Advance(position, elapsed);
             if (line.Notes.Exists(note => note.Hit && !note.HoldDropped && !note.HoldFinished && note.Remaining > 0))
                 owner.KeepFunkinHoldPose(side);
