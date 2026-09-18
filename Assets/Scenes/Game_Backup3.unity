@@ -14274,7 +14274,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8c18c1fca62958f45bea95cde2a2e51e, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -16658,7 +16658,7 @@ MonoBehaviour:
   vocalSource: {fileID: 1416364255}
   oopsSource: {fileID: 1586668371}
   musicClip: {fileID: 8300000, guid: f125c2565ceb27241b09592dca9f73d3, type: 3}
-  vocalClip: {fileID: 8300000, guid: 2a85e0454651f2f47950b5b0482d9caa, type: 3}
+  vocalClip: {fileID: 0}
   menuClip: {fileID: 8300000, guid: 5f84c60844ecdad4da400d24ecd0a803, type: 3}
   noteMissClip:
   - {fileID: 8300000, guid: a5c02e4865153f84ebc5b0ab54bee8b2, type: 3}
@@ -16718,7 +16718,7 @@ MonoBehaviour:
   cameraBopLerpSpeed: 0.15
   portraitBopLerpSpeed: 0.1
   defaultGameZoom: 4
-  jsonDir: galaxy-x.json
+  jsonDir:
   notesOffset: 100
   noteDelay: 7
   speedDifference: 0.0025
