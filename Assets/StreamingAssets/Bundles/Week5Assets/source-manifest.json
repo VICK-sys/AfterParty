@@ -250,5 +250,97 @@
   "Source/songs/winter-horrorland.hxc": {
     "source": "scripts/songs/winter-horrorland.hxc",
     "sha256": "b0b7cdb109258f3fecebea3043022b4efecefbe0646a4dd56daabf6e58d976f3"
+  },
+  "characters/nene-christmas/character.json": {
+    "source": "data/characters/nene-christmas.json",
+    "sha256": "567960e9f938a7622d3e395c4c837ffcf6a02ed8235da5efcc17c4a897d503d5"
+  },
+  "characters/nene-christmas/Animation.json": {
+    "source": "shared/images/characters/nene-christmas/Animation.json",
+    "sha256": "70cfa40d1bc801ca3b5a2a46e33b3a7b94c68cd8eac3349be8b5828bfa759a99"
+  },
+  "characters/nene-christmas/spritemap1.json": {
+    "source": "shared/images/characters/nene-christmas/spritemap1.json",
+    "sha256": "a0ff798b07b072ac300d07a7da2574d3bf2f15352254aa1833f65a3488bc3dc0"
+  },
+  "characters/nene-christmas/spritemap1.png": {
+    "source": "shared/images/characters/nene-christmas/spritemap1.png",
+    "sha256": "9df652f38ec531f8546865af3929a0c13fdd25e1423b82c88ebcca993b7782b4"
+  },
+  "Source/characters/nene-christmas.hxc": {
+    "source": "scripts/characters/nene-christmas.hxc",
+    "sha256": "614dda199806c3c8c77507bc03122e5200174accec7243b966433e5e7d0cb38e"
+  },
+  "characters/pico-christmas/character.json": {
+    "source": "data/characters/pico-christmas.json",
+    "sha256": "83e598117bffa4e96b2e666c0e6f03ac2bfd79108218b878ad2962b37cb50424"
+  },
+  "characters/pico-christmas/Animation.json": {
+    "source": "shared/images/characters/pico-christmas/Animation.json",
+    "sha256": "8b34ec564cb44f21c502477e6959584ec1385859d39386b2734ed034af5e84b9"
+  },
+  "characters/pico-christmas/spritemap1.json": {
+    "source": "shared/images/characters/pico-christmas/spritemap1.json",
+    "sha256": "a5d45f503559eed6ba067ca9087eee9c26131c6b3789e1eed651e7c4fe431ace"
+  },
+  "characters/pico-christmas/spritemap1.png": {
+    "source": "shared/images/characters/pico-christmas/spritemap1.png",
+    "sha256": "9321bbfd960a5efe918c18294cf8c7939f18f3ace4e8f765cfc621e46cc63e01"
+  },
+  "Source/characters/pico-christmas.hxc": {
+    "source": "scripts/characters/pico-christmas.hxc",
+    "sha256": "1f3f7dbfe5ea9793e48af27ae3b63e7bf4359d8809ad29fbd95c5eca79517084"
+  },
+  "effects/abotSystem/Animation.json": {
+    "source": "shared/images/characters/abot/abotSystem/Animation.json",
+    "sha256": "0c611b720f9fe93497688b91bd5db74487ef6135a04d627fba76d687fcde9041"
+  },
+  "effects/abotSystem/spritemap1.json": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.json",
+    "sha256": "b78ba18d6a87f1336e76c41cfee8d9cb5629efbde81ac1daca412707decabeb1"
+  },
+  "effects/abotSystem/spritemap1.png": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.png",
+    "sha256": "9efdb7f15a62d0cfacb122ac14b58478d05f5104eb6374b369fd81bd05d6e81c"
+  },
+  "effects/systemEyes/Animation.json": {
+    "source": "shared/images/characters/abot/systemEyes/Animation.json",
+    "sha256": "807e341bc387c659f40f726919a0ece5da00b007f3ea43c69bc284916da3d0a6"
+  },
+  "effects/systemEyes/spritemap1.json": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.json",
+    "sha256": "c14a329d3716b08a813f49a55927772fc76d46d64239471f806d1e3e5859c605"
+  },
+  "effects/systemEyes/spritemap1.png": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.png",
+    "sha256": "35914b2fe5a01c4c2db5cdaae02b81ee61cca4cbf5e26eb5ce695fe1de3a172f"
+  },
+  "effects/stereoBG/stereoBG.png": {
+    "source": "shared/images/characters/abot/stereoBG.png",
+    "sha256": "f8c74ebbfbb0e8ea8f85a27a6d156c7bec48a3c83e241ca40d2afe5711973898"
+  },
+  "effects/visualizer/aBotViz.png": {
+    "source": "shared/images/characters/abot/aBotViz.png",
+    "sha256": "9a26755372e2e63f91fa94eeefe14edf4908c6a35f8f57fb073f7f768f916c6c"
+  },
+  "effects/visualizer/aBotViz.xml": {
+    "source": "shared/images/characters/abot/aBotViz.xml",
+    "sha256": "d76220bf8e63c642d5b348dd688be13839e0c1be167d4e23f4bd2cd0d0f28cc8"
+  },
+  "effects/knife/NeneKnifeToss.png": {
+    "source": "shared/images/characters/NeneKnifeToss.png",
+    "sha256": "f0b73908279ecf0d4ea1ad1359e963cebf2b75f6c55ea3ba06d1141e1ad71708"
+  },
+  "effects/knife/NeneKnifeToss.xml": {
+    "source": "shared/images/characters/NeneKnifeToss.xml",
+    "sha256": "1b2b66b978cfbe58b76baf715363611c432cb818a42e8107c218d1c77fa85c1b"
+  },
+  "effects/knife/neneChristmasKnife.png": {
+    "source": "shared/images/characters/neneChristmasKnife.png",
+    "sha256": "05e1d1dadda812e1f39f5bef614804938133b1ccbe6438eef50220bea3663a56"
+  },
+  "effects/knife/neneChristmasKnife.xml": {
+    "source": "shared/images/characters/neneChristmasKnife.xml",
+    "sha256": "ba4ab0877ecfc45369806770a9c24e8967586bdd207951a0e090a2dc625fc852"
   }
 }

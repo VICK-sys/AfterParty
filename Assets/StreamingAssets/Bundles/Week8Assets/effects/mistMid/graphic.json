@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,2048,0,2048,1280,0,1280],"rect":[0,0,2048,1280],"image":"mistMid.png","rotated":false,"alpha":1}]],"bounds":[0,0,2048,1280],"fps":24,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

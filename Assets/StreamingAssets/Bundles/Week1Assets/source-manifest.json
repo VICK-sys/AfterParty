@@ -130,5 +130,133 @@
   "Source/stages/mainStageErect.hxc": {
     "source": "scripts/stages/mainStageErect.hxc",
     "sha256": "ae68afc76580f7d4b0f9b20352da295f45ffe62b2a9825d685eb8f2eeafa00ed"
+  },
+  "characters/nene/character.json": {
+    "source": "data/characters/nene.json",
+    "sha256": "9427131dc6a590fabe2d3cf46abed236c222d9403773571ab2ca796893d6b81f"
+  },
+  "characters/nene/Animation.json": {
+    "source": "shared/images/characters/nene/Animation.json",
+    "sha256": "0959d81b39d7f088e80e07520129cd0a0d96b2b71e269a1d8c80ef643183e962"
+  },
+  "characters/nene/spritemap1.json": {
+    "source": "shared/images/characters/nene/spritemap1.json",
+    "sha256": "fc130e951753e02b39db4987d0844506a9e731a55bf5a37c72ff3476ae7d7a5c"
+  },
+  "characters/nene/spritemap1.png": {
+    "source": "shared/images/characters/nene/spritemap1.png",
+    "sha256": "16a643dfdf63267fddce3f64fa251d55dbea89fdd15f46d2495220e9c214beb6"
+  },
+  "Source/characters/nene.hxc": {
+    "source": "scripts/characters/nene.hxc",
+    "sha256": "d1ed29278e624ce724bfff4fe6ff059bddb19496223d0eda07733c3684635d3a"
+  },
+  "characters/pico-playable/character.json": {
+    "source": "data/characters/pico-playable.json",
+    "sha256": "58f38b5275064fd5c95b4c9d58c584ba87fbe850ba3d375d5d5804fb4d024494"
+  },
+  "characters/pico-playable/Animation.json": {
+    "source": "shared/images/characters/pico/basic-animations/Animation.json",
+    "sha256": "975b5e7b260888950d9fcf8c29bab7f6e6e4f5025cfdddd75926fb77a700caa7"
+  },
+  "characters/pico-playable/spritemap1.json": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.json",
+    "sha256": "7f86756c1557d3f90c006db5b90cc74239058b14e1ae2737db9e2e46913cbd01"
+  },
+  "characters/pico-playable/spritemap1.png": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.png",
+    "sha256": "9a9cde5b96b9e677490cde81c6f0aafccb5582e4048cbed3ed966f23f6624f53"
+  },
+  "characters/pico-playable/censor/Pico_Censored.png": {
+    "source": "shared/images/characters/Pico_Censored.png",
+    "sha256": "89d59b30c7b20424cce5fdc99a58956859d14f19316904527764c5e3e298e558"
+  },
+  "characters/pico-playable/censor/Pico_Censored.xml": {
+    "source": "shared/images/characters/Pico_Censored.xml",
+    "sha256": "bb631622376d15d8867a4c5941391d19095c58c34c5fbe2053ca925d589443c9"
+  },
+  "characters/pico-playable/alternate1/Animation.json": {
+    "source": "shared/images/characters/pico/playable-animations/Animation.json",
+    "sha256": "69079f1dd826e5a3a5bd545f49a10544677226d8e8a0b7c1dcf2661e142eb621"
+  },
+  "characters/pico-playable/alternate1/spritemap1.json": {
+    "source": "shared/images/characters/pico/playable-animations/spritemap1.json",
+    "sha256": "51be9268222480c9ea8a4d544ee1f6e80c3b691cb2ce1f580a9562c27f3748ac"
+  },
+  "characters/pico-playable/alternate1/spritemap1.png": {
+    "source": "shared/images/characters/pico/playable-animations/spritemap1.png",
+    "sha256": "0ad6d157cc21efa753c48e2eea5ef303f7acefe57a5e7fb9891b214d0da15e9f"
+  },
+  "characters/pico-playable/death/Animation.json": {
+    "source": "shared/images/characters/pico/death/Animation.json",
+    "sha256": "43c03f07d8c0cff13106a1e8c119a29bae764b525d0dfa09c98d0dabbf29795b"
+  },
+  "characters/pico-playable/death/spritemap1.json": {
+    "source": "shared/images/characters/pico/death/spritemap1.json",
+    "sha256": "5de0d6975adbf6672594e185666fc5d775b086ac610b1529b045bb9a96dc3b1a"
+  },
+  "characters/pico-playable/death/spritemap1.png": {
+    "source": "shared/images/characters/pico/death/spritemap1.png",
+    "sha256": "b57b38a8aec25b570b6945013adf98a63737e014ed54b4bbecb1e1b4808c5554"
+  },
+  "characters/pico-playable/explosion/Animation.json": {
+    "source": "shared/images/characters/pico/explosion-death/Animation.json",
+    "sha256": "064bc08ee25a0d2961536e88bed1ab89c081d084c5d2d190ec94fedc7ddda8d2"
+  },
+  "characters/pico-playable/explosion/spritemap1.json": {
+    "source": "shared/images/characters/pico/explosion-death/spritemap1.json",
+    "sha256": "ab9ac1bfb95d25fb171cfe4b88dcb71be819a03276505259d175ad1ba1eef343"
+  },
+  "characters/pico-playable/explosion/spritemap1.png": {
+    "source": "shared/images/characters/pico/explosion-death/spritemap1.png",
+    "sha256": "47bdd713a0ced1e3906e5f458f0e3755392bdadbab5f641da1d88f9e68f74014"
+  },
+  "Source/characters/pico-playable.hxc": {
+    "source": "scripts/characters/pico-playable.hxc",
+    "sha256": "e3a4fe7d2d713948e05b161cb35429ad6e7ef07dad9881e2d3376d1228335478"
+  },
+  "effects/abotSystem/Animation.json": {
+    "source": "shared/images/characters/abot/abotSystem/Animation.json",
+    "sha256": "0c611b720f9fe93497688b91bd5db74487ef6135a04d627fba76d687fcde9041"
+  },
+  "effects/abotSystem/spritemap1.json": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.json",
+    "sha256": "b78ba18d6a87f1336e76c41cfee8d9cb5629efbde81ac1daca412707decabeb1"
+  },
+  "effects/abotSystem/spritemap1.png": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.png",
+    "sha256": "9efdb7f15a62d0cfacb122ac14b58478d05f5104eb6374b369fd81bd05d6e81c"
+  },
+  "effects/systemEyes/Animation.json": {
+    "source": "shared/images/characters/abot/systemEyes/Animation.json",
+    "sha256": "807e341bc387c659f40f726919a0ece5da00b007f3ea43c69bc284916da3d0a6"
+  },
+  "effects/systemEyes/spritemap1.json": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.json",
+    "sha256": "c14a329d3716b08a813f49a55927772fc76d46d64239471f806d1e3e5859c605"
+  },
+  "effects/systemEyes/spritemap1.png": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.png",
+    "sha256": "35914b2fe5a01c4c2db5cdaae02b81ee61cca4cbf5e26eb5ce695fe1de3a172f"
+  },
+  "effects/stereoBG/stereoBG.png": {
+    "source": "shared/images/characters/abot/stereoBG.png",
+    "sha256": "f8c74ebbfbb0e8ea8f85a27a6d156c7bec48a3c83e241ca40d2afe5711973898"
+  },
+  "effects/visualizer/aBotViz.png": {
+    "source": "shared/images/characters/abot/aBotViz.png",
+    "sha256": "9a26755372e2e63f91fa94eeefe14edf4908c6a35f8f57fb073f7f768f916c6c"
+  },
+  "effects/visualizer/aBotViz.xml": {
+    "source": "shared/images/characters/abot/aBotViz.xml",
+    "sha256": "d76220bf8e63c642d5b348dd688be13839e0c1be167d4e23f4bd2cd0d0f28cc8"
+  },
+  "effects/knife/NeneKnifeToss.png": {
+    "source": "shared/images/characters/NeneKnifeToss.png",
+    "sha256": "f0b73908279ecf0d4ea1ad1359e963cebf2b75f6c55ea3ba06d1141e1ad71708"
+  },
+  "effects/knife/NeneKnifeToss.xml": {
+    "source": "shared/images/characters/NeneKnifeToss.xml",
+    "sha256": "1b2b66b978cfbe58b76baf715363611c432cb818a42e8107c218d1c77fa85c1b"
   }
 }

@@ -16,7 +16,10 @@ SONGS = [('tutorial', '00-Tutorial', '01-Tutorial'), ('bopeebo', '01-Week1', '01
          ('milf', '04-Week4', '03-MILF'), ('cocoa', '05-Week5', '01-Cocoa'),
          ('eggnog', '05-Week5', '02-Eggnog'), ('winter-horrorland', '05-Week5', '03-WinterHorrorland'),
          ('senpai', '06-Week6', '01-Senpai'), ('roses', '06-Week6', '02-Roses'),
-         ('thorns', '06-Week6', '03-Thorns')]
+         ('thorns', '06-Week6', '03-Thorns'), ('ugh', '07-Week7', '01-Ugh'),
+         ('guns', '07-Week7', '02-Guns'), ('stress', '07-Week7', '03-Stress'),
+         ('darnell', '08-Weekend1', '01-Darnell'), ('lit-up', '08-Weekend1', '02-LitUp'),
+         ('2hot', '08-Weekend1', '03-2hot'), ('blazin', '08-Weekend1', '04-Blazin')]
 COLORS = {'easy': (0, 1, 0), 'normal': (1, 1, 0), 'hard': (1, 0, 0),
           'erect': (0.8, 0.3, 1), 'nightmare': (1, 0.2, 0.6)}
 
@@ -44,7 +47,7 @@ def convert(song_id, metadata, chart, difficulty):
     bpm = changes[0]['bpm']
     length = 240000 / bpm
     notes = chart['notes'][difficulty]
-    if any(n.get('k') not in (None, '', 'noanim', 'mom', 'censor') or not 0 <= n['d'] < 8 for n in notes):
+    if any(not str(n.get('k') or '').startswith('weekend-1-') and n.get('k') not in (None, '', 'noanim', 'mom', 'censor', 'ugh', 'hehPrettyGood') or not 0 <= n['d'] < 8 for n in notes):
         raise ValueError(f'{song_id}: unsupported note kind or lane.')
     end = max(n['t'] + n.get('l', 0) for n in notes)
     sections = []
@@ -64,12 +67,14 @@ def convert(song_id, metadata, chart, difficulty):
                       for section in sections for n in section['sectionNotes'])
     if restored != expected:
         raise ValueError(f'{song_id}/{difficulty}: note conversion changed timing, lanes, or sustain lengths.')
-    return {'song': {'song': metadata['songName'], 'bpm': bpm, 'needsVoices': True,
-                     'player1': 'bf', 'player2': metadata['playData']['characters']['opponent'],
+    return {'song': {'song': metadata['songName'], 'bpm': bpm, 'needsVoices': song_id != 'blazin',
+                     'player1': metadata['playData']['characters']['player'], 'player2': metadata['playData']['characters']['opponent'],
                      'speed': chart['scrollSpeed'][difficulty], 'notes': sections, 'validScore': True}}
 
 
 def mix_vocals(source, target, metadata, suffix, ffmpeg, quality=8):
+    if not list(source.glob('Voices*.ogg')):
+        return
     characters = metadata['playData']['characters']
     offsets = metadata.get('offsets', {}).get('vocals', {})
     stems = characters.get('playerVocals', [characters['player']]) + characters.get('opponentVocals', [characters['opponent']])
@@ -90,14 +95,18 @@ def mix_vocals(source, target, metadata, suffix, ffmpeg, quality=8):
                     '-c:a', 'libvorbis', '-q:a', str(quality), str(target / f'Voices{suffix}.ogg')], check=True)
 
 
-def run(assets, output, ffmpeg, erect_only=False, week2_only=False, week3_only=False, weeks456_only=False):
+def run(assets, output, ffmpeg, erect_only=False, week2_only=False, week3_only=False, weeks456_only=False, week7_only=False, weekend1_only=False):
     data_root = assets / 'preload/data'
     if not data_root.is_dir():
         data_root = assets / 'data'
     manifest = {'version': '0.8.6', 'assetCommit': REVISION, 'songs': []}
-    if erect_only or week2_only or week3_only or weeks456_only:
+    if erect_only or week2_only or week3_only or weeks456_only or week7_only or weekend1_only:
         manifest = read(output / 'vanilla-import.json')
     for song_id, bundle, directory in SONGS:
+        if weekend1_only and bundle != '08-Weekend1':
+            continue
+        if week7_only and bundle != '07-Week7':
+            continue
         if week2_only and bundle != '02-Week2':
             continue
         if week3_only and bundle != '03-Week3':
@@ -116,6 +125,8 @@ def run(assets, output, ffmpeg, erect_only=False, week2_only=False, week3_only=F
                 else 'Week 4: Mommy Must Murder.' if bundle == '04-Week4'
                 else 'Week 5: Red Snow.' if bundle == '05-Week5'
                 else 'Week 6: Hating Simulator.' if bundle == '06-Week6'
+                else 'Weekend 1: Due Debts.' if bundle == '08-Weekend1'
+                else 'Week 7: Tankman.' if bundle == '07-Week7'
                 else 'Week 3: Pico.' if bundle == '03-Week3'
                 else 'Week 2: Spooky Month.' if bundle == '02-Week2' else 'Week 1: Daddy Dearest.')
         }
@@ -147,7 +158,7 @@ def run(assets, output, ffmpeg, erect_only=False, week2_only=False, week3_only=F
             source = assets / f'songs/{song_id}'
             shutil.copyfile(source / f'Inst{suffix}.ogg', target / f'Inst{suffix}.ogg')
             mix_vocals(source, target, metadata, suffix, ffmpeg, 10 if bundle >= '03-Week3' else 8)
-            if bundle >= '02-Week2':
+            if bundle >= '02-Week2' and list(source.glob('Voices*.ogg')):
                 characters = metadata['playData']['characters']
                 for role in ['player', 'opponent']:
                     character = characters.get(role+'Vocals', [characters[role]])[0]
@@ -166,7 +177,7 @@ def run(assets, output, ffmpeg, erect_only=False, week2_only=False, week3_only=F
         subtitles = data_root / f'songs/{song_id}/subtitles/song-lyrics.srt'
         if subtitles.is_file() and not erect_only:
             shutil.copyfile(subtitles, target / 'Subtitles.txt')
-    if not week2_only and not week3_only and not weeks456_only:
+    if not week2_only and not week3_only and not weeks456_only and not week7_only and not weekend1_only:
         from ImportVanillaCharacters import run as import_characters
         import_characters(assets, output)
         stage = output / 'Stages/mainStageErect'
@@ -177,20 +188,28 @@ def run(assets, output, ffmpeg, erect_only=False, week2_only=False, week3_only=F
                 shutil.copyfile(image, stage / image.name)
         write(output / '00-Tutorial/bundle-meta.json', {'bundleName': 'Tutorial', 'authorName': "The Funkin' Crew"})
         write(output / '01-Week1/bundle-meta.json', {'bundleName': 'Week 1: Daddy Dearest', 'authorName': "The Funkin' Crew"})
-    if not week3_only and not weeks456_only:
+    if not week3_only and not weeks456_only and not week7_only and not weekend1_only:
         from ImportVanillaWeek2 import import_assets
         import_assets(assets, data_root, output)
         write(output / '02-Week2/bundle-meta.json', {'bundleName': 'Week 2: Spooky Month', 'authorName': "The Funkin' Crew"})
-    if not week2_only and not weeks456_only:
+    if not week2_only and not weeks456_only and not week7_only and not weekend1_only:
         from ImportVanillaWeek3 import import_assets
         import_assets(assets, data_root, output)
         write(output / '03-Week3/bundle-meta.json', {'bundleName': 'Week 3: Pico', 'authorName': "The Funkin' Crew"})
-    if not week2_only and not week3_only:
+    if not week2_only and not week3_only and not week7_only and not weekend1_only:
         from ImportVanillaWeeks456 import import_assets
         import_assets(assets, data_root, output)
         for week, title in [(4, 'Mommy Must Murder'), (5, 'Red Snow'), (6, 'Hating Simulator')]:
             write(output / f'0{week}-Week{week}/bundle-meta.json',
                   {'bundleName': f'Week {week}: {title}', 'authorName': "The Funkin' Crew"})
+    if not week2_only and not week3_only and not weeks456_only and not weekend1_only:
+        from ImportVanillaWeek7 import import_assets
+        import_assets(assets, data_root, output, ffmpeg)
+        write(output / '07-Week7/bundle-meta.json', {'bundleName': 'Week 7: Tankman', 'authorName': "The Funkin' Crew"})
+    if not week2_only and not week3_only and not weeks456_only and not week7_only:
+        from ImportVanillaWeekend1 import import_assets
+        import_assets(assets, data_root, output, ffmpeg)
+        write(output / '08-Weekend1/bundle-meta.json', {'bundleName': 'Weekend 1: Due Debts', 'authorName': "The Funkin' Crew"})
     write(output / 'vanilla-import.json', manifest)
     if (assets / 'LICENSE.md').is_file():
         shutil.copyfile(assets / 'LICENSE.md', output / 'Vanilla-LICENSE.md')
@@ -206,5 +225,7 @@ if __name__ == '__main__':
     weeks.add_argument('--week2-only', action='store_true')
     weeks.add_argument('--week3-only', action='store_true')
     weeks.add_argument('--weeks456-only', action='store_true')
+    weeks.add_argument('--week7-only', action='store_true')
+    weeks.add_argument('--weekend1-only', action='store_true')
     args = parser.parse_args()
-    run(args.assets, args.output, args.ffmpeg, args.erect_only, args.week2_only, args.week3_only, args.weeks456_only)
+    run(args.assets, args.output, args.ffmpeg, args.erect_only, args.week2_only, args.week3_only, args.weeks456_only, args.week7_only, args.weekend1_only)

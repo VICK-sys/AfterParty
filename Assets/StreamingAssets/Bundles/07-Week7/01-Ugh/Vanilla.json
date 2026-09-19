@@ -1,0 +1,185 @@
+{
+  "song": "ugh",
+  "variation": "",
+  "bpm": 160,
+  "stage": "tankmanBattlefield",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 160,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "opponent": "tankman",
+  "characters": {
+    "player": "bf",
+    "girlfriend": "gf-tankmen",
+    "opponent": "tankman",
+    "altInstrumentals": [
+      "pico"
+    ],
+    "opponentVocals": [
+      "tankman"
+    ],
+    "playerVocals": [
+      "bf"
+    ]
+  },
+  "events": [
+    {
+      "t": 0,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 6000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 12000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 18000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 24000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 27000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 30000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 33000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 36000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 42000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 48000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 54000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 60000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 66000,
+      "e": "FocusCamera",
+      "v": 0
+    },
+    {
+      "t": 72000,
+      "e": "FocusCamera",
+      "v": 1
+    },
+    {
+      "t": 78000,
+      "e": "FocusCamera",
+      "v": 0
+    }
+  ],
+  "noteStyle": "funkin",
+  "noteKinds": {
+    "easy": [
+      {
+        "t": 5625,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 41625,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 49125,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 77625,
+        "d": 6,
+        "k": "ugh"
+      }
+    ],
+    "normal": [
+      {
+        "t": 5625,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 41625,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 49125,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 77625,
+        "d": 6,
+        "k": "ugh"
+      }
+    ],
+    "hard": [
+      {
+        "t": 5625,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 41625,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 49125,
+        "d": 6,
+        "k": "ugh"
+      },
+      {
+        "t": 77625,
+        "d": 6,
+        "k": "ugh"
+      }
+    ]
+  }
+}

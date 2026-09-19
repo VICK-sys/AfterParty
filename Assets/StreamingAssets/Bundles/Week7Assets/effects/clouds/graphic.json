@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,2155,0,2155,235,0,235],"rect":[0,0,2155,235],"image":"tankClouds.png","rotated":false,"alpha":1},{"xy":[2155,0,3200,0,3200,235,2155,235],"rect":[0,0,1045,235],"image":"tankClouds.png","rotated":false,"alpha":1}]],"bounds":[0,0,3200,235],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

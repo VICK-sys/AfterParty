@@ -1,5 +1,6 @@
 import hashlib
 import json
+import math
 from pathlib import Path
 import shutil
 import struct
@@ -42,8 +43,11 @@ def bounds(frames):
     return [min(xs), min(ys), max(xs)-min(xs), max(ys)-min(ys)]
 
 
-def animate(path, hidden=(), symbol=None, stage_matrix=False):
+def animate(path, hidden=(), symbol=None, stage_matrix=False, filter_bounds=False):
     data = read(path / 'Animation.json')
+    if 'SD' not in data:
+        from ImportVanillaFreeplay import normalize
+        data = normalize(data)
     symbols = {s['SN']: s['TL'] for s in data['SD']['S']}
     sprites = {}
     for mapping in sorted(path.glob('spritemap*.json')):
@@ -99,7 +103,58 @@ def animate(path, hidden=(), symbol=None, stage_matrix=False):
     frames = [flatten(timeline, index, transform) for index in range(length(timeline))]
     if symbol:
         labels[symbol] = list(range(len(frames)))
-    return {'frames': frames, 'labels': labels, 'bounds': bounds(frames), 'fps': data['MD'].get('FRT', 24), 'animate': True}
+    atlas_bounds = bounds(frames)
+    if filter_bounds:
+        cached_bounds = {}
+
+        def measure(tl, index):
+            cache_key = (id(tl), index)
+            if cache_key in cached_bounds:
+                return cached_bounds[cache_key]
+            quads = []
+            for layer in tl['L']:
+                if any(layer.get('LN', '').startswith(prefix) for prefix in hidden):
+                    continue
+                key = next((f for f in reversed(layer['FR']) if f['I'] <= index < f['I'] + f.get('DU', 1)), None)
+                if key is None:
+                    continue
+                for element in key.get('E', []):
+                    instance = element.get('SI', element.get('ASI'))
+                    if 'SI' in element:
+                        child = symbols[instance['SN']]
+                        mode = instance.get('LP', 'LP')
+                        frame = instance.get('FF', 0) + (0 if mode == 'SF' else index - key['I'])
+                        frame = frame % length(child) if mode == 'LP' else min(max(frame, 0), length(child) - 1)
+                        box = measure(child, frame)
+                        if box is None:
+                            continue
+                        x, y, w, h = box
+                    else:
+                        sprite, _ = sprites[instance['N']]
+                        x = y = 0
+                        w, h = sprite['w'], sprite['h']
+                        if sprite.get('rotated', False):
+                            w, h = h, w
+                    m = matrix(instance)
+                    box = bounds([[{'xy': point(m, x, y) + point(m, x + w, y)
+                                    + point(m, x + w, y + h) + point(m, x, y + h)}]])
+                    for effect in instance.get('F', []):
+                        if effect['N'] == 'BLF':
+                            dx, dy = (math.ceil(max(0, effect[key])) for key in ('BLX', 'BLY'))
+                            box = [box[0] - dx, box[1] - dy, box[2] + dx * 2, box[3] + dy * 2]
+                        elif effect['N'] != 'ACF':
+                            raise ValueError(f'Unsupported bounds filter: {effect["N"]}')
+                    x, y, w, h = box
+                    quads.append({'xy': [x, y, x + w, y + h]})
+            result = bounds([quads]) if quads else None
+            cached_bounds[cache_key] = result
+            return result
+
+        boxes = [measure(timeline, index) for index in range(length(timeline))]
+        atlas_bounds = bounds([[{'xy': point(transform, x, y) + point(transform, x + w, y)
+                                + point(transform, x + w, y + h) + point(transform, x, y + h)}
+                               for box in boxes if box is not None for x, y, w, h in [box]]])
+    return {'frames': frames, 'labels': labels, 'bounds': atlas_bounds, 'fps': data['MD'].get('FRT', 24), 'animate': True}
 
 
 def sparrow(path):
@@ -129,7 +184,9 @@ def save_graphic(target, graphic, animations):
     for animation in animations:
         prefix = animation['prefix']
         indices = graphic['labels'].get(prefix)
-        if indices is None:
+        if indices is None and graphic.get('animate'):
+            indices = next((entries for label, entries in graphic['labels'].items() if label.rstrip() == prefix), None)
+        if indices is None and not graphic.get('animate'):
             indices = [index for label, entries in graphic['labels'].items() if label.startswith(prefix) for index in entries]
         if not indices:
             raise ValueError(f'Missing animation {prefix} in {target}')

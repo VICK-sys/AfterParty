@@ -1,0 +1,26 @@
+{
+  "FunkinHud/Pico/loss-pixel-pico.ogg": {
+    "source": "shared/sounds/gameplay/gameover/fnf_loss_sfx-pixel-pico.ogg",
+    "sha256": "3fb60a0d075cac02dde4ee5cbbc095b8024e0684a595aa370856e8ba1c60bb7d"
+  },
+  "FunkinHud/Pico/loss-pico-and-nene.ogg": {
+    "source": "week7/sounds/gameplay/gameover/fnf_loss_sfx-pico-and-nene.ogg",
+    "sha256": "8ddc52224e49ff8ecf8628983a3346ccb28d26a66c420150faabff60e4dd37f1"
+  },
+  "FunkinHud/Pico/gameOver-pixel-pico.ogg": {
+    "source": "shared/music/gameplay/gameover/gameOver-pixel-pico.ogg",
+    "sha256": "3b0e8a008dd8bf26dde4ab9d678daabe024b8cd2196c0f503829efdce4b2434f"
+  },
+  "FunkinHud/Pico/gameOverEnd-pixel-pico.ogg": {
+    "source": "shared/music/gameplay/gameover/gameOverEnd-pixel-pico.ogg",
+    "sha256": "6c4621b42ae3373e27f9a92803942d47e8fcb89f76c2436676aecda9b3b0b9e9"
+  },
+  "FunkinHud/Icons/icon-pico-pixel.png": {
+    "source": "images/icons/icon-pico-pixel.png",
+    "sha256": "12c2fdbcc8ee522e1a961f4401ced53858c3a10df56c7021aedcb4eafb9e8159"
+  },
+  "FunkinHud/Icons/icon-tankman-bloody.png": {
+    "source": "images/icons/icon-tankman-bloody.png",
+    "sha256": "29c84e79de3675bf2a2a8b1b6283dd3a538578dda6c6f95516e1603a4307f4c2"
+  }
+}

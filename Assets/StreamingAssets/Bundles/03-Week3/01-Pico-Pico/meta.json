@@ -1,0 +1,28 @@
+{
+  "Song Name": "Pico (Pico Mix)",
+  "Song Credits": {
+    "Composer": "Metaroom (ft. Saster)",
+    "Charter": "fabs"
+  },
+  "Song Difficulties": {
+    "Easy": {
+      "r": 0,
+      "g": 1,
+      "b": 0,
+      "a": 1
+    },
+    "Normal": {
+      "r": 1,
+      "g": 1,
+      "b": 0,
+      "a": 1
+    },
+    "Hard": {
+      "r": 1,
+      "g": 0,
+      "b": 0,
+      "a": 1
+    }
+  },
+  "Song Description": "Friday Night Funkin' 0.8.6."
+}

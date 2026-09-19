@@ -1,9 +1,9 @@
-# AfterParty Tutorial and Weeks 1 through 6
+# AfterParty campaign songs
 
 These bundles contain the original Tutorial, Bopeebo, Fresh, and DadBattle charts from Friday Night Funkin' 0.8.6.
 Each song includes Easy, Normal, and Hard.
 Bopeebo, Fresh, and DadBattle also include Erect and Nightmare.
-The song picker lists Tutorial and Weeks 1 through 6 in that order.
+The song picker lists Tutorial, Weeks 1 through 7, and Weekend 1 in that order.
 Week 1 lists Bopeebo, Fresh, and DadBattle in that order.
 
 Week 2 lists Spookeez, South, and Monster in that order.
@@ -102,7 +102,29 @@ Winter Horrorland includes its lights intro, and Eggnog Erect includes its endin
 `Week4Assets`, `Week5Assets`, and `Week6Assets` record copied files in their source manifests.
 Cross-engine frame and shader parity still requires comparison with a running upstream build.
 
-Pico variations are not included.
+Week 7 lists Ugh, Guns, and Stress in that order.
+Each song includes Easy, Normal, and Hard.
+Ugh also includes Erect and Nightmare.
+The source does not contain Guns or Stress Erect mixes.
+Week 7 adds 11 charts, 7,253 note heads, and four audio variants.
+Its instrumentals and separate vocal stems remain unchanged.
+Both battlefield stages use the source artwork, positions, parallax, camera targets, and animations.
+The original battlefield includes moving clouds, the rotating tank, smoke, and dancing spectators.
+Tankman plays the source `ugh` and `hehPrettyGood` note animations.
+Ugh Erect includes the source character color adjustments, directional rim lighting, masked Girlfriend lighting, and sniper animations.
+Stress uses Boyfriend holding Girlfriend and Pico on the speakers.
+Its 546 internal `picospeaker` cues control shooting and randomly selected running tankmen.
+This internal animation chart remains separate from selectable difficulties and Pico mixes.
+Runners use the source movement, four-sprite pool, shot animations, and flicker timing.
+Story Mode plays the three original video cutscenes with their English subtitles before the countdown.
+Video streams remain unchanged, and PCM audio preserves the source decoding without another lossy encode.
+The cutscene pause menu supports resume, skip, restart, and exit.
+Freeplay and retries skip the cutscenes.
+Week 7 uses the source death atlases and 25 Tankman game-over quotes.
+Pause freezes effects, and retry resets speaker cues, runners, and character state.
+`Week7Assets/source-manifest.json` records the original asset and script hashes.
+
+Pico and BF mixes use separate song folders and retain the original campaign entries.
 Story Mode plays the installed weeks as sequential campaigns on Easy, Normal, or Hard.
 Freeplay and the bundle picker expose Erect and Nightmare where available.
 
@@ -117,6 +139,7 @@ Add `--erect-only` to extend existing bundles without regenerating their origina
 Add `--week2-only` to import only Week 2.
 Add `--week3-only` to import only Week 3.
 Add `--weeks456-only` to import only Weeks 4 through 6.
+Add `--week7-only` to import only Week 7.
 The importer overwrites these generated bundles.
 Select `Tools > AfterParty > Build Tutorial Character` to regenerate the character animation assets.
 
@@ -125,7 +148,7 @@ Select `Tools > AfterParty > Build Tutorial Character` to regenerate the charact
 Set `UNITY_PARTY_SONG_TEST_PATH` to an empty output directory.
 Set `AFTERPARTY_BUILD_PATH` to the output executable path.
 Run Unity with `-batchmode -executeMethod VanillaSongValidation.Begin`.
-The probe checks all 87 charts through the gameplay parser.
+The probe checks all 163 charts through the gameplay parser.
 It rejects controls for swapped note sides, rounded scroll speeds, and incorrect linear camera easing.
 The default probe completes the six Week 1 remix charts and the Tutorial and Week 1 Hard charts in autoplay.
 It checks note counts, misses, audio selection, opponents, camera events, stage loading, and menu return.
@@ -135,13 +158,14 @@ Set `UNITY_PARTY_SKIP_BUILD=1` to run gameplay validation without a Windows buil
 Set `UNITY_PARTY_WEEK2_TEST=1` to run the three Week 2 Hard charts and all four remix charts.
 Set `UNITY_PARTY_WEEK3_TEST=1` to run the three Week 3 Hard charts and all six remix charts.
 Set `UNITY_PARTY_WEEKS456_TEST=1` to check nine original Hard charts and all 14 remix charts.
+Set `UNITY_PARTY_WEEK7_TEST=1` to check three original Hard charts and both Ugh remix charts.
 Set `UNITY_PARTY_SONG_TEST_START` to skip earlier entries for a focused check.
 Set `UNITY_PARTY_SONG_TEST_LIMIT=1` to run only the first chart for a focused regression check.
 Set `UNITY_PARTY_SONG_STAGE_ONLY=1` to check stage behavior and menu return without waiting for full song playback.
 Run this probe in an isolated batch editor.
 The probe uses separate validation preferences.
 
-Run `Scripts/TestFunkinRules.ps1` to simulate all 41,590 note heads at 30, 60, and 144 frames per second.
+Run `Scripts/TestFunkinRules.ps1` to simulate all 88,736 note heads at 30, 60, and 144 frames per second.
 Run `python Scripts/TestVanillaCharacterAssets.py --assets "path/to/assets"` to verify character files and animation indices.
 Set `UNITY_PARTY_CHARACTER_TEST_PATH` to an output directory.
 Run `VanillaCharacterValidation.Begin` in an isolated batch editor to check character timing, pause, and retry.
@@ -175,5 +199,86 @@ Run `VanillaWeek2LifecycleValidation.Begin` to check the three player death atla
 Set `UNITY_PARTY_PRESENTATION_TEST_PATH` and run `VanillaCampaignPresentationValidation.Begin` to check dialogue and the Eggnog Erect ending.
 Presentation controls reject missing canvas meshes and backdrop-only renders.
 
+Run `python Scripts/TestWeek7Assets.py --assets "path/to/assets"` to verify Week 7 charts, source hashes, shooting cues, and cutscenes.
+Controls reject swapped note sides, Pico mixes, unavailable remixes, missing animations, and changed media.
+Run `VanillaWeek7Validation.CheckAssets` for playlists, meshes, runner frame sizes, and rendered rim lighting.
+The rim probe rejects light on internal atlas seams and requires light on the outer silhouette.
+Set `UNITY_PARTY_WEEK7_VIDEO_PATH` and run `VanillaWeek7VideoValidation.Begin` in an isolated batch editor.
+The video probe checks decoding, subtitles, pause, resume, restart, skip, completion, and retry suppression.
+Set `UNITY_PARTY_CAMPAIGN_LIFECYCLE_SONG` to `Ugh,Stress` to check both Week 7 death atlases.
+
 The content remains subject to `Vanilla-LICENSE.md`.
 The upstream asset license restricts public redistribution.
+
+## Weekend 1
+
+Weekend 1 includes Darnell, Lit Up, 2hot, and Blazin'.
+Darnell also includes its Erect and Nightmare charts.
+Darnell and Lit Up also include separate BF mixes.
+The import adds 14 charts, 10,089 note heads, and five instrumental variants.
+Blazin' has no separate vocal track.
+
+The stages use the source Pico, Darnell, Nene, A-Bot, traffic, mist, rain, and combat graphics.
+2hot uses the gun preparation window and spray-can hit and miss behavior.
+Spray cans, explosions, and casings reuse preloaded graphics and animation meshes.
+The gun afterimage expands around the captured frame center without character animation offsets.
+Blazin' uses paired combat animations and a centered player strumline.
+Story Mode includes the Darnell intro and the 2hot and Blazin' ending videos.
+Pico uses his source pause music and game-over animations.
+
+Add `--weekend1-only` to `Scripts/ImportVanillaSongs.py` to import Weekend 1 separately.
+Run `Scripts/ImportVanillaCharacterSelect.py` to import the character-select screen.
+Pass `--assets` for the release assets and `--source` for the 0.8.6 checkout.
+
+Run `python Scripts/TestWeekend1Assets.py --assets "path/to/assets"` to check the Weekend 1 source files and charts.
+Set `UNITY_PARTY_WEEKEND_TEST=1` to use the Weekend 1 song probes.
+Set `UNITY_PARTY_SONG_TEST_PATH` to the probe output directory.
+Run `VanillaSongValidation.Begin` in an isolated Unity batch editor.
+Set `UNITY_PARTY_SONG_STAGE_ONLY=1` to check loading and stage behavior without full playback.
+
+Set `UNITY_PARTY_CHARACTER_TEST_PATH` before running `VanillaCharacterSelectValidation.Begin`.
+Set `UNITY_PARTY_WEEKEND_VIDEO_PATH` before running `VanillaWeekend1PresentationValidation.Begin`.
+Set `UNITY_PARTY_CAMPAIGN_LIFECYCLE_SONG` to `Darnell,2hot,Blazin'` for the three Pico death paths.
+Set `UNITY_PARTY_CAMPAIGN_LIFECYCLE_PATH` before running `VanillaWeek2LifecycleValidation.Begin`.
+
+## Pico and BF mixes
+
+All 17 released mixes from version 0.8.6 are included.
+Pico has Bopeebo, Fresh, DadBattle, Spookeez, South, Pico, Philly Nice, Blammed, Cocoa, Eggnog, Senpai, Roses, Ugh, Guns, and Stress.
+BF has Darnell and Lit Up.
+Each mix includes Easy, Normal, and Hard.
+The import adds 51 charts and 29,804 playable note heads.
+Stress has 584 separate Otis animation cues.
+
+Folders ending in `-Pico` or `-BF` hold the mixes.
+Each folder preserves its source chart, metadata, instrumental, and separate player and opponent vocal files.
+The compatibility vocal file combines the original stems with Vorbis quality 10.
+Mix scores and favorites use their separate titles and paths.
+Story Mode selects the original song paths.
+
+The mix importer adds the source characters, alternate animations, masks, companion graphics, dialogue, and cutscene media.
+Stress Pico uses the Otis cues, bloody Tankman events, video intro, and scripted ending.
+The school Pico mixes use their Freeplay dialogue.
+The Week 3 Pico mixes use the doppelganger intro.
+An exploded opponent remains hidden and muted on retries.
+An exploded player completes the song before the countdown.
+Retries preserve the source intro suppression.
+
+Run `python Scripts/ImportVanillaMixes.py --assets "path/to/assets"` after the base song importer.
+Add `--extras-only` to import missing characters and refresh presentation assets without rewriting song audio.
+Run `python Scripts/TestMixAssets.py --assets "path/to/assets"` to verify source hashes, charts, dependency files, and cutscene media.
+The test rejects swapped lanes and original instrumentals used for mix audio.
+
+Set `UNITY_PARTY_MIX_TEST=1` and `UNITY_PARTY_SONG_TEST_PATH` before running `VanillaSongValidation.Begin`.
+The probe checks the 43 catalog entries, original Story playlists, all 163 parsed charts, and the mix stages.
+Set `UNITY_PARTY_SONG_STAGE_ONLY=1` for stage loading checks.
+Clear that variable to check complete playback and event consumption.
+The gameplay probe suppresses intros so random cutscene outcomes cannot skip its chart checks.
+Run `Scripts/TestVanillaABotAnalyzer.ps1` to compare A-Bot levels with 14 original Haxe fixtures.
+The analyzer tests also check silence, stereo cancellation, playhead position, clip boundaries, and retry reset.
+Cross-engine frame and shader parity requires comparison with a running upstream build.
+
+Set `UNITY_PARTY_MIX_IDS` to a comma-separated song ID list to select targeted mix probes.
+Stage probes also check source event transitions, special animations, vocal restoration, and reset controls.
+Run `VanillaMixPresentationValidation.Begin` with `UNITY_PARTY_MIX_PRESENTATION_PATH` to check Freeplay dialogue, video, endings, and randomized intro outcomes.
+Run `VanillaWeek2LifecycleValidation.Begin` with `UNITY_PARTY_MIX_TEST=1` and `UNITY_PARTY_CAMPAIGN_LIFECYCLE_PATH` to check eight mix death and retry paths.

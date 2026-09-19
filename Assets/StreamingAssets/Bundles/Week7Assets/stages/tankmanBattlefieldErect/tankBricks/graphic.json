@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,512,0,512,64,0,64],"rect":[0,0,512,64],"image":"bricksGround.png","rotated":false,"alpha":1}]],"bounds":[0,0,512,64],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,1920,0,1920,1080,0,1080],"rect":[0,0,1920,1080],"image":"tankGround.png","rotated":false,"alpha":1}]],"bounds":[0,0,1920,1080],"fps":24,"pixel":false,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

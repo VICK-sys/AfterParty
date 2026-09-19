@@ -1,0 +1,686 @@
+{
+  "characters/pico-playable/character.json": {
+    "source": "data/characters/pico-playable.json",
+    "sha256": "58f38b5275064fd5c95b4c9d58c584ba87fbe850ba3d375d5d5804fb4d024494"
+  },
+  "characters/pico-playable/Animation.json": {
+    "source": "shared/images/characters/pico/basic-animations/Animation.json",
+    "sha256": "975b5e7b260888950d9fcf8c29bab7f6e6e4f5025cfdddd75926fb77a700caa7"
+  },
+  "characters/pico-playable/spritemap1.json": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.json",
+    "sha256": "7f86756c1557d3f90c006db5b90cc74239058b14e1ae2737db9e2e46913cbd01"
+  },
+  "characters/pico-playable/spritemap1.png": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.png",
+    "sha256": "9a9cde5b96b9e677490cde81c6f0aafccb5582e4048cbed3ed966f23f6624f53"
+  },
+  "characters/pico-playable/censor/Pico_Censored.png": {
+    "source": "shared/images/characters/Pico_Censored.png",
+    "sha256": "89d59b30c7b20424cce5fdc99a58956859d14f19316904527764c5e3e298e558"
+  },
+  "characters/pico-playable/censor/Pico_Censored.xml": {
+    "source": "shared/images/characters/Pico_Censored.xml",
+    "sha256": "bb631622376d15d8867a4c5941391d19095c58c34c5fbe2053ca925d589443c9"
+  },
+  "characters/pico-playable/alternate1/Animation.json": {
+    "source": "shared/images/characters/pico/playable-animations/Animation.json",
+    "sha256": "69079f1dd826e5a3a5bd545f49a10544677226d8e8a0b7c1dcf2661e142eb621"
+  },
+  "characters/pico-playable/alternate1/spritemap1.json": {
+    "source": "shared/images/characters/pico/playable-animations/spritemap1.json",
+    "sha256": "51be9268222480c9ea8a4d544ee1f6e80c3b691cb2ce1f580a9562c27f3748ac"
+  },
+  "characters/pico-playable/alternate1/spritemap1.png": {
+    "source": "shared/images/characters/pico/playable-animations/spritemap1.png",
+    "sha256": "0ad6d157cc21efa753c48e2eea5ef303f7acefe57a5e7fb9891b214d0da15e9f"
+  },
+  "characters/pico-playable/death/Animation.json": {
+    "source": "shared/images/characters/pico/death/Animation.json",
+    "sha256": "43c03f07d8c0cff13106a1e8c119a29bae764b525d0dfa09c98d0dabbf29795b"
+  },
+  "characters/pico-playable/death/spritemap1.json": {
+    "source": "shared/images/characters/pico/death/spritemap1.json",
+    "sha256": "5de0d6975adbf6672594e185666fc5d775b086ac610b1529b045bb9a96dc3b1a"
+  },
+  "characters/pico-playable/death/spritemap1.png": {
+    "source": "shared/images/characters/pico/death/spritemap1.png",
+    "sha256": "b57b38a8aec25b570b6945013adf98a63737e014ed54b4bbecb1e1b4808c5554"
+  },
+  "characters/pico-playable/explosion/Animation.json": {
+    "source": "shared/images/characters/pico/explosion-death/Animation.json",
+    "sha256": "064bc08ee25a0d2961536e88bed1ab89c081d084c5d2d190ec94fedc7ddda8d2"
+  },
+  "characters/pico-playable/explosion/spritemap1.json": {
+    "source": "shared/images/characters/pico/explosion-death/spritemap1.json",
+    "sha256": "ab9ac1bfb95d25fb171cfe4b88dcb71be819a03276505259d175ad1ba1eef343"
+  },
+  "characters/pico-playable/explosion/spritemap1.png": {
+    "source": "shared/images/characters/pico/explosion-death/spritemap1.png",
+    "sha256": "47bdd713a0ced1e3906e5f458f0e3755392bdadbab5f641da1d88f9e68f74014"
+  },
+  "Source/characters/pico-playable.hxc": {
+    "source": "scripts/characters/pico-playable.hxc",
+    "sha256": "e3a4fe7d2d713948e05b161cb35429ad6e7ef07dad9881e2d3376d1228335478"
+  },
+  "characters/pico-blazin/character.json": {
+    "source": "data/characters/pico-blazin.json",
+    "sha256": "d5c6a2a5c14dee7b7664fbebb526d375782b5f59d325c0dbe125d9e0cc99a538"
+  },
+  "characters/pico-blazin/Animation.json": {
+    "source": "shared/images/characters/picoBlazin/Animation.json",
+    "sha256": "80e20cd6532bc26889a395327b873dfb8414c7ccf4349f597ad03112f6236fb2"
+  },
+  "characters/pico-blazin/spritemap1.json": {
+    "source": "shared/images/characters/picoBlazin/spritemap1.json",
+    "sha256": "7869a6db23fe4dff557ee42b1307e3ee7de2f2ec247095df721bd2cfd9f54a3b"
+  },
+  "characters/pico-blazin/spritemap1.png": {
+    "source": "shared/images/characters/picoBlazin/spritemap1.png",
+    "sha256": "f95aa5af9c7ff19c73d2591e2a422de532b91165e3362bb9f654dacb9423a2da"
+  },
+  "Source/characters/pico-blazin.hxc": {
+    "source": "scripts/characters/pico-blazin.hxc",
+    "sha256": "5a683533e4bc4259ae039a677bdc2665f3bd8978d796485e0b3c5546c9141341"
+  },
+  "characters/darnell/character.json": {
+    "source": "data/characters/darnell.json",
+    "sha256": "67b7cb03a6393c142ab683dbc99c4548223b534815a7994f6749d7018499f816"
+  },
+  "characters/darnell/Animation.json": {
+    "source": "shared/images/characters/darnell/Animation.json",
+    "sha256": "a9d4896c7d34cb1ab1d5cc2dd60c7d6dc4a3baf3793a70c7dfae2e73e76b2463"
+  },
+  "characters/darnell/spritemap1.json": {
+    "source": "shared/images/characters/darnell/spritemap1.json",
+    "sha256": "ac99432359a12600a9548667a13da9096c31ba4c9b594a19d977c63719bbb243"
+  },
+  "characters/darnell/spritemap1.png": {
+    "source": "shared/images/characters/darnell/spritemap1.png",
+    "sha256": "620cc78dd28bac996d7d8713380ee1080d92a131cf43bcd82368af0fbe0854de"
+  },
+  "Source/characters/darnell.hxc": {
+    "source": "scripts/characters/darnell.hxc",
+    "sha256": "40ea7b2798753d753f07a370d1e61001bf0bb10c332e674ddc3a25da401ec4ba"
+  },
+  "characters/darnell-blazin/character.json": {
+    "source": "data/characters/darnell-blazin.json",
+    "sha256": "c39b643cc9bc8e4946eaee22ef7c570980731fe68ab91b636ed337888273c3e1"
+  },
+  "characters/darnell-blazin/Animation.json": {
+    "source": "shared/images/characters/darnellBlazin/Animation.json",
+    "sha256": "5a5d0a17b7c4f280eb48b9fcf0a4b163996ea2883bbb89fa6916ab5bf7196976"
+  },
+  "characters/darnell-blazin/spritemap1.json": {
+    "source": "shared/images/characters/darnellBlazin/spritemap1.json",
+    "sha256": "09573d7cbe8e3b8107a5dfd8e528b203c19593085976b408fd8350d25127e63b"
+  },
+  "characters/darnell-blazin/spritemap1.png": {
+    "source": "shared/images/characters/darnellBlazin/spritemap1.png",
+    "sha256": "11c4b4f344b6df03d130cf11b97800266cd1fe001c4195f2d64cb51b45ab3e50"
+  },
+  "Source/characters/darnell-blazin.hxc": {
+    "source": "scripts/characters/darnell-blazin.hxc",
+    "sha256": "0a3942095c70bb96c91f429e544609c1b7721ffc860df672a5706ae4d149bbb9"
+  },
+  "characters/nene/character.json": {
+    "source": "data/characters/nene.json",
+    "sha256": "9427131dc6a590fabe2d3cf46abed236c222d9403773571ab2ca796893d6b81f"
+  },
+  "characters/nene/Animation.json": {
+    "source": "shared/images/characters/nene/Animation.json",
+    "sha256": "0959d81b39d7f088e80e07520129cd0a0d96b2b71e269a1d8c80ef643183e962"
+  },
+  "characters/nene/spritemap1.json": {
+    "source": "shared/images/characters/nene/spritemap1.json",
+    "sha256": "fc130e951753e02b39db4987d0844506a9e731a55bf5a37c72ff3476ae7d7a5c"
+  },
+  "characters/nene/spritemap1.png": {
+    "source": "shared/images/characters/nene/spritemap1.png",
+    "sha256": "16a643dfdf63267fddce3f64fa251d55dbea89fdd15f46d2495220e9c214beb6"
+  },
+  "Source/characters/nene.hxc": {
+    "source": "scripts/characters/nene.hxc",
+    "sha256": "d1ed29278e624ce724bfff4fe6ff059bddb19496223d0eda07733c3684635d3a"
+  },
+  "stages/phillyStreets/stage.json": {
+    "source": "data/stages/phillyStreets.json",
+    "sha256": "568818770c50fecdcd310e710f73e631eb89a02456873efd61c07bd4ff775d0f"
+  },
+  "stages/phillyStreets/phillySkyline/phillySkyline.png": {
+    "source": "weekend1/images/phillyStreets/phillySkyline.png",
+    "sha256": "f5731668003d3c46f54424afbe59074378400e4ee025d384731b2252b27c3d04"
+  },
+  "stages/phillyStreets/phillyForegroundCity2/phillyForegroundCity.png": {
+    "source": "weekend1/images/phillyStreets/phillyForegroundCity.png",
+    "sha256": "0a5717e1dc750b065e439bdffe4f85ce4aeb83eafa2b2a4f8d97db3fbfcc7e62"
+  },
+  "stages/phillyStreets/phillyConstruction/phillyConstruction.png": {
+    "source": "weekend1/images/phillyStreets/phillyConstruction.png",
+    "sha256": "db2dccffe8ecebede5df85fbdfa5d2e09c0c767ddbce78d8db247cc1991ef6f5"
+  },
+  "stages/phillyStreets/phillyHighwayLights/phillyHighwayLights.png": {
+    "source": "weekend1/images/phillyStreets/phillyHighwayLights.png",
+    "sha256": "521035faa888daff22df2b7235a9e4ade4476b886fefd018d0015555207a72f4"
+  },
+  "stages/phillyStreets/phillyHighwayLights_lightmap/phillyHighwayLights_lightmap.png": {
+    "source": "weekend1/images/phillyStreets/phillyHighwayLights_lightmap.png",
+    "sha256": "381a9685867c2953845dcc0c7b00bcf2737f5c4297b100db0f72738a21bd5bf9"
+  },
+  "stages/phillyStreets/phillyHighway/phillyHighway.png": {
+    "source": "weekend1/images/phillyStreets/phillyHighway.png",
+    "sha256": "dcdc6b7485962ccdbb5369ffe836816f7f16ca5c954d282f1dea92e30c1e4964"
+  },
+  "stages/phillyStreets/phillySmog/phillySmog.png": {
+    "source": "weekend1/images/phillyStreets/phillySmog.png",
+    "sha256": "7f5441b4d46135dad464c8102964bb96b7f8d5d54285a1ba313d4a6c8b8726da"
+  },
+  "stages/phillyStreets/phillyCars/phillyCars.png": {
+    "source": "weekend1/images/phillyStreets/phillyCars.png",
+    "sha256": "dabbb1e6365029940ec6ced56a4b666eee97562b5796633fe812f21d7cab11d2"
+  },
+  "stages/phillyStreets/phillyCars/phillyCars.xml": {
+    "source": "weekend1/images/phillyStreets/phillyCars.xml",
+    "sha256": "fe8a1354657bef6766f5d69de8f6a57c9e70c608ea6ec2578138f0007582092e"
+  },
+  "stages/phillyStreets/phillyCars2/phillyCars.png": {
+    "source": "weekend1/images/phillyStreets/phillyCars.png",
+    "sha256": "dabbb1e6365029940ec6ced56a4b666eee97562b5796633fe812f21d7cab11d2"
+  },
+  "stages/phillyStreets/phillyCars2/phillyCars.xml": {
+    "source": "weekend1/images/phillyStreets/phillyCars.xml",
+    "sha256": "fe8a1354657bef6766f5d69de8f6a57c9e70c608ea6ec2578138f0007582092e"
+  },
+  "stages/phillyStreets/phillyTraffic/phillyTraffic.png": {
+    "source": "weekend1/images/phillyStreets/phillyTraffic.png",
+    "sha256": "627a06cfdf677ec0a9b26ee7660decd72c48f3e1b9f34f3d19c27e4815a5685d"
+  },
+  "stages/phillyStreets/phillyTraffic/phillyTraffic.xml": {
+    "source": "weekend1/images/phillyStreets/phillyTraffic.xml",
+    "sha256": "d147ccc8b3edec8952e8a6666deecff65218b786ad17f38c7aa9546a2d033ada"
+  },
+  "stages/phillyStreets/phillyTraffic_lightmap/phillyTraffic_lightmap.png": {
+    "source": "weekend1/images/phillyStreets/phillyTraffic_lightmap.png",
+    "sha256": "802d6b073ce205905686a6cffece42ff76aa5a44642201ac92c877915f6b1d72"
+  },
+  "stages/phillyStreets/phillyForeground/phillyForeground.png": {
+    "source": "weekend1/images/phillyStreets/phillyForeground.png",
+    "sha256": "1bbbc6752bab95273859d0d05308f5be3ab474be345a27d75d6b9d0312b27891"
+  },
+  "stages/phillyStreets/spraycanPile/SpraycanPile.png": {
+    "source": "weekend1/images/SpraycanPile.png",
+    "sha256": "6c1596be69c34d92ad0c260a26664c654433f4f515cb11322e28d4a22a28a6de"
+  },
+  "Source/stages/phillyStreets.hxc": {
+    "source": "scripts/stages/phillyStreets.hxc",
+    "sha256": "464c84a2a19b588c9d447493f8541d6173f41a132bc9474b31d4b74311c93ba3"
+  },
+  "stages/phillyStreetsErect/stage.json": {
+    "source": "data/stages/phillyStreetsErect.json",
+    "sha256": "5879a03a2c0ff16bc23c8c805770e8763c9010218fee165ddbc34b7c5e43dadd"
+  },
+  "stages/phillyStreetsErect/phillySkyline/phillySkyline.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillySkyline.png",
+    "sha256": "b6364658cd3bc2c68585a92728df3a190296241748f6d444d5aea0d50fc33f9b"
+  },
+  "stages/phillyStreetsErect/phillyForegroundCity/phillyForegroundCity.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyForegroundCity.png",
+    "sha256": "4ce69131670d864aa6071565d58e513e965a90d7e838117ec29a20a5c4478f52"
+  },
+  "stages/phillyStreetsErect/phillyForegroundCity2/phillyForegroundCity.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyForegroundCity.png",
+    "sha256": "4ce69131670d864aa6071565d58e513e965a90d7e838117ec29a20a5c4478f52"
+  },
+  "stages/phillyStreetsErect/phillyConstruction2/phillyConstruction.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyConstruction.png",
+    "sha256": "fa446cdfc0f5503454efd757f377997209218039cc9fed5fbb5404d433b26c22"
+  },
+  "stages/phillyStreetsErect/phillyHighwayLights/phillyHighwayLights.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyHighwayLights.png",
+    "sha256": "8b2e036d357e7ea4d579816c13832a552985c88ac66bcd96097342939c912b42"
+  },
+  "stages/phillyStreetsErect/phillyHighwayLights_lightmap/phillyHighwayLights_lightmap.png": {
+    "source": "weekend1/images/phillyStreets/phillyHighwayLights_lightmap.png",
+    "sha256": "381a9685867c2953845dcc0c7b00bcf2737f5c4297b100db0f72738a21bd5bf9"
+  },
+  "stages/phillyStreetsErect/phillyHighway2/phillyHighway.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyHighway.png",
+    "sha256": "61608f17e3627439001d410fd712bbe6309b4b841a87afcd62d895ac488bb135"
+  },
+  "stages/phillyStreetsErect/grey1/greyGradient.png": {
+    "source": "weekend1/images/phillyStreets/erect/greyGradient.png",
+    "sha256": "61fb969938f631d19a6c85a368a60e2ccb85fe531efc9b7b8eafa5ea91258c56"
+  },
+  "stages/phillyStreetsErect/grey2/greyGradient.png": {
+    "source": "weekend1/images/phillyStreets/erect/greyGradient.png",
+    "sha256": "61fb969938f631d19a6c85a368a60e2ccb85fe531efc9b7b8eafa5ea91258c56"
+  },
+  "stages/phillyStreetsErect/phillyCars/phillyCars.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyCars.png",
+    "sha256": "314558f18f3ebafacd52ed916ceb600f0403fd7080b5ba2c453b7a7f4c4bf2d8"
+  },
+  "stages/phillyStreetsErect/phillyCars/phillyCars.xml": {
+    "source": "weekend1/images/phillyStreets/erect/phillyCars.xml",
+    "sha256": "eb4e34d56a1885a5c7a7943a3d4dd6908ba4a57adfa7766f04f3ee123ed236e2"
+  },
+  "stages/phillyStreetsErect/phillyCars2/phillyCars.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyCars.png",
+    "sha256": "314558f18f3ebafacd52ed916ceb600f0403fd7080b5ba2c453b7a7f4c4bf2d8"
+  },
+  "stages/phillyStreetsErect/phillyCars2/phillyCars.xml": {
+    "source": "weekend1/images/phillyStreets/erect/phillyCars.xml",
+    "sha256": "eb4e34d56a1885a5c7a7943a3d4dd6908ba4a57adfa7766f04f3ee123ed236e2"
+  },
+  "stages/phillyStreetsErect/phillyTraffic/phillyTraffic.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyTraffic.png",
+    "sha256": "d112fef0cffe54b44d994f8b0415626b47fdad9c570cffd45b04ef6776385cf3"
+  },
+  "stages/phillyStreetsErect/phillyTraffic/phillyTraffic.xml": {
+    "source": "weekend1/images/phillyStreets/erect/phillyTraffic.xml",
+    "sha256": "b6205d95ed401d93442bc07e9c5d18172f46163cb9ac7a112b2090ea5f79e089"
+  },
+  "stages/phillyStreetsErect/phillyTraffic_lightmap/phillyTraffic_lightmap.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyTraffic_lightmap.png",
+    "sha256": "07f3dcbaba2dd588449cb4ee1d962667c180a77704bdfcb5e45172f9d315e353"
+  },
+  "stages/phillyStreetsErect/phillyForeground/phillyForeground.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillyForeground.png",
+    "sha256": "8462309f0f062e645c5ffb3f350e902f36569eaf464f00f0f1e19a2e30a51976"
+  },
+  "stages/phillyStreetsErect/paper/paper.png": {
+    "source": "weekend1/images/phillyStreets/erect/paper.png",
+    "sha256": "fa16d4733cdd4ab8c85477f11966be21375bc590beadc70d6a83a40e2e45d2cc"
+  },
+  "stages/phillyStreetsErect/paper/paper.xml": {
+    "source": "weekend1/images/phillyStreets/erect/paper.xml",
+    "sha256": "6cdb24ad6387f32949ffdc6fe1757b3a48e43a40183547f43c5f0a3602bca43a"
+  },
+  "Source/stages/phillyStreetsErect.hxc": {
+    "source": "scripts/stages/phillyStreetsErect.hxc",
+    "sha256": "00acf2c276a1215870605c6eaee573a57b1a821080d579f4eb0be0026002cc02"
+  },
+  "stages/phillyBlazin/stage.json": {
+    "source": "data/stages/phillyBlazin.json",
+    "sha256": "c20f9718742df1959a76dd1e9fc0e19a4ec2855f164226ad93d31ea7ed73c583"
+  },
+  "stages/phillyBlazin/skyAdditive/skyBlur.png": {
+    "source": "weekend1/images/phillyBlazin/skyBlur.png",
+    "sha256": "a7ad1aaf01d95cf825a14da97dd471afaaf19e98b22f342ac8f8a6a990e1bb44"
+  },
+  "stages/phillyBlazin/lightning/lightning.png": {
+    "source": "weekend1/images/phillyBlazin/lightning.png",
+    "sha256": "61588fe54e89f283e4b63161aec781539724e38b04ecf2ae89f66928796e2581"
+  },
+  "stages/phillyBlazin/lightning/lightning.xml": {
+    "source": "weekend1/images/phillyBlazin/lightning.xml",
+    "sha256": "e314e8c00c14f3225bef8f8fff9856d01f0f9797f0f4c8b00e087991f3e3404b"
+  },
+  "stages/phillyBlazin/phillyForegroundCity/streetBlur.png": {
+    "source": "weekend1/images/phillyBlazin/streetBlur.png",
+    "sha256": "dfecd7a43072fb80e4773ec1b7ab44028722bc6b3643c0b2d4670a860d980aa9"
+  },
+  "stages/phillyBlazin/foregroundMultiply/streetBlur.png": {
+    "source": "weekend1/images/phillyBlazin/streetBlur.png",
+    "sha256": "dfecd7a43072fb80e4773ec1b7ab44028722bc6b3643c0b2d4670a860d980aa9"
+  },
+  "Source/stages/phillyBlazin.hxc": {
+    "source": "scripts/stages/phillyBlazin.hxc",
+    "sha256": "19ab8fb720ccde884d319b7c448e454a0997facb3ac42906e3f324a1d928879e"
+  },
+  "effects/can/Animation.json": {
+    "source": "weekend1/images/spraycanAtlas/Animation.json",
+    "sha256": "eb36de6de7fbf6179f1298cdc569802f5d133543773be673f8803000767d1aca"
+  },
+  "effects/can/spritemap1.json": {
+    "source": "weekend1/images/spraycanAtlas/spritemap1.json",
+    "sha256": "5a2d74518f232d0b45be8aff46eca2649adae9a5adecef6a0ff55a30f1788c32"
+  },
+  "effects/can/spritemap1.png": {
+    "source": "weekend1/images/spraycanAtlas/spritemap1.png",
+    "sha256": "c6fa2b4e7450795d82a69c7d96228ad9687559d628dc3d75581970ec2ae84c95"
+  },
+  "effects/casing/PicoBullet.png": {
+    "source": "weekend1/images/PicoBullet.png",
+    "sha256": "d64ed1683b2635b0905febd88254aa230aab9329a08ffccf0d52bc3623fcab45"
+  },
+  "effects/casing/PicoBullet.xml": {
+    "source": "weekend1/images/PicoBullet.xml",
+    "sha256": "67198f697dc3de515bc279d3b6bac013f95d658f8ed41e9fc18a7ed08f4b7846"
+  },
+  "effects/SpraypaintExplosion/SpraypaintExplosion.png": {
+    "source": "weekend1/images/SpraypaintExplosion.png",
+    "sha256": "c34c0bb50938a0b3314cb2043f267acd360b05cfeff850f056a1a904b22526a7"
+  },
+  "effects/SpraypaintExplosion/SpraypaintExplosion.xml": {
+    "source": "weekend1/images/SpraypaintExplosion.xml",
+    "sha256": "2c78367508efa7bd4eb92371feb315d565833a05f64d5f2e3880d37a8d41a4e4"
+  },
+  "effects/spraypaintExplosionEZ/spraypaintExplosionEZ.png": {
+    "source": "weekend1/images/spraypaintExplosionEZ.png",
+    "sha256": "2adcb601feea765a3cee6b6388158c43b6a71d1b8435c67353a3d2eb587a6b63"
+  },
+  "effects/spraypaintExplosionEZ/spraypaintExplosionEZ.xml": {
+    "source": "weekend1/images/spraypaintExplosionEZ.xml",
+    "sha256": "d5ddb10313512aef0bdf244cd572a20e31787c72885bb9ac9681d3c4b071ce5a"
+  },
+  "effects/CanImpactParticle/CanImpactParticle.png": {
+    "source": "weekend1/images/CanImpactParticle.png",
+    "sha256": "f54e22e41e0da63f3bcefdec15bfdc9f51d4abd3dbcaf6df3a52b36df2ace8cb"
+  },
+  "effects/CanImpactParticle/CanImpactParticle.xml": {
+    "source": "weekend1/images/CanImpactParticle.xml",
+    "sha256": "c55af9a822a203757fd4039319751ab629b5652dd32d7d00ee90bd309d929ee2"
+  },
+  "effects/cutsceneCan/wked1_cutscene_1_can.png": {
+    "source": "weekend1/images/wked1_cutscene_1_can.png",
+    "sha256": "32b0e38b6e1832576d3986617a861c8825b7d8c60ae820b880f10416269f0859"
+  },
+  "effects/cutsceneCan/wked1_cutscene_1_can.xml": {
+    "source": "weekend1/images/wked1_cutscene_1_can.xml",
+    "sha256": "bd64829393c722adc5f7d19ad2a471f9950e13e372ef43c1ab7d21b2278e6960"
+  },
+  "effects/knife/NeneKnifeToss.png": {
+    "source": "shared/images/characters/NeneKnifeToss.png",
+    "sha256": "f0b73908279ecf0d4ea1ad1359e963cebf2b75f6c55ea3ba06d1141e1ad71708"
+  },
+  "effects/knife/NeneKnifeToss.xml": {
+    "source": "shared/images/characters/NeneKnifeToss.xml",
+    "sha256": "1b2b66b978cfbe58b76baf715363611c432cb818a42e8107c218d1c77fa85c1b"
+  },
+  "effects/abotSystem/Animation.json": {
+    "source": "shared/images/characters/abot/abotSystem/Animation.json",
+    "sha256": "0c611b720f9fe93497688b91bd5db74487ef6135a04d627fba76d687fcde9041"
+  },
+  "effects/abotSystem/spritemap1.json": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.json",
+    "sha256": "b78ba18d6a87f1336e76c41cfee8d9cb5629efbde81ac1daca412707decabeb1"
+  },
+  "effects/abotSystem/spritemap1.png": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.png",
+    "sha256": "9efdb7f15a62d0cfacb122ac14b58478d05f5104eb6374b369fd81bd05d6e81c"
+  },
+  "effects/systemEyes/Animation.json": {
+    "source": "shared/images/characters/abot/systemEyes/Animation.json",
+    "sha256": "807e341bc387c659f40f726919a0ece5da00b007f3ea43c69bc284916da3d0a6"
+  },
+  "effects/systemEyes/spritemap1.json": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.json",
+    "sha256": "c14a329d3716b08a813f49a55927772fc76d46d64239471f806d1e3e5859c605"
+  },
+  "effects/systemEyes/spritemap1.png": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.png",
+    "sha256": "35914b2fe5a01c4c2db5cdaae02b81ee61cca4cbf5e26eb5ce695fe1de3a172f"
+  },
+  "effects/stereoBG/stereoBG.png": {
+    "source": "shared/images/characters/abot/stereoBG.png",
+    "sha256": "f8c74ebbfbb0e8ea8f85a27a6d156c7bec48a3c83e241ca40d2afe5711973898"
+  },
+  "effects/visualizer/aBotViz.png": {
+    "source": "shared/images/characters/abot/aBotViz.png",
+    "sha256": "9a26755372e2e63f91fa94eeefe14edf4908c6a35f8f57fb073f7f768f916c6c"
+  },
+  "effects/visualizer/aBotViz.xml": {
+    "source": "shared/images/characters/abot/aBotViz.xml",
+    "sha256": "d76220bf8e63c642d5b348dd688be13839e0c1be167d4e23f4bd2cd0d0f28cc8"
+  },
+  "effects/sky/phillySkybox.png": {
+    "source": "weekend1/images/phillyStreets/phillySkybox.png",
+    "sha256": "0e6dc85836ffe86aec25fbd3dcae728951d5e0a3c2ef697b50a0c31f27e672c3"
+  },
+  "effects/skyBlazin/skyBlur.png": {
+    "source": "weekend1/images/phillyBlazin/skyBlur.png",
+    "sha256": "a7ad1aaf01d95cf825a14da97dd471afaaf19e98b22f342ac8f8a6a990e1bb44"
+  },
+  "effects/phillySkybox/phillySkybox.png": {
+    "source": "weekend1/images/phillyStreets/erect/phillySkybox.png",
+    "sha256": "1fd6392581410a16de51a063b874d42658496178ee599c4db7de3db39d568963"
+  },
+  "effects/mistMid/mistMid.png": {
+    "source": "weekend1/images/phillyStreets/erect/mistMid.png",
+    "sha256": "026439d7ef388118c187ea382e3482c99029f90ed59e943a1a523b3760f21059"
+  },
+  "effects/mistBack/mistBack.png": {
+    "source": "weekend1/images/phillyStreets/erect/mistBack.png",
+    "sha256": "578aa79bff2d5656a23ee21f05412e54d2d272b2c4a81d0ae49e9e019cb1fc26"
+  },
+  "audio/carAmbience.ogg": {
+    "source": "weekend1/sounds/carAmbience.ogg",
+    "sha256": "25b5df0864ec9c01b37b1a4d73eca0ea9d7aaa9aacf9a73f4995cb774ddda017"
+  },
+  "audio/Darnell_Lighter.ogg": {
+    "source": "weekend1/sounds/Darnell_Lighter.ogg",
+    "sha256": "8ab8a6ec652787541c95ca9ebc53f262725b574a35b0fef59eb6d1087b590b14"
+  },
+  "audio/fuse_burning.ogg": {
+    "source": "weekend1/sounds/fuse_burning.ogg",
+    "sha256": "9bbc2bc4dac8fc066c61bc3786ac9e170225d0fb6326ba623949bc080cb0ef75"
+  },
+  "audio/Gun_Prep.ogg": {
+    "source": "weekend1/sounds/Gun_Prep.ogg",
+    "sha256": "1547839cba44b5285ed47b0aab8e708622954de457164f627edafe7cd9f2cd97"
+  },
+  "audio/Kick_Can_FORWARD.ogg": {
+    "source": "weekend1/sounds/Kick_Can_FORWARD.ogg",
+    "sha256": "9d04f962e7636ce4d3f731fb14ddfc5078aaa059094a1c3996d3e68698c22ef7"
+  },
+  "audio/Kick_Can_UP.ogg": {
+    "source": "weekend1/sounds/Kick_Can_UP.ogg",
+    "sha256": "6be00f78f34bfdc456dc84bf0af392cc48fabdd07695ae2003afaf8e19a09cbb"
+  },
+  "audio/Lightning1.ogg": {
+    "source": "weekend1/sounds/Lightning1.ogg",
+    "sha256": "4b2299738720d8f7afff632608bd116104eb700f57e5d92b3616bd8168026f8a"
+  },
+  "audio/Lightning2.ogg": {
+    "source": "weekend1/sounds/Lightning2.ogg",
+    "sha256": "a12a4bf4d50e1a0b782234ed217d56f338c55caab5342255bff77b960b3291b8"
+  },
+  "audio/Lightning3.ogg": {
+    "source": "weekend1/sounds/Lightning3.ogg",
+    "sha256": "be07f58605154446f967813cb594f6a083721423d7f0edc6e485e96d70cbbde9"
+  },
+  "audio/Pico_Bonk.ogg": {
+    "source": "weekend1/sounds/Pico_Bonk.ogg",
+    "sha256": "9abe1db427f6199842a4e0159da81ae7c438f5f2d50da63c469596ae8fa7c609"
+  },
+  "audio/rainAmbience.ogg": {
+    "source": "weekend1/sounds/rainAmbience.ogg",
+    "sha256": "1b5ec3e805d9b8fa780efa1f6402d28faf1e06c5ecdc2389a9a858264bc6e6eb"
+  },
+  "audio/Shoot_1.ogg": {
+    "source": "weekend1/sounds/Shoot_1.ogg",
+    "sha256": "715e38a1fca6f326b0391c762d5ed93ad488f817066cdb7a9552e196cee3442e"
+  },
+  "audio/shot1.ogg": {
+    "source": "weekend1/sounds/shot1.ogg",
+    "sha256": "fbfc84a1dbc065eb147ae1b6b0c3c755eee58f7bab7b8713d0afd21d6a41244f"
+  },
+  "audio/shot2.ogg": {
+    "source": "weekend1/sounds/shot2.ogg",
+    "sha256": "9b8490f7ca387390c9cd1099dc5fe3791dd92f1dcca0bba62fc14f3ffecd6f2e"
+  },
+  "audio/shot3.ogg": {
+    "source": "weekend1/sounds/shot3.ogg",
+    "sha256": "9bf212c2fdfe68e12aaa75660d92bc6921131e537391d08bc8d6619c41badeb8"
+  },
+  "audio/shot4.ogg": {
+    "source": "weekend1/sounds/shot4.ogg",
+    "sha256": "7531ed63ba5b8d97b503bf36793650ece795a86796a8003fb8b14e722fe2c65c"
+  },
+  "audio/singed_loop.ogg": {
+    "source": "weekend1/sounds/singed_loop.ogg",
+    "sha256": "a189d931100f8400762e8b3703686cff8d0266995ba83bba168fc554d3fb3f22"
+  },
+  "audio/cutscene/darnell_laugh.ogg": {
+    "source": "weekend1/sounds/cutscene/darnell_laugh.ogg",
+    "sha256": "055ef484245ac606792396ea704ba927daf1dab093267bfad2083ef884bf46c3"
+  },
+  "audio/cutscene/nene_laugh.ogg": {
+    "source": "weekend1/sounds/cutscene/nene_laugh.ogg",
+    "sha256": "c2bcb2fd759b2601d39401d2d4ff4282fbc02015b93837526a57977dfa08f075"
+  },
+  "audio/raindrops/raindrop1.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop1.ogg",
+    "sha256": "43565136723189c3f665f803809b3e7e21e94692909c055143b87df385c1671a"
+  },
+  "audio/raindrops/raindrop10.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop10.ogg",
+    "sha256": "4319dfe27f65daf04670ff490eac33a1933ad32939d588bf92a38893b5b0e6f6"
+  },
+  "audio/raindrops/raindrop11.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop11.ogg",
+    "sha256": "949a6457f95ce3c4901f87b53cfbdea6a064c27ff49549700667ea4e4f8ad11e"
+  },
+  "audio/raindrops/raindrop12.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop12.ogg",
+    "sha256": "5efcb7c9268b64808c12dd1d4d6d9f31d8ab29fbc6d33c29ab1cb59773ee6384"
+  },
+  "audio/raindrops/raindrop13.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop13.ogg",
+    "sha256": "7361611f40030e638446ba8767bdc1c9a24148423bc4718e8d4da222823c56fd"
+  },
+  "audio/raindrops/raindrop14.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop14.ogg",
+    "sha256": "fb76795f05901cda9201a040906f53e7987f36c6d3410649dd019ee0a8bfa0da"
+  },
+  "audio/raindrops/raindrop15.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop15.ogg",
+    "sha256": "97fcae557972afe83ef5666a7da4ed5d15ccd15982e5310d1e3761d54aec2137"
+  },
+  "audio/raindrops/raindrop16.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop16.ogg",
+    "sha256": "c35e6a4a9b5a485b710331c13c886070ad6fb4f1fcd3e895ba3f9fe694b75b1e"
+  },
+  "audio/raindrops/raindrop2.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop2.ogg",
+    "sha256": "a51d1dfeaa50acbc3d0618ade51e439e74a3fb2fbc89a974109fe4b22e32c4ed"
+  },
+  "audio/raindrops/raindrop3.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop3.ogg",
+    "sha256": "f4249a415c2c64255a7ee5cf86b34d0160ff9e708e1ce342873b92f68210cb84"
+  },
+  "audio/raindrops/raindrop4.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop4.ogg",
+    "sha256": "acc991ef2eb243e1d3a044ee5378f56c680122dcacfc1a8656a413ea1829f712"
+  },
+  "audio/raindrops/raindrop5.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop5.ogg",
+    "sha256": "96b4b7b560110e93ec4ec8be411da7699adff534ee99cce8f703afa976a55be1"
+  },
+  "audio/raindrops/raindrop6.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop6.ogg",
+    "sha256": "949c82b9ab493addf4be7dca01f389dbfb40d366eaf4e871008b9a957e716725"
+  },
+  "audio/raindrops/raindrop7.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop7.ogg",
+    "sha256": "aeb9a186b74bff4c953d10ba0e65d84a6a14c96c47ae42ffd24f45c4e70438e6"
+  },
+  "audio/raindrops/raindrop8.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop8.ogg",
+    "sha256": "cbf6891307057ac252a4d56a2786e3cadfb5760a40d069f20b21bc049782b12e"
+  },
+  "audio/raindrops/raindrop9.ogg": {
+    "source": "weekend1/sounds/raindrops/raindrop9.ogg",
+    "sha256": "ef89b5efc5352624059a6d58e2eb5aec52f901c2288dd0c5f27b4b2fce6375ca"
+  },
+  "audio/gameplay/gameover/fnf_loss_sfx-pico-explode.ogg": {
+    "source": "weekend1/sounds/gameplay/gameover/fnf_loss_sfx-pico-explode.ogg",
+    "sha256": "7991bc6a5a97e7af2f15b548477f253ac3a93d1decd56bdf72fe8e436f61f579"
+  },
+  "audio/gameplay/gameover/fnf_loss_sfx-pico-gutpunch.ogg": {
+    "source": "weekend1/sounds/gameplay/gameover/fnf_loss_sfx-pico-gutpunch.ogg",
+    "sha256": "099cff5e7f2e8a8f221c8991ac4b0861a42847c32fa9c979c0c773ed33b792e3"
+  },
+  "audio/darnellCanCutscene.ogg": {
+    "source": "weekend1/music/darnellCanCutscene/darnellCanCutscene.ogg",
+    "sha256": "a2211aafd2fa0f133b2e68d0cd02e07765a3e0ad238c7426239e76e7c82502e4"
+  },
+  "Source/songs/darnell.hxc": {
+    "source": "scripts/songs/darnell.hxc",
+    "sha256": "8f598e01b0ae2080134b52a146ffaa2a8bcf6b7a7723daef50bbb104a6dc28db"
+  },
+  "Source/songs/lit-up.hxc": {
+    "source": "scripts/songs/lit-up.hxc",
+    "sha256": "343ffabaf1846a9d75da2ade7045ccc116f11e8c73184331a13c118bf68ec199"
+  },
+  "Source/songs/2hot.hxc": {
+    "source": "scripts/songs/2hot.hxc",
+    "sha256": "09070173e5fe88e9d810929c0b3013e8518862b9af56896a9204904d587dd2c6"
+  },
+  "Source/songs/blazin.hxc": {
+    "source": "scripts/songs/blazin.hxc",
+    "sha256": "5d1d21605c75aedbb05635acbcfc883a6b1f288a75ae39be88f441c595f733bd"
+  },
+  "Source/props/SpraycanAtlasSprite.hxc": {
+    "source": "scripts/stages/props/SpraycanAtlasSprite.hxc",
+    "sha256": "9676304c95564f963d7d99d21e8c2cad75074b154923501eb32cfa0e7fafcf37"
+  },
+  "Source/props/ABotAtlasSprite.hxc": {
+    "source": "scripts/stages/props/ABotAtlasSprite.hxc",
+    "sha256": "1222fbab5af0c131d6a4a018695b1367eff8b7d881eab39e55ed4fe772830d05"
+  },
+  "Source/videos/darnell.mp4": {
+    "source": "videos/videos/darnellCutscene.mp4",
+    "sha256": "75ec1eba2563a2eeaf05f4a4a6d99efcbcdb7b62767789dd70e80fc00f300f64"
+  },
+  "Source/videos/2hot.mp4": {
+    "source": "videos/videos/2hotCutscene.mp4",
+    "sha256": "741901a50e2e323b84972934f9d6e0010761947c33b54f9a2ceeb19c1de967d9"
+  },
+  "Source/videos/blazin.mp4": {
+    "source": "videos/videos/blazinCutscene.mp4",
+    "sha256": "3da3fe81b2569f6b0f2608589471c87d12aae7846525478c38e234a5365f8e04"
+  },
+  "characters/bf/character.json": {
+    "source": "data/characters/bf.json",
+    "sha256": "76c1d7c48f384b8c55b0cbac24ddcf7a9e4e905f5ee5430e610e0514278b39b9"
+  },
+  "characters/bf/Animation.json": {
+    "source": "shared/images/characters/bf/Animation.json",
+    "sha256": "010a656d2e3d5669fa630f2b380346a367598fbc8739da3c07125b98e018b8d7"
+  },
+  "characters/bf/spritemap1.json": {
+    "source": "shared/images/characters/bf/spritemap1.json",
+    "sha256": "354862ae6fc430130f5424c54f2bbe7ba7b556381fe8cd29ebceb8952c7fc5cb"
+  },
+  "characters/bf/spritemap1.png": {
+    "source": "shared/images/characters/bf/spritemap1.png",
+    "sha256": "bc29a4de45a5fde7ad7f5e403f6862758f289041783e6165470604b3ad4ee888"
+  },
+  "characters/bf/death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/bf/death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/bf/death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "Source/characters/bf.hxc": {
+    "source": "scripts/characters/bf.hxc",
+    "sha256": "5199ae05e96dd9f3ec8bed83aa068a7bb00858dfb5de83a13fd8d836292ea1cc"
+  },
+  "characters/gf/character.json": {
+    "source": "data/characters/gf.json",
+    "sha256": "962d22ed64216602716cc57815f847b68cf699621710be1d4429575118f0a58c"
+  },
+  "characters/gf/Animation.json": {
+    "source": "shared/images/characters/gf/Animation.json",
+    "sha256": "df0e37e75232ff197705a0443c9e9491679f6b5a4fe2957e8fab8650ef136338"
+  },
+  "characters/gf/spritemap1.json": {
+    "source": "shared/images/characters/gf/spritemap1.json",
+    "sha256": "ab739d49ef1b2def78baf825247276cd3b22b2b8536449eb7f2bd1d9892fa3e4"
+  },
+  "characters/gf/spritemap1.png": {
+    "source": "shared/images/characters/gf/spritemap1.png",
+    "sha256": "cbfe8ddcbcd1b9a3e780e95f68863fb656a53cd6304e792e0088544e6d605a20"
+  },
+  "Source/characters/gf.hxc": {
+    "source": "scripts/characters/gf.hxc",
+    "sha256": "3741785164a025c795b4a5c429fa1d268a07e32da08466e5639abf82ad254aa3"
+  }
+}

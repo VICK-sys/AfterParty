@@ -1,0 +1,726 @@
+{
+  "characters/bf/character.json": {
+    "source": "data/characters/bf.json",
+    "sha256": "76c1d7c48f384b8c55b0cbac24ddcf7a9e4e905f5ee5430e610e0514278b39b9"
+  },
+  "characters/bf/Animation.json": {
+    "source": "shared/images/characters/bf/Animation.json",
+    "sha256": "010a656d2e3d5669fa630f2b380346a367598fbc8739da3c07125b98e018b8d7"
+  },
+  "characters/bf/spritemap1.json": {
+    "source": "shared/images/characters/bf/spritemap1.json",
+    "sha256": "354862ae6fc430130f5424c54f2bbe7ba7b556381fe8cd29ebceb8952c7fc5cb"
+  },
+  "characters/bf/spritemap1.png": {
+    "source": "shared/images/characters/bf/spritemap1.png",
+    "sha256": "bc29a4de45a5fde7ad7f5e403f6862758f289041783e6165470604b3ad4ee888"
+  },
+  "characters/bf/death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/bf/death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/bf/death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "Source/characters/bf.hxc": {
+    "source": "scripts/characters/bf.hxc",
+    "sha256": "5199ae05e96dd9f3ec8bed83aa068a7bb00858dfb5de83a13fd8d836292ea1cc"
+  },
+  "characters/gf-tankmen/character.json": {
+    "source": "data/characters/gf-tankmen.json",
+    "sha256": "6bc438031b6e7491d768a0451f6115393a1a573a3dce8a38306d3c597ea7fa4b"
+  },
+  "characters/gf-tankmen/gfTankmen.png": {
+    "source": "shared/images/characters/gfTankmen.png",
+    "sha256": "551146b2167eb669e699cdf8cdb466296794757542d22e1052b3f325606be647"
+  },
+  "characters/gf-tankmen/gfTankmen.xml": {
+    "source": "shared/images/characters/gfTankmen.xml",
+    "sha256": "ed35b1ad5abd3201c677be70e095ca43ed29a4e3a75e2af9a15494f7cfacbca9"
+  },
+  "characters/bf-holding-gf/character.json": {
+    "source": "data/characters/bf-holding-gf.json",
+    "sha256": "60ca6574827cfe36bc8cc6197a7429ab32f2104cb9b09f7e7a2dcd977a960fa7"
+  },
+  "characters/bf-holding-gf/bfAndGF.png": {
+    "source": "shared/images/characters/bfAndGF.png",
+    "sha256": "9017b7edd9462a8f64e13e2c5dd53904935c932281009f5ac278f1dd203b5090"
+  },
+  "characters/bf-holding-gf/bfAndGF.xml": {
+    "source": "shared/images/characters/bfAndGF.xml",
+    "sha256": "6c3cf921ae47e387268c698ac8ecea23b5f8f9cd8d780c21f148aad168b547ee"
+  },
+  "characters/bf-holding-gf/death/bfHoldingGF-DEAD.png": {
+    "source": "shared/images/characters/bfHoldingGF-DEAD.png",
+    "sha256": "6dd52c4157c57b15bc93a66e3599954e07038983d4a4d5ad8ad91a1b684c33f1"
+  },
+  "characters/bf-holding-gf/death/bfHoldingGF-DEAD.xml": {
+    "source": "shared/images/characters/bfHoldingGF-DEAD.xml",
+    "sha256": "2af048f217b6ce99583921c9cc73207244676bdfb2cc092f2f6159c54d04fb8d"
+  },
+  "Source/characters/bf-holding-gf.hxc": {
+    "source": "scripts/characters/bf-holding-gf.hxc",
+    "sha256": "341fa48b5e42ea5660fa6a8196f686c3d31639d43d91f8b2aff29f79c1f15b30"
+  },
+  "characters/pico-speaker/character.json": {
+    "source": "data/characters/pico-speaker.json",
+    "sha256": "b9b672c1bc94ed8a3dd37b954a2e60199bcea33217ae3ee9e818c4e44fb792b3"
+  },
+  "characters/pico-speaker/Animation.json": {
+    "source": "shared/images/characters/pico-speaker/Animation.json",
+    "sha256": "d921a996f11aa0a238ea9a2e0e4e55436ec9941059e920770e32537007e19e7d"
+  },
+  "characters/pico-speaker/spritemap1.json": {
+    "source": "shared/images/characters/pico-speaker/spritemap1.json",
+    "sha256": "121f2cc247491fc8260dd6489a3367e0186a0ffa02f37ad35cbab6839b25354f"
+  },
+  "characters/pico-speaker/spritemap1.png": {
+    "source": "shared/images/characters/pico-speaker/spritemap1.png",
+    "sha256": "9477d10b9f01587221f9299d91126ebc5e75f75838f2d15a8c4a247027395eb7"
+  },
+  "Source/characters/pico-speaker.hxc": {
+    "source": "scripts/characters/pico-speaker.hxc",
+    "sha256": "6d687973f3d661f958b7dd25b5baec59eedf4497f5604e00d0f3cb4115bd63ae"
+  },
+  "characters/tankman/character.json": {
+    "source": "data/characters/tankman.json",
+    "sha256": "53f6c79a95916a0fbed435517155081259f401dc3bd7c2d2b7743e679695aeee"
+  },
+  "characters/tankman/Animation.json": {
+    "source": "shared/images/characters/tankman/basic/Animation.json",
+    "sha256": "6a45c074fbee356781eb277b8376a35faa21bcb9aebc7a0a97438037503a2380"
+  },
+  "characters/tankman/spritemap1.json": {
+    "source": "shared/images/characters/tankman/basic/spritemap1.json",
+    "sha256": "86086810db490368eab383f85e9df290d2493e82d78986c1a44af7e131e03328"
+  },
+  "characters/tankman/spritemap1.png": {
+    "source": "shared/images/characters/tankman/basic/spritemap1.png",
+    "sha256": "01c15b7c623dc88237635bd45070a5561e3ee08dfc19ac0b1f3890659e64f8e2"
+  },
+  "characters/tankman/censor/Animation.json": {
+    "source": "shared/images/characters/tankman/extra-animations/Animation.json",
+    "sha256": "97fe51160bf92fd5294d8471ebb10ea3b8987f7be1de6192935d43e7a9347aa0"
+  },
+  "characters/tankman/censor/spritemap1.json": {
+    "source": "shared/images/characters/tankman/extra-animations/spritemap1.json",
+    "sha256": "35d6fc71807e0aac36d07d432d57833159a02046bb5f47354f6f8b5672c6ef65"
+  },
+  "characters/tankman/censor/spritemap1.png": {
+    "source": "shared/images/characters/tankman/extra-animations/spritemap1.png",
+    "sha256": "95eef31d9bceba3be9d608762019e2b08a165caa721526ff2c998816c8bf8656"
+  },
+  "Source/characters/tankman.hxc": {
+    "source": "scripts/characters/tankman.hxc",
+    "sha256": "655cf50d2ae3d53b42cba3cde64d88f4238af947bfc6a0f1dca6f18c3ebfbe51"
+  },
+  "stages/tankmanBattlefield/stage.json": {
+    "source": "data/stages/tankmanBattlefield.json",
+    "sha256": "9f22c450c8a81996f7a1932776eb7c3e37fdfcab70133a0a8b2676e364b07366"
+  },
+  "stages/tankmanBattlefield/tankSky/tankSky.png": {
+    "source": "week7/images/tankSky.png",
+    "sha256": "542de9136a17069d797c6a4f545b7d74d680ca8b0ab36756b76e54b9b06ce723"
+  },
+  "stages/tankmanBattlefield/mountains/mountains2.png": {
+    "source": "week7/images/mountains2.png",
+    "sha256": "f9e9416b35078e8cfa792ddc398bcc96603cadeb876410e2bc3ff4ac4137403f"
+  },
+  "stages/tankmanBattlefield/buildings/tankBuildings.png": {
+    "source": "week7/images/tankBuildings.png",
+    "sha256": "9bd526b86d792527fa5c1cf669de564053c14253b32d7ab34787cf36d10c007c"
+  },
+  "stages/tankmanBattlefield/ruins/cityruins2.png": {
+    "source": "week7/images/cityruins2.png",
+    "sha256": "023429862b1732a1def21eeb2221bfd3d18b3b113082f73936fee36f7a715f28"
+  },
+  "stages/tankmanBattlefield/clouds2/tankClouds.png": {
+    "source": "week7/images/tankClouds.png",
+    "sha256": "d04aa6fd58a91225776484ae45bf86ba4a09774eee4d86acd5169e04e088eac4"
+  },
+  "stages/tankmanBattlefield/smokeLeft/smokeLeft.png": {
+    "source": "week7/images/smokeLeft.png",
+    "sha256": "e83e4cb6f4a167d243e78eb5e420a6995a6e37c845e36c7c2bd473b64a086e28"
+  },
+  "stages/tankmanBattlefield/smokeLeft/smokeLeft.xml": {
+    "source": "week7/images/smokeLeft.xml",
+    "sha256": "ec2941bcf131b9b4c50ef640342a3b9b19c4884bd22d7f2c61c7297109633e20"
+  },
+  "stages/tankmanBattlefield/smokeRight/smokeRight.png": {
+    "source": "week7/images/smokeRight.png",
+    "sha256": "321e22b037114c5a87c1f53621ad7e4216dbd3e3366119e3232f2057a83bbb85"
+  },
+  "stages/tankmanBattlefield/smokeRight/smokeRight.xml": {
+    "source": "week7/images/smokeRight.xml",
+    "sha256": "22058c3ea68263507803fafb7d0a5221890c29a215d38b9f63ffb646a519197d"
+  },
+  "stages/tankmanBattlefield/watchtower/tankWatchtower.png": {
+    "source": "week7/images/tankWatchtower.png",
+    "sha256": "016a211c7fd0c4e2749e11a6c4292e3541739a1c65dd3022289979f0080b60b9"
+  },
+  "stages/tankmanBattlefield/watchtower/tankWatchtower.xml": {
+    "source": "week7/images/tankWatchtower.xml",
+    "sha256": "cc984758af729d3172345b4c945db8a620e3daab06e01fa4ec4eea689ec42230"
+  },
+  "stages/tankmanBattlefield/tankRolling/tankRolling.png": {
+    "source": "week7/images/tankRolling.png",
+    "sha256": "61faedfca2a874d1b6bf59ce9c0cf1bf376ef8063aa5e761e926cb799ce8b7b6"
+  },
+  "stages/tankmanBattlefield/tankRolling/tankRolling.xml": {
+    "source": "week7/images/tankRolling.xml",
+    "sha256": "b84814dd15c9a9a80c7edbc80311a5e20f5b1e46bbdbea6094e00b470cc3a919"
+  },
+  "stages/tankmanBattlefield/tankGround/tankGround.png": {
+    "source": "week7/images/tankGround.png",
+    "sha256": "39d8cd9d97a0e743d67fc86e66aaeea00b66d575172c07e32f8458ab234414a2"
+  },
+  "stages/tankmanBattlefield/tankBricks/bricksGround.png": {
+    "source": "week7/images/bricksGround.png",
+    "sha256": "56c5665e29452c205ada9485524b3c5ce091a32b12ec93ee8936de5f4e371a6e"
+  },
+  "stages/tankmanBattlefield/tankmanAudience0/tank0.png": {
+    "source": "week7/images/tank0.png",
+    "sha256": "682e2357ecfbc93e1ace2a2be02a1ca8206977ce6bf2b8649a97cfa1ab1d9419"
+  },
+  "stages/tankmanBattlefield/tankmanAudience0/tank0.xml": {
+    "source": "week7/images/tank0.xml",
+    "sha256": "721a7485198406ca056f93829066a5727017695709c71b7148276646c84ecb84"
+  },
+  "stages/tankmanBattlefield/tankmanAudience2/tank2.png": {
+    "source": "week7/images/tank2.png",
+    "sha256": "9c5480e439b3698bddcfa9d54fcc0bebd41a33712da2cd83f31d9db511e578c9"
+  },
+  "stages/tankmanBattlefield/tankmanAudience2/tank2.xml": {
+    "source": "week7/images/tank2.xml",
+    "sha256": "552a9c2ecc1ecf07869ff09c04925d5c05229a0d9e49d34fa3565f9d545bfb9b"
+  },
+  "stages/tankmanBattlefield/tankmanAudience3/tank3.png": {
+    "source": "week7/images/tank3.png",
+    "sha256": "37e36797c1bb4997892aa799a189af88a73281c5b7aaaa57df6454323e93dbe0"
+  },
+  "stages/tankmanBattlefield/tankmanAudience3/tank3.xml": {
+    "source": "week7/images/tank3.xml",
+    "sha256": "af618fd3c3c887f3c8ffb13bed796d9d339eacc9edcd3097df9490f72d60bb28"
+  },
+  "stages/tankmanBattlefield/tankmanAudience4/tank4.png": {
+    "source": "week7/images/tank4.png",
+    "sha256": "9d9726d1ae0907ceb56db50af1cb685bd8ecdfab705e4ec0bfa2420ef38b50e9"
+  },
+  "stages/tankmanBattlefield/tankmanAudience4/tank4.xml": {
+    "source": "week7/images/tank4.xml",
+    "sha256": "794d51b7f0f57b81f90f776c14d5cdb45536df4dcd118e228721e3343e28345d"
+  },
+  "stages/tankmanBattlefield/tankmanAudience5/tank5.png": {
+    "source": "week7/images/tank5.png",
+    "sha256": "b14255f9233f311e8ad01398a77d61d4e160095c890922a88ca8c8cd6bebb2ef"
+  },
+  "stages/tankmanBattlefield/tankmanAudience5/tank5.xml": {
+    "source": "week7/images/tank5.xml",
+    "sha256": "2dcc5a1ff82a659855cf1017a92ee5f9b3d85bddc109e6bd9bd8ee46f23b91bb"
+  },
+  "stages/tankmanBattlefield/tankmanAudience1/tank1.png": {
+    "source": "week7/images/tank1.png",
+    "sha256": "55a870769b8bb7318afe6c4017000e17cf36be590f8fb4c2415f76ec6f652514"
+  },
+  "stages/tankmanBattlefield/tankmanAudience1/tank1.xml": {
+    "source": "week7/images/tank1.xml",
+    "sha256": "bed7cb0bedecb1fa44707d621d1ffe987d5b2b59cc09e33c66d8a381a38ffbc3"
+  },
+  "Source/stages/tankmanBattlefield.hxc": {
+    "source": "scripts/stages/tankmanBattlefield.hxc",
+    "sha256": "49211fff134b0e799463c045b83dee96f795ec2d4fc6be82608e2837e6cdcb86"
+  },
+  "stages/tankmanBattlefieldErect/stage.json": {
+    "source": "data/stages/tankmanBattlefieldErect.json",
+    "sha256": "4ccd4b28ae6913656a474f1a53c2c8df4a46101b89b2778e1d244631bec158a8"
+  },
+  "stages/tankmanBattlefieldErect/bg/bg.png": {
+    "source": "week7/images/erect/bg.png",
+    "sha256": "ae3d233b0d18abe1533d3126bbdbda8fc3b814637d0a283e0345282b811ef7ab"
+  },
+  "stages/tankmanBattlefieldErect/sniper/Animation.json": {
+    "source": "week7/images/erect/sniper/Animation.json",
+    "sha256": "65010edbcee5e9644a3a9e16e4084b31025b2bbaec6db83382958ab287a155ce"
+  },
+  "stages/tankmanBattlefieldErect/sniper/spritemap1.json": {
+    "source": "week7/images/erect/sniper/spritemap1.json",
+    "sha256": "46814b4f06cde1b7f32ba2e01d93918545c6dcadccd6fd68821dd13ad46dd597"
+  },
+  "stages/tankmanBattlefieldErect/sniper/spritemap1.png": {
+    "source": "week7/images/erect/sniper/spritemap1.png",
+    "sha256": "13642eaa572143baa1a9b23502cdf74b69c4fe68a0b0b8260241d9eef460ceb1"
+  },
+  "stages/tankmanBattlefieldErect/guy/Animation.json": {
+    "source": "week7/images/erect/rando/Animation.json",
+    "sha256": "14f4c897a3800fc5445554a1484bbf37d012344547c6669de731c1ee76a3fe7e"
+  },
+  "stages/tankmanBattlefieldErect/guy/spritemap1.json": {
+    "source": "week7/images/erect/rando/spritemap1.json",
+    "sha256": "11fb1b4dfe8a62c0ae249e4a9ebddbbd3677d75ea99d2f9bbc25513bf7a3e46b"
+  },
+  "stages/tankmanBattlefieldErect/guy/spritemap1.png": {
+    "source": "week7/images/erect/rando/spritemap1.png",
+    "sha256": "38da79d362d68148bbae9e95ea434041ca3053c63aecb523af683cb05211567c"
+  },
+  "stages/tankmanBattlefieldErect/tankBricks/bricksGround.png": {
+    "source": "week7/images/erect/bricksGround.png",
+    "sha256": "07cd9236853661790fba8a1cfe04c3d0a2f0fab1d18ff03a4de71a7f7ae089db"
+  },
+  "Source/stages/tankmanBattlefieldErect.hxc": {
+    "source": "scripts/stages/tankmanBattlefieldErect.hxc",
+    "sha256": "c482e491d525a00277eea5cec2753854f801984344d12808441d0e4ac9f37b8b"
+  },
+  "effects/runner/tankmanKilled1.png": {
+    "source": "week7/images/tankmanKilled1.png",
+    "sha256": "3e96fe45eef656d0a5efde9ce2dfffcad484b083b488b9eb336b321473d0bc78"
+  },
+  "effects/runner/tankmanKilled1.xml": {
+    "source": "week7/images/tankmanKilled1.xml",
+    "sha256": "bbad846b8a50dd2d01e752ac8d32054772570774f60cce63d023245abad33ce3"
+  },
+  "effects/gfTankmen_mask.png": {
+    "source": "week7/images/erect/masks/gfTankmen_mask.png",
+    "sha256": "180719bb03cf1902207b5906ef03364a0229eaab5712d1dd242953751f8a41d7"
+  },
+  "Source/songs/ugh.hxc": {
+    "source": "scripts/songs/ugh.hxc",
+    "sha256": "c1d98e7f1223c1b4d1405df8319458648bfda43e93eacbbac356f92fdee0b68f"
+  },
+  "Source/songs/guns.hxc": {
+    "source": "scripts/songs/guns.hxc",
+    "sha256": "43b04b7bf59205a6c6787ea5ef89e09dc426420ee644f0e153abf31edd93c068"
+  },
+  "Source/songs/stress.hxc": {
+    "source": "scripts/songs/stress.hxc",
+    "sha256": "6af9dfb302ab8d03682c9ccaf879a8b26e42becf3d3302c0c55af02dfe1a1dea"
+  },
+  "Source/props/TankmanSprite.hxc": {
+    "source": "scripts/stages/props/TankmanSprite.hxc",
+    "sha256": "d623ebbae94b3bf6bab8209e0dc210763f484f06c7b0b805c3bb93e507ac6594"
+  },
+  "Source/props/TankmanSpriteGroup.hxc": {
+    "source": "scripts/stages/props/TankmanSpriteGroup.hxc",
+    "sha256": "313b77bf8c827c21e2d61a8741a91b3f2a6abb5a2d512c82fb87ed9550a824de"
+  },
+  "audio/jeffGameover-1.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-1.ogg",
+    "sha256": "d155afb8d1a5f12b774d2c01131b506c919b1649f14fc1f5f31889ab7c5a682a"
+  },
+  "audio/jeffGameover-2.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-2.ogg",
+    "sha256": "cf94ff26924a4625499e9e2ed6fd8480b5dcaf2ab7975e67cd86ea1df11f9890"
+  },
+  "audio/jeffGameover-3.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-3.ogg",
+    "sha256": "86cf2fc2f9b9957018e0ae07d5c3e230731a213ca9d4d6305241fc9ff9481f39"
+  },
+  "audio/jeffGameover-4.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-4.ogg",
+    "sha256": "4e49a2e3192ed936a4cdfd71d4590d5ff97c473f12bfdc517833ff4361969970"
+  },
+  "audio/jeffGameover-5.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-5.ogg",
+    "sha256": "e69e74b29596a907786f986e1fc1d3d0b73e0efdad297fdb362001e22fa831c4"
+  },
+  "audio/jeffGameover-6.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-6.ogg",
+    "sha256": "b2033bf66ac22784b6facca2811844a4ba515723d73f269fea889fcbe9a3af50"
+  },
+  "audio/jeffGameover-7.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-7.ogg",
+    "sha256": "864a35e44cf4c024d40ef5dc991aad8ed836c5126e31e8cd5b0a34d66ebafe30"
+  },
+  "audio/jeffGameover-8.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-8.ogg",
+    "sha256": "cb44238971deea818b78fd181b52739b27ec55091c86b35dedc4c533dfb43ab7"
+  },
+  "audio/jeffGameover-9.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-9.ogg",
+    "sha256": "96361348d5d8dbd329374d9cc85f5850453be453d598411fd002f5bfd39453b5"
+  },
+  "audio/jeffGameover-10.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-10.ogg",
+    "sha256": "5d2ecf171108ec58ff7f0be6e1fb621a3cf9aa4d777a5b03cb49a7aca290f852"
+  },
+  "audio/jeffGameover-11.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-11.ogg",
+    "sha256": "c8c678f5857355811bba7b61d7fb65e43b8238b6dbc67e5e16a2259ef05ed5d9"
+  },
+  "audio/jeffGameover-12.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-12.ogg",
+    "sha256": "e48cdb16c315616747c048b7db6681964f2868404a3c4d8584d968eea114861e"
+  },
+  "audio/jeffGameover-13.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-13.ogg",
+    "sha256": "69ad44345e26e827adfda9f6ca8a4f49b061fa01b5fadbf72a2958482a0c0d90"
+  },
+  "audio/jeffGameover-14.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-14.ogg",
+    "sha256": "b2032610736136b5e445e7185295f8bb738c93a8719a304d0121907f362d2a9f"
+  },
+  "audio/jeffGameover-15.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-15.ogg",
+    "sha256": "59a4b536294796b960beb2a8f5a24e30d3e5626f94650854a50f9e3ab00e37cf"
+  },
+  "audio/jeffGameover-16.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-16.ogg",
+    "sha256": "c4352432e9ae811e49d53bd72685bb01cc2d0946bc99ddad43b3299f3a0e43ac"
+  },
+  "audio/jeffGameover-17.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-17.ogg",
+    "sha256": "c5e43b9adf5f43aec8e509b35467746c4ef9131e98be5926066034e821ecca22"
+  },
+  "audio/jeffGameover-18.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-18.ogg",
+    "sha256": "b20a1d91abfdc0085f6f0f8a5753c7bb7539c5c6d542575a48127260d2e3b529"
+  },
+  "audio/jeffGameover-19.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-19.ogg",
+    "sha256": "a38d9d462898dac55b7a68044f6a6e5eed3c15262c8bf5638c111a7cbdbdfdff"
+  },
+  "audio/jeffGameover-20.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-20.ogg",
+    "sha256": "4db970e8cb4a24a4dbce63a58818cb772bc262f8d3e7e61f3bb27bc18ffe65ba"
+  },
+  "audio/jeffGameover-21.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-21.ogg",
+    "sha256": "75dd54d030e50bfea6ae88ce0f4ba81865d5379164584d65658f7b225c6eb892"
+  },
+  "audio/jeffGameover-22.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-22.ogg",
+    "sha256": "359662a40d07b7423f2c1f6bdca196e99b2121a58c657ee56b3c3d2b25b27be9"
+  },
+  "audio/jeffGameover-23.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-23.ogg",
+    "sha256": "202c8b1d45187b4312219dd2dcf245a7e10d27dca78bf90ef2992fbde84d57f1"
+  },
+  "audio/jeffGameover-24.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-24.ogg",
+    "sha256": "3a047d7986b4df63d82adf3062a9813ecf56c1f93ed17de2eb64b793c951a545"
+  },
+  "audio/jeffGameover-25.ogg": {
+    "source": "week7/sounds/jeffGameover/jeffGameover-25.ogg",
+    "sha256": "f4b4ac6509aaf1c2e11d2134ed3cb4e471160ba4bf8bebed7be26bfa48781a00"
+  },
+  "Source/videos/ugh.mkv": {
+    "source": "videos/videos/ughCutscene.mkv",
+    "sha256": "c7cc5e6a9573720f90a130335275d76fb60aaa1a65448903101bcfe6f442a37d"
+  },
+  "Source/videos/guns.mkv": {
+    "source": "videos/videos/gunsCutscene.mkv",
+    "sha256": "bb47236a8c2edc7297c13d11f9ea259c7638545e37cf1ee59c45545d3ecca041"
+  },
+  "Source/videos/stress.mkv": {
+    "source": "videos/videos/stressCutscene.mkv",
+    "sha256": "ba89dfdc7035fcebe678649d91f2fa31da1079aa30322d4ff71ed3bcd50921be"
+  },
+  "characters/nene-tankmen/character.json": {
+    "source": "data/characters/nene-tankmen.json",
+    "sha256": "9e95524d00390933805a2c06c1fdff89754d8e103b7cd32be90169fd64316d30"
+  },
+  "characters/nene-tankmen/Animation.json": {
+    "source": "shared/images/characters/nene/Animation.json",
+    "sha256": "0959d81b39d7f088e80e07520129cd0a0d96b2b71e269a1d8c80ef643183e962"
+  },
+  "characters/nene-tankmen/spritemap1.json": {
+    "source": "shared/images/characters/nene/spritemap1.json",
+    "sha256": "fc130e951753e02b39db4987d0844506a9e731a55bf5a37c72ff3476ae7d7a5c"
+  },
+  "characters/nene-tankmen/spritemap1.png": {
+    "source": "shared/images/characters/nene/spritemap1.png",
+    "sha256": "16a643dfdf63267fddce3f64fa251d55dbea89fdd15f46d2495220e9c214beb6"
+  },
+  "Source/characters/nene-tankmen.hxc": {
+    "source": "scripts/characters/nene-tankmen.hxc",
+    "sha256": "db303ad284abcef5f15088cb7a0d472eb5e5b82cf3d232d1cd6232cfe776fd6b"
+  },
+  "characters/otis-speaker/character.json": {
+    "source": "data/characters/otis-speaker.json",
+    "sha256": "660d837a2f7c8954eabfce11b368a5740e2a643fafd17533829c89940b3bd8c8"
+  },
+  "characters/otis-speaker/Animation.json": {
+    "source": "shared/images/characters/otis/Animation.json",
+    "sha256": "727b0da707dcdbc08675e7c67a9a3f49c8079dc5c83c8497060cd66390780d15"
+  },
+  "characters/otis-speaker/spritemap1.json": {
+    "source": "shared/images/characters/otis/spritemap1.json",
+    "sha256": "1af35d0cf304c458950c3567c659f892515d0fbfd381713d9fb74a2f244f6f29"
+  },
+  "characters/otis-speaker/spritemap1.png": {
+    "source": "shared/images/characters/otis/spritemap1.png",
+    "sha256": "41596274ee12a848985e7454c5117423d1caa3b13b81ba570340b2def73e564f"
+  },
+  "Source/characters/otis-speaker.hxc": {
+    "source": "scripts/characters/otis-speaker.hxc",
+    "sha256": "c13cfc2aa0b5a4cf57eff7bfb78f181b92921cd82a6abc0af990a184547132de"
+  },
+  "characters/pico-holding-nene/character.json": {
+    "source": "data/characters/pico-holding-nene.json",
+    "sha256": "1ec89c25bf01ee743fe7880ae33287a2d2c2e045175cca09b08c12c3e130dd7b"
+  },
+  "characters/pico-holding-nene/Animation.json": {
+    "source": "shared/images/characters/pico-holding-nene/Animation.json",
+    "sha256": "921377c941913d0fbeee83078a427da7cf73acd3c9f81f28b24be330b20ec32a"
+  },
+  "characters/pico-holding-nene/spritemap1.json": {
+    "source": "shared/images/characters/pico-holding-nene/spritemap1.json",
+    "sha256": "011f1306b0d71a784e346a5c04b5e4ae10b40d577fdd6af86462a0007656b0b7"
+  },
+  "characters/pico-holding-nene/spritemap1.png": {
+    "source": "shared/images/characters/pico-holding-nene/spritemap1.png",
+    "sha256": "58a797a80b9713ce9334c38d247c127e6c94d60dcf75483b3fcdac6ccab647a2"
+  },
+  "characters/pico-holding-nene/death/Animation.json": {
+    "source": "shared/images/characters/pico-holding-nene/picoAndNene-DEAD/Animation.json",
+    "sha256": "30968b71046770be211eccbcb27633905476daa7df7aef7d987e2fcc63f67b59"
+  },
+  "characters/pico-holding-nene/death/spritemap1.json": {
+    "source": "shared/images/characters/pico-holding-nene/picoAndNene-DEAD/spritemap1.json",
+    "sha256": "a3e48fe385192839339aedf49b0803601b29ea73169c8c387e339c3d402a0723"
+  },
+  "characters/pico-holding-nene/death/spritemap1.png": {
+    "source": "shared/images/characters/pico-holding-nene/picoAndNene-DEAD/spritemap1.png",
+    "sha256": "a4a188a55b1b608d126a1e4fe72b88a3edbb537c8d68219aaa519a6dea65f024"
+  },
+  "Source/characters/pico-holding-nene.hxc": {
+    "source": "scripts/characters/pico-holding-nene.hxc",
+    "sha256": "0d52ff2883ee5875f91d4058666b64609f8caf86cdc1ea410355ff7b79130d33"
+  },
+  "characters/pico-playable/character.json": {
+    "source": "data/characters/pico-playable.json",
+    "sha256": "58f38b5275064fd5c95b4c9d58c584ba87fbe850ba3d375d5d5804fb4d024494"
+  },
+  "characters/pico-playable/Animation.json": {
+    "source": "shared/images/characters/pico/basic-animations/Animation.json",
+    "sha256": "975b5e7b260888950d9fcf8c29bab7f6e6e4f5025cfdddd75926fb77a700caa7"
+  },
+  "characters/pico-playable/spritemap1.json": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.json",
+    "sha256": "7f86756c1557d3f90c006db5b90cc74239058b14e1ae2737db9e2e46913cbd01"
+  },
+  "characters/pico-playable/spritemap1.png": {
+    "source": "shared/images/characters/pico/basic-animations/spritemap1.png",
+    "sha256": "9a9cde5b96b9e677490cde81c6f0aafccb5582e4048cbed3ed966f23f6624f53"
+  },
+  "characters/pico-playable/censor/Pico_Censored.png": {
+    "source": "shared/images/characters/Pico_Censored.png",
+    "sha256": "89d59b30c7b20424cce5fdc99a58956859d14f19316904527764c5e3e298e558"
+  },
+  "characters/pico-playable/censor/Pico_Censored.xml": {
+    "source": "shared/images/characters/Pico_Censored.xml",
+    "sha256": "bb631622376d15d8867a4c5941391d19095c58c34c5fbe2053ca925d589443c9"
+  },
+  "characters/pico-playable/alternate1/Animation.json": {
+    "source": "shared/images/characters/pico/playable-animations/Animation.json",
+    "sha256": "69079f1dd826e5a3a5bd545f49a10544677226d8e8a0b7c1dcf2661e142eb621"
+  },
+  "characters/pico-playable/alternate1/spritemap1.json": {
+    "source": "shared/images/characters/pico/playable-animations/spritemap1.json",
+    "sha256": "51be9268222480c9ea8a4d544ee1f6e80c3b691cb2ce1f580a9562c27f3748ac"
+  },
+  "characters/pico-playable/alternate1/spritemap1.png": {
+    "source": "shared/images/characters/pico/playable-animations/spritemap1.png",
+    "sha256": "0ad6d157cc21efa753c48e2eea5ef303f7acefe57a5e7fb9891b214d0da15e9f"
+  },
+  "characters/pico-playable/death/Animation.json": {
+    "source": "shared/images/characters/pico/death/Animation.json",
+    "sha256": "43c03f07d8c0cff13106a1e8c119a29bae764b525d0dfa09c98d0dabbf29795b"
+  },
+  "characters/pico-playable/death/spritemap1.json": {
+    "source": "shared/images/characters/pico/death/spritemap1.json",
+    "sha256": "5de0d6975adbf6672594e185666fc5d775b086ac610b1529b045bb9a96dc3b1a"
+  },
+  "characters/pico-playable/death/spritemap1.png": {
+    "source": "shared/images/characters/pico/death/spritemap1.png",
+    "sha256": "b57b38a8aec25b570b6945013adf98a63737e014ed54b4bbecb1e1b4808c5554"
+  },
+  "characters/pico-playable/explosion/Animation.json": {
+    "source": "shared/images/characters/pico/explosion-death/Animation.json",
+    "sha256": "064bc08ee25a0d2961536e88bed1ab89c081d084c5d2d190ec94fedc7ddda8d2"
+  },
+  "characters/pico-playable/explosion/spritemap1.json": {
+    "source": "shared/images/characters/pico/explosion-death/spritemap1.json",
+    "sha256": "ab9ac1bfb95d25fb171cfe4b88dcb71be819a03276505259d175ad1ba1eef343"
+  },
+  "characters/pico-playable/explosion/spritemap1.png": {
+    "source": "shared/images/characters/pico/explosion-death/spritemap1.png",
+    "sha256": "47bdd713a0ced1e3906e5f458f0e3755392bdadbab5f641da1d88f9e68f74014"
+  },
+  "Source/characters/pico-playable.hxc": {
+    "source": "scripts/characters/pico-playable.hxc",
+    "sha256": "e3a4fe7d2d713948e05b161cb35429ad6e7ef07dad9881e2d3376d1228335478"
+  },
+  "characters/tankman-bloody/character.json": {
+    "source": "data/characters/tankman-bloody.json",
+    "sha256": "1d474946e85ba8d9423f2e9997e9b8c5984a6fa9db5acc9a1e756c2f55bbaca3"
+  },
+  "characters/tankman-bloody/Animation.json": {
+    "source": "shared/images/characters/tankman/basic/Animation.json",
+    "sha256": "6a45c074fbee356781eb277b8376a35faa21bcb9aebc7a0a97438037503a2380"
+  },
+  "characters/tankman-bloody/spritemap1.json": {
+    "source": "shared/images/characters/tankman/basic/spritemap1.json",
+    "sha256": "86086810db490368eab383f85e9df290d2493e82d78986c1a44af7e131e03328"
+  },
+  "characters/tankman-bloody/spritemap1.png": {
+    "source": "shared/images/characters/tankman/basic/spritemap1.png",
+    "sha256": "01c15b7c623dc88237635bd45070a5561e3ee08dfc19ac0b1f3890659e64f8e2"
+  },
+  "characters/tankman-bloody/censor/Animation.json": {
+    "source": "shared/images/characters/tankman/bloody/Animation.json",
+    "sha256": "f1156894f7cdfb59f9e0fd88125b4e2bbd86b0d5e6c38ff3ef0a17e709cc0ab8"
+  },
+  "characters/tankman-bloody/censor/spritemap1.json": {
+    "source": "shared/images/characters/tankman/bloody/spritemap1.json",
+    "sha256": "4d74c494bc70a9d17822ca2a36788bfdf6b1e4c4caf87ec3309f615070a04a74"
+  },
+  "characters/tankman-bloody/censor/spritemap1.png": {
+    "source": "shared/images/characters/tankman/bloody/spritemap1.png",
+    "sha256": "c6322c69713d8bdf28e7d40ac1c56c8876b042bfcb81a30697fb1c68c0f5ca0d"
+  },
+  "characters/tankman-bloody/alternate1/Animation.json": {
+    "source": "week7/images/erect/cutscene/tankmanEnding/Animation.json",
+    "sha256": "e5a4ee523f80c43649d8122c9b2204a137251eb23acca04e651bff66c759add7"
+  },
+  "characters/tankman-bloody/alternate1/spritemap1.json": {
+    "source": "week7/images/erect/cutscene/tankmanEnding/spritemap1.json",
+    "sha256": "08e2a53858964ff7e921b6219d0d37f0feee0936f130e48f7835873f5e79876a"
+  },
+  "characters/tankman-bloody/alternate1/spritemap1.png": {
+    "source": "week7/images/erect/cutscene/tankmanEnding/spritemap1.png",
+    "sha256": "52001e8f89b016246db457ed4bb5e59265beb58eb165e60f1716e1a234bb03ab"
+  },
+  "Source/characters/tankman-bloody.hxc": {
+    "source": "scripts/characters/tankman-bloody.hxc",
+    "sha256": "e36b247beb3605fd466430c8efb092d955ddcf48b6952bd7c37fec821b866245"
+  },
+  "effects/abotSystem/Animation.json": {
+    "source": "shared/images/characters/abot/abotSystem/Animation.json",
+    "sha256": "0c611b720f9fe93497688b91bd5db74487ef6135a04d627fba76d687fcde9041"
+  },
+  "effects/abotSystem/spritemap1.json": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.json",
+    "sha256": "b78ba18d6a87f1336e76c41cfee8d9cb5629efbde81ac1daca412707decabeb1"
+  },
+  "effects/abotSystem/spritemap1.png": {
+    "source": "shared/images/characters/abot/abotSystem/spritemap1.png",
+    "sha256": "9efdb7f15a62d0cfacb122ac14b58478d05f5104eb6374b369fd81bd05d6e81c"
+  },
+  "effects/systemEyes/Animation.json": {
+    "source": "shared/images/characters/abot/systemEyes/Animation.json",
+    "sha256": "807e341bc387c659f40f726919a0ece5da00b007f3ea43c69bc284916da3d0a6"
+  },
+  "effects/systemEyes/spritemap1.json": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.json",
+    "sha256": "c14a329d3716b08a813f49a55927772fc76d46d64239471f806d1e3e5859c605"
+  },
+  "effects/systemEyes/spritemap1.png": {
+    "source": "shared/images/characters/abot/systemEyes/spritemap1.png",
+    "sha256": "35914b2fe5a01c4c2db5cdaae02b81ee61cca4cbf5e26eb5ce695fe1de3a172f"
+  },
+  "effects/stereoBG/stereoBG.png": {
+    "source": "shared/images/characters/abot/stereoBG.png",
+    "sha256": "f8c74ebbfbb0e8ea8f85a27a6d156c7bec48a3c83e241ca40d2afe5711973898"
+  },
+  "effects/visualizer/aBotViz.png": {
+    "source": "shared/images/characters/abot/aBotViz.png",
+    "sha256": "9a26755372e2e63f91fa94eeefe14edf4908c6a35f8f57fb073f7f768f916c6c"
+  },
+  "effects/visualizer/aBotViz.xml": {
+    "source": "shared/images/characters/abot/aBotViz.xml",
+    "sha256": "d76220bf8e63c642d5b348dd688be13839e0c1be167d4e23f4bd2cd0d0f28cc8"
+  },
+  "effects/knife/NeneKnifeToss.png": {
+    "source": "shared/images/characters/NeneKnifeToss.png",
+    "sha256": "f0b73908279ecf0d4ea1ad1359e963cebf2b75f6c55ea3ba06d1141e1ad71708"
+  },
+  "effects/knife/NeneKnifeToss.xml": {
+    "source": "shared/images/characters/NeneKnifeToss.xml",
+    "sha256": "1b2b66b978cfbe58b76baf715363611c432cb818a42e8107c218d1c77fa85c1b"
+  },
+  "Source/songs/stress-pico.hxc": {
+    "source": "scripts/songs/stress-pico.hxc",
+    "sha256": "5ef3df3cfe34c2a07f7cb38b240658c9556c0aa10d6ecbe9fe531bc8b52916c9"
+  },
+  "effects/neneTankmen_mask.png": {
+    "source": "week7/images/erect/masks/neneTankmen_mask.png",
+    "sha256": "3613f643db443fd4dbc0f4ead3a04342981540f199167e62af024fb26a971f00"
+  },
+  "effects/tankmanCaptainBloody_mask.png": {
+    "source": "week7/images/erect/masks/tankmanCaptainBloody_mask.png",
+    "sha256": "24cdd75fd21b0a81133dfc1b15f3cce8ca80b2b95c9d19866931a13ab819c613"
+  },
+  "effects/comboHeart/Nene_comboHeart.png": {
+    "source": "shared/images/characters/Nene_comboHeart.png",
+    "sha256": "37f8c6df0e0fda630dc3c2e520a21c27c46bb7799d00afbc6ce0c390188c5aaf"
+  },
+  "effects/comboHeart/Nene_comboHeart.xml": {
+    "source": "shared/images/characters/Nene_comboHeart.xml",
+    "sha256": "07be2e2192db68cff23b7a069f081b9f58d11b09ee686d73d34f95b5d2085d64"
+  },
+  "effects/otisMuzzle/otis_flashes.png": {
+    "source": "shared/images/characters/otis/muzzle-flashes/otis_flashes.png",
+    "sha256": "65420d432a39d2dba13215e477b641a1e358cc628db3e159a14ddd00e96e1162"
+  },
+  "effects/otisMuzzle/otis_flashes.xml": {
+    "source": "shared/images/characters/otis/muzzle-flashes/otis_flashes.xml",
+    "sha256": "7b169f710031babd38a449499fe23a99e6e6cf47a2dc7f2eb9cc43298e613b11"
+  },
+  "audio/jeffGameover-pico/jeffGameover-1.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-1.ogg",
+    "sha256": "94a114f55c70f0b3cb306587d67e38857001e702c924e257e2731096667286bd"
+  },
+  "audio/jeffGameover-pico/jeffGameover-10.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-10.ogg",
+    "sha256": "6ddc50d16b71bc4ea4f3a3f0981753f388804be0212fd2d9365594cb98218e4a"
+  },
+  "audio/jeffGameover-pico/jeffGameover-2.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-2.ogg",
+    "sha256": "4a4041079dab3c8b9522b6e580fa018e0ff6af0e3a5b363e5895975b1ffcaa12"
+  },
+  "audio/jeffGameover-pico/jeffGameover-3.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-3.ogg",
+    "sha256": "5628b21c8df81125f689fe36faaa1037445fbbbfb511639e98a004a17397dde2"
+  },
+  "audio/jeffGameover-pico/jeffGameover-4.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-4.ogg",
+    "sha256": "5e0f70fa8e5b3660c50ec6bd8ff2f2db0d1ef45c90cabfed3c8d18114e5f88b7"
+  },
+  "audio/jeffGameover-pico/jeffGameover-5.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-5.ogg",
+    "sha256": "ddb42c9fe377e6ec92fd80eab07d3419677f65c3ac2cec48687a14782d0e5e1a"
+  },
+  "audio/jeffGameover-pico/jeffGameover-6.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-6.ogg",
+    "sha256": "6fc952e20879d1e9e92cb9b4f054a9b8ee39510aaaf285594ba82095b3d03f03"
+  },
+  "audio/jeffGameover-pico/jeffGameover-7.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-7.ogg",
+    "sha256": "fadb764b8718681c58234dfc0f69882ee84bee9af8806088c7af198c860c1e36"
+  },
+  "audio/jeffGameover-pico/jeffGameover-8.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-8.ogg",
+    "sha256": "c36d2f50c8577ade34e386db6e17523e99134c8065257f73a7ddbad086aae20f"
+  },
+  "audio/jeffGameover-pico/jeffGameover-9.ogg": {
+    "source": "week7/sounds/jeffGameover-pico/jeffGameover-9.ogg",
+    "sha256": "42947c68b6bdbf6c5e2370025bc4964155cb7576310c53c1f1878463376e8221"
+  },
+  "audio/erect/endCutscene.ogg": {
+    "source": "week7/sounds/erect/endCutscene.ogg",
+    "sha256": "019d64b754095050c94a561e36e1c08d826252435d1c8142da212104844f5fb0"
+  },
+  "video/stress-pico-ending.srt": {
+    "source": "data/songs/stress/subtitles/end-cutscene-pico.srt",
+    "sha256": "5e94f4778f2b852b1fe5b5db0de3f95c1691027c021b0faff640939102cd145c"
+  },
+  "Source/videos/stress-pico.mkv": {
+    "source": "videos/videos/stressPicoCutscene.mkv",
+    "sha256": "dd1c56ee7563e376819d9b5fe6f76873cc35b8ddd92ca3996e6abb1346144d5a"
+  }
+}

@@ -41,11 +41,12 @@ def static_graphic(path):
             'labels': {'idle': [0]}, 'bounds': [0, 0, w, h], 'fps': 24}
 
 
-def import_assets(assets, data, output, weeks=None):
+def import_assets(assets, data, output, weeks=None, extras_only=False):
     for week, (stages, characters) in (WEEKS if weeks is None else weeks).items():
         root = output / f'Week{week}Assets'
         root.mkdir(parents=True, exist_ok=True)
-        copied = {}
+        manifest_path = root / 'source-manifest.json'
+        copied = read(manifest_path) if extras_only and manifest_path.is_file() else {}
 
         def copy(source, target):
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -119,9 +120,10 @@ def import_assets(assets, data, output, weeks=None):
             for animation in character['animations']:
                 if animation.get('assetPath') and animation['name'] != 'fakeoutDeath':
                     alternate.setdefault(animation['assetPath'], []).append(animation)
-            for asset, animations in alternate.items():
-                name = 'death' if animations[0]['name'] == 'firstDeath' else 'censor'
-                graphic(resolve(asset, 'shared'), target / name, animations, character.get('isPixel', False))
+            for index, (asset, animations) in enumerate(alternate.items()):
+                name = 'death' if any(a['name'] == 'firstDeath' for a in animations) else 'explosion' if any(a['name'] == 'firstDeath-explosion' for a in animations) else 'censor' if index == 0 else f'alternate{index}'
+                symbol = next((a['prefix'] for a in animations if a.get('animType') == 'symbol'), None)
+                graphic(resolve(asset, 'shared'), target / name, animations, character.get('isPixel', False), symbol)
             source = assets / f'scripts/characters/{cid}.hxc'
             if source.is_file():
                 copy(source, root / 'Source/characters' / source.name)
@@ -135,19 +137,19 @@ def import_assets(assets, data, output, weeks=None):
                     continue
                 animations = prop.get('animations', [])
                 symbol = next((a['prefix'] for a in animations if a.get('animType') == 'symbol'), None)
-                graphic(resolve(prop['assetPath'], f'week{week}'), target / prop['name'], animations,
+                graphic(resolve(prop['assetPath'], read(target / 'stage.json').get('directory', f'week{week}')), target / prop['name'], animations,
                         prop.get('isPixel', False), symbol, prop.get('atlasSettings', {}).get('applyStageMatrix', False))
             source = assets / f'scripts/stages/{sid}.hxc'
             if source.is_file():
                 copy(source, root / 'Source/stages' / source.name)
             print(f'Week {week}: {sid}')
 
-        if week == 4:
+        if not extras_only and week == 4:
             for name in ['mistMid', 'mistBack']:
                 graphic(assets / f'week4/images/limo/erect/{name}', root / 'effects' / name, [])
             for index in range(2):
                 copy(assets / f'week4/sounds/carPass{index}.ogg', root / f'audio/carPass{index}.ogg')
-        if week == 6:
+        if not extras_only and week == 6:
             for name in ['bfPixel_mask', 'gfPixel_mask', 'senpai_mask']:
                 copy(assets / f'week6/images/weeb/erect/masks/{name}.png', root / 'effects' / (name + '.png'))
             copy(data / 'notestyles/pixel.json', root / 'pixel.json')
@@ -166,7 +168,7 @@ def import_assets(assets, data, output, weeks=None):
                 copy(source, root / f'audio/{name}.ogg')
             for name in ['Lunchbox', 'LunchboxScary']:
                 copy(assets / f'week6/music/{name}.ogg', root / f'audio/{name}.ogg')
-        if week == 5:
+        if not extras_only and week == 5:
             for name, prefix in [('santa_speaks_assets', 'santa whole scene'), ('parents_shoot_assets', 'parents whole scene')]:
                 graphic(assets / f'week5/images/christmas/{name}', root / 'cutscene' / name,
                         [{'name': 'cutscene', 'prefix': prefix}], symbol=prefix)
@@ -179,7 +181,7 @@ def import_assets(assets, data, output, weeks=None):
                 copy(source, root / 'Source/songs' / source.name)
         (root / 'source-manifest.json').write_text(json.dumps(copied, indent=2) + '\n', encoding='utf-8')
 
-    if weeks is not None and 6 not in weeks:
+    if extras_only or weeks is not None and 6 not in weeks:
         return
     resources = output.parents[1] / 'Resources'
     def resource(source, folder, name=None):

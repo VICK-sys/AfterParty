@@ -423,6 +423,342 @@
       },
       "vocalOffsets": {},
       "instrumentalSha256": "5fe92f283c728f2f2da7e62126e6ca56cece926b734bbd71bddc07e45bc14580"
+    },
+    {
+      "id": "ugh",
+      "variation": "",
+      "path": "07-Week7/01-Ugh",
+      "bpm": 160,
+      "notes": {
+        "easy": 284,
+        "normal": 469,
+        "hard": 525
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "d197ab3824d0235e222d35b458c0184d0c8bed0f11f83ea64dcaa3d2bba64d3f"
+    },
+    {
+      "id": "ugh",
+      "variation": "erect",
+      "path": "07-Week7/01-Ugh",
+      "bpm": 170,
+      "notes": {
+        "erect": 673,
+        "nightmare": 695
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "995ab08c1ae292ca615716b3f22bb0a69be6076a7d1dd97c79688e9bfcbd54bf"
+    },
+    {
+      "id": "guns",
+      "variation": "",
+      "path": "07-Week7/02-Guns",
+      "bpm": 185,
+      "notes": {
+        "easy": 488,
+        "normal": 766,
+        "hard": 903
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "87fd346f256f88f22670a10d704ce0992fd108c0db43ae14d891d7a9d615d712"
+    },
+    {
+      "id": "stress",
+      "variation": "",
+      "path": "07-Week7/03-Stress",
+      "bpm": 178,
+      "notes": {
+        "easy": 715,
+        "normal": 830,
+        "hard": 905
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "a55189421339a7f932a3f239b358455880a4d07801f8684d138aa37d1830f9f7"
+    },
+    {
+      "id": "darnell",
+      "variation": "",
+      "path": "08-Weekend1/01-Darnell",
+      "bpm": 155,
+      "notes": {
+        "easy": 550,
+        "normal": 620,
+        "hard": 725
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "4fc45e33b5ae3588c328b39293f5f39a6913f4ba5d631795d9870ea38417d2c8"
+    },
+    {
+      "id": "darnell",
+      "variation": "erect",
+      "path": "08-Weekend1/01-Darnell",
+      "bpm": 155,
+      "notes": {
+        "erect": 917,
+        "nightmare": 978
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "005d5f4b67397ade154587d1d0759bcc11ea885d1f42a9b7d5a4e3d7d5a18da5"
+    },
+    {
+      "id": "lit-up",
+      "variation": "",
+      "path": "08-Weekend1/02-LitUp",
+      "bpm": 176,
+      "notes": {
+        "easy": 663,
+        "normal": 756,
+        "hard": 830
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "cd1f40091358b1f2b392eef6425b05931e4fe15814b7056557ba06716e8592e3"
+    },
+    {
+      "id": "2hot",
+      "variation": "",
+      "path": "08-Weekend1/03-2hot",
+      "bpm": 182,
+      "notes": {
+        "easy": 821,
+        "normal": 906,
+        "hard": 1035
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "0d8f194b3c4131d1c9429f794d7749d37c873db20cacdce14ae518c9d46a312b"
+    },
+    {
+      "id": "blazin",
+      "variation": "",
+      "path": "08-Weekend1/04-Blazin",
+      "bpm": 180,
+      "notes": {
+        "easy": 422,
+        "normal": 426,
+        "hard": 440
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "e5c7952a79fb692afc2444d421f227c4b402228ff84fb75a1c416af3a4c94a50"
+    },
+    {
+      "id": "bopeebo",
+      "variation": "pico",
+      "path": "01-Week1/01-Bopeebo-Pico",
+      "bpm": 100,
+      "notes": {
+        "easy": 220,
+        "normal": 283,
+        "hard": 343
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "495477b3dcf2cefedeee1aa595882da6ff345156456303f27be7a9832e296e68"
+    },
+    {
+      "id": "fresh",
+      "variation": "pico",
+      "path": "01-Week1/02-Fresh-Pico",
+      "bpm": 120,
+      "notes": {
+        "easy": 246,
+        "normal": 318,
+        "hard": 341
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "70bdc288d9710c2b9ffb84c0241a1fca99d29b68284a116d8c87c7013e95497e"
+    },
+    {
+      "id": "dadbattle",
+      "variation": "pico",
+      "path": "01-Week1/03-DadBattle-Pico",
+      "bpm": 180,
+      "notes": {
+        "easy": 398,
+        "normal": 499,
+        "hard": 526
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "9242825ce91710ff2b6c0a5782c612e59641607df2237cd74b33c6ffbd57fa00"
+    },
+    {
+      "id": "spookeez",
+      "variation": "pico",
+      "path": "02-Week2/01-Spookeez-Pico",
+      "bpm": 150,
+      "notes": {
+        "easy": 408,
+        "normal": 443,
+        "hard": 497
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "3f6fe5d92f3dd9af3f06a405edd93c2c10897d31465876b91faffa6e11dcdd6f"
+    },
+    {
+      "id": "south",
+      "variation": "pico",
+      "path": "02-Week2/02-South-Pico",
+      "bpm": 165,
+      "notes": {
+        "easy": 283,
+        "normal": 391,
+        "hard": 439
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "ebb7a0bab95acd7fb281ef48d7a362226772c392b498906e5e9e9993603d8055"
+    },
+    {
+      "id": "pico",
+      "variation": "pico",
+      "path": "03-Week3/01-Pico-Pico",
+      "bpm": 150,
+      "notes": {
+        "easy": 349,
+        "normal": 369,
+        "hard": 423
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "5f67816db8f30727e229f592a8271951a6620456f4c5cd1a5997cabbe36097c9"
+    },
+    {
+      "id": "philly-nice",
+      "variation": "pico",
+      "path": "03-Week3/02-Philly-Pico",
+      "bpm": 175,
+      "notes": {
+        "easy": 423,
+        "normal": 533,
+        "hard": 570
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "91c950d4332c968135fd4dbc3976244573241e58f8eb45f6290a0f9996a7bd5b"
+    },
+    {
+      "id": "blammed",
+      "variation": "pico",
+      "path": "03-Week3/03-Blammed-Pico",
+      "bpm": 165,
+      "notes": {
+        "easy": 508,
+        "normal": 629,
+        "hard": 674
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "11777a96462c9c6a846e46bd737a1d0e0b855814a007b24daad3cdeffc495f06"
+    },
+    {
+      "id": "cocoa",
+      "variation": "pico",
+      "path": "05-Week5/01-Cocoa-Pico",
+      "bpm": 100,
+      "notes": {
+        "easy": 597,
+        "normal": 705,
+        "hard": 762
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "b4fe5d3d53e1d5bda5da93ea47e39d112ef7b8169226cff1741fd8b2e05b49bd"
+    },
+    {
+      "id": "eggnog",
+      "variation": "pico",
+      "path": "05-Week5/02-Eggnog-Pico",
+      "bpm": 150,
+      "notes": {
+        "easy": 441,
+        "normal": 568,
+        "hard": 640
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "067ce38e886c0aea01a9206e0ffefcf5c142eb04aecf329b5d0677aed8046c09"
+    },
+    {
+      "id": "senpai",
+      "variation": "pico",
+      "path": "06-Week6/01-Senpai-Pico",
+      "bpm": 144,
+      "notes": {
+        "easy": 440,
+        "normal": 514,
+        "hard": 559
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "8b88faf43fbff10fd13bca1d62b2e8d8f05d8d7b4cbb33feb9cd4fc5af204857"
+    },
+    {
+      "id": "roses",
+      "variation": "pico",
+      "path": "06-Week6/02-Roses-Pico",
+      "bpm": 120,
+      "notes": {
+        "easy": 562,
+        "normal": 622,
+        "hard": 641
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "c80190bf40fc178e9f51b44aa92362085e3dbf97da0d62faf258d16179ecea59"
+    },
+    {
+      "id": "ugh",
+      "variation": "pico",
+      "path": "07-Week7/01-Ugh-Pico",
+      "bpm": 160,
+      "notes": {
+        "easy": 543,
+        "normal": 697,
+        "hard": 781
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "382f315e12585b6efd42171f89df5515391f49e860b0d848a5809071e3de7dc5"
+    },
+    {
+      "id": "guns",
+      "variation": "pico",
+      "path": "07-Week7/02-Guns-Pico",
+      "bpm": 185,
+      "notes": {
+        "easy": 796,
+        "normal": 890,
+        "hard": 972
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "d46f4a8224149633a21eeba58c5ae60c57d0e61e63add60df437626d125c63e4"
+    },
+    {
+      "id": "stress",
+      "variation": "pico",
+      "path": "07-Week7/03-Stress-Pico",
+      "bpm": 178,
+      "notes": {
+        "easy": 898,
+        "normal": 954,
+        "hard": 1024
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "886c327576c88ad74143b14b03eab8fc9a2888056f5e334e34915570622fe509"
+    },
+    {
+      "id": "darnell",
+      "variation": "bf",
+      "path": "08-Weekend1/01-Darnell-BF",
+      "bpm": 155,
+      "notes": {
+        "easy": 637,
+        "normal": 728,
+        "hard": 773
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "47b88ad1aa08c1b854ed74d9937f4a9c8a98d305fc70eabae2b9d8492c20c55b"
+    },
+    {
+      "id": "lit-up",
+      "variation": "bf",
+      "path": "08-Weekend1/02-LitUp-BF",
+      "bpm": 176,
+      "notes": {
+        "easy": 893,
+        "normal": 982,
+        "hard": 1072
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "9579114c576d2cdf9b56911a52b6c888ec862efa9c86cbd3f6545e49d354bed2"
     }
   ]
 }

@@ -8,34 +8,38 @@ Shader "Unity Party/Week 2 Graphic"
         _Clock ("Clock", Float) = 1
         _Tint ("Tint", Color) = (1,1,1,1)
         _BuildingFade ("Building Fade", Float) = 0
+        _SrcBlend ("Source Blend", Float) = 5
         _DstBlend ("Destination Blend", Float) = 10
         _RimMask ("Rim Mask", 2D) = "black" {}
         _Rim ("Rim Settings", Vector) = (0,0,0,0)
         _RimAdjustment ("Rim Color Adjustment", Vector) = (0,0,0,0)
+        _RimColor ("Rim Color", Color) = (0.3215686,0.2078431,0.1137255,1)
+        _RimDirection ("Rim Direction", Vector) = (0,1,0,0)
     }
     SubShader
     {
         Tags { "Queue"="Transparent" "RenderType"="Transparent" }
         Cull Off
         ZWrite Off
-        Blend SrcAlpha [_DstBlend], One OneMinusSrcAlpha
+        Blend [_SrcBlend] [_DstBlend], One OneMinusSrcAlpha
         Pass
         {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
-            struct Input { float4 vertex : POSITION; float2 uv : TEXCOORD0; float4 color : COLOR; float4 addition : TEXCOORD1; };
-            struct Output { float4 vertex : SV_POSITION; float2 uv : TEXCOORD0; float4 color : COLOR; float4 addition : TEXCOORD1; float2 world : TEXCOORD2; };
+            struct Input { float4 vertex : POSITION; float2 uv : TEXCOORD0; float4 color : COLOR; float4 addition : TEXCOORD1; float4 bounds : TEXCOORD2; float2 rotation : TEXCOORD3; };
+            struct Output { float4 vertex : SV_POSITION; float2 uv : TEXCOORD0; float4 color : COLOR; float4 addition : TEXCOORD1; float2 world : TEXCOORD2; float4 bounds : TEXCOORD3; float2 rotation : TEXCOORD4; };
             sampler2D _MainTex;
             float4 _MainTex_TexelSize;
             float4 _FrameBounds;
-            float _Opacity, _Rain, _Clock;
+            float _Opacity, _Rain, _Clock, _Multiply;
             float4 _Tint;
             float _BuildingFade;
             float3 _Wiggle;
             sampler2D _RimMask;
             float4 _Rim, _RimAdjustment;
+            float4 _RimColor, _RimDirection;
             Output vert(Input input)
             {
                 Output output;
@@ -44,6 +48,8 @@ Shader "Unity Party/Week 2 Graphic"
                 output.uv = input.uv;
                 output.color = input.color;
                 output.addition = input.addition;
+                output.bounds = input.bounds;
+                output.rotation = input.rotation;
                 return output;
             }
             float randomValue(float2 value)
@@ -124,10 +130,11 @@ Shader "Unity Party/Week 2 Graphic"
                     float delta = max((abs(right-center)+abs(down-center)+abs(diagonal-center)*.7)/2.7*2,.00001);
                     float threshold = tex2D(_RimMask, uv).b > 0 ? _Rim.z : _Rim.y;
                     float intensity = smoothstep(threshold-delta,threshold+delta,center);
-                    float2 checkedUV = uv + float2(0,_Rim.x*_MainTex_TexelSize.y);
-                    float shadow = checkedUV.x > _FrameBounds.x && checkedUV.x < _FrameBounds.x+_FrameBounds.z
-                        && checkedUV.y < _FrameBounds.y && checkedUV.y > _FrameBounds.y+_FrameBounds.w ? tex2D(_MainTex,checkedUV).a : 0;
-                    sampled.rgb = adjustColor(sampled.rgb,_RimAdjustment) + float3(82,53,29)/255*(1-shadow)*intensity;
+                    float2 direction = input.rotation.x > 0 ? float2(_RimDirection.y,-_RimDirection.x) : _RimDirection.xy;
+                    float2 checkedUV = uv + direction * _Rim.x * _MainTex_TexelSize.xy;
+                    float shadow = checkedUV.x > input.bounds.x && checkedUV.x < input.bounds.z
+                        && checkedUV.y > input.bounds.y && checkedUV.y < input.bounds.w ? tex2D(_MainTex,checkedUV).a : 0;
+                    sampled.rgb = adjustColor(sampled.rgb,_RimAdjustment) + _RimColor.rgb*(1-shadow)*intensity;
                 }
                 float4 color = sampled * input.color + input.addition;
                 color.a = sampled.a == 0 ? 0 : saturate(color.a) * _Opacity;
@@ -138,6 +145,7 @@ Shader "Unity Party/Week 2 Graphic"
                     float4 faded = saturate(float4(color.rgb * color.a, color.a) - _BuildingFade);
                     color = float4(faded.a > 0 ? faded.rgb / faded.a : 0, faded.a);
                 }
+                if (_Multiply > 0) color.rgb *= color.a;
                 return color;
             }
             ENDCG
