@@ -1,0 +1,330 @@
+{
+  "characters/sserafim-yunjin/character.json": {
+    "source": "data/characters/sserafim-yunjin.json",
+    "sha256": "557ecc512c389eba4ea0561e7a9a17f4d335ec187973a481d0ceda47e01dec77"
+  },
+  "Source/characters/sserafim-yunjin.hxc": {
+    "source": "scripts/characters/sserafim-yunjin.hxc",
+    "sha256": "82415c7756f7c4d034f798853f2b9b49dd620d1aaf202ce0e72aebc084b82c31"
+  },
+  "characters/sserafim-yunjin/Animation.json": {
+    "source": "shared/images/characters/sserafim/yunjin/Animation.json",
+    "sha256": "5f9ee18392259a9dfdebc5a2bddb2abadc714ae8d439729830c54358e9545f77"
+  },
+  "characters/sserafim-yunjin/spritemap1.json": {
+    "source": "shared/images/characters/sserafim/yunjin/spritemap1.json",
+    "sha256": "4012a28f9e013993f0a2a1cb1272ab6146f8f9014639b7eb7806c3423c638959"
+  },
+  "characters/sserafim-yunjin/spritemap1.png": {
+    "source": "shared/images/characters/sserafim/yunjin/spritemap1.png",
+    "sha256": "a489763b9a3945770f921a7050b3e1dd5408d225d78a36210f57136eb590af31"
+  },
+  "characters/sserafim-kazuha/character.json": {
+    "source": "data/characters/sserafim-kazuha.json",
+    "sha256": "5ffd917b8692ed2a406161ed8a779fc4d4e4d767247355588a0631b19d448ec0"
+  },
+  "Source/characters/sserafim-kazuha.hxc": {
+    "source": "scripts/characters/sserafim-kazuha.hxc",
+    "sha256": "16c46d9c1baf7744a7e6548796bd4a5069aa57f028acbd03d292b9ea0d2c1d30"
+  },
+  "characters/sserafim-kazuha/Animation.json": {
+    "source": "shared/images/characters/sserafim/kazuha/Animation.json",
+    "sha256": "5aba787679f71be0f585021c26dcc25917fd9266c2c9f51ad5a69cc548642613"
+  },
+  "characters/sserafim-kazuha/spritemap1.json": {
+    "source": "shared/images/characters/sserafim/kazuha/spritemap1.json",
+    "sha256": "1d1148fd1bd2b95058d1fb74344d2d9ec706de398be41bcf5c92ca52ae489e7f"
+  },
+  "characters/sserafim-kazuha/spritemap1.png": {
+    "source": "shared/images/characters/sserafim/kazuha/spritemap1.png",
+    "sha256": "4401bf0070a479076ae4c454b94d0446aaccb3f6768cea442c4d8a7bac5944d9"
+  },
+  "characters/sserafim-chaewon/character.json": {
+    "source": "data/characters/sserafim-chaewon.json",
+    "sha256": "fb30ce98d6f1ef92c35601c2ae5e098b9db85c68c71a462f4e3a96c3c52dc499"
+  },
+  "Source/characters/sserafim-chaewon.hxc": {
+    "source": "scripts/characters/sserafim-chaewon.hxc",
+    "sha256": "aad61022c3461b0128c06d05342762d1f7fe29681dd75c2eaa9f98eb31a843de"
+  },
+  "characters/sserafim-chaewon/Animation.json": {
+    "source": "shared/images/characters/sserafim/chaewon/Animation.json",
+    "sha256": "bb6347bc3530413d783553913a1abd33fccb889e9620700b7c1b6d6a250b3dfe"
+  },
+  "characters/sserafim-chaewon/spritemap1.json": {
+    "source": "shared/images/characters/sserafim/chaewon/spritemap1.json",
+    "sha256": "f77c15eccece980bd953c05c1cf597d041195b0e3227c10d5a8492fcaaa38b45"
+  },
+  "characters/sserafim-chaewon/spritemap1.png": {
+    "source": "shared/images/characters/sserafim/chaewon/spritemap1.png",
+    "sha256": "0bcd6921ce34e1becb2a9172e8b5e327390d4f5fe288824ec4c1f91889d4a5f5"
+  },
+  "characters/sserafim-eunchae/character.json": {
+    "source": "data/characters/sserafim-eunchae.json",
+    "sha256": "b7c31be33f180bfb13ae35f0f1ffd9e22c1e30f2e8bb7ae74312a663f64de8e5"
+  },
+  "Source/characters/sserafim-eunchae.hxc": {
+    "source": "scripts/characters/sserafim-eunchae.hxc",
+    "sha256": "9b17efedc13f1d0f78a0562a55679edf8788bf99be77e733b700afbcbb0882f3"
+  },
+  "characters/sserafim-eunchae/Animation.json": {
+    "source": "shared/images/characters/sserafim/eunchae/Animation.json",
+    "sha256": "5e8e97a79913f8a9ab6c741eaf31917fe8edbc61ff636e2072377d8ebde9722b"
+  },
+  "characters/sserafim-eunchae/spritemap1.json": {
+    "source": "shared/images/characters/sserafim/eunchae/spritemap1.json",
+    "sha256": "b277c1435fe7c5f00594b72cdb1dc9dc430cd8643eb04bd7ac0ea8a690eec8fe"
+  },
+  "characters/sserafim-eunchae/spritemap1.png": {
+    "source": "shared/images/characters/sserafim/eunchae/spritemap1.png",
+    "sha256": "4f6819179ea23333d7999a42117009c1fda42ac3452b2e29fc9a70f5c032b933"
+  },
+  "characters/sserafim-sakura/character.json": {
+    "source": "data/characters/sserafim-sakura.json",
+    "sha256": "1fbb94eec67c00f6986f92534e3bd05324b96d158f10d4dd60f887e676bc04a3"
+  },
+  "Source/characters/sserafim-sakura.hxc": {
+    "source": "scripts/characters/sserafim-sakura.hxc",
+    "sha256": "59783466ebc6724cff548ceb7e7596ef266952afb0a2f7d306e58d8f9e563888"
+  },
+  "characters/sserafim-sakura/Animation.json": {
+    "source": "shared/images/characters/sserafim/sakura/Animation.json",
+    "sha256": "5bd6f57f16fdee096f1380281e39701f89f7ae84c965be6cd0a5fee693735f64"
+  },
+  "characters/sserafim-sakura/spritemap1.json": {
+    "source": "shared/images/characters/sserafim/sakura/spritemap1.json",
+    "sha256": "feb9149d37474e3aeef5577ecdb79737c8268a4ac7a8f8ddfd549d6b6241f44e"
+  },
+  "characters/sserafim-sakura/spritemap1.png": {
+    "source": "shared/images/characters/sserafim/sakura/spritemap1.png",
+    "sha256": "54cd70f48df02ca7dc67a366f78fa66078fb49665141d547b6c9fbf9e4230030"
+  },
+  "characters/sserafim-sakura/death/Animation.json": {
+    "source": "shared/images/characters/bf-death/Animation.json",
+    "sha256": "780f6a7615ae0e64584139e43cdba8f7bff9548ad40f7cab29c231aef73de7ab"
+  },
+  "characters/sserafim-sakura/death/spritemap1.json": {
+    "source": "shared/images/characters/bf-death/spritemap1.json",
+    "sha256": "544dc32c1f992b239ae4c3630df41eb1f308cb0272d39e07e125d678116efbc4"
+  },
+  "characters/sserafim-sakura/death/spritemap1.png": {
+    "source": "shared/images/characters/bf-death/spritemap1.png",
+    "sha256": "83d751032aaa5385bc819933ccb638950576b6c285bdc890a419c5e89d32aef1"
+  },
+  "characters/sserafim-gf/character.json": {
+    "source": "data/characters/sserafim-gf.json",
+    "sha256": "c3d55d7ac7f011f9514ce71cb30ccc0271c8e7688c1223f3380b5aeef3ab1d80"
+  },
+  "Source/characters/sserafim-gf.hxc": {
+    "source": "scripts/characters/sserafim-gf.hxc",
+    "sha256": "e3b9337b6b90572095d8cc313deb0eb8848dd49a960b2f670188c5e14a2a294f"
+  },
+  "characters/sserafim-gf/Animation.json": {
+    "source": "shared/images/characters/sserafim/sserafim-gf/Animation.json",
+    "sha256": "58c4897397f6a3146e77b722d062da06ba97345c1d665a97f50830fbe8dc658e"
+  },
+  "characters/sserafim-gf/spritemap1.json": {
+    "source": "shared/images/characters/sserafim/sserafim-gf/spritemap1.json",
+    "sha256": "93c0b809d6491fe8e83373de9cfbf591cd0804266348c2e89810e3e00137e7bf"
+  },
+  "characters/sserafim-gf/spritemap1.png": {
+    "source": "shared/images/characters/sserafim/sserafim-gf/spritemap1.png",
+    "sha256": "0198830976aca89165ce7d0677428e21cef713830148642bd11a66358a26f5a7"
+  },
+  "stages/sserafim/stage.json": {
+    "source": "data/stages/sserafim.json",
+    "sha256": "220f05b9b85d7766506d36b2b0e48707f9275f94fa8041e45b5df9d66b848a4d"
+  },
+  "stages/sserafim/bg/bg.png": {
+    "source": "sserafim/images/bg.png",
+    "sha256": "9f3e2f3bdd970cda8c37be53d5a76811d89bb5faa991d54d975b7c1fdae91761"
+  },
+  "stages/sserafim/fucker/floor.png": {
+    "source": "sserafim/images/floor.png",
+    "sha256": "06551f9ad0fec0f0634d75682970f2c3f0555b5a9586b1407ef3a172f22f79dc"
+  },
+  "stages/sserafim/backTables/back-tables.png": {
+    "source": "sserafim/images/back-tables.png",
+    "sha256": "47bc136ac227a87ea201c05ceaeb42ea2138254e840bcd4314fd1bc244a9c9ec"
+  },
+  "stages/sserafim/backTablesCutscene/counter-stretch.png": {
+    "source": "sserafim/images/cutscene/counter-stretch.png",
+    "sha256": "063582a5ccd3743884cf9956befc1948295fd9c7edf534ab1780c4644677a6be"
+  },
+  "stages/sserafim/burgerCutscene/burger-cutscene.png": {
+    "source": "sserafim/images/cutscene/burger-cutscene.png",
+    "sha256": "1e323784ae9cee144a06c0a059d304bc2170648bfb448bfe22d16e99a8dd07a7"
+  },
+  "stages/sserafim/backStools/back-stools.png": {
+    "source": "sserafim/images/back-stools.png",
+    "sha256": "c44c1d827566c6a1f9d223ed7d14cf652271b806d413be18d52b826f67640458"
+  },
+  "stages/sserafim/backLightColor/back-light-color.png": {
+    "source": "sserafim/images/lights/back-light-color.png",
+    "sha256": "6c47250dec0b2f958d99c6d5365e00684226b210dc4efba1054cd965f942ae1c"
+  },
+  "stages/sserafim/backLightWhite/back-light-white.png": {
+    "source": "sserafim/images/lights/back-light-white.png",
+    "sha256": "010881366844c09507e2d4a03e2d594cf96200a229eb9494b91c7213ec5b4ece"
+  },
+  "stages/sserafim/truck/truck-stuff.png": {
+    "source": "sserafim/images/truck-stuff.png",
+    "sha256": "4036e755694eac21295c7862f2f17f00cd20d2794232ad1f78a8e5ab108a7324"
+  },
+  "stages/sserafim/truckDoor/truck-door.png": {
+    "source": "sserafim/images/truck-door.png",
+    "sha256": "7f7d8afc8cfbc1daddec7a762e1bb7e4bde01767f78122632ac65e30f33b2411"
+  },
+  "stages/sserafim/truckLight1/truck-light1.png": {
+    "source": "sserafim/images/lights/truck-light1.png",
+    "sha256": "95491f66d1a66dd4082fdbb47f063d486620bd8542446dee935e7f4a53430791"
+  },
+  "stages/sserafim/truckLight2/truck-light2.png": {
+    "source": "sserafim/images/lights/truck-light2.png",
+    "sha256": "351e2ad9929f9109a51961ae0957ac75c3e67c3a51275e13ae0dec1bf870ab9f"
+  },
+  "stages/sserafim/frontStool/front-stool.png": {
+    "source": "sserafim/images/front-stool.png",
+    "sha256": "de61e1b26ea9bb63563630336b2e7d877cfda8055d1fa16ae77343c682d85130"
+  },
+  "effects/floor/floor.png": {
+    "source": "sserafim/images/floor.png",
+    "sha256": "06551f9ad0fec0f0634d75682970f2c3f0555b5a9586b1407ef3a172f22f79dc"
+  },
+  "effects/cutscene/floor-cutscene/floor-cutscene.png": {
+    "source": "sserafim/images/cutscene/floor-cutscene.png",
+    "sha256": "1af2900d5b25f82da92b416d7938dd1a1f776a645014b219af31cf5dc649467d"
+  },
+  "effects/cutscene/cutsceneMain/Animation.json": {
+    "source": "sserafim/images/cutscene/cutsceneMain/Animation.json",
+    "sha256": "98560c351604ddb636f23f840bd81ae692b1edce1c41888460157d1a0a731371"
+  },
+  "effects/cutscene/cutsceneMain/spritemap1.json": {
+    "source": "sserafim/images/cutscene/cutsceneMain/spritemap1.json",
+    "sha256": "4aded2ede5bcad3a0d9662af76d9106cf408724977e02de4d98fa4bb6d68d868"
+  },
+  "effects/cutscene/cutsceneMain/spritemap1.png": {
+    "source": "sserafim/images/cutscene/cutsceneMain/spritemap1.png",
+    "sha256": "03c630f5804ea258f5be432f930594a36a5097708fa6061effde6a4f07d33c8b"
+  },
+  "effects/cutscene/bfGetUp/Animation.json": {
+    "source": "sserafim/images/cutscene/bfGetUp/Animation.json",
+    "sha256": "8039cf3838bfdc76202d9e012eab812471f02681a789db0733ee1a502d7b288f"
+  },
+  "effects/cutscene/bfGetUp/spritemap1.json": {
+    "source": "sserafim/images/cutscene/bfGetUp/spritemap1.json",
+    "sha256": "4adf16af2ec1ae5a50ab92868ddae9825de2f8eee9c01233210113f2381f8c73"
+  },
+  "effects/cutscene/bfGetUp/spritemap1.png": {
+    "source": "sserafim/images/cutscene/bfGetUp/spritemap1.png",
+    "sha256": "b6b7979273422e8979c05363f33990b5df6075717637a5abccae87fdb8246a98"
+  },
+  "effects/cutscene/gfGetUp/Animation.json": {
+    "source": "sserafim/images/cutscene/gfGetUp/Animation.json",
+    "sha256": "8f5e659fad237e534043315ce372a561100f7370dff31ebe2573b83162777b8a"
+  },
+  "effects/cutscene/gfGetUp/spritemap1.json": {
+    "source": "sserafim/images/cutscene/gfGetUp/spritemap1.json",
+    "sha256": "8dc4caa8cb36565b4fb5b4c1b32f1bc585888176fa7ae265efe65304e604efec"
+  },
+  "effects/cutscene/gfGetUp/spritemap1.png": {
+    "source": "sserafim/images/cutscene/gfGetUp/spritemap1.png",
+    "sha256": "8ece3553ea77560f8659782c8327948f9f1e2cb146e641c79958ca2a982213a9"
+  },
+  "effects/dust/dustMid/dustMid.png": {
+    "source": "sserafim/images/dust/dustMid.png",
+    "sha256": "0c9150739cc367e00cd6a17af4533bc36661a1eabf11c4c5dbd11a18d3df587f"
+  },
+  "effects/dust/dustBack/dustBack.png": {
+    "source": "sserafim/images/dust/dustBack.png",
+    "sha256": "e53dff74544b7b0c8e30082463e7433a242052784b32c72fb263ded86182e85b"
+  },
+  "effects/end/end1/end1.png": {
+    "source": "sserafim/images/end/end1.png",
+    "sha256": "9ad43bbf60f12007e482d350e34e14cb971f80c0f7f29d95203f04d6331f4282"
+  },
+  "effects/end/end2/end2.png": {
+    "source": "sserafim/images/end/end2.png",
+    "sha256": "aa66448c850b43fbe65556137a99a13b14dce6448bfebb69672f4923bed3d8ad"
+  },
+  "effects/sserafim-lipsync/Animation.json": {
+    "source": "sserafim/images/sserafim-lipsync/Animation.json",
+    "sha256": "87f6448222f912a458db259b2a2dff9292f90387d94713ce9c2f6187f241391c"
+  },
+  "effects/sserafim-lipsync/spritemap1.json": {
+    "source": "sserafim/images/sserafim-lipsync/spritemap1.json",
+    "sha256": "ef5a511c5235e54e2ef74ca66efc775f4a3fbfe2adf05958f7ee602955db9b79"
+  },
+  "effects/sserafim-lipsync/spritemap1.png": {
+    "source": "sserafim/images/sserafim-lipsync/spritemap1.png",
+    "sha256": "9a0ad3f535f7520aa48c48c5391b158ff09b1527dcb4ee7d5dadd1d4a9719337"
+  },
+  "effects/sserafim-lipsync-yunjin/Animation.json": {
+    "source": "sserafim/images/sserafim-lipsync-yunjin/Animation.json",
+    "sha256": "644d29bd757bceda24b9de9cec17abce758f478c0cec9ff78f1d2e6cafabc535"
+  },
+  "effects/sserafim-lipsync-yunjin/spritemap1.json": {
+    "source": "sserafim/images/sserafim-lipsync-yunjin/spritemap1.json",
+    "sha256": "321b51d7fb22bbf3d1959bb7481c0714d7fbc82078d0c354b3aaa70d082f1351"
+  },
+  "effects/sserafim-lipsync-yunjin/spritemap1.png": {
+    "source": "sserafim/images/sserafim-lipsync-yunjin/spritemap1.png",
+    "sha256": "f061b06eb06678272e5db191a442419882e43cc49f95e7b62debd6cd8b3178b9"
+  },
+  "audio/doorKick1.ogg": {
+    "source": "sserafim/sounds/doorKick1.ogg",
+    "sha256": "1ab3abea21d0d0a0b72a4129d80cc049040e5fe355fb95c3b5d408129106623c"
+  },
+  "audio/doorKick2.ogg": {
+    "source": "sserafim/sounds/doorKick2.ogg",
+    "sha256": "06bd156e450b501b8462bd3704fbb24d0092ac91649ee9b55e0af5c0049de33c"
+  },
+  "audio/cutscene/end1.ogg": {
+    "source": "sserafim/sounds/cutscene/end1.ogg",
+    "sha256": "6211175b51da259d845e328a1fb959c3bb362f1a427c3971bef482f7b7020df6"
+  },
+  "audio/cutscene/end2.ogg": {
+    "source": "sserafim/sounds/cutscene/end2.ogg",
+    "sha256": "20be60c5db7dc6769e2fbf5e731dc10665a377b2f474666a902c7a8fbc618889"
+  },
+  "audio/cutscene/startCutscene.ogg": {
+    "source": "sserafim/sounds/cutscene/startCutscene.ogg",
+    "sha256": "2eb7a7e820bebf17068b317ecb4d4d5eb0a654b66b52e5d44dca20a1f7d721dd"
+  },
+  "Source/stages/sserafim.hxc": {
+    "source": "scripts/stages/sserafim.hxc",
+    "sha256": "927d9c9dc07bb5bed6d22db9eb6310dbe5f9fae38301eceaeefe97169a5fa298"
+  },
+  "Source/songs/spaghetti.hxc": {
+    "source": "scripts/songs/spaghetti.hxc",
+    "sha256": "91dafa6dace1544fd7a263f20d12345f1fb324cc3ba2983ff03e8e78813c8822"
+  },
+  "Source/levels/sserafim.hxc": {
+    "source": "scripts/levels/sserafim.hxc",
+    "sha256": "0a331a5636a2d22f136d7ed3bcf9b2ae35a42f5e8bc64051be2416fcfe3c25dd"
+  },
+  "Source/stages/props/PerspectiveSprite.hxc": {
+    "source": "scripts/stages/props/PerspectiveSprite.hxc",
+    "sha256": "d6a3fd0f334c0fecca7c6418785d55d9cb839ee31ab47e89ddc0bf62ac477cec"
+  },
+  "Source/stages/props/SserafimLipSyncSprite.hxc": {
+    "source": "scripts/stages/props/SserafimLipSyncSprite.hxc",
+    "sha256": "9679e3852dfcd22ac3817f330dd1ca7e2a56d58952e89a44336b0c14a2ab66fc"
+  },
+  "Source/stages/props/SserafimCutsceneSprite.hxc": {
+    "source": "scripts/stages/props/SserafimCutsceneSprite.hxc",
+    "sha256": "19e6be3621ccb9f128b084f8a56798d127fdc10d91631333361ab0b143ee0bf9"
+  },
+  "Source/stages/props/SserafimBfSprite.hxc": {
+    "source": "scripts/stages/props/SserafimBfSprite.hxc",
+    "sha256": "4aa439e9e99d4e93aa8343d9a2dabd48cf827aa8a6160778077c590da96af5fe"
+  },
+  "Source/stages/props/SserafimGfSprite.hxc": {
+    "source": "scripts/stages/props/SserafimGfSprite.hxc",
+    "sha256": "b9ad707f6db6c1b184b3a08afe2938af975c43004cec3d23795e24b3e9c4a100"
+  },
+  "Source/SserafimShader.hx": {
+    "source": "Funkin-0.8.6/source/funkin/graphics/shaders/SserafimShader.hx",
+    "sha256": "450300108c74343be75c30c09be85d16340cb98a31e3d526d0cf3cbee679aae6"
+  }
+}

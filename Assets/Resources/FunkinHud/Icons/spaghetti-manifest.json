@@ -1,0 +1,22 @@
+{
+  "icon-yunjin.png": {
+    "source": "images/icons/icon-yunjin.png",
+    "sha256": "949fd8f166bd67409875ffc5fb8ee1a4077c66a186e512b013e3ea176e311a7d"
+  },
+  "icon-kazuha.png": {
+    "source": "images/icons/icon-kazuha.png",
+    "sha256": "acfe137a4866ad30bbe52e2cc89bc11193b6d70358f8c23b1332b4ef2cb9dcc1"
+  },
+  "icon-chaewon.png": {
+    "source": "images/icons/icon-chaewon.png",
+    "sha256": "8e8983de5817ee0b69b16d5476d9cbd3009c7d18173f9ffd2e3f496f915a4b72"
+  },
+  "icon-eunchae.png": {
+    "source": "images/icons/icon-eunchae.png",
+    "sha256": "788b167fce1f570e0d383f4d6826e51e7a93ebf08743030ae492de1f8e199e18"
+  },
+  "icon-sakura.png": {
+    "source": "images/icons/icon-sakura.png",
+    "sha256": "3b6b81bce46618c16a0959b578e56df6182efe0b76380f50461e945956116ece"
+  }
+}

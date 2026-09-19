@@ -1,0 +1,40 @@
+{
+  "poses": {
+    "idle": {
+      "offset": [
+        41.0,
+        3.0
+      ],
+      "angle": -166.0
+    },
+    "singUP": {
+      "offset": [
+        38.0,
+        0.0
+      ],
+      "angle": -168.0
+    },
+    "singRIGHT": {
+      "offset": [
+        39.0,
+        1.0
+      ],
+      "angle": -165.0
+    },
+    "singDOWN": {
+      "offset": [
+        41.0,
+        3.0
+      ],
+      "angle": -167.0
+    },
+    "singLEFT": {
+      "offset": [
+        40.0,
+        2.0
+      ],
+      "angle": -165.0
+    }
+  },
+  "flipX": false
+}

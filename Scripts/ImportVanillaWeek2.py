@@ -43,12 +43,14 @@ def bounds(frames):
     return [min(xs), min(ys), max(xs)-min(xs), max(ys)-min(ys)]
 
 
-def animate(path, hidden=(), symbol=None, stage_matrix=False, filter_bounds=False):
+def animate(path, hidden=(), symbol=None, stage_matrix=False, filter_bounds=False, attachment_keyword=None):
     data = read(path / 'Animation.json')
     if 'SD' not in data:
         from ImportVanillaFreeplay import normalize
         data = normalize(data)
     symbols = {s['SN']: s['TL'] for s in data['SD']['S']}
+    attachment_timelines = {id(tl) for name, tl in symbols.items() if attachment_keyword and attachment_keyword in name}
+    frame_attachments = []
     sprites = {}
     for mapping in sorted(path.glob('spritemap*.json')):
         for entry in read(mapping)['ATLAS']['SPRITES']:
@@ -97,10 +99,17 @@ def animate(path, hidden=(), symbol=None, stage_matrix=False, filter_bounds=Fals
                                    +point(transform2, w, h)+point(transform2, 0, h),
                                    'rect': [sprite[k] for k in ['x', 'y', 'w', 'h']],
                                    'image': image, 'rotated': sprite.get('rotated', False), 'tint': tint2, 'add': add2})
+            if id(tl) in attachment_timelines:
+                frame_attachments.append({'matrix': transform, 'tint': tint, 'add': addition})
         return result
 
     transform = matrix(data['AN'].get('STI', {}).get('SI', {})) if stage_matrix else IDENTITY
-    frames = [flatten(timeline, index, transform) for index in range(length(timeline))]
+    frames = []
+    attachments = []
+    for index in range(length(timeline)):
+        frame_attachments = []
+        frames.append(flatten(timeline, index, transform))
+        attachments.append(frame_attachments)
     if symbol:
         labels[symbol] = list(range(len(frames)))
     atlas_bounds = bounds(frames)
@@ -154,7 +163,10 @@ def animate(path, hidden=(), symbol=None, stage_matrix=False, filter_bounds=Fals
         atlas_bounds = bounds([[{'xy': point(transform, x, y) + point(transform, x + w, y)
                                 + point(transform, x + w, y + h) + point(transform, x, y + h)}
                                for box in boxes if box is not None for x, y, w, h in [box]]])
-    return {'frames': frames, 'labels': labels, 'bounds': atlas_bounds, 'fps': data['MD'].get('FRT', 24), 'animate': True}
+    result = {'frames': frames, 'labels': labels, 'bounds': atlas_bounds, 'fps': data['MD'].get('FRT', 24), 'animate': True}
+    if attachment_keyword:
+        result['attachments'] = attachments
+    return result
 
 
 def sparrow(path):

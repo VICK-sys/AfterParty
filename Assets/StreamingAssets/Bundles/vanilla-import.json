@@ -759,6 +759,20 @@
       },
       "vocalOffsets": {},
       "instrumentalSha256": "9579114c576d2cdf9b56911a52b6c888ec862efa9c86cbd3f6545e49d354bed2"
+    },
+    {
+      "id": "spaghetti",
+      "variation": "",
+      "path": "09-Sserafim/01-Spaghetti",
+      "bpm": 111.5,
+      "notes": {
+        "easy": 435,
+        "normal": 559,
+        "hard": 707
+      },
+      "vocalOffsets": {},
+      "instrumentalSha256": "086b1f38653353fdae27e0903ce8288477b6e0b3178de93c2bddce3641d78606",
+      "vocalsSha256": "40a5d1e30fddac59ca83fbd48c30a34f0491cb15b7df86c8f5624e241a5c8a38"
     }
   ]
 }

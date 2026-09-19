@@ -1,0 +1,68 @@
+{
+  "poses": {
+    "idle": {
+      "offset": [
+        7.0,
+        2.0
+      ],
+      "angle": -14.0
+    },
+    "singUP": {
+      "offset": [
+        8.0,
+        1.0
+      ],
+      "angle": -15.0
+    },
+    "singRIGHT": {
+      "offset": [
+        7.0,
+        2.0
+      ],
+      "angle": -15.0
+    },
+    "singDOWN": {
+      "offset": [
+        6.0,
+        3.0
+      ],
+      "angle": -15.0
+    },
+    "singLEFT": {
+      "offset": [
+        7.0,
+        2.0
+      ],
+      "angle": -14.0
+    },
+    "singUP-joint": {
+      "offset": [
+        10.0,
+        -1.0
+      ],
+      "angle": -14.0
+    },
+    "singRIGHT-joint": {
+      "offset": [
+        6.0,
+        3.0
+      ],
+      "angle": -15.0
+    },
+    "singDOWN-joint": {
+      "offset": [
+        5.0,
+        5.0
+      ],
+      "angle": -15.0
+    },
+    "singLEFT-joint": {
+      "offset": [
+        7.0,
+        2.0
+      ],
+      "angle": -16.0
+    }
+  },
+  "flipX": true
+}

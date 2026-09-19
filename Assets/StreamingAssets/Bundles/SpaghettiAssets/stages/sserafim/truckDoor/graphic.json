@@ -1,0 +1,1 @@
+{"frames":[[{"xy":[0,0,276,0,276,664,0,664],"rect":[0,0,276,664],"image":"truck-door.png","rotated":false,"alpha":1}]],"bounds":[0,0,276,664],"fps":24,"scaledOffsets":true,"animations":{"idle":{"frames":[0],"fps":24,"loop":false,"offset":[0,0]}}}

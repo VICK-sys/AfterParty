@@ -47,7 +47,7 @@ def convert(song_id, metadata, chart, difficulty):
     bpm = changes[0]['bpm']
     length = 240000 / bpm
     notes = chart['notes'][difficulty]
-    if any(not str(n.get('k') or '').startswith('weekend-1-') and n.get('k') not in (None, '', 'noanim', 'mom', 'censor', 'ugh', 'hehPrettyGood') or not 0 <= n['d'] < 8 for n in notes):
+    if any(not str(n.get('k') or '').startswith('weekend-1-') and n.get('k') not in (None, '', 'noanim', 'mom', 'censor', 'ugh', 'hehPrettyGood', 'sakura-joint', 'sakura-bf1', 'sakura-bf2', 'non_scoreable') or not 0 <= n['d'] < 8 for n in notes):
         raise ValueError(f'{song_id}: unsupported note kind or lane.')
     end = max(n['t'] + n.get('l', 0) for n in notes)
     sections = []
