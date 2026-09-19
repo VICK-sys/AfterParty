@@ -2911,7 +2911,6 @@ GameObject:
   - component: {fileID: 131881617}
   - component: {fileID: 131881619}
   - component: {fileID: 131881618}
-  - component: {fileID: 131881620}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -2975,20 +2974,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 131881616}
   m_CullTransparentMesh: 0
---- !u!114 &131881620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 131881616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 131881618}
 --- !u!1 &144900624
 GameObject:
   m_ObjectHideFlags: 0
@@ -12962,10 +12947,10 @@ MonoBehaviour:
   pauseKeybindText: {fileID: 1374202286}
   resetKeybindText: {fileID: 162440158}
   colorPickers:
-  - {fileID: 1769837225}
-  - {fileID: 131881620}
-  - {fileID: 1620940634}
-  - {fileID: 1409593081}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   colorFields:
   - {fileID: 312694036}
   - {fileID: 913012143}
@@ -15181,7 +15166,6 @@ GameObject:
   - component: {fileID: 648689049}
   - component: {fileID: 648689052}
   - component: {fileID: 648689051}
-  - component: {fileID: 648689050}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -15208,20 +15192,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &648689050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 648689048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 648689051}
-  colorPicker: {fileID: 1620940634}
 --- !u!114 &648689051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23362,7 +23332,6 @@ GameObject:
   - component: {fileID: 986939870}
   - component: {fileID: 986939873}
   - component: {fileID: 986939872}
-  - component: {fileID: 986939871}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -23389,20 +23358,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &986939871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986939869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 986939872}
-  colorPicker: {fileID: 1409593081}
 --- !u!114 &986939872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33925,7 +33880,6 @@ GameObject:
   - component: {fileID: 1409593078}
   - component: {fileID: 1409593080}
   - component: {fileID: 1409593079}
-  - component: {fileID: 1409593081}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -33989,20 +33943,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409593077}
   m_CullTransparentMesh: 0
---- !u!114 &1409593081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409593077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 1409593079}
 --- !u!1 &1412098333
 GameObject:
   m_ObjectHideFlags: 0
@@ -36286,7 +36226,6 @@ GameObject:
   - component: {fileID: 1516242233}
   - component: {fileID: 1516242236}
   - component: {fileID: 1516242235}
-  - component: {fileID: 1516242234}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -36313,20 +36252,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1516242234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1516242232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 1516242235}
-  colorPicker: {fileID: 1769837225}
 --- !u!114 &1516242235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39092,7 +39017,6 @@ GameObject:
   - component: {fileID: 1620940631}
   - component: {fileID: 1620940633}
   - component: {fileID: 1620940632}
-  - component: {fileID: 1620940634}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -39156,20 +39080,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1620940630}
   m_CullTransparentMesh: 0
---- !u!114 &1620940634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1620940630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 1620940632}
 --- !u!1 &1621196704
 GameObject:
   m_ObjectHideFlags: 0
@@ -39291,7 +39201,6 @@ GameObject:
   - component: {fileID: 1644275299}
   - component: {fileID: 1644275302}
   - component: {fileID: 1644275301}
-  - component: {fileID: 1644275300}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -39318,20 +39227,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1644275300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1644275298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 1644275301}
-  colorPicker: {fileID: 131881620}
 --- !u!114 &1644275301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41814,7 +41709,6 @@ GameObject:
   - component: {fileID: 1769837222}
   - component: {fileID: 1769837224}
   - component: {fileID: 1769837223}
-  - component: {fileID: 1769837225}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -41878,20 +41772,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1769837221}
   m_CullTransparentMesh: 0
---- !u!114 &1769837225
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1769837221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 1769837223}
 --- !u!1 &1780817561
 GameObject:
   m_ObjectHideFlags: 0

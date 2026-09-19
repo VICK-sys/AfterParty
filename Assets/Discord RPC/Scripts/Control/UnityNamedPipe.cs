@@ -2,7 +2,7 @@
 using DiscordRPC.IO;
 using DiscordRPC.Logging;
 using System;
-using Lachee.IO;
+using System.IO.Pipes;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -86,7 +86,7 @@ namespace DiscordRPC.Unity
                 Logger.Info("Connecting to " + pipename + " (" + sandbox +")");
                 ConnectedPipe = pipe;
                 _stream = new NamedPipeClientStream(".", pipename);
-                _stream.Connect();
+                _stream.Connect(100);
 
                 Logger.Info("Connected");
                 return true;

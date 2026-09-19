@@ -2755,7 +2755,6 @@ GameObject:
   - component: {fileID: 80736804}
   - component: {fileID: 80736807}
   - component: {fileID: 80736806}
-  - component: {fileID: 80736805}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -2782,20 +2781,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &80736805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 80736803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 80736806}
-  colorPicker: {fileID: 764655175}
 --- !u!114 &80736806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9601,7 +9586,6 @@ GameObject:
   - component: {fileID: 470869489}
   - component: {fileID: 470869488}
   - component: {fileID: 470869487}
-  - component: {fileID: 470869486}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -9609,20 +9593,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &470869486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 470869485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 470869487}
 --- !u!114 &470869487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14982,7 +14952,6 @@ GameObject:
   - component: {fileID: 764655178}
   - component: {fileID: 764655177}
   - component: {fileID: 764655176}
-  - component: {fileID: 764655175}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -14990,20 +14959,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &764655175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 764655174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 764655176}
 --- !u!114 &764655176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20576,7 +20531,6 @@ GameObject:
   - component: {fileID: 954927866}
   - component: {fileID: 954927865}
   - component: {fileID: 954927864}
-  - component: {fileID: 954927863}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -20584,20 +20538,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &954927863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 954927862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 954927864}
 --- !u!114 &954927864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27188,7 +27128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55bac9484cffcfc47a1acc26a182bbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transitionEffect: {fileID: 1758728204}
+  transitionEffect: {fileID: 0}
   loadingText: {fileID: 1926485382}
   toggled: 0
 --- !u!1 &1365743614
@@ -27202,7 +27142,6 @@ GameObject:
   - component: {fileID: 1365743615}
   - component: {fileID: 1365743618}
   - component: {fileID: 1365743617}
-  - component: {fileID: 1365743616}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -27229,20 +27168,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1365743616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1365743614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 1365743617}
-  colorPicker: {fileID: 470869486}
 --- !u!114 &1365743617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29568,7 +29493,6 @@ GameObject:
   - component: {fileID: 1558770513}
   - component: {fileID: 1558770516}
   - component: {fileID: 1558770515}
-  - component: {fileID: 1558770514}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -29595,20 +29519,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1558770514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1558770512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 1558770515}
-  colorPicker: {fileID: 954927863}
 --- !u!114 &1558770515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30318,7 +30228,6 @@ GameObject:
   - component: {fileID: 1583843904}
   - component: {fileID: 1583843907}
   - component: {fileID: 1583843906}
-  - component: {fileID: 1583843905}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -30345,20 +30254,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1583843905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1583843903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2c42ee235f17049ab3792499eccc59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewGraphic: {fileID: 1583843906}
-  colorPicker: {fileID: 1748517795}
 --- !u!114 &1583843906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33045,7 +32940,6 @@ GameObject:
   - component: {fileID: 1748517798}
   - component: {fileID: 1748517797}
   - component: {fileID: 1748517796}
-  - component: {fileID: 1748517795}
   m_Layer: 5
   m_Name: Picker
   m_TagString: Untagged
@@ -33053,20 +32947,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1748517795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1748517794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3ff511a986a5c4e8dc1a7939e7b981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorPickerShader: {fileID: 4800000, guid: 1fe34ac173a0455499fd722bc6744230, type: 3}
-  image: {fileID: 1748517796}
 --- !u!114 &1748517796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33409,7 +33289,6 @@ GameObject:
   - component: {fileID: 1758728203}
   - component: {fileID: 1758728206}
   - component: {fileID: 1758728205}
-  - component: {fileID: 1758728204}
   m_Layer: 5
   m_Name: Transition
   m_TagString: Untagged
@@ -33436,36 +33315,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1758728204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1758728202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 922b805bc01c243e5853d9cbb544118c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 300
-  m_EffectMaterial: {fileID: 21383746192470066, guid: 77a4cc77ec7394415a18f9e5a4b8083e, type: 2}
-  m_EffectMode: 1
-  m_EffectFactor: 0
-  m_TransitionTexture: {fileID: 2800000, guid: a74d3d4a498866d44b094d3d3717604d, type: 3}
-  m_EffectArea: 0
-  m_KeepAspectRatio: 1
-  m_DissolveWidth: 0.5
-  m_DissolveSoftness: 0.5
-  m_DissolveColor: {r: 0, g: 0.25, b: 1, a: 1}
-  m_PassRayOnHidden: 1
-  m_Player:
-    play: 0
-    initialPlayDelay: 0
-    duration: 0.5
-    loop: 0
-    loopDelay: 0
-    updateMode: 0
 --- !u!114 &1758728205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34694,10 +34543,10 @@ MonoBehaviour:
   selectedTabColor: {r: 0, g: 0, b: 0, a: 1}
   unselectedTabColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   colorPickers:
-  - {fileID: 954927863}
-  - {fileID: 470869486}
-  - {fileID: 1748517795}
-  - {fileID: 764655175}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   colorFields:
   - {fileID: 398678804}
   - {fileID: 1583537749}

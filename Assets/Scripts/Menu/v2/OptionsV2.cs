@@ -19,7 +19,7 @@ public class OptionsV2 : MonoBehaviour
 
     
 
-    [Header("Note Colors")] public ColorPicker[] colorPickers;
+    private Color[] noteColors = (Color[])NoteCustomization.defaultFnfColors.Clone();
 
     public TMP_InputField[] colorFields;
 
@@ -125,7 +125,7 @@ public class OptionsV2 : MonoBehaviour
         if (colorString.Length != 7) return;
         if (ColorUtility.TryParseHtmlString(colorString, out var color))
         {
-            colorPickers[0].color = color;
+            noteColors[0] = color;
         }
 
         SaveNotePrefs();
@@ -137,7 +137,7 @@ public class OptionsV2 : MonoBehaviour
         if (colorString.Length != 7) return;
         if (ColorUtility.TryParseHtmlString(colorString, out var color))
         {
-            colorPickers[1].color = color;
+            noteColors[1] = color;
         }
         SaveNotePrefs();
     }
@@ -148,7 +148,7 @@ public class OptionsV2 : MonoBehaviour
         if (colorString.Length != 7) return;
         if (ColorUtility.TryParseHtmlString(colorString, out var color))
         {
-            colorPickers[2].color = color;
+            noteColors[2] = color;
         }
         SaveNotePrefs();
     }
@@ -159,7 +159,7 @@ public class OptionsV2 : MonoBehaviour
         if (colorString.Length != 7) return;
         if (ColorUtility.TryParseHtmlString(colorString, out var color))
         {
-            colorPickers[3].color = color;
+            noteColors[3] = color;
         }
         SaveNotePrefs();
     }
@@ -167,49 +167,16 @@ public class OptionsV2 : MonoBehaviour
     public void LoadNotePrefs()
     {
         string savedCustomization = PlayerPrefs.GetString("Note Customization");
-
-        if (!string.IsNullOrWhiteSpace(savedCustomization))
-        {
-            NoteCustomization noteCustomization = JsonConvert.DeserializeObject<NoteCustomization>(savedCustomization);
-
-            for (int i = 0; i < colorPickers.Length; i++)
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                colorPickers[i].color = noteCustomization.savedColors[i];
-                colorFields[i].text = ColorUtility.ToHtmlStringRGB(noteCustomization.savedColors[i]);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < colorPickers.Length; i++)
-            {
-                Color selectedColor = NoteCustomization.defaultFnfColors[i];
-                
-                colorPickers[i].color = selectedColor;
-
-                colorFields[i].text = ColorUtility.ToHtmlStringRGB(selectedColor);
-            }
-
-            PlayerPrefs.SetString("Note Customization",
-                JsonConvert.SerializeObject(new NoteCustomization {savedColors = NoteCustomization.defaultFnfColors}));
-            PlayerPrefs.Save();
-        }
+        var saved = string.IsNullOrWhiteSpace(savedCustomization) ? null : JsonConvert.DeserializeObject<NoteCustomization>(savedCustomization);
+        noteColors = saved?.savedColors?.Length == 4 ? saved.savedColors : (Color[])NoteCustomization.defaultFnfColors.Clone();
+        for (int i = 0; i < colorFields.Length && i < noteColors.Length; i++)
+            colorFields[i].SetTextWithoutNotify(ColorUtility.ToHtmlStringRGB(noteColors[i]));
+        SaveNotePrefs();
     }
-    
+
     public void SaveNotePrefs()
     {
-        List<Color> colors = new List<Color>();
-        foreach (ColorPicker picker in colorPickers)
-        {
-            colors.Add(picker.color);
-        }
-
-        NoteCustomization noteCustomization = new NoteCustomization
-        {
-            savedColors = colors.ToArray()
-        };
-
-        PlayerPrefs.SetString("Note Customization", JsonConvert.SerializeObject(noteCustomization));
+        PlayerPrefs.SetString("Note Customization", JsonConvert.SerializeObject(new NoteCustomization { savedColors = noteColors }));
     }
     #endregion=
     #region Volumes

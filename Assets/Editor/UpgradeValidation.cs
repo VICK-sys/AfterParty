@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using Coffee.UIExtensions;
 using QFSW.MOP2;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -15,9 +14,8 @@ public static class UpgradeValidation
     public static void Run()
     {
         ValidatePool();
-        ValidateMaterialCache();
         ValidateRendering();
-        Debug.Log("UPGRADE VALIDATION PASSED: object reuse, component identity, material isolation, CRT rendering and control.");
+        Debug.Log("UPGRADE VALIDATION PASSED: object reuse, component identity, CRT rendering and control.");
     }
 
     private static void Require(bool condition, string message)
@@ -51,39 +49,6 @@ public static class UpgradeValidation
             Object.DestroyImmediate(pool.ObjectParent.gameObject);
             Object.DestroyImmediate(pool);
             Object.DestroyImmediate(template);
-        }
-    }
-
-    private static void ValidateMaterialCache()
-    {
-        var firstTexture = new Texture2D(2, 2);
-        var secondTexture = new Texture2D(2, 2);
-        var shader = Shader.Find("UI/Default");
-        const ulong key = 0xE000000001;
-        MaterialCache first = null;
-        MaterialCache shared = null;
-        MaterialCache distinct = null;
-        try
-        {
-            first = MaterialCache.Register(key, firstTexture, () => new Material(shader));
-            shared = MaterialCache.Register(key, firstTexture, () => new Material(shader));
-            distinct = MaterialCache.Register(key, secondTexture, () => new Material(shader));
-            Require(ReferenceEquals(first, shared), "Identical texture and effect did not share a material.");
-            Require(!ReferenceEquals(first, distinct), "Different textures shared a material.");
-            Require(first.texture == firstTexture && distinct.texture == secondTexture, "Material cache lost texture identity.");
-            Require(first.referenceCount == 2 && distinct.referenceCount == 1, "Material cache reference counts differ.");
-        }
-        finally
-        {
-            if (first != null)
-                Object.DestroyImmediate(first.material);
-            if (distinct != null)
-                Object.DestroyImmediate(distinct.material);
-            MaterialCache.Unregister(first);
-            MaterialCache.Unregister(shared);
-            MaterialCache.Unregister(distinct);
-            Object.DestroyImmediate(firstTexture);
-            Object.DestroyImmediate(secondTexture);
         }
     }
 

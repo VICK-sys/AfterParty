@@ -55,7 +55,6 @@ public class CharacterEditorManager : MonoBehaviour
     public TMP_InputField charNameField;
     public TMP_InputField charScaleField;
     public TMP_InputField healthColorField;
-    public ColorPicker healthColorPicker;
     
     [Space] public string charactersDir;
     public string charMetaPath;
@@ -96,7 +95,6 @@ public class CharacterEditorManager : MonoBehaviour
             
         }
 
-        healthColorPicker.onColorChanged += OnHealthColorPicked;
 		LoadingTransition.instance.Hide();
     }
 
@@ -119,9 +117,7 @@ public class CharacterEditorManager : MonoBehaviour
     public void OnHealthColorFieldChanged(string colorString)
     {
         colorString = colorString.Replace("#", "");
-        ColorUtility.TryParseHtmlString("#" + colorString, out var newColor);
-        currentMeta.Character.healthColor = newColor;
-        healthColorPicker.ChangeColorWithoutNotify(newColor);
+        if (ColorUtility.TryParseHtmlString("#" + colorString, out var newColor)) OnHealthColorPicked(newColor);
     }
 
     public void OnCharNameFieldChanged(string newName)
@@ -270,7 +266,7 @@ public class CharacterEditorManager : MonoBehaviour
 
         state = CurrentState.MetaEditing;
 
-        healthColorPicker.color = currentMeta.Character.healthColor;
+        healthColorField.SetTextWithoutNotify(ColorUtility.ToHtmlStringRGB(currentMeta.Character.healthColor));
     }
 
     public void EditAnimation(string animationName)
