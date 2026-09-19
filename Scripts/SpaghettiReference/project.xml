@@ -1,0 +1,14 @@
+<project>
+    <meta title="Spaghetti Reference" package="local.spaghetti.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="SpaghettiReference" path="../../Builds/SpaghettiReference/compiled" />
+    <window width="1280" height="720" hidden="true" />
+    <source path="." />
+    <source path="../../Temp/SpaghettiReferenceSource" />
+    <haxelib name="flixel" version="6.2.0" />
+    <haxelib name="flixel-animate" version="1.4.0" />
+    <assets path="../../Assets/StreamingAssets/Bundles/SpaghettiAssets/characters" rename="assets/characters" exclude="*.meta|graphic.json" />
+    <assets path="../../Assets/StreamingAssets/Bundles/SpaghettiAssets/effects/sserafim-lipsync" rename="assets/lipsync" exclude="*.meta|graphic.json" />
+    <assets path="../../Assets/StreamingAssets/Bundles/SpaghettiAssets/effects/sserafim-lipsync-yunjin" rename="assets/lipsync-yunjin" exclude="*.meta|graphic.json" />
+    <assets path="../../Assets/StreamingAssets/Bundles/SpaghettiAssets/effects/cutscene/gfGetUp" rename="assets/gfGetUp" exclude="*.meta|graphic.json" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

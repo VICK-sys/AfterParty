@@ -294,8 +294,9 @@ public static class FunkinRuleTests
                         int direction = entry.GetProperty("d").GetInt32();
                         double time = entry.GetProperty("t").GetDouble();
                         double length = entry.TryGetProperty("l", out var sustain) ? sustain.GetDouble() : 0;
-                        lines[direction / 4].Add(new FunkinNoteState(time, direction % 4, length));
-                        expected[direction / 4]++;
+                        bool scoreable = !entry.TryGetProperty("k", out var kind) || kind.GetString() != "non_scoreable";
+                        lines[direction / 4].Add(new FunkinNoteState(time, direction % 4, length) { Scoreable = scoreable });
+                        if (scoreable) expected[direction / 4]++;
                         end = Math.Max(end, time + length);
                     }
                     for (double position = -200; position < end + 500; position += 1000.0 / fps)
@@ -311,7 +312,7 @@ public static class FunkinRuleTests
                 heads += entries.Length;
             }
         }
-        Require(charts == 163 && heads == 88736, "Expected all 163 bundled charts and 88,736 note heads.");
+        Require(charts == 166 && heads == 90437, "Expected all 166 bundled charts and 90,437 note heads.");
         Console.WriteLine("FUNKIN CHART TESTS PASSED: " + charts + " charts, " + heads + " heads, 30/60/144 FPS.");
     }
 

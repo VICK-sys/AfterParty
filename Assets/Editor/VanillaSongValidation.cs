@@ -18,6 +18,7 @@ using Object = UnityEngine.Object;
 public static class VanillaSongValidation
 {
     private static readonly string[] MixIds = (Environment.GetEnvironmentVariable("UNITY_PARTY_MIX_IDS") ?? "bopeebo,fresh,dadbattle,spookeez,south,pico,philly-nice,blammed,cocoa,eggnog,senpai,roses,ugh,guns,stress,darnell,lit-up").Split(',');
+    private static bool SpaghettiOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_SPAGHETTI_TEST") == "1";
     private static bool MixOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_MIX_TEST") == "1";
     private static bool WeekendOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEKEND_TEST") == "1";
     private static bool Week7Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEK7_TEST") == "1";
@@ -27,14 +28,14 @@ public static class VanillaSongValidation
     private static bool StageOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_STAGE_ONLY") == "1";
     private static int RunLimit => int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_LIMIT"), out int limit) && limit > 0 ? limit : int.MaxValue;
     private static int RunStart => int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_START"), out int start) ? start : 0;
-    private static readonly string[] Ids = (MixOnly ? MixIds
+    private static readonly string[] Ids = (SpaghettiOnly ? new[] { "spaghetti", "spaghetti", "spaghetti" } : MixOnly ? MixIds
         : WeekendOnly ? new[] { "darnell", "lit-up", "2hot", "blazin", "darnell", "darnell" }
         : Week7Only ? new[] { "ugh", "guns", "stress", "ugh", "ugh" }
         : Weeks456Only ? new[] { "satin-panties", "high", "milf", "cocoa", "eggnog", "winter-horrorland", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns" }
         : Week3Only ? new[] { "pico", "philly-nice", "blammed", "pico", "philly-nice", "blammed", "pico", "philly-nice", "blammed" }
         : Week2Only ? new[] { "spookeez", "south", "monster", "spookeez", "south", "spookeez", "south" }
         : new[] { "bopeebo", "fresh", "dadbattle", "bopeebo", "fresh", "dadbattle", "tutorial", "bopeebo", "fresh", "dadbattle" }).Skip(RunStart).Take(RunLimit).ToArray();
-    private static readonly string[] Difficulties = (MixOnly ? Enumerable.Repeat("Hard", MixIds.Length).ToArray()
+    private static readonly string[] Difficulties = (SpaghettiOnly ? new[] { "Hard", "Normal", "Easy" } : MixOnly ? Enumerable.Repeat("Hard", MixIds.Length).ToArray()
         : WeekendOnly ? new[] { "Hard", "Hard", "Hard", "Hard", "Erect", "Nightmare" }
         : Week7Only ? new[] { "Hard", "Hard", "Hard", "Erect", "Nightmare" }
         : Weeks456Only ? Enumerable.Repeat("Hard", 9).Concat(Enumerable.Repeat("Erect", 7)).Concat(Enumerable.Repeat("Nightmare", 7)).ToArray()
@@ -91,6 +92,11 @@ public static class VanillaSongValidation
 
     static VanillaSongValidation()
     {
+        if (SessionState.GetBool("VanillaSongValidation.Pending", false))
+        {
+            beginAt = EditorApplication.timeSinceStartup + 5;
+            EditorApplication.update += BeginWhenReady;
+        }
         if (SessionState.GetBool("VanillaSongValidation.Active", false))
         {
             EditorApplication.update += Tick;
@@ -104,17 +110,22 @@ public static class VanillaSongValidation
         if (!Application.isBatchMode) throw new InvalidOperationException("Run song validation in an isolated batch editor.");
         PlayerSettings.companyName = "UnityPartyValidation";
         PlayerSettings.productName = "SongValidation";
+        PlayerPrefs.SetInt("Funkin.Options.DiscordRPC", 0);
+        PlayerPrefs.SetInt("Funkin.Options.AutoPause", 0);
+        PlayerPrefs.Save();
         Directory.CreateDirectory(Output);
         try
         {
             CheckCharts();
             CheckEasing();
+            if (SpaghettiOnly && StageOnly) SpaghettiValidation.CheckRegression();
             if (MixOnly) VanillaMixValidation.CheckAssets();
             if (WeekendOnly) VanillaWeekend1Validation.CheckAssets();
             if (Week7Only) VanillaWeek7Validation.CheckAssets();
             if (Week3Only) VanillaWeek3Validation.CheckAssets();
             if (Weeks456Only) VanillaWeeks456Validation.CheckAssets();
             EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
+            SessionState.SetBool("VanillaSongValidation.Pending", true);
             beginAt = EditorApplication.timeSinceStartup + 5;
             EditorApplication.update += BeginWhenReady;
         }
@@ -156,8 +167,8 @@ public static class VanillaSongValidation
                 chartCount++;
             }
         }
-        Require(chartCount == 163 && control && speedControl, "Expected 163 charts and rejected side and integer-speed controls.");
-        Debug.Log("SONG CHARTS PASSED: all 163 charts preserve timing, note sides, directions, sustains, and speeds. Swapped-side control rejected.");
+        Require(chartCount == 166 && control && speedControl, "Expected 166 charts and rejected side and integer-speed controls.");
+        Debug.Log("SONG CHARTS PASSED: all 166 charts preserve timing, note sides, directions, sustains, and speeds. Swapped-side control rejected.");
     }
 
     private static void CheckEasing()
@@ -198,8 +209,9 @@ public static class VanillaSongValidation
 
     private static void BeginWhenReady()
     {
-        if (EditorApplication.timeSinceStartup < beginAt) return;
+        if (EditorApplication.timeSinceStartup < beginAt || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
         EditorApplication.update -= BeginWhenReady;
+        SessionState.SetBool("VanillaSongValidation.Pending", false);
         SessionState.SetBool("VanillaSongValidation.Active", true);
         EditorApplication.EnterPlaymode();
     }
@@ -261,7 +273,7 @@ public static class VanillaSongValidation
                 if (elapsed < 1) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 var bundles = menu.songListRect.GetComponentsInChildren<BundleButtonV2>(true);
-                Require(bundles.Length == 9 && bundles.Sum(b => b.SongButtons.Count) == 43, "Built-in songs and mixes did not appear in the song picker.");
+                Require(bundles.Length == 10 && bundles.Sum(b => b.SongButtons.Count) == 44, "Built-in songs and mixes did not appear in the song picker.");
                 SongButtonV2 button = bundles.SelectMany(b => b.SongButtons).Single(b =>
                     (string)JObject.Parse(File.ReadAllText(Path.Combine(b.Meta.songPath, "Vanilla.json")))["song"] == Ids[songIndex]
                     && (string)JObject.Parse(File.ReadAllText(Path.Combine(b.Meta.songPath, "Vanilla.json")))["variation"] == (MixOnly ? Ids[songIndex] == "darnell" || Ids[songIndex] == "lit-up" ? "bf" : "pico" : ""));
@@ -273,7 +285,7 @@ public static class VanillaSongValidation
                 if (elapsed < 3) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 Require(menu.songInfoScreen.activeInHierarchy && menu.canChangeSongs && menu.musicSource.isPlaying, "Bundled song preview did not load.");
-                string[] options = MixOnly || new[] { "tutorial", "monster", "milf", "winter-horrorland", "guns", "stress", "lit-up", "2hot", "blazin" }.Contains(Ids[songIndex]) ? new[] { "Easy", "Normal", "Hard" }
+                string[] options = MixOnly || new[] { "tutorial", "monster", "milf", "winter-horrorland", "guns", "stress", "lit-up", "2hot", "blazin", "spaghetti" }.Contains(Ids[songIndex]) ? new[] { "Easy", "Normal", "Hard" }
                     : new[] { "Easy", "Normal", "Hard", "Erect", "Nightmare" };
                 Require(menu.songDifficultiesDropdown.options.Select(o => o.text).SequenceEqual(options), "Difficulty order is incorrect.");
                 menu.songDifficultiesDropdown.value = Array.IndexOf(options, Difficulties[songIndex]);
@@ -284,7 +296,7 @@ public static class VanillaSongValidation
                 if (elapsed < 3) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 Require(menu.canChangeSongs && menu.musicSource.isPlaying, "Variation preview did not finish loading.");
-                bool erect = Difficulties[songIndex] != "Hard";
+                bool erect = Difficulties[songIndex] == "Erect" || Difficulties[songIndex] == "Nightmare";
                 Require(menu.songNameText.text.EndsWith(" Erect") == erect, "Variation title did not update.");
                 Require(menu.songModeDropdown.options.Select(option => option.text).SequenceEqual(new[] { "as Protagonist", "as Opponent", "AutoPlay" }),
                     "Bundle picker must offer exactly the three single-player modes.");
@@ -302,14 +314,15 @@ public static class VanillaSongValidation
             }
             else if (phase == 3)
             {
-                Require(elapsed < 30, "Gameplay did not start.");
+                Require(elapsed < (SpaghettiOnly ? 70 : 30), "Gameplay did not start.");
                 if (SceneManager.GetActiveScene().name != "Game_Backup3") return;
                 activeSong = Object.FindFirstObjectByType<Song>();
+                if (SpaghettiOnly && activeSong != null) SpaghettiValidation.ObserveIntro(activeSong);
                 if (activeSong == null || !activeSong.songStarted) return;
                 Require(activeSong.musicSources[0].isPlaying && (Ids[songIndex] == "blazin" ? !activeSong.hasVoiceLoaded : activeSong.hasVoiceLoaded && activeSong.vocalSource.isPlaying), "Gameplay audio did not start.");
-                if (!MixOnly && Ids[songIndex] != "blazin") Require(Math.Abs(activeSong.musicClip.length - activeSong.vocalClip.length) < 0.05, "Instrumental and mixed vocals have different durations.");
+                if (!MixOnly && !SpaghettiOnly && Ids[songIndex] != "blazin") Require(Math.Abs(activeSong.musicClip.length - activeSong.vocalClip.length) < 0.05, "Instrumental and mixed vocals have different durations.");
                 Require(activeSong.vanillaPlayback != null && activeSong.vanillaPlayback.SongId == Ids[songIndex], "Vanilla chart events did not attach.");
-                bool erect = Difficulties[songIndex] != "Hard";
+                bool erect = Difficulties[songIndex] == "Erect" || Difficulties[songIndex] == "Nightmare";
                 Require(activeSong.selectedInstrumentalPath.EndsWith("Inst-erect.ogg") == erect, "Wrong instrumental variation loaded.");
                 Require(activeSong.selectedVocalsPath.EndsWith("Voices-erect.ogg") == erect, "Wrong vocal variation loaded.");
                 Require(activeSong.vanillaPlayback.IsErect == erect, "Wrong chart events loaded.");
@@ -329,13 +342,14 @@ public static class VanillaSongValidation
                 string sourceName = erect ? "chart-erect.json" : "chart.json";
                 sourceEvents = JObject.Parse(File.ReadAllText(Path.Combine(activeSong.selectedSongDir, "Source", sourceName)))["events"]
                     .OrderBy(entry => (double)entry["t"]).ToArray();
-                Require(MixOnly || activeSong.enemy.characterName == (Weeks456Only || Week7Only || WeekendOnly ? activeSong.vanillaPlayback.OpponentId : Week3Only ? "Pico" : Week2Only ? Ids[songIndex] == "monster" ? "Monster" : "Spooky Kids"
+                Require(MixOnly || SpaghettiOnly || activeSong.enemy.characterName == (Weeks456Only || Week7Only || WeekendOnly ? activeSong.vanillaPlayback.OpponentId : Week3Only ? "Pico" : Week2Only ? Ids[songIndex] == "monster" ? "Monster" : "Spooky Kids"
                     : Ids[songIndex] == "tutorial" ? "Girlfriend" : "Dad"), "Wrong opponent loaded.");
                 if (WeekendOnly)
                 {
                     weekendCombatBeforeProbe = activeSong.vanillaPlayback.CampaignStage.CombatNotes;
                     VanillaWeekend1Validation.CheckStage(activeSong);
                 }
+                if (SpaghettiOnly) SpaghettiValidation.CheckStage(activeSong);
                 if (Week7Only) VanillaWeek7Validation.CheckStage(activeSong);
                 if (Week2Only) VanillaWeek2Validation.CheckStage(activeSong);
                 if (Week3Only) VanillaWeek3Validation.CheckStage(activeSong);
@@ -346,8 +360,8 @@ public static class VanillaSongValidation
                     Require(!activeSong.girlfriendObject.activeSelf, "Tutorial displays a duplicate Girlfriend.");
                 var chart = (FNFSong)typeof(Song).GetField("_song", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeSong);
                 var notes = Notes(chart);
-                headsPlayer = notes.Count(n => n.Item2 < 4);
-                headsOpponent = notes.Length - headsPlayer;
+                headsPlayer = notes.Count(n => n.Item2 < 4) - activeSong.vanillaPlayback.UnscoredNotes(0);
+                headsOpponent = notes.Count(n => n.Item2 >= 4) - activeSong.vanillaPlayback.UnscoredNotes(1);
                 var behaviors = (List<NoteBehaviour>)typeof(Song).GetField("_noteBehaviours", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeSong);
                 Require(behaviors.Count == notes.Length, "Note scheduler contains missing or duplicate heads.");
                 Debug.Log("SONG RUNNING: " + Ids[songIndex] + " " + Difficulties[songIndex] + ", " + notes.Length + " heads, opponent=" + activeSong.enemy.characterName + ", duration=" + activeSong.musicClip.length);
@@ -363,7 +377,8 @@ public static class VanillaSongValidation
             }
             else if (phase == 4)
             {
-                if (activeSong != null && (activeSong.vanillaPlayback.IsErect || MixOnly))
+                if (SpaghettiOnly && activeSong != null) SpaghettiValidation.Observe(activeSong);
+                if (activeSong != null && (activeSong.vanillaPlayback.IsErect || MixOnly || SpaghettiOnly))
                 {
                     var applied = sourceEvents.Take(activeSong.vanillaPlayback.EventsApplied).ToArray();
                     JToken focus = applied.LastOrDefault(entry => (string)entry["e"] == "FocusCamera")?["v"];
@@ -384,10 +399,11 @@ public static class VanillaSongValidation
                     CaptureStage(Ids[songIndex] + "-" + Difficulties[songIndex].ToLowerInvariant() + ".png");
                     captured = true;
                 }
-                if (!checkedEnd && activeSong != null && activeSong.stopwatch.ElapsedMilliseconds >= (activeSong.musicClip.length - 0.2f) * 1000)
+                if (!checkedEnd && activeSong != null && activeSong.stopwatch.ElapsedMilliseconds >= (SpaghettiOnly ? 168000 : (activeSong.musicClip.length - 0.2f) * 1000))
                 {
                     Require(Player.instance.Strumlines[0].HeadsHit == headsPlayer && Player.instance.Strumlines[1].HeadsHit == headsOpponent,
-                        "Autoplay did not consume all chart heads: " + Player.instance.Strumlines[0].HeadsHit + "/" + headsPlayer + ", " + Player.instance.Strumlines[1].HeadsHit + "/" + headsOpponent);
+                        "Autoplay did not consume all chart heads: " + Player.instance.Strumlines[0].HeadsHit + "/" + headsPlayer + ", " + Player.instance.Strumlines[1].HeadsHit + "/" + headsOpponent
+                        + ", missed=" + string.Join(",", Player.instance.Strumlines.SelectMany(line => line.Notes).Where(note => note.Missed).Select(note => note.Time)));
                     Require(activeSong.playerOneStats.currentScore == 0 && activeSong.playerTwoStats.currentScore == 0,
                         "Autoplay must not grant player score.");
                     Require(activeSong.playerOneStats.missedHits == 0 && activeSong.playerTwoStats.missedHits == 0, "Autoplay missed notes.");
@@ -481,7 +497,10 @@ public static class VanillaSongValidation
 
     public static void CaptureStage(string name)
     {
-        CaptureStage(activeSong, Path.Combine(Output, name));
+        bool playing = activeSong.songStarted && !activeSong.isDead && !Pause.instance.IsPaused;
+        if (playing) Pause.instance.PauseSong();
+        try { CaptureStage(activeSong, Path.Combine(Output, name)); }
+        finally { if (playing) Pause.instance.ContinueSong(); }
     }
 
     public static void CaptureStage(Song song, string path)

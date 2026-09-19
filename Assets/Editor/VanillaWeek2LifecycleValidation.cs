@@ -22,6 +22,7 @@ public static class VanillaWeek2LifecycleValidation
     private static int campaignIndex;
     private static string CampaignSong => CampaignSongs[campaignIndex];
     private static bool Blazin => song?.vanillaPlayback?.SongId == "blazin";
+    private static bool Spaghetti => song?.vanillaPlayback?.IsSpaghetti == true;
     private static bool Explosion => song?.vanillaPlayback?.SongId == "2hot";
     private static bool Campaign => Mix || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("UNITY_PARTY_CAMPAIGN_LIFECYCLE_SONG"));
     private static int phase;
@@ -30,9 +31,11 @@ public static class VanillaWeek2LifecycleValidation
     private static double started;
     private static double changed;
     private static Song song;
+    private static Song retrySong;
     private static bool finishing;
     private static bool mixQuoteObserved;
     private static bool mixQuoteDucked;
+    private static bool spaghettiResultsObserved;
     private static string Output => Environment.GetEnvironmentVariable(Campaign ? "UNITY_PARTY_CAMPAIGN_LIFECYCLE_PATH" : Week3 ? "UNITY_PARTY_WEEK3_LIFECYCLE_PATH" : "UNITY_PARTY_WEEK2_LIFECYCLE_PATH")
         ?? Path.GetFullPath(Mix ? "Builds/MixLifecycle" : Week3 ? "Builds/Week3Lifecycle" : "Builds/Week2Lifecycle");
 
@@ -57,6 +60,9 @@ public static class VanillaWeek2LifecycleValidation
         if (!Application.isBatchMode) throw new InvalidOperationException("Run lifecycle validation in an isolated batch editor.");
         PlayerSettings.companyName = "UnityPartyValidation";
         PlayerSettings.productName = "SongValidation";
+        PlayerPrefs.SetInt("Funkin.Options.DiscordRPC", 0);
+        PlayerPrefs.SetInt("Funkin.Options.AutoPause", 0);
+        PlayerPrefs.Save();
         Directory.CreateDirectory(Output);
         EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
         SessionState.SetBool("VanillaWeek2LifecycleValidation.Active", true);
@@ -137,7 +143,7 @@ public static class VanillaWeek2LifecycleValidation
                 case 1:
                     song = Object.FindAnyObjectByType<Song>();
                     if (song == null || !song.songStarted) return;
-                    Require(song.vanillaPlayback.CharacterStage != null && (Blazin || song.OpponentVocals.isPlaying), "Source gameplay did not initialize.");
+                    Require(song.vanillaPlayback.CharacterStage != null && (Blazin || (Spaghetti ? song.vocalSource.isPlaying : song.OpponentVocals.isPlaying)), "Source gameplay did not initialize.");
                     if (Mix)
                     {
                         Require(song.vanillaPlayback.SongId == MixIds[campaignIndex] && song.vanillaPlayback.Variation == MixVariation, "Lifecycle selected the wrong mix.");
@@ -216,15 +222,24 @@ public static class VanillaWeek2LifecycleValidation
                     if (Mix) Require(song.musicSources[0].isPlaying, "Mix game-over confirm sound did not play.");
                     Capture("death-confirm.png");
                     SuppressMixIntro();
+                    retrySong = song;
                     SceneManager.LoadScene("Game_Backup3");
                     Next();
                     break;
                 case 5:
                     song = Object.FindAnyObjectByType<Song>();
-                    if (song == null || !song.songStarted) return;
+                    if (song == null || ReferenceEquals(song, retrySong) || !song.songStarted) return;
                     Require(!song.isDead && (Campaign ? Death == null : Week3 ? song.vanillaPlayback.Week3Stage.TrainCount == 0 : song.vanillaPlayback.Week2Stage.LightningCount == 0), "Retry retained death or stage effects.");
-                    Require(Blazin ? !song.hasVoiceLoaded : song.OpponentVocals.isPlaying && song.vocalSource.isPlaying && song.musicSources.Count(source => source == song.OpponentVocals) == 1,
+                    Require(Blazin ? !song.hasVoiceLoaded : Spaghetti ? song.vocalSource.isPlaying && song.OpponentVocals == null : song.OpponentVocals.isPlaying && song.vocalSource.isPlaying && song.musicSources.Count(source => source == song.OpponentVocals) == 1,
                         "Retry duplicated or lost vocal sources.");
+                    if (Spaghetti)
+                    {
+                        var stage = song.vanillaPlayback.CampaignStage;
+                        Require(elapsed < 12 && song.vanillaPlayback.Presentation.SpaghettiIntroTime == 0 && Pause.PlayedCampaignIntro,
+                            "Spaghetti retry replayed the intro.");
+                        Require(!stage.SpaghettiIconVisible && !stage.PropGraphic("truckDoor").gameObject.activeSelf
+                            && Enumerable.Range(0, 6).All(index => !stage.SpaghettiSinging(index)), "Spaghetti retry retained stage events.");
+                    }
                     Require(PlayerGraphic.Alpha == 1, "Retry retained faded character.");
                     if (Mix)
                     {
@@ -233,11 +248,29 @@ public static class VanillaWeek2LifecycleValidation
                         CheckMixAudio();
                     }
                     if (song.vanillaPlayback.CampaignStage?.Week == 8) VanillaWeekend1Validation.CheckRain(song, Output);
-                    Pause.instance.QuitSong();
+                    if (Spaghetti)
+                    {
+                        Pause.instance.EnablePractice();
+                        spaghettiResultsObserved = false;
+                        song.vanillaPlayback.Presentation.BeginSpaghettiEnding(song);
+                    }
+                    else Pause.instance.QuitSong();
                     Next();
                     break;
                 case 6:
+                    if (Spaghetti)
+                    {
+                        SpaghettiValidation.ObserveEnding(song);
+                        Require(!song.isDead, "Ending validation entered game over.");
+                        if (VanillaResultsScreen.Active != null)
+                        {
+                            Require(song.vanillaPlayback.Presentation.OutroFinished, "Results opened before the ending finished.");
+                            spaghettiResultsObserved = true;
+                            VanillaResultsScreen.Active.Accept();
+                        }
+                    }
                     if (SceneManager.GetActiveScene().name != "Title") return;
+                    if (Spaghetti) Require(spaghettiResultsObserved, "Ending skipped results before returning to the menu.");
                     if (Campaign && ++campaignIndex < CampaignSongs.Length)
                     {
                         phase = 0;

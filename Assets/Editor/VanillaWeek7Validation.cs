@@ -16,7 +16,7 @@ public static class VanillaWeek7Validation
     public static void CheckAssets()
     {
         var levels = VanillaStoryCatalog.Load();
-        Require(levels.Count == 9, "Expected Tutorial, seven weeks, and Weekend 1.");
+        Require(levels.Count == 10, "Expected Tutorial, seven weeks, Weekend 1, and LE SSERAFIM.");
         var level = levels.Single(item => item.id == "week7");
         foreach (string difficulty in new[] { "easy", "normal", "hard" })
         {

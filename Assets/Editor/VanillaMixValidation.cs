@@ -28,8 +28,8 @@ public static partial class VanillaMixValidation
     {
         string root = Path.Combine(Application.streamingAssetsPath, "Bundles");
         var catalog = VanillaFreeplayCatalog.Discover(root);
-        Require(catalog.Count == 43, "Expected 43 distinct Freeplay songs after importing 17 mixes.");
-        Require(catalog.Select(song => song.id).Distinct(StringComparer.OrdinalIgnoreCase).Count() == 43, "Freeplay contains duplicate paths.");
+        Require(catalog.Count == 44, "Expected 44 distinct Freeplay songs after importing Spaghetti.");
+        Require(catalog.Select(song => song.id).Distinct(StringComparer.OrdinalIgnoreCase).Count() == 44, "Freeplay contains duplicate paths.");
         Require(catalog.Count(song => ((string)song.Details("Hard")["playData"]["characters"]["player"]).StartsWith("pico")) == 19,
             "Pico Freeplay catalog must contain 15 mixes and four Weekend songs.");
         Require(catalog.Count(song => ((string)song.Details("Hard")["playData"]["characters"]["player"]).StartsWith("bf")) == 24,
@@ -101,7 +101,7 @@ public static partial class VanillaMixValidation
         Require(FunkinHudAssets.Icon("missing-mix-control")[0] == FunkinHudAssets.Icon("face")[0], "Missing-icon fallback control failed.");
         foreach (string icon in new[] { "pico", "pico-pixel", "tankman-bloody", "darnell" })
             Require(FunkinHudAssets.Icon(icon)[0] != FunkinHudAssets.Icon("face")[0], "Mix icon silently falls back: " + icon);
-        Debug.Log("MIX ASSETS PASSED: 43 catalog rows, 19 Pico and 24 BF players, 51 parsed charts, 29804 heads, 1329 events, Story originals, meshes and negative controls.");
+        Debug.Log("MIX ASSETS PASSED: 44 catalog rows, 19 Pico and 24 BF players, Spaghetti, 51 parsed mix charts, 29804 heads, 1329 events, Story originals, meshes and negative controls.");
     }
 
     private static void CheckGraphic(string path)

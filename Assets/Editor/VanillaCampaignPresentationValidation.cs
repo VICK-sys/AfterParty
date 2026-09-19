@@ -224,6 +224,11 @@ public static class VanillaCampaignPresentationValidation
 
     private static void Capture(string name, VanillaCampaignPresentation presentation)
     {
+        CaptureOverlay(Path.Combine(Output, name), presentation, index < 3);
+    }
+
+    public static void CaptureOverlay(string path, VanillaCampaignPresentation presentation, bool dialogue)
+    {
         Canvas canvas = presentation.GetComponentInChildren<Canvas>();
         CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
         var transforms = canvas.GetComponentsInChildren<Transform>(true);
@@ -254,7 +259,7 @@ public static class VanillaCampaignPresentationValidation
             scaler.enabled = false;
             canvas.scaleFactor = 1;
             Canvas.ForceUpdateCanvases();
-            if (index < 3)
+            if (dialogue)
                 foreach (var graphic in canvas.GetComponentsInChildren<VanillaDialogueGraphic>())
                     Require(graphic.canvasRenderer != null && graphic.canvasRenderer.GetMesh()?.vertexCount > 0,
                         "Dialogue artwork did not create a canvas mesh: " + graphic.name);
@@ -266,9 +271,10 @@ public static class VanillaCampaignPresentationValidation
                 var image = new Texture2D(1280,720,TextureFormat.RGB24,false);
                 image.ReadPixels(new Rect(0,0,1280,720),0,0);
                 image.Apply();
-                int colored = image.GetPixels32().Count(pixel => Math.Abs(pixel.r-pixel.g) > 45 || Math.Abs(pixel.g-pixel.b) > 45);
-                if (pass == 0) File.WriteAllBytes(Path.Combine(Output,name),image.EncodeToPNG());
-                if (index < 3) Require(pass == 0 ? colored > 3000 : colored == 0,"Dialogue artwork render or blank control failed: " + colored);
+                int colored = image.GetPixels32().Count(pixel => dialogue
+                    ? Math.Abs(pixel.r-pixel.g) > 45 || Math.Abs(pixel.g-pixel.b) > 45 : pixel.r > 200 || pixel.g > 200 || pixel.b > 200);
+                if (pass == 0) File.WriteAllBytes(path,image.EncodeToPNG());
+                Require(pass == 0 ? colored > (dialogue ? 3000 : 1000) : colored == 0,"Presentation artwork render or blank control failed: " + colored);
                 Object.DestroyImmediate(image);
             }
         }
