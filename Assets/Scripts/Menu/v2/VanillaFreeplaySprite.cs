@@ -20,6 +20,7 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
     private static readonly Dictionary<string, Frame[]> Cache = new Dictionary<string, Frame[]>();
     private Texture2D atlas;
     private string assetPath;
+    private string resourceRoot = "VanillaFreeplay";
     private string nextPrefix;
     private Frame[] frames;
     private float clock;
@@ -40,17 +41,18 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
     public int FrameIndex => index;
     public string CurrentFrameName => frames == null || frames.Length == 0 ? null : frames[index].name;
 
-    public void Load(string path, string prefix = "", bool repeat = true)
+    public void Load(string path, string prefix = "", bool repeat = true, string root = "VanillaFreeplay")
     {
         assetPath = path;
+        resourceRoot = root;
         nextPrefix = null;
         frozen = false;
-        atlas = Resources.Load<Texture2D>("VanillaFreeplay/" + path);
+        atlas = Resources.Load<Texture2D>(resourceRoot + "/" + path);
         if (atlas == null) throw new InvalidOperationException("Missing Freeplay texture: " + path);
-        string key = path + ":" + prefix;
+        string key = resourceRoot + "/" + path + ":" + prefix;
         if (!Cache.TryGetValue(key, out frames))
         {
-            TextAsset xml = Resources.Load<TextAsset>("VanillaFreeplay/" + path);
+            TextAsset xml = Resources.Load<TextAsset>(resourceRoot + "/" + path);
             frames = xml == null
                 ? new[] { new Frame { name = path, uv = new Rect(0, 0, 1, 1), size = new Vector2(atlas.width, atlas.height), full = new Vector2(atlas.width, atlas.height) } }
                 : XDocument.Parse(xml.text).Root.Elements("SubTexture")
@@ -81,10 +83,10 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
 
     public bool TryPlay(string prefix, bool repeat = true, string then = null)
     {
-        TextAsset xml = Resources.Load<TextAsset>("VanillaFreeplay/" + assetPath);
+        TextAsset xml = Resources.Load<TextAsset>(resourceRoot + "/" + assetPath);
         if (xml == null || !XDocument.Parse(xml.text).Root.Elements("SubTexture")
             .Any(e => ((string)e.Attribute("name")).StartsWith(prefix, StringComparison.Ordinal))) return false;
-        Load(assetPath, prefix, repeat);
+        Load(assetPath, prefix, repeat, resourceRoot);
         nextPrefix = then;
         return true;
     }

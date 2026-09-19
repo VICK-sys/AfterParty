@@ -21,12 +21,15 @@ public sealed partial class VanillaFreeplay
 
     private void InitializeDJ()
     {
+        if (!IsPico)
+        {
         const string symbol = "Boyfriend DJ watchin tv OG";
         cartoonBlink = dj.GetSymbolFrameLabel(symbol, "BLINK");
         cartoonLoop = dj.GetSymbolFrameLabel(symbol, "LOOP");
         cartoonChangeChannel = dj.GetSymbolFrameLabel(symbol, "CHANGE_CHANNEL");
         cartoonRemoteClick = dj.GetSymbolFrameLabel(symbol, "REMOTE_CLICK");
         cartoonTvSound = dj.GetSymbolFrameLabel(symbol, "TV_SOUND");
+        }
         cartoon = gameObject.AddComponent<AudioSource>();
         tvSound = gameObject.AddComponent<AudioSource>();
         cartoon.playOnAwake = tvSound.playOnAwake = false;
@@ -67,7 +70,7 @@ public sealed partial class VanillaFreeplay
                     djIdleTime = 0;
                     dj.Play("AFK", false);
                 }
-                else if (djIdleTime >= 120)
+                else if (!IsPico && djIdleTime >= 120)
                 {
                     djIdleTime = 0;
                     PlayCartoon(0);

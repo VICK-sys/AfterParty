@@ -268,7 +268,7 @@ public static class VanillaFreeplayValidation
                     Require(UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(freeplay.PreviewSource.clip)
                         < (long)freeplay.PreviewSource.clip.samples * freeplay.PreviewSource.clip.channels * 2, "Preview retained the complete decoded instrumental.");
                     freeplay.ChangeDifficulty(2);
-                    Require(freeplay.Difficulty == "Erect" && freeplay.VisibleSongCount == 15 && freeplay.SelectedSong.meta.songPath == songPath, "Erect filtering lost selection or kept a song without a remix.");
+                    Require(freeplay.Difficulty == "Erect" && freeplay.VisibleSongCount == 16 && freeplay.SelectedSong.meta.songPath == songPath, "Erect filtering lost selection or kept a song without a remix.");
                     Next();
                     break;
                 case 3:

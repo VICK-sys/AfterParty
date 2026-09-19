@@ -55,7 +55,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private static readonly string[] Ranks = { "LOSS rank", "GOOD rank", "GREAT rank", "EXCELLENT rank", "PERFECT rank0", "PERFECT rank GOLD" };
     private static readonly float[] CapsuleStretch = { 1.7f, 1.8f, 0.85f, 0.85f, 0.97f, 0.97f, 1 };
     private static readonly float[] CapsuleExitX = { 0.245f, 0.75f, 0.98f, 0.98f, 1.2f, 1.2f, 1.2f };
-    private const float IntroDuration = 17f / 24;
+    private float IntroDuration => dj.GetLabelDuration("Intro");
+    public bool IsPico => VanillaCharacterSelect.SelectedCharacter == "pico";
+    private string userBundleRoot;
+    private string StyleSuffix => IsPico ? "_pico" : "";
     private MenuV2 menu;
     private RectTransform viewport;
     private RectTransform list;
@@ -131,14 +134,14 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public AudioSource PreviewSource => preview;
     public RectTransform Viewport => viewport;
 
-    public static VanillaFreeplay Open(MenuV2 owner, bool skipIntro = false, string userRoot = null)
+    public static VanillaFreeplay Open(MenuV2 owner, bool skipIntro = false, string userRoot = null, List<VanillaFreeplaySong> catalog = null)
     {
         if (Active != null) return Active;
         var root = new GameObject("Vanilla Freeplay", typeof(RectTransform));
         root.SetActive(false);
         var freeplay = root.AddComponent<VanillaFreeplay>();
         freeplay.menu = owner;
-        freeplay.Build(userRoot);
+        freeplay.Build(userRoot, catalog);
         owner.vanillaMenu?.SetFreeplaySuspended(true);
         owner.mainScreen.gameObject.SetActive(!skipIntro);
         owner.playScreen.gameObject.SetActive(false);
@@ -159,8 +162,11 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         return freeplay;
     }
 
-    private void Build(string userRoot)
+    private List<VanillaFreeplaySong> availableSongs;
+
+    private void Build(string userRoot, List<VanillaFreeplaySong> catalog)
     {
+        userBundleRoot = userRoot;
         pixelFont = Resources.Load<Font>("VanillaFreeplay/5by7");
         vcrFont = Resources.Load<Font>("VanillaFreeplay/vcr");
         weekFont = Resources.Load<Font>("VanillaFreeplay/YoureGone");
@@ -203,9 +209,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         confirmGlow.gameObject.SetActive(false);
         confirmText = Sprite("Confirm Text", content, "freeplay/glowingText", -8, 115);
         confirmText.gameObject.SetActive(false);
-        dj = Animate("Boyfriend DJ", content, "freeplay/freeplay-boyfriend", 0, 0, true);
+        dj = Animate("Boyfriend DJ", content, IsPico ? "freeplay/freeplay-pico" : "freeplay/freeplay-boyfriend", 0, 0, true);
         InitializeDJ();
-        backing = Sprite("Dad Backdrop", content, "freeplay/freeplayBGweek1-bf", 387.76f, 0);
+        if (IsPico) BuildPicoCard();
+        backing = Sprite("Dad Backdrop", content, "freeplay/freeplayBGweek1-" + (IsPico ? "pico" : "bf"), 387.76f, 0);
         backing.centerScale = false;
         backing.drawScale = 721f / backing.FrameSize.y;
         backing.leftSlant = 90 * backing.drawScale;
@@ -215,9 +222,9 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         content = Rect("Chrome", content, 0, 0, 1280, 720);
         chrome = content.gameObject.AddComponent<CanvasGroup>();
         difficultyRoot = Rect("Difficulty", content, 0, 0, 400, 180);
-        VanillaFreeplaySprite left = Sprite("Previous Difficulty", difficultyRoot, "freeplay/freeplaySelector/freeplaySelector", 20, 70, "arrow pointer loop");
+        VanillaFreeplaySprite left = Sprite("Previous Difficulty", difficultyRoot, "freeplay/freeplaySelector/freeplaySelector" + StyleSuffix, 20, 70, "arrow pointer loop");
         Hit("Previous Difficulty Button", difficultyRoot, 15, 65, 65, 100, () => ChangeDifficulty(-1));
-        Sprite("Next Difficulty", difficultyRoot, "freeplay/freeplaySelector/freeplaySelector", 325, 70, "arrow pointer loop").flipX = true;
+        Sprite("Next Difficulty", difficultyRoot, "freeplay/freeplaySelector/freeplaySelector" + StyleSuffix, 325, 70, "arrow pointer loop").flipX = true;
         Hit("Next Difficulty Button", difficultyRoot, 315, 65, 65, 100, () => ChangeDifficulty(1));
         filters = Rect("Filters", content, 400, 75, 400, 60);
         emptyText = Label("Empty Filter", content, "NO SONGS", 440, 420, 430, 100, 32, pixelFont);
@@ -229,7 +236,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Sprite("Highscore", scoreRoot, "freeplay/highscore", 860, 70, "highscore small instance 1").loop = false;
         for (int i = 0; i < 7; i++)
         {
-            VanillaFreeplaySprite digit = Sprite("Score " + i, scoreRoot, "digital_numbers", 927 + 45 * i, 120, "ZERO DIGITAL");
+            VanillaFreeplaySprite digit = Sprite("Score " + i, scoreRoot, "digital_numbers" + StyleSuffix, 927 + 45 * i, 120, "ZERO DIGITAL");
             digit.drawScale = 0.4f;
             digit.centerScale = false;
             digit.loop = false;
@@ -242,7 +249,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Hit("Back", headerRoot, 0, 0, 285, 64, Close);
         Text ost = Label("OST", headerRoot, "OFFICIAL OST", 600, 3, 670, 61, 48, vcrFont);
         ost.alignment = TextAnchor.UpperRight;
-        modeHint = Label("Controls", content, "F: FAVORITE   Q/E: FILTER   TAB: PLAY MODE", 8, 686, 900, 26, 20, pixelFont);
+        modeHint = Label("Controls", content, "F: FAVORITE   Q/E: FILTER   TAB: CHARACTER   M: PLAY MODE", 8, 686, 900, 26, 20, pixelFont);
         modeHint.color = new Color(1, 1, 1, 0.75f);
         modeHint.gameObject.AddComponent<Outline>().effectDistance = new Vector2(1, -1);
         status = Label("Status", content, "", 415, 650, 820, 30, 24, pixelFont);
@@ -252,7 +259,11 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         preview = gameObject.AddComponent<AudioSource>();
         preview.playOnAwake = false;
         randomClip = Resources.Load<AudioClip>("VanillaFreeplay/audio/freeplayRandom");
-        songs = VanillaFreeplayCatalog.Discover(Path.Combine(Application.streamingAssetsPath, "Bundles"), userRoot ?? Path.Combine(Application.persistentDataPath, "Bundles"));
+        availableSongs = catalog ?? VanillaFreeplayCatalog.Discover(Path.Combine(Application.streamingAssetsPath, "Bundles"), userRoot ?? Path.Combine(Application.persistentDataPath, "Bundles"));
+        songs = availableSongs;
+        songs = songs.Where(item => IsPico
+            ? item.details.Values.Any(data => ((string)data["playData"]?["characters"]?["player"] ?? "").StartsWith("pico"))
+            : item.details.Values.Any(data => !((string)data["playData"]?["characters"]?["player"] ?? "bf").StartsWith("pico"))).ToList();
         difficulties = VanillaFreeplayCatalog.Difficulties(songs);
         Difficulty = difficulties.FirstOrDefault(d => string.Equals(d, rememberedDifficulty, StringComparison.OrdinalIgnoreCase)) ?? difficulties.FirstOrDefault() ?? "Normal";
         Mode = rememberedMode = PlayModes.Normalize(rememberedMode);
@@ -293,7 +304,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         age += delta;
         capsuleAge += delta;
         selectionAge += delta;
-        if (!ready && age >= IntroDuration && !closing)
+        if (!ready && dj.CurrentLabel == "Intro" && dj.Finished && !closing)
         {
             ready = true;
             menu.mainScreen.gameObject.SetActive(false);
@@ -309,12 +320,13 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (selectingMode)
         {
             for (int i = 0; i < PlayModes.Count; i++) if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SetMode(PlayModes.FromIndex(i));
-            if (BackPressed() || Input.GetKeyDown(KeyCode.Tab)) { DJPlayerAction(); selectingMode = false; modePanel.SetActive(false); }
+            if (BackPressed() || Input.GetKeyDown(KeyCode.M)) { DJPlayerAction(); selectingMode = false; modePanel.SetActive(false); }
             return;
         }
         if (BackPressed()) { Close(); return; }
-        if (Input.GetKeyDown(KeyCode.Tab)) { DJPlayerAction(); selectingMode = true; modePanel.SetActive(true); return; }
-        float vertical = Input.GetAxisRaw("Vertical");
+        if (Input.GetKeyDown(KeyCode.M)) { DJPlayerAction(); selectingMode = true; modePanel.SetActive(true); return; }
+        if (VanillaControls.Pressed("FREEPLAY_CHAR_SELECT")) { OpenCharacterSelect(); return; }
+        float vertical = Player.MenuAxis("Vertical");
         int direction = vertical > 0.5f ? -1 : vertical < -0.5f ? 1 : 0;
         if (direction != 0) DJPlayerAction();
         if (direction != heldDirection)
@@ -329,20 +341,20 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             repeatTime += delta;
             if (heldTime >= 0.9f && repeatTime >= 0.07f) { repeatTime = 0; MoveSelection(direction); }
         }
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        float horizontal = Player.MenuAxis("Horizontal");
         if (horizontal > 0.5f && previousHorizontal <= 0.5f) ChangeDifficulty(1);
         if (horizontal < -0.5f && previousHorizontal >= -0.5f) ChangeDifficulty(-1);
         previousHorizontal = horizontal;
         if (Input.mouseScrollDelta.y != 0) MoveSelection(Input.mouseScrollDelta.y > 0 ? -1 : 1);
-        if (Input.GetKeyDown(KeyCode.Home)) MoveSelection(-SelectedIndex);
-        if (Input.GetKeyDown(KeyCode.End)) MoveSelection(filtered.Count - SelectedIndex);
-        if (Input.GetKeyDown(KeyCode.Q)) ChangeFilter(-1);
-        if (Input.GetKeyDown(KeyCode.E)) ChangeFilter(1);
-        if (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.JoystickButton2)) ToggleFavorite();
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton0)) ConfirmSelection();
+        if (VanillaControls.Pressed("FREEPLAY_JUMP_TO_TOP")) MoveSelection(-SelectedIndex);
+        if (VanillaControls.Pressed("FREEPLAY_JUMP_TO_BOTTOM")) MoveSelection(filtered.Count - SelectedIndex);
+        if (VanillaControls.Pressed("FREEPLAY_LEFT")) ChangeFilter(-1);
+        if (VanillaControls.Pressed("FREEPLAY_RIGHT")) ChangeFilter(1);
+        if (VanillaControls.Pressed("FREEPLAY_FAVORITE")) ToggleFavorite();
+        if (VanillaControls.Pressed("ACCEPT")) ConfirmSelection();
     }
 
-    private static bool BackPressed() => Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton1);
+    private static bool BackPressed() => VanillaControls.Pressed("BACK");
 
     public void MoveSelection(int change)
     {
@@ -430,7 +442,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     {
         RectTransform root = Rect(song?.meta.songName ?? "Random", list, 0, 0, 612, 132);
         var capsule = new Capsule { root = root, song = song };
-        capsule.body = Sprite("Capsule", root, "freeplay/freeplayCapsule/capsule/freeplayCapsule", 0, 0, "mp3 capsule w backing NOT SELECTED");
+        capsule.body = Sprite("Capsule", root, "freeplay/freeplayCapsule/capsule/freeplayCapsule" + StyleSuffix, 0, 0, "mp3 capsule w backing NOT SELECTED");
         capsule.body.drawScale = 0.8f;
         RectTransform detail = Rect("Details", root, 0, 0, 612, 132);
         capsule.detail = detail.gameObject.AddComponent<CanvasGroup>();
@@ -438,7 +450,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         titleMask.gameObject.AddComponent<RectMask2D>();
         capsule.title = Label("Title", titleMask, song?.Title(Difficulty) ?? "Random", 0, 0, 1000, 42, 32, pixelFont);
         capsule.glow = capsule.title.gameObject.AddComponent<Outline>();
-        capsule.glow.effectColor = Hex("00CCFF");
+        capsule.glow.effectColor = Hex(IsPico ? "CC6600" : "00CCFF");
         capsule.glow.effectDistance = new Vector2(1, -1);
         if (song != null)
         {
@@ -586,7 +598,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         foreach (Capsule capsule in capsules)
         {
             bool selected = capsule.index == SelectedIndex;
-            capsule.body.Load("freeplay/freeplayCapsule/capsule/freeplayCapsule", selected ? "mp3 capsule w backing0" : "mp3 capsule w backing NOT SELECTED");
+            capsule.body.Load("freeplay/freeplayCapsule/capsule/freeplayCapsule" + StyleSuffix, selected ? "mp3 capsule w backing0" : "mp3 capsule w backing NOT SELECTED");
             capsule.body.rectTransform.anchoredPosition = new Vector2(selected ? 0 : 5, 0);
             capsule.detail.alpha = selected ? 1 : 0.6f;
             capsule.glow.enabled = selected;
@@ -609,7 +621,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             VanillaFreeplaySprite image = Sprite("Clear " + x, clearDigits, "fonts/freeplay-clear", x, 0, digit + "0000");
             x += image.FrameSize.x;
         }
-        modeHint.text = Mode == PlayModes.Boyfriend ? "F: FAVORITE   Q/E: FILTER   TAB: PLAY MODE" : "MODE: " + PlayModes.Label(Mode) + "   TAB: CHANGE";
+        modeHint.text = Mode == PlayModes.Boyfriend ? "F: FAVORITE   Q/E: FILTER   TAB: CHARACTER   M: PLAY MODE" : "MODE: " + PlayModes.Label(Mode) + "   M: CHANGE   TAB: CHARACTER";
         modeHint.gameObject.SetActive(Mode != 1);
         status.text = string.Empty;
         if (ready) StartPreview();
@@ -642,6 +654,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void Draw(float delta)
     {
+        if (characterTransitionAge >= 0) { DrawCharacterWipe(delta); return; }
         if (exitAge >= 0) { DrawExit(delta); return; }
         float intro = Mathf.Clamp01(age / 0.6f);
         cardRoot.anchoredPosition = new Vector2(-524 * Mathf.Pow(1 - intro, 4), 0);
@@ -653,20 +666,21 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         headerRoot.gameObject.SetActive(age >= IntroDuration + 1f / 24);
         scoreRoot.gameObject.SetActive(age >= IntroDuration + 1f / 24);
         stars.enabled = albumTitle.enabled = age >= IntroDuration + 0.75f;
-        card.color = ready ? Hex("FFD863") : Hex("FFD4E9");
-        cardRoot.Find("Band").gameObject.SetActive(ready && confirmAge < 0);
+        card.color = ready ? Hex(IsPico ? "98A2F3" : "FFD863") : Hex(IsPico ? "84D7E8" : "FFD4E9");
+        if (IsPico) DrawPicoCard(delta);
+        cardRoot.Find("Band").gameObject.SetActive(!IsPico && ready && confirmAge < 0);
         float light = ready ? 1 - Mathf.Pow(2, -10 * Mathf.Clamp01((age - IntroDuration) / 0.6f)) : 0;
         backing.color = new Color(light, light, light);
         if (confirmAge >= 0)
         {
-            card.color = Color.Lerp(Hex("FFD0D5"), Hex("171831"), Mathf.Clamp01(confirmAge / 0.33f));
-            backing.color = Color.Lerp(Hex("A8A8A8"), Hex("646464"), Mathf.Clamp01(confirmAge / 0.5f));
+            if (!IsPico) card.color = Color.Lerp(Hex("FFD0D5"), Hex("171831"), Mathf.Clamp01(confirmAge / 0.33f));
+            backing.color = IsPico ? PicoConfirmColor() : Color.Lerp(Hex("A8A8A8"), Hex("646464"), Mathf.Clamp01(confirmAge / 0.5f));
             confirmGlow.color = new Color(1, 1, 1, 0.6f * Mathf.Clamp01(confirmAge / 0.33f));
             confirmText.color = new Color(1, 1, 1, confirmAge < 0.33f ? 0 : Mathf.Lerp(1, 0.4f, (confirmAge - 0.33f) / 0.5f));
         }
         for (int i = 0; i < marquees.Count; i++)
         {
-            marquees[i].gameObject.SetActive(ready && confirmAge < 0);
+            marquees[i].gameObject.SetActive(!IsPico && ready && confirmAge < 0);
             float period = marquees[i].preferredWidth / 8;
             float x = -Mathf.Repeat(age * marqueeSpeeds[i], period);
             marquees[i].rectTransform.anchoredPosition = new Vector2(x, marquees[i].rectTransform.anchoredPosition.y);
@@ -694,7 +708,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             string text = shown.ToString("D7");
             for (int i = 0; i < 7; i++)
             {
-                scoreDigits[i].Load("digital_numbers", Numbers[text[i] - '0'] + " DIGITAL", false);
+                scoreDigits[i].Load("digital_numbers" + StyleSuffix, Numbers[text[i] - '0'] + " DIGITAL", false);
                 scoreDigits[i].rectTransform.anchoredPosition = new Vector2(927 + 45 * i + (text[i] == '1' ? 15 : 0), -120);
             }
             previousScore = shown;
@@ -814,7 +828,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             foreach (Capsule capsule in capsules)
             {
                 if (capsule.index != SelectedIndex) capsule.detail.alpha = Mathf.Clamp01(1 - elapsed * 3);
-                else if (menu.vanillaMenu.flashingLights) capsule.title.color = (int)(elapsed * 24) % 2 == 0 ? Color.white : Hex("00CCFF");
+                else if (menu.vanillaMenu.flashingLights) capsule.title.color = (int)(elapsed * 24) % 2 == 0 ? Color.white : Hex(IsPico ? "CC6600" : "00CCFF");
             }
             yield return null;
         }
@@ -823,7 +837,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Song.modeOfPlay = Mode;
         ArmRankReturn(song.meta, Song.difficulty, Mode);
         ReturnToFreeplay = true;
-        LoadingTransition.instance.Show(() => SceneManager.LoadScene("Game_Backup3"));
+        LoadingTransition.instance.LoadScene("Game_Backup3");
     }
 
     public void Close()
@@ -841,6 +855,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         menu.vanillaMenu?.SetFreeplaySuspended(true);
         cardRoot.Find("Band").gameObject.SetActive(false);
         foreach (Text marquee in marquees) marquee.gameObject.SetActive(false);
+        foreach (var item in picoLoops) item.sprite.gameObject.SetActive(false);
+        if (picoBlue != null) picoBlue.gameObject.SetActive(false);
+        if (picoDark != null) picoDark.gameObject.SetActive(false);
+        if (picoGlow != null) picoGlow.gameObject.SetActive(false);
         QueueExit(cardRoot, 0.4f, -524);
         QueueExit(dj.rectTransform, 0.5f, -dj.rectTransform.rect.width * 1.6f);
         QueueExit(backing.rectTransform, 0.4f, 1920);
@@ -887,7 +905,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             float eased = t == 0 || t == 1 ? t : Mathf.Pow(2, 10 * (t - 1));
             tween.rect.anchoredPosition = Vector2.LerpUnclamped(tween.start, tween.end, eased);
         }
-        card.color = Color.Lerp(Hex("FFD863"), Hex("FFD4E9"), 1 - Mathf.Pow(1 - Mathf.Clamp01(exitAge / 0.25f), 2));
+        card.color = Color.Lerp(Hex(IsPico ? "98A2F3" : "FFD863"), Hex(IsPico ? "FFD0D5" : "FFD4E9"), 1 - Mathf.Pow(1 - Mathf.Clamp01(exitAge / 0.25f), 2));
         foreach (VanillaFreeplaySprite dot in difficultyDots)
         {
             Color tint = dot.color;
@@ -925,6 +943,9 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (characterTransition != null) Destroy(characterTransition.gameObject);
+        Destroy(picoMultiply);
+        Destroy(picoAdditive);
         StopCartoon(false);
         CancelPreview();
         if (rankAdditive != null) Destroy(rankAdditive);

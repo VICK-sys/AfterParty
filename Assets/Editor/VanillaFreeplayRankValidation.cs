@@ -219,6 +219,7 @@ public static class VanillaFreeplayRankValidation
                     Next();
                     break;
                 case 2:
+                    if (VanillaResultsScreen.Active != null) VanillaResultsScreen.Active.Accept();
                     if (SceneManager.GetActiveScene().name != "Title" || VanillaFreeplay.Active == null) return;
                     freeplay = VanillaFreeplay.Active;
                     menu = MenuV2.Instance;

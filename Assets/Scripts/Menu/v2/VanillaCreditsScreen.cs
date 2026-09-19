@@ -131,7 +131,7 @@ public sealed class VanillaCreditsScreen : MonoBehaviour
         bool pause = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)
             || Input.GetKey(KeyCode.P) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.JoystickButton7);
         bool back = Time.frameCount != openedFrame && !VanillaCreditsTransition.BlocksInput && (Input.GetKeyDown(KeyCode.Escape)
-            || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.JoystickButton1));
+            || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Backspace) || Player.ControllerBackPressed);
         Tick(Time.unscaledDeltaTime, fast, pause, back);
     }
 

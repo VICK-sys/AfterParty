@@ -12,6 +12,7 @@ public sealed class VanillaTitleScreen : MonoBehaviour
     public static VanillaTitleScreen Active { get; private set; }
     public static bool Initialized { get; private set; }
     public static bool EnteredMainMenu { get; private set; }
+    public static void ResetEntry() => EnteredMainMenu = false;
     public bool IntroSkipped { get; private set; }
     public bool Transitioning { get; private set; }
     public bool CheatActive { get; private set; }
@@ -93,8 +94,8 @@ public sealed class VanillaTitleScreen : MonoBehaviour
         owner.optionsScreen.gameObject.SetActive(false);
         owner.inputBlocker.enabled = false;
         title.enabledFrame = Time.frameCount;
-        title.previousHorizontal = Input.GetAxisRaw("Horizontal");
-        title.previousVertical = Input.GetAxisRaw("Vertical");
+        title.previousHorizontal = Player.MenuAxis("Horizontal");
+        title.previousVertical = Player.MenuAxis("Vertical");
         if (!Initialized) owner.musicSource.Stop();
         Active = title;
         host.SetActive(true);
@@ -220,11 +221,11 @@ public sealed class VanillaTitleScreen : MonoBehaviour
         Tick(delta);
         if (Time.frameCount == enabledFrame || closing || VanillaTitleTransition.BlocksInput) return;
         bool accept = Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)
-            || Input.GetKeyDown(KeyCode.JoystickButton7) || Input.GetKeyDown(KeyCode.JoystickButton0);
+            || Player.ControllerPausePressed || Player.ControllerConfirmPressed;
         if (accept) Accept();
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.JoystickButton1)) menu.QuitGame();
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Player.ControllerBackPressed) menu.QuitGame();
+        float horizontal = Player.MenuAxis("Horizontal");
+        float vertical = Player.MenuAxis("Vertical");
         ShiftHue(Mathf.Sign(horizontal) * (Mathf.Abs(horizontal) > 0.5f ? delta * 0.1f : 0));
         if (!CheatActive && IntroSkipped)
         {

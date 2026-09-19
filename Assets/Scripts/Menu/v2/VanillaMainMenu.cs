@@ -34,7 +34,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
         freeplaySuspended = value;
         Busy = value;
         enabledFrame = Time.frameCount;
-        previousAxis = Input.GetAxisRaw("Vertical");
+        previousAxis = Player.MenuAxis("Vertical");
     }
 
     private void OnEnable()
@@ -43,12 +43,13 @@ public sealed class VanillaMainMenu : MonoBehaviour
         if (items == null || items.Length == 0)
             return;
         Busy = false;
+        flashingLights = VanillaPreferences.FlashingLights;
         showingCredits = false;
         creditsPanel.SetActive(false);
         magenta.enabled = false;
         SelectedIndex = Mathf.Clamp(rememberedIndex, 0, items.Length - 1);
         CameraScroll = TargetScroll;
-        previousAxis = Input.GetAxisRaw("Vertical");
+        previousAxis = Player.MenuAxis("Vertical");
         for (int i = 0; i < items.Length; i++)
         {
             items[i].Select(i == SelectedIndex);
@@ -77,13 +78,13 @@ public sealed class VanillaMainMenu : MonoBehaviour
         if (Time.frameCount == enabledFrame) return;
         if (menu.musicSource.clip == menu.menuClip)
             menu.musicSource.volume = Mathf.MoveTowards(menu.musicSource.volume, OptionsV2.menuVolume * 0.8f, delta * 0.5f);
-        float axis = Input.GetAxisRaw("Vertical");
+        float axis = Player.MenuAxis("Vertical");
         if (VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput)
         {
             previousAxis = axis;
             return;
         }
-        bool back = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.JoystickButton1);
+        bool back = VanillaControls.Pressed("BACK");
         if (showingCredits)
         {
             if (back)
@@ -95,7 +96,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
                 MoveSelection(-1);
             else if (axis < -0.5f && previousAxis >= -0.5f)
                 MoveSelection(1);
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
+            if (VanillaControls.Pressed("ACCEPT"))
                 ConfirmSelection();
             else if (back)
                 ReturnToTitle();

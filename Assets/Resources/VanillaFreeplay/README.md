@@ -1,7 +1,7 @@
 # AfterParty Freeplay
 
-The main menu opens a Unity adaptation of the Boyfriend Freeplay screen from Friday Night Funkin' 0.8.6.
-It uses the original artwork, fonts, capsule animations, album animations, letter filters, and Boyfriend DJ timeline.
+The main menu opens a Unity adaptation of the Freeplay screen from Friday Night Funkin' 0.8.6.
+It uses the original artwork, fonts, capsule animations, album animations, letter filters, and BF and Pico DJ timelines.
 The menu reads built-in and local bundles.
 Story Mode uses the original level order and installed vanilla songs.
 Only songs with a chart and instrumental for the selected difficulty appear.
@@ -15,7 +15,8 @@ Only songs with a chart and instrumental for the selected difficulty appear.
 - Press Home or End to select the first or last entry.
 - Press Enter, Space, or Z to play the selected song.
 - Press Escape, Backspace, or X to return to the main menu.
-- Press Tab to select an AfterParty play mode.
+- Press Tab to open character select.
+- Press M to select an AfterParty play mode.
 - Use the mouse wheel to select a song.
 - Click a capsule to select it. Click the selected capsule to play it.
 
@@ -26,11 +27,17 @@ The Random entry selects a playable song from the current filter and difficulty.
 Song previews use the metadata range, or the first 20 percent of the instrumental.
 The menu restores the song and difficulty after gameplay.
 Entry keeps the main menu visible behind the moving card, backdrop, and capsules until the DJ intro finishes.
+The intro completion switches the DJ to idle and reveals the backing card.
+UI entrance timing uses the DJ clip duration.
 Exit moves the screen elements separately and restores main menu input after 0.5 seconds.
 Song confirmation plays the selected icon animation at 10 frames per second, then holds its confirmation pose.
+Character select starts its upward transition 0.45 seconds after the DJ animation begins.
+Menu elements use separate vertical offsets and a 0.8-second easing curve.
+The original gradient rises over the blue-to-black fade while preview music fades over 0.9 seconds.
+The screen change waits for the DJ animation and confirmation sound to finish.
 
 The DJ plays the AFK animation after 60 idle seconds, at the end of an idle loop.
-The DJ returns to idle, then watches TV after another 120 idle seconds.
+BF returns to idle, then watches TV after another 120 idle seconds.
 Menu actions reset the idle timer and allow the AFK animation to play again.
 Browsing does not interrupt an active AFK or TV animation.
 TV playback uses the original remote sounds, cartoon audio, random blinks, and channel changes.
@@ -63,10 +70,21 @@ The screen supports the songs and variations installed in AfterParty.
 Song previews stream audio to avoid decoding complete instrumentals during selection.
 Difficulty changes reuse song rows and update their titles, icons, BPM, ratings, ranks, and favorites.
 The screen retains unchanged filters and does not replay the list entrance when the difficulty changes.
-It does not import additional charts, Pico gameplay, character selection, unlock screens, or result-screen celebrations.
-Tab opens AfterParty play modes in place of character selection.
+Pico includes the four original Weekend 1 songs.
+Original Weekend 1 songs appear in Freeplay only when Pico is selected.
+Pico and the four Weekend 1 songs are available in Freeplay from the first session.
+Pico also includes 15 Pico mixes.
+BF includes Darnell and Lit Up BF mixes.
+Each mix has separate scores and favorites.
+Character selection filters songs by their player metadata.
+The results screen retains the existing AfterParty behavior.
+Character select preserves the BF and Pico animations, selection grid, introduction video, and selection music.
+Escape cancels confirmation before the exit transition.
+Character selection persists between sessions.
+Character select preloads Freeplay textures and parses the DJ atlases in the background.
+Character switching reuses the current song catalog.
 The Animate renderer preserves affine transforms, frame labels, atlas rotation, and the color multipliers used by these assets.
-Special Animate blend modes use normal alpha blending.
+Character select and the Pico backing card use additive, screen, and multiply blending.
 The screen retains a 1280 by 720 viewport with letterboxing at other aspect ratios.
 
 The artwork, sounds, fonts, and music retain their upstream ownership.
@@ -99,3 +117,9 @@ Use `-executeMethod VanillaFreeplayDJValidation.Begin` to check DJ behavior in t
 This probe checks idle thresholds, loop boundaries, activity resets, TV frame cues, streamed audio, preview volume, and exit cleanup.
 Controls verify that AFK stays inactive before its threshold and does not replace rank reactions.
 The probe observes the 60-second idle trigger in Play mode and captures AFK and TV frames.
+
+Set `UNITY_PARTY_CHARACTER_TEST_PATH` and run `VanillaCharacterSelectValidation.Begin` to check character select.
+The probe checks the introduction video, fresh-save Pico access, confirmation cancellation, saved selection, and both character catalogs.
+It checks that BF excludes original Weekend 1 songs before and after switching to Pico.
+It rejects a finished intro held for 100 milliseconds and checks that Pico resumes animation with his backing card visible.
+Character filtering, missing charts, and blank renders provide controls.

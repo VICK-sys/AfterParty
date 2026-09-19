@@ -91,6 +91,18 @@ public sealed partial class VanillaFreeplay
         rankReturnPath = null;
     }
 
+    public static void PrepareResultsReturn(SongMetaV2 meta, string difficulty, int mode, string character, VanillaFreeplayRankChange change)
+    {
+        rememberedSong = Path.GetFullPath(meta.songPath);
+        rememberedDifficulty = difficulty;
+        rememberedMode = mode;
+        hasRememberedSelection = true;
+        ReturnToFreeplay = true;
+        PlayerPrefs.SetString("Freeplay.Character", character);
+        ArmRankReturn(meta, difficulty, mode);
+        QueueRankReturn(change);
+    }
+
     private static void ClearRankReturn()
     {
         pendingRank = null;
@@ -163,7 +175,7 @@ public sealed partial class VanillaFreeplay
         rankVignette.color = Color.clear;
         rankFade = Rect("Fade In", rankLayer, 0, 0, 1280, 720).gameObject.AddComponent<Image>();
         rankFade.raycastTarget = false;
-        dj.PlayRange(change.newRank == 0 ? "Fist Pump Loss" : "Fist Pump", 0, 4, true);
+        dj.PlayRange(change.newRank == 0 ? "Fist Pump Loss" : "Fist Pump", 0, IsPico && change.newRank == 0 ? 1 : 4, true);
         DrawRankAnimation(0);
     }
 
@@ -216,7 +228,7 @@ public sealed partial class VanillaFreeplay
         if (!rankSlammed && t >= 1.6f)
         {
             rankSlammed = true;
-            dj.PlayRange(rankChange.newRank == 0 ? "Fist Pump Loss" : "Fist Pump", 4, -1, false);
+            dj.PlayRange(rankChange.newRank == 0 ? "Fist Pump Loss" : "Fist Pump", IsPico && rankChange.newRank == 0 ? 0 : 4, -1, false);
             rankDjReaction = true;
             foreach (Capsule capsule in capsules)
             {

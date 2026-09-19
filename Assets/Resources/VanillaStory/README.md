@@ -13,8 +13,8 @@ The text renderer preserves source font metrics and the 29-pixel line spacing.
 
 ## Menu behavior
 
-The screen currently shows Tutorial and Weeks 1 through 3.
-Weeks 4 through 7, Weekend 1, and LE SSERAFIM remain hidden until their songs are added to Freeplay.
+The screen shows Tutorial, Weeks 1 through 7, and Weekend 1.
+LE SSERAFIM remains hidden until its song is installed.
 The menu preserves original sprite coordinates, trimmed and rotated atlas frames, indexed dances, animation offsets, and character reuse.
 Characters dance with the 102 BPM menu music.
 Level titles use the source spacing, scrolling curve, opacity, and confirmation colors.
@@ -34,9 +34,9 @@ The menu restores the selected level and difficulty after gameplay.
 
 ## Installed content
 
-Tutorial and Weeks 1 through 6 launch their installed songs in the original order.
+Tutorial, Weeks 1 through 7, and Weekend 1 launch their installed songs in the original order.
 The hidden level definitions retain their original artwork and track names.
-`VanillaStoryCatalog.Load` limits the menu to Tutorial and Weeks 1 through 6.
+`VanillaStoryCatalog.Load` limits the menu to Tutorial, Weeks 1 through 7, and Weekend 1.
 Extend this list when more weeks are installed.
 Selecting a visible level with missing songs displays the missing song names.
 The menu does not import additional gameplay content.
@@ -48,7 +48,9 @@ The level score totals completed songs from one campaign.
 Only a completed campaign can update its best score.
 Quitting or leaving game over returns to Story Mode without completing the campaign.
 Restarting a song preserves the campaign position and previous song scores.
-Weekend 1 hides Blazin' until a completed campaign has a positive score.
+The Weekend 1 track list hides Blazin' until a completed campaign has a positive score.
+The campaign includes Blazin' on the first playthrough.
+Pico and the Weekend 1 Freeplay songs are available before completing the campaign.
 
 ## Validation
 

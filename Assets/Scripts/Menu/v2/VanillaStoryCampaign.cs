@@ -10,6 +10,8 @@ public static class VanillaStoryCampaign
     public static string Difficulty { get; private set; }
     public static int Score { get; private set; }
     public static int SongIndex { get; private set; }
+    public static VanillaResultsData Results { get; private set; }
+    public static bool IsLastSong => Running && SongIndex + 1 == playlist.Count;
     private static List<VanillaFreeplaySong> playlist;
     private static bool scoreEligible;
 
@@ -25,6 +27,7 @@ public static class VanillaStoryCampaign
         Difficulty = difficulty;
         playlist = new List<VanillaFreeplaySong>(songs);
         Score = 0;
+        Results = new VanillaResultsData();
         scoreEligible = true;
         SongIndex = 0;
         ReturnToStory = Running = true;
@@ -43,10 +46,11 @@ public static class VanillaStoryCampaign
     {
         if (!Running) return;
         Score = 0;
+        Results = new VanillaResultsData();
         Difficulty = difficulty;
     }
 
-    public static bool CompleteSong(SongMetaV2 meta, string difficulty, int mode, int score, bool completed, bool saveScore = true)
+    public static bool CompleteSong(SongMetaV2 meta, string difficulty, int mode, int score, bool completed, bool saveScore = true, VanillaResultsData results = null)
     {
         if (!Running) return false;
         if (!completed || mode != 1 || !string.Equals(difficulty, Difficulty, StringComparison.OrdinalIgnoreCase)
@@ -56,6 +60,7 @@ public static class VanillaStoryCampaign
             return false;
         }
         Score += score;
+        if (results != null) Results.Add(results);
         scoreEligible &= saveScore;
         SongIndex++;
         if (SongIndex < playlist.Count)

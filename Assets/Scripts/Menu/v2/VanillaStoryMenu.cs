@@ -77,8 +77,8 @@ public sealed class VanillaStoryMenu : MonoBehaviour
         root.SetActive(true);
         Active = story;
         story.enabledFrame = Time.frameCount;
-        story.previousVertical = Input.GetAxisRaw("Vertical");
-        story.previousHorizontal = Input.GetAxisRaw("Horizontal");
+        story.previousVertical = Player.MenuAxis("Vertical");
+        story.previousHorizontal = Player.MenuAxis("Horizontal");
         story.lastUpdate = Time.realtimeSinceStartupAsDouble;
         story.lastStep = Mathf.FloorToInt(owner.musicSource.time * 102 / 60 * 4);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
@@ -224,8 +224,8 @@ public sealed class VanillaStoryMenu : MonoBehaviour
                 foreach (VanillaStoryProp prop in props) prop.Step(current);
             lastStep = step;
         }
-        float vertical = Input.GetAxisRaw("Vertical");
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Player.MenuAxis("Vertical");
+        float horizontal = Player.MenuAxis("Horizontal");
         if (!Busy)
         {
             if (vertical > 0.5f && previousVertical <= 0.5f) { ChangeLevel(-1); ChangeDifficulty(0); }
@@ -238,8 +238,8 @@ public sealed class VanillaStoryMenu : MonoBehaviour
             if (horizontal < -0.5f && previousHorizontal >= -0.5f) ChangeDifficulty(-1);
             SetArrow(left, horizontal < -0.5f, ref leftPressed, "left");
             SetArrow(right, horizontal > 0.5f, ref rightPressed, "right");
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0)) Confirm();
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.JoystickButton1)) Close();
+            if (VanillaControls.Pressed("ACCEPT")) Confirm();
+            if (VanillaControls.Pressed("BACK")) Close();
         }
         previousVertical = vertical;
         previousHorizontal = horizontal;

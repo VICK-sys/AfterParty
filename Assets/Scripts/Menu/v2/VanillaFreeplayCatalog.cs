@@ -85,6 +85,8 @@ public static class VanillaFreeplayCatalog
                         if (Path.GetFileName(bundlePath) == "04-Week4") song.week = "Week 4";
                         if (Path.GetFileName(bundlePath) == "05-Week5") song.week = "Week 5";
                         if (Path.GetFileName(bundlePath) == "06-Week6") song.week = "Week 6";
+                        if (Path.GetFileName(bundlePath) == "07-Week7") song.week = "Week 7";
+                        if (Path.GetFileName(bundlePath) == "08-Weekend1") song.week = "Weekend 1";
                         songs.Add(song);
                     }
                     catch (Exception e) { Debug.LogWarning("Cannot read Freeplay song " + path + ": " + e.Message); }
@@ -114,9 +116,9 @@ public static class VanillaFreeplayCatalog
     {
         if (!completed || mode != 1 || totalNotes <= 0) return null;
         string key = meta.songName + meta.bundleMeta.bundleName + difficulty.ToLowerInvariant() + mode;
-        int missed = stats.missedHits + Mathf.Max(0, totalNotes - stats.totalNoteHits);
-        float clear = Mathf.Clamp01((stats.totalSicks + stats.totalGoods - missed) / (float)totalNotes);
-        int rank = stats.totalSicks == totalNotes ? 5 : clear >= 1 ? 4 : clear >= 0.9f ? 3 : clear >= 0.8f ? 2 : clear >= 0.6f ? 1 : 0;
+        var results = VanillaResultsData.Capture(stats, totalNotes);
+        float clear = (float)results.Clear;
+        int rank = results.Rank;
         int oldRank = PlayerPrefs.GetInt("Freeplay.Rank." + key, -1);
         PlayerPrefs.SetFloat("Freeplay.Clear." + key, Mathf.Max(clear, PlayerPrefs.GetFloat("Freeplay.Clear." + key, 0)));
         PlayerPrefs.SetInt("Freeplay.Rank." + key, Mathf.Max(rank, oldRank));
