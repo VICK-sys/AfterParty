@@ -32,7 +32,7 @@ public class NoteObject : MonoBehaviour
         scrollSpeed = -speed;
         layer = section;
         dummyNote = susNote = lastSusNote = false;
-        State = new FunkinNoteState(time, direction, length) { View = this };
+        State = new FunkinNoteState(time, direction, length) { View = this, Scoreable = owner.vanillaPlayback?.IsScoreable(player ? 0 : 1, direction, time) ?? true };
         sprite = GetComponentInChildren<SpriteRenderer>();
         sprite.enabled = true;
         sprite.sprite = FunkinNoteSkin.Head(direction);

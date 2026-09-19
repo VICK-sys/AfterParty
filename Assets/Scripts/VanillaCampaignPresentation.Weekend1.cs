@@ -14,8 +14,8 @@ public sealed partial class VanillaCampaignPresentation
     private IEnumerator DarnellIntro()
     {
         Busy = weekendCamera = true;
-        bool hud = song.uiCamera.enabled;
-        bool battle = song.battleCanvas.enabled;
+        bool hud = IntroHud;
+        bool battle = IntroBattle;
         song.uiCamera.enabled = false;
         song.battleCanvas.enabled = false;
         var stage = song.vanillaPlayback.CampaignStage;

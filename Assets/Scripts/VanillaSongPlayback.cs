@@ -21,6 +21,15 @@ public sealed class VanillaSongPlayback : MonoBehaviour
     public bool IsCampaign { get; private set; }
     public bool IsMainStage { get; private set; }
     public bool IsPixel { get; private set; }
+    public bool IsSpaghetti => SongId == "spaghetti";
+    public int UnscoredNotes(int side) => sourceData?["noteKinds"]?[Song.difficulty.ToLowerInvariant()]?.Count(note => (string)note["k"] == "non_scoreable" && (int)note["d"] / 4 == side) ?? 0;
+    public bool IsScoreable(int side, int direction, double time)
+    {
+        foreach (var note in unscoredNotes)
+            if (note.lane == side * 4 + direction && System.Math.Abs(note.time - time) < .02) return false;
+        return true;
+    }
+    private (int lane, double time)[] unscoredNotes = System.Array.Empty<(int, double)>();
     public string PlayerId => (string)sourceData?["characters"]?["player"] ?? "bf";
     public string OpponentId => (string)sourceData?["opponent"];
     public bool IsWeek2 { get; private set; }
@@ -94,6 +103,18 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                 case "quartOut":
                     eased = 1 - Mathf.Pow(1 - t, 4);
                     break;
+                case "circOut":
+                    eased = Mathf.Sqrt(1 - (t - 1) * (t - 1));
+                    break;
+                case "circIn":
+                    eased = 1 - Mathf.Sqrt(1 - t * t);
+                    break;
+                case "circInOut":
+                    eased = t < .5f ? (1 - Mathf.Sqrt(1 - 4 * t * t)) / 2 : (Mathf.Sqrt(1 - Mathf.Pow(-2 * t + 2, 2)) + 1) / 2;
+                    break;
+                case "quartIn":
+                    eased = Mathf.Pow(t, 4);
+                    break;
                 case "sineInOut":
                     eased = (1 - Mathf.Cos(Mathf.PI * t)) / 2;
                     break;
@@ -146,9 +167,11 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         IsWeek3 = ((string)data["stage"])?.StartsWith("phillyTrain") == true;
         string stageId = (string)data["stage"] ?? "";
         IsMainStage = stageId.StartsWith("mainStage");
-        IsCampaign = stageId.StartsWith("limo") || stageId.StartsWith("mall") || stageId.StartsWith("school") || stageId.StartsWith("tankmanBattlefield") || stageId.StartsWith("phillyStreets") || stageId == "phillyBlazin";
+        IsCampaign = stageId.StartsWith("limo") || stageId.StartsWith("mall") || stageId.StartsWith("school") || stageId.StartsWith("tankmanBattlefield") || stageId.StartsWith("phillyStreets") || stageId == "phillyBlazin" || IsSpaghetti;
         IsPixel = (string)data["noteStyle"] == "pixel";
         sourceData = data;
+        unscoredNotes = data["noteKinds"]?[Song.difficulty.ToLowerInvariant()]?.Where(note => (string)note["k"] == "non_scoreable")
+            .Select(note => ((int)note["d"], (double)note["t"])).ToArray() ?? System.Array.Empty<(int, double)>();
         if (Presentation == null) Presentation = song.gameObject.AddComponent<VanillaCampaignPresentation>();
         if (IsPixel)
         {
@@ -169,7 +192,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         if (IsCampaign || IsMainStage)
         {
             int week = IsMainStage ? 1 : stageId.StartsWith("limo") ? 4 : stageId.StartsWith("mall") ? 5 : stageId.StartsWith("school") ? 6 : stageId.StartsWith("tankman") ? 7 : 8;
-            string path = Path.Combine(Application.streamingAssetsPath, "Bundles/Week" + week + "Assets/stages", stageId, "stage.json");
+            string path = Path.Combine(Application.streamingAssetsPath, IsSpaghetti ? "Bundles/SpaghettiAssets/stages" : "Bundles/Week" + week + "Assets/stages", stageId, "stage.json");
             stageZoom = (float)JObject.Parse(File.ReadAllText(path))["cameraZoom"];
         }
         BopRate = 4;
@@ -186,18 +209,19 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         zoomTransition = new Transition { from = zoom, to = zoom };
         scrollTransition = new Transition { from = scroll, to = scroll };
         song.speedDifference = 0;
-        if ((IsWeek2 || IsWeek3 || IsCampaign) && week2Opponent == null)
+        if ((IsWeek2 || IsWeek3 || IsCampaign || IsMainStage) && week2Opponent == null)
         {
             string id = (string)data["opponent"];
-            week2Opponent = Instantiate(song.enemy);
-            week2Opponent.characterName = IsCampaign ? id : IsWeek3 ? "Pico" : id == "monster" ? "Monster" : "Spooky Kids";
+            week2Opponent = song.enemy != null ? Instantiate(song.enemy) : ScriptableObject.CreateInstance<Character>();
+            week2Opponent.animations ??= new System.Collections.Generic.List<SpriteAnimation>();
+            week2Opponent.characterName = IsCampaign || IsMainStage ? id : IsWeek3 ? "Pico" : id == "monster" ? "Monster" : "Spooky Kids";
             week2Opponent.portrait = FunkinHudAssets.Icon(id == "spooky-dark" ? "spooky" : id)[0];
             week2Opponent.portraitDead = week2Opponent.portrait;
             song.charactersDictionary[id] = week2Opponent;
             Cache.cachedOpponents[id] = week2Opponent;
         }
         var hey = Resources.Load<SpriteAnimation>("VanillaSongs/Boyfriend Hey");
-        if (hey != null && song.boyfriendAnimator.spriteAnimations.All(a => a.Name != hey.Name))
+        if (hey != null && song.boyfriendAnimator.spriteAnimations.All(a => a == null || a.Name != hey.Name))
             song.boyfriendAnimator.spriteAnimations.Add(hey);
         if ((string)data["opponent"] == "gf")
         {
@@ -239,6 +263,14 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         song.mainCamera.transform.position = cameraTo;
         song.mainCamera.orthographicSize = 3.6f / zoom;
         ApplyUntil(0);
+        if (IsSpaghetti)
+        {
+            cameraTo = new Vector3(10.7f, -4.7f, -10);
+            zoom = .55f;
+            zoomTransition = new Transition { from = zoom, to = zoom };
+            song.mainCamera.transform.position = cameraTo;
+            song.mainCamera.orthographicSize = 3.6f / zoom;
+        }
     }
 
     public bool MoveCamera(Camera camera)
@@ -303,6 +335,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
             JToken entry = events[EventsApplied++];
             JToken value = entry["v"];
             float eventTime = (float)entry["t"];
+            if (IsSpaghetti) CampaignStage?.SpaghettiEvent((string)entry["e"], value, eventTime);
             switch ((string)entry["e"])
             {
                 case "FocusCamera":

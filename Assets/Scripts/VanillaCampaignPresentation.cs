@@ -12,7 +12,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
 {
     public bool Busy { get; private set; }
     public bool OutroFinished { get; private set; }
-    public bool OwnsCamera => winterIntro || winterTransition || weekendCamera || eggnogCamera;
+    public bool OwnsCamera => winterIntro || winterTransition || weekendCamera || eggnogCamera || spaghettiCamera;
     private bool eggnogCamera;
     public float HudAlpha { get; private set; } = 1;
     private bool winterIntro;
@@ -24,6 +24,12 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
     private CanvasGroup hudGroup;
     private MaterialPropertyBlock hudProperties;
     private bool playedIntro;
+    private Image introCover;
+    private bool introPrepared;
+    private bool introHud;
+    private bool introBattle;
+    private bool IntroHud => introPrepared ? introHud : song.uiCamera.enabled;
+    private bool IntroBattle => introPrepared ? introBattle : song.battleCanvas.enabled;
     private bool outroStarted;
     private bool advanceRequested;
     private float dialogueAge;
@@ -34,7 +40,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
     private AudioSource sound;
     private AudioSource music;
     private readonly System.Collections.Generic.List<AudioClip> clips = new System.Collections.Generic.List<AudioClip>();
-    private string Root(int week) => Path.Combine(Application.streamingAssetsPath, "Bundles/Week" + week + "Assets");
+    private string Root(int week) => Path.Combine(Application.streamingAssetsPath, week == 9 ? "Bundles/SpaghettiAssets" : "Bundles/Week" + week + "Assets");
     private bool Advance
     {
         get
@@ -47,6 +53,40 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
 
     public void AdvanceDialogue() => advanceRequested = true;
     public bool TakeAdvanceInput() => Advance;
+
+    public void PrepareIntro(Song owner)
+    {
+        var playback = owner.vanillaPlayback;
+        if (playback == null || playedIntro || Pause.PlayedCampaignIntro || Pause.DeathCount > 0 || introPrepared) return;
+        string id = playback.SongId;
+        bool pico = playback.Variation == "pico";
+        bool hasIntro = id == "spaghetti" && playback.CampaignStage != null || id == "winter-horrorland"
+            || pico && (playback.IsWeek3 || id == "stress")
+            || VanillaStoryCampaign.Running && (id == "darnell" || id == "ugh" || id == "guns" || id == "stress")
+            || playback.IsPixel && (VanillaStoryCampaign.Running || pico);
+        if (!hasIntro) return;
+        Initialize(owner);
+        introHud = owner.uiCamera.enabled;
+        introBattle = owner.battleCanvas.enabled;
+        introPrepared = Busy = true;
+        owner.uiCamera.enabled = owner.battleCanvas.enabled = false;
+        introCover = Overlay(Color.black);
+    }
+
+    private Image TakeIntroCover(Color color)
+    {
+        Image cover = introCover != null ? introCover : Overlay(color);
+        introCover = null;
+        cover.color = color;
+        return cover;
+    }
+
+    private void ReleaseIntroCover()
+    {
+        if (introCover == null) return;
+        Destroy(introCover.gameObject);
+        introCover = null;
+    }
 
     private void Update()
     {
@@ -152,11 +192,26 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
 
     public IEnumerator Intro(Song owner)
     {
+        try { yield return RunIntro(owner); }
+        finally
+        {
+            introPrepared = false;
+            ReleaseIntroCover();
+        }
+    }
+
+    private IEnumerator RunIntro(Song owner)
+    {
         Initialize(owner);
         if (playedIntro || Pause.PlayedCampaignIntro || Pause.DeathCount > 0) yield break;
         playedIntro = true;
         Pause.PlayedCampaignIntro = true;
         string id = song.vanillaPlayback.SongId;
+        if (id == "spaghetti" && song.vanillaPlayback.CampaignStage != null)
+        {
+            yield return SpaghettiIntro();
+            yield break;
+        }
         bool pico = song.vanillaPlayback.Variation == "pico";
         if (pico && song.vanillaPlayback.IsWeek3)
         {
@@ -181,8 +236,8 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
         }
         if (id != "winter-horrorland" && (!song.vanillaPlayback.IsPixel || !VanillaStoryCampaign.Running && !pico)) yield break;
         Busy = true;
-        bool hud = song.uiCamera.enabled;
-        bool battle = song.battleCanvas.enabled;
+        bool hud = IntroHud;
+        bool battle = IntroBattle;
         song.uiCamera.enabled = false;
         song.battleCanvas.enabled = false;
         if (id == "winter-horrorland")
@@ -190,7 +245,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
             winterIntro = true;
             cameraReturn = song.mainCamera.transform.position;
             cameraReturnSize = song.mainCamera.orthographicSize;
-            var black = Overlay(Color.black);
+            var black = TakeIntroCover(Color.black);
             yield return LoadAudio(5, "Lights_Turn_On", clip => sound.clip = clip);
             yield return new WaitForSeconds(.1f);
             Destroy(black.gameObject);
@@ -206,7 +261,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
         {
             if (id == "senpai")
             {
-                var black = Overlay(Color.black);
+                var black = TakeIntroCover(Color.black);
                 yield return new WaitForSeconds(.25f);
                 for (float time = 0; time < 2; time += Time.deltaTime)
                 {
@@ -230,7 +285,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
 
     private IEnumerator Explosion()
     {
-        var red = Overlay(new Color32(255,27,49,255));
+        var red = TakeIntroCover(new Color32(255,27,49,255));
         var actor = Rect("Senpai Explosion", viewport, 0,0,1280,720).gameObject.AddComponent<VanillaDialogueGraphic>();
         actor.Load(Path.Combine(Root(6), "dialogue/explosion"));
         actor.DrawScale = 6;
@@ -295,6 +350,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
         text.verticalOverflow = VerticalWrapMode.Overflow;
         text.raycastTarget = false;
         var shadow = text.gameObject.AddComponent<Shadow>();
+        ReleaseIntroCover();
         string lastBox = null;
         string lastSpeaker = null;
         foreach (JToken line in conversation["dialogue"])
@@ -315,7 +371,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
             if (continuing && boxId == "roses") sound.PlayOneShot(click,.6f);
             text.text = "";
             if (!continuing) portrait.color = Color.clear;
-            while (!box.Finished)
+            while (!box.Finished && !box.Looping)
             {
                 FadeDialogue(backdrop);
                 yield return null;
@@ -450,6 +506,11 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
     public bool AllowEnd(Song owner)
     {
         Initialize(owner);
+        if (song.vanillaPlayback.IsSpaghetti && song.vanillaPlayback.CampaignStage != null)
+        {
+            BeginSpaghettiEnding(owner);
+            return OutroFinished;
+        }
         if (song.vanillaPlayback.SongId == "stress" && song.vanillaPlayback.Variation == "pico" && !OptionsV2.DesperateMode)
         {
             if (!outroStarted) { outroStarted = true; StartCoroutine(StressPicoOutro()); }

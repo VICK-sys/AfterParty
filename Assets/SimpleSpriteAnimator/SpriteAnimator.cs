@@ -90,7 +90,7 @@ namespace SimpleSpriteAnimator
         {
             foreach (var t in spriteAnimations)
             {
-                if (t.Name == name)
+                if (t != null && t.Name == name)
                 {
                     return t;
                 }

@@ -43,6 +43,8 @@ public static class FunkinHudAssets
 
     public static Sprite[] Icon(string character)
     {
+        if (character == "sserafim-sakura") character = "bf";
+        if (character.StartsWith("sserafim-")) character = character.Substring(9);
         if (character.StartsWith("pico-") && character != "pico-pixel") character = "pico";
         if (character == "darnell-blazin") character = "darnell";
         if (character == "spooky-dark") character = "spooky";

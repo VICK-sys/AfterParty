@@ -173,6 +173,7 @@ public sealed class FunkinHud : MonoBehaviour
 
     public void ShowRating(FunkinRules.Judgement judgement)
     {
+        if (song.vanillaPlayback?.IsSpaghetti == true) return;
         if (judgement == FunkinRules.Judgement.Miss) return;
         string image = judgement.ToString().ToLowerInvariant();
         bool isPixel = song.vanillaPlayback != null && song.vanillaPlayback.IsPixel;
@@ -192,6 +193,7 @@ public sealed class FunkinHud : MonoBehaviour
 
     public void ShowCombo(int combo)
     {
+        if (song.vanillaPlayback?.IsSpaghetti == true) return;
         string digits = combo.ToString("000", CultureInfo.InvariantCulture);
         bool isPixel = song.vanillaPlayback != null && song.vanillaPlayback.IsPixel;
         for (int index = 0; index < digits.Length; index++)
@@ -235,6 +237,7 @@ public sealed class FunkinHud : MonoBehaviour
             int frame = Icons[side].Animation == FunkinHealthIconState.Face.Losing ? 1 :
                 Icons[side].Animation == FunkinHealthIconState.Face.Winning ? 2 : 0;
             iconRenderers[side].sprite = iconFrames[side][System.Math.Min(frame, iconFrames[side].Length - 1)];
+            iconRenderers[side].enabled = side != 1 || song.vanillaPlayback?.IsSpaghetti != true || song.vanillaPlayback.CampaignStage?.SpaghettiIconVisible == true;
             double width = Icons[side].Width;
             Place(iconRenderers[side], boundary + (side == 0 ? -26 : 26 - width), y + 4 - width / 2, width, width, side == 0);
         }

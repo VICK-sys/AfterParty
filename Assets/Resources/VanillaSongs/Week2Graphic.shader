@@ -7,6 +7,7 @@ Shader "Unity Party/Week 2 Graphic"
         _Rain ("Rain", Float) = 0
         _Clock ("Clock", Float) = 1
         _Tint ("Tint", Color) = (1,1,1,1)
+        _Lighting ("Lighting", Color) = (1,1,1,1)
         _BuildingFade ("Building Fade", Float) = 0
         _SrcBlend ("Source Blend", Float) = 5
         _DstBlend ("Destination Blend", Float) = 10
@@ -35,6 +36,9 @@ Shader "Unity Party/Week 2 Graphic"
             float4 _FrameBounds;
             float _Opacity, _Rain, _Clock, _Multiply;
             float4 _Tint;
+            float4 _Lighting;
+            float4x4 _Affine;
+            float _AffineEnabled;
             float _BuildingFade;
             float3 _Wiggle;
             sampler2D _RimMask;
@@ -43,7 +47,7 @@ Shader "Unity Party/Week 2 Graphic"
             Output vert(Input input)
             {
                 Output output;
-                output.vertex = UnityObjectToClipPos(input.vertex);
+                output.vertex = UnityObjectToClipPos(lerp(input.vertex, mul(_Affine, input.vertex), _AffineEnabled));
                 output.world = mul(unity_ObjectToWorld, input.vertex).xy * float2(100, -100);
                 output.uv = input.uv;
                 output.color = input.color;
@@ -140,6 +144,7 @@ Shader "Unity Party/Week 2 Graphic"
                 color.a = sampled.a == 0 ? 0 : saturate(color.a) * _Opacity;
                 color.rgb = lerp(color.rgb + addition, float3(0.4, 0.5019608, 0.8), 0.1 * sum);
                 color *= _Tint;
+                color.rgb *= _Lighting.rgb;
                 if (_BuildingFade > 0 && color.a > 0)
                 {
                     float4 faded = saturate(float4(color.rgb * color.a, color.a) - _BuildingFade);

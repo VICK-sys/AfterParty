@@ -4,6 +4,7 @@ Shader "Unity Party/Week 2 Composite"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Opacity ("Opacity", Float) = 1
+        _Lighting ("Lighting", Color) = (1,1,1,1)
         _PhillyColor ("Philly Color", Float) = 0
         _RimMask ("Rim Mask", 2D) = "black" {}
     }
@@ -27,11 +28,14 @@ Shader "Unity Party/Week 2 Composite"
             float _Opacity;
             float _PhillyColor;
             float4 _Adjustment;
+            float4 _Lighting;
+            float4x4 _Affine;
+            float _AffineEnabled;
             float4 _Rim, _RimAdjustment, _RimColor, _RimDirection;
             Output vert(Input input)
             {
                 Output output;
-                output.vertex = UnityObjectToClipPos(input.vertex);
+                output.vertex = UnityObjectToClipPos(lerp(input.vertex, mul(_Affine, input.vertex), _AffineEnabled));
                 output.uv = input.uv;
                 #if UNITY_UV_STARTS_AT_TOP
                 output.uv.y = 1 - output.uv.y;
@@ -86,6 +90,7 @@ Shader "Unity Party/Week 2 Composite"
                     color.rgb = (hue * saturation + dot(hue, float3(.2126, .7152, .0722)) * (1 - saturation)) * color.a;
                 }
                 color.rgb += _RimColor.rgb * rim * color.a;
+                color.rgb *= _Lighting.rgb;
                 return color * _Opacity;
             }
             ENDCG

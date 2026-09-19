@@ -1060,6 +1060,7 @@ public partial class Song : MonoBehaviour
 
         startSongTooltip.SetActive(false);
 
+        vanillaPlayback?.Presentation?.PrepareIntro(this);
         LoadingTransition.instance.Hide();
         while (LoadingTransition.instance != null && LoadingTransition.instance.toggled) yield return null;
 
@@ -1277,6 +1278,8 @@ public partial class Song : MonoBehaviour
             modeOfPlay;
 
         int playerNotes = _noteBehaviours.Count(note => note.noteData.ConvertToNote()[1] > 3 ? !note.section.MustHitSection : note.section.MustHitSection);
+        int opponentNotes = _noteBehaviours.Count - playerNotes - (vanillaPlayback?.UnscoredNotes(1) ?? 0);
+        playerNotes -= vanillaPlayback?.UnscoredNotes(0) ?? 0;
         var rankChange = VanillaFreeplayCatalog.SaveCompletion(currentSongMeta, difficulty, modeOfPlay, playerOneStats,
             completed && !Pause.PracticeMode, playerNotes);
 
@@ -1307,7 +1310,7 @@ public partial class Song : MonoBehaviour
         bool storyResults = VanillaStoryCampaign.Running;
         int previousWeekScore = storyResults ? VanillaStoryCampaign.HighScore(VanillaStoryCampaign.LevelId, difficulty) : 0;
         var results = VanillaResultsData.Capture(modeOfPlay == PlayModes.Opponent ? playerTwoStats : playerOneStats,
-            modeOfPlay == PlayModes.Opponent ? _noteBehaviours.Count - playerNotes : playerNotes);
+            modeOfPlay == PlayModes.Opponent ? opponentNotes : playerNotes);
         if (modeOfPlay == PlayModes.Autoplay && Player.instance != null)
         {
             results.sick = results.totalNotesHit = Player.instance.Strumlines[0].HeadsHit;
@@ -1376,7 +1379,7 @@ public partial class Song : MonoBehaviour
 
     public void EnemyPlayAnimation(string animationName)
     {
-        if (enemy.idleOnly || OptionsV2.DesperateMode) return;
+        if (enemy == null || enemy.idleOnly || OptionsV2.DesperateMode) return;
         opponentAnimator.Play(animationName);
         _currentEnemyIdleTimer = enemyIdleTimer;
     }
@@ -1384,7 +1387,7 @@ public partial class Song : MonoBehaviour
     public void PlayChartAnimation(bool player, string animationName)
     {
         var animator = player ? boyfriendAnimator : opponentAnimator;
-        if (!animator.spriteAnimations.Any(animation => animation.Name == animationName))
+        if (!animator.spriteAnimations.Any(animation => animation != null && animation.Name == animationName))
             return;
         animator.Play(animationName);
         if (player)
@@ -1704,7 +1707,7 @@ public partial class Song : MonoBehaviour
                 FinishSong(false);
             }
         }
-        else
+        else if (vanillaPlayback?.CharacterStage == null)
         {
             _bfRandomDanceTimer -= Time.deltaTime;
             _enemyRandomDanceTimer -= Time.deltaTime;
@@ -1764,7 +1767,7 @@ public partial class Song : MonoBehaviour
                 _currentRatingLayer = 0;
         }
         
-        if (OptionsV2.DesperateMode) return;
+        if (OptionsV2.DesperateMode || vanillaPlayback?.CharacterStage != null) return;
         if ((opponentAnimator.CurrentAnimation == null || !opponentAnimator.CurrentAnimation.Name.Contains("Idle")) & !songStarted)
         {
             _currentEnemyIdleTimer -= Time.deltaTime;
@@ -1779,7 +1782,7 @@ public partial class Song : MonoBehaviour
             _currentEnemyIdleTimer -= Time.deltaTime;
         }
 
-        if ((!boyfriendAnimator.CurrentAnimation.Name.Contains("Idle") || boyfriendAnimator.CurrentAnimation == null) & !songStarted)
+        if ((boyfriendAnimator.CurrentAnimation == null || !boyfriendAnimator.CurrentAnimation.Name.Contains("Idle")) & !songStarted)
         {
 
             _currentBoyfriendIdleTimer -= Time.deltaTime;

@@ -153,7 +153,7 @@ public partial class Song
                 Vector3 point = new Vector3(uiCamera.transform.position.x + (x - 640) * worldScale,
                     uiCamera.transform.position.y + (360 - y) * worldScale, sprite.transform.position.z);
                 sprite.transform.position = point;
-                if (vanillaPlayback?.SongId == "blazin" && side == 1) sprite.enabled = false;
+                if ((vanillaPlayback?.SongId == "blazin" || vanillaPlayback?.IsSpaghetti == true) && side == 1) sprite.enabled = false;
             }
         }
     }
@@ -196,12 +196,13 @@ public partial class Song
     {
         int side = note.mustHit ? 0 : 1;
         RemoveFunkinHead(note);
+        if (!note.State.Scoreable) return;
         PlayerStat stats = side == 0 ? playerOneStats : playerTwoStats;
         stats.totalNoteHits++;
         stats.missedHits++;
         BreakFunkinCombo(side);
         AddFunkinScore(side, -100, -8);
-        if (vanillaPlayback?.CampaignStage?.Week == 8) vanillaPlayback.CampaignStage.Miss(side, note.type, note.State.Time);
+        if (vanillaPlayback?.CampaignStage?.Week == 8 || vanillaPlayback?.IsSpaghetti == true) vanillaPlayback.CampaignStage.Miss(side, note.type, note.State.Time);
         else PlayFunkinCharacter(side, note.type, true);
         PlayFunkinMissSound(side, 0.5f, 0.6f);
     }

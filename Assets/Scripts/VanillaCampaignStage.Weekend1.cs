@@ -292,6 +292,7 @@ public sealed partial class VanillaCampaignStage
     public void Miss(int side, int direction, double time)
     {
         string kind = NoteKind(side, direction, time);
+        if (Week == 9) { SingSpaghetti(side, direction, true, kind); return; }
         if (!WeekendNote(side, kind, true)) SingKind(side, direction, true, "");
     }
 

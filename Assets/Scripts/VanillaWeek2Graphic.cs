@@ -47,6 +47,10 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
     public Color Tint { get; set; } = Color.white;
     public float BuildingFade { get; set; }
     public Vector4 ColorAdjustment { get; set; }
+    public Color Lighting { get; set; } = Color.white;
+    public Matrix4x4 VertexTransform { get; set; } = Matrix4x4.identity;
+    public Vector2 BoundsOrigin => origin;
+    public JToken Attachments => data["attachments"]?[Frame];
     public Vector3 Wiggle { get; set; }
     public int FrozenFrame { get; set; } = -1;
     public bool Additive { get; set; }
@@ -56,6 +60,11 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
     public void SetAnimationFrame(int frame)
     {
         FrozenFrame = clip.frames[Mathf.Clamp(frame, 0, clip.frames.Length - 1)];
+    }
+    public void SeekAnimationFrame(int frame)
+    {
+        FrozenFrame = -1;
+        age = Mathf.Max(0, frame) / clip.fps;
     }
     public float Angle { get; set; }
     public float Duration => clip == null ? 0 : clip.frames.Length / clip.fps;
@@ -145,6 +154,9 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
                 }
         material = new Material(Resources.Load<Shader>("VanillaSongs/Week2Graphic"));
         material.mainTexture = texture;
+        material.SetMatrix("_Affine", Matrix4x4.identity);
+        material.SetFloat("_AffineEnabled", 1);
+        material.SetColor("_Lighting", Color.white);
         filter = gameObject.AddComponent<MeshFilter>();
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshRenderer.sharedMaterial = material;
@@ -252,6 +264,8 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
             transform.localPosition += pivot - transform.localRotation * pivot;
         }
         bool grouped = compositeRim || PhillyColor || ColorAdjustment != Vector4.zero || CompositeAlpha && Alpha > 0 && Alpha < 1;
+        material.SetMatrix("_Affine", grouped ? Matrix4x4.identity : VertexTransform);
+        material.SetColor("_Lighting", grouped ? Color.white : Lighting);
         material.SetFloat("_Opacity", grouped ? 1 : Alpha);
         material.SetFloat("_DstBlend", (float)(Additive ? BlendMode.One : BlendMode.OneMinusSrcAlpha));
         material.SetFloat("_Multiply", Multiply ? 1 : 0);
@@ -266,6 +280,14 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
         {
             filter.sharedMesh = meshes[Frame];
             meshRenderer.sharedMaterial = material;
+        }
+        if (VertexTransform != Matrix4x4.identity)
+        {
+            Bounds bounds = filter.sharedMesh.bounds;
+            Vector3 extents = bounds.extents;
+            meshRenderer.localBounds = new Bounds(VertexTransform.MultiplyPoint3x4(bounds.center), new Vector3(
+                Mathf.Abs(VertexTransform.m00) * extents.x + Mathf.Abs(VertexTransform.m01) * extents.y,
+                Mathf.Abs(VertexTransform.m10) * extents.x + Mathf.Abs(VertexTransform.m11) * extents.y, .1f) * 2);
         }
     }
 
@@ -351,6 +373,9 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
             compositeFrame = Frame;
         }
         compositeMaterial.SetFloat("_Opacity", Alpha);
+        compositeMaterial.SetMatrix("_Affine", VertexTransform);
+        compositeMaterial.SetFloat("_AffineEnabled", 1);
+        compositeMaterial.SetColor("_Lighting", Lighting);
         compositeMaterial.SetFloat("_PhillyColor", PhillyColor ? 1 : 0);
         compositeMaterial.SetVector("_Adjustment", ColorAdjustment);
         compositeMaterial.SetVector("_Rim", compositeRim ? rimSettings : Vector4.zero);

@@ -255,7 +255,7 @@ public sealed class FunkinStrumline
         note.HeadVisible = !automatic && FunkinRules.BreaksCombo(FunkinRules.Judge(difference));
         note.HoldDropped = false;
         note.Remaining = Math.Min(note.Length, Math.Max(0, note.Time + note.Length - position));
-        HeadsHit++;
+        if (note.Scoreable) HeadsHit++;
         Play(note.Direction, Animation.Confirm);
         GhostTimer = FunkinRules.GhostTapDelay;
         NoteHit?.Invoke(note, difference, automatic);

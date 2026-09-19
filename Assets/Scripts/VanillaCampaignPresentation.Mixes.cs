@@ -58,8 +58,8 @@ public sealed partial class VanillaCampaignPresentation
     private IEnumerator PicoDoppelgangerIntro()
     {
         Busy = weekendCamera = true;
-        bool hud = song.uiCamera.enabled;
-        bool battle = song.battleCanvas.enabled;
+        bool hud = IntroHud;
+        bool battle = IntroBattle;
         song.uiCamera.enabled = song.battleCanvas.enabled = false;
         var stage = song.vanillaPlayback.Week3Stage;
         bool playerShoots = Random.value < .5f;
@@ -92,6 +92,7 @@ public sealed partial class VanillaCampaignPresentation
         opponent.gameObject.SetActive(true);
         player.Play((playerShoots ? "shoot" : explode ? "explode" : "cigarette") + "Player");
         opponent.Play((!playerShoots ? "shoot" : explode ? "explode" : "cigarette") + "Opponent");
+        ReleaseIntroCover();
         music.loop = false;
         music.Play();
         int lastCutsceneBeat = -1;

@@ -10,6 +10,7 @@ public sealed class VanillaDialogueGraphic : MaskableGraphic
     public Vector2 Size { get; private set; }
     public float DrawScale = 1;
     public bool Finished { get; private set; }
+    public bool Looping => clip != null && (bool)clip["loop"];
     public string Animation { get; private set; }
     public bool FlipX;
     public bool FlipY;

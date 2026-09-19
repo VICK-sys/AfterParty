@@ -23,11 +23,11 @@ public sealed partial class VanillaCampaignPresentation
         Busy = true;
         skipVideo = false;
         videoError = null;
-        bool hud = song.uiCamera.enabled;
-        bool battle = song.battleCanvas.enabled;
+        bool hud = IntroHud;
+        bool battle = IntroBattle;
         song.uiCamera.enabled = false;
         song.battleCanvas.enabled = false;
-        var black = Overlay(Color.black);
+        var black = TakeIntroCover(Color.black);
         var image = Rect("Week 7 Video", viewport, 0, 0, 1280, 720).gameObject.AddComponent<RawImage>();
         image.raycastTarget = false;
         image.enabled = false;

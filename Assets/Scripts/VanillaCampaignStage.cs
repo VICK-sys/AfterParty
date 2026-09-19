@@ -66,10 +66,12 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         public bool locked;
         public bool bloody;
         public bool hidden;
+        public bool beautiful;
         public readonly List<VanillaWeek2Graphic> alternates = new List<VanillaWeek2Graphic>();
 
         public void Play(string name, bool protect = false, bool reverse = false)
         {
+            if (beautiful && !name.EndsWith("-beautiful")) name += "-beautiful";
             if (bloody && (graphic.Has(name + "-bloody") || censor != null && censor.Has(name + "-bloody") || alternates.Any(item => item.Has(name + "-bloody")))) name += "-bloody";
             var target = graphic.Has(name) ? graphic : censor != null && censor.Has(name) ? censor : alternates.FirstOrDefault(item => item.Has(name));
             if (target == null) return;
@@ -126,8 +128,8 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
     private void Load()
     {
         StageId = (string)chart["stage"];
-        Week = StageId.StartsWith("mainStage") ? 1 : StageId.StartsWith("limo") ? 4 : StageId.StartsWith("mall") ? 5 : StageId.StartsWith("school") ? 6 : StageId.StartsWith("tankman") ? 7 : 8;
-        root = Path.Combine(Application.streamingAssetsPath, "Bundles/Week" + Week + "Assets");
+        Week = StageId == "sserafim" ? 9 : StageId.StartsWith("mainStage") ? 1 : StageId.StartsWith("limo") ? 4 : StageId.StartsWith("mall") ? 5 : StageId.StartsWith("school") ? 6 : StageId.StartsWith("tankman") ? 7 : 8;
+        root = Path.Combine(Application.streamingAssetsPath, Week == 9 ? "Bundles/SpaghettiAssets" : "Bundles/Week" + Week + "Assets");
         string directory = Path.Combine(root, "stages", StageId);
         stageData = JObject.Parse(File.ReadAllText(Path.Combine(directory, "stage.json")));
         CameraZoom = (float)stageData["cameraZoom"];
@@ -190,13 +192,14 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
             if (index == 1 && id == "gf") placement = stageData["characters"]["gf"];
             var graphic = Graphic(folder, id, (int)placement["zIndex"]);
             Vector2 hitbox = graphic.HitboxSize;
-            if ((string)chart["variation"] == "pico" || (string)chart["variation"] == "bf")
+            if ((string)chart["variation"] == "pico" || (string)chart["variation"] == "bf" || Week == 9)
                 hitbox = new Vector2((int)hitbox.x, (int)hitbox.y);
             float scale = ((float?)character["scale"] ?? 1) * ((float?)placement["scale"] ?? 1);
             graphic.transform.localScale = new Vector3(scale, scale, 1);
             graphic.Position = Point(placement["position"]) + new Vector3(-hitbox.x * scale / 200, hitbox.y * scale / 100, 0)
                 + Point(character["offsets"]);
             graphic.GlobalOffset = Point(character["offsets"]);
+            if (Week == 9) graphic.Scroll = Scale(placement["scroll"]);
             graphic.FlipX = index == 0 ? !((bool?)character["flipX"] ?? false) : (bool?)character["flipX"] ?? false;
             if (StageId == "limoRideErect") graphic.ColorAdjustment = new Vector4(-30, -20, -30, 0);
             if (StageId == "mallXmasErect") graphic.ColorAdjustment = new Vector4(5, 20, 0, 0);
@@ -255,6 +258,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
             }
         if (Week == 7) LoadWeek7();
         if (Week == 8) LoadWeekend1();
+        if (Week == 9) LoadSpaghetti();
         if (Week != 8 && (actors[2].id.StartsWith("nene") || actors[2].id == "otis-speaker"))
         {
             companion = new VanillaMixCompanion();
@@ -331,6 +335,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         foreach (var trail in trails) { trail.Play("idle"); trail.gameObject.SetActive(false); }
         if (Week == 7) ResetWeek7();
         if (Week == 8) ResetWeekend1();
+        if (Week == 9) ResetSpaghetti();
         companion?.Reset();
         Render(0);
     }
@@ -343,6 +348,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
     private void SingKind(int side, int direction, bool miss, string kind)
     {
         if (kind == "noanim") return;
+        if (Week == 9) { SingSpaghetti(side, direction, miss, kind); return; }
         if (Week == 8 && WeekendNote(side, kind, miss)) return;
         Actor actor = actors[side];
         if (side == 1 && Week == 7 && (kind == "ugh" || kind == "hehPrettyGood"))
@@ -369,17 +375,20 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
 
     public void Press(int side)
     {
+        if (Week == 9) { HoldSpaghetti(side, true); return; }
         if (VanillaCharacterTiming.IsManualSide(side)) actors[side].holdTimer = 0;
     }
 
     public void Hold(int side)
     {
+        if (Week == 9) { HoldSpaghetti(side, false); return; }
         if (!VanillaCharacterTiming.IsManualSide(side) && VanillaCharacterTiming.IsSinging(actors[side].current.Animation))
             actors[side].holdTimer = 0;
     }
 
     public void Combo(int count, bool dropped)
     {
+        if (Week == 9) return;
         if (chart["characters"]["girlfriend"] == null) return;
         if (dropped) { if (count >= 70) actors[2].Play("drop70", true); }
         else actors[2].Play("combo" + count, true);
@@ -485,7 +494,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
             {
                 float amount = 1 - Mathf.Pow(.98f, Time.deltaTime * 60);
                 song.deadCamera.transform.position = Vector3.Lerp(song.deadCamera.transform.position, deathTarget, amount);
-                float deathZoom = Week == 8 ? (float?)actors[0].data["death"]?["cameraZoom"] ?? 1 : 1;
+                float deathZoom = Week == 8 || Week == 9 ? (float?)actors[0].data["death"]?["cameraZoom"] ?? 1 : 1;
                 song.deadCamera.orthographicSize = Mathf.Lerp(song.deadCamera.orthographicSize, 3.6f / (CameraZoom * deathZoom), amount);
                 death.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
                 if (Week == 7) AdvanceDeathQuote(Time.deltaTime);
@@ -504,6 +513,12 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         clock += delta;
         if (Week == 7) AdvanceWeek7(delta, song.SongPosition - Pause.GlobalOffset);
         if (Week == 8) AdvanceWeekend1(delta);
+        if (Week == 9)
+        {
+            AdvanceSpaghetti(delta);
+            Render(delta);
+            return;
+        }
         if (CarDriving)
         {
             props["fastCar"].Position += Vector3.right * (carVelocity * delta);
@@ -563,6 +578,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         foreach (var trail in trails) trail.Advance(0, camera, clock);
         if (Week == 7) RenderWeek7(delta, camera);
         if (Week == 8) RenderWeekend1(delta, camera);
+        if (Week == 9) RenderSpaghetti(delta, camera);
         for (int i = 0; i < mist.Count; i++)
         {
             int layer = i / 5;
@@ -681,6 +697,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
 
     private void OnDestroy()
     {
+        foreach (var clip in spaghettiSounds.Values) if (clip != null) Destroy(clip);
         foreach (AudioClip clip in carClips) if (clip != null) Destroy(clip);
         if (deathQuote != null) Destroy(deathQuote);
         foreach (var clip in weekendSounds.Values) if (clip != null) Destroy(clip);
