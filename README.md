@@ -6,7 +6,9 @@ AfterParty forks [Unity Party](https://github.com/Team-Determination/Unity-Party
 ## Features
 
 - Intro, title, menus, credits, and gameplay behavior adapted from Friday Night Funkin' 0.8.6.
-- Tutorial and Weeks 1 through 6, with available Erect and Nightmare charts.
+- Tutorial, Weeks 1 through 7, and Weekend 1, with available Erect and Nightmare charts.
+- All 15 Pico mixes and both BF mixes from Friday Night Funkin' 0.8.6.
+- BF and Pico results screens with rank animations, song tallies, and campaign totals.
 - Boyfriend, Opponent, and AutoPlay modes.
 - Primary and secondary control bindings.
 - Song bundles with custom scripts, song metadata, and album artwork.
@@ -14,6 +16,16 @@ AfterParty forks [Unity Party](https://github.com/Team-Determination/Unity-Party
 
 Online and local multiplayer are not supported.
 The port documentation describes supported content, behavior, and remaining differences.
+
+## Controller controls
+
+Use the D-pad or either stick to play notes.
+The left, bottom, top, and right face buttons play left, down, up, and right notes.
+Use the D-pad or left stick to navigate menus.
+Press the bottom face button to confirm, advance dialogue, start a song, or retry after game over.
+Press the right face button to go back or exit after game over.
+Press Start to pause or resume gameplay.
+Press the left face button to change a song favorite in Freeplay.
 
 ## Open and build
 
@@ -46,10 +58,16 @@ Set `UNITY_PARTY_VALIDATION_PATH` to save the CRT control and output images.
 The validation tools retain their `UNITY_PARTY_*` variables for compatibility.
 Each port document lists its validation commands and control cases.
 
+Run `VanillaGameplayPerformanceValidation.RunAndBegin` in an isolated batch editor with graphics enabled and without `-quit`.
+Set `UNITY_PARTY_GAMEPLAY_PERFORMANCE_PATH` to the output directory.
+The probe measures character allocations and checks animation frames, note hits, and mesh creation during four songs.
+Frame timings include editor overhead and other running applications.
+
 ## Documentation
 
 - [Intro, title, and diamond transitions](Assets/Resources/VanillaTitle/README.md)
 - [Main menu](Assets/VanillaMenu/README.md)
+- [Options menu](Assets/Resources/VanillaOptions/README.md)
 - [Story Mode](Assets/Resources/VanillaStory/README.md)
 - [Freeplay](Assets/Resources/VanillaFreeplay/README.md)
 - [Credits](Assets/Resources/VanillaCredits/README.md)
@@ -57,6 +75,7 @@ Each port document lists its validation commands and control cases.
 - [Input, judgement, and notes](Assets/Resources/FunkinNotes/README.md)
 - [Healthbar and judgements](Assets/Resources/FunkinHud/README.md)
 - [Pause menu](Assets/Resources/FunkinPause/README.md)
+- [Results screens](Assets/Resources/VanillaResults/README.md)
 
 ## Save compatibility
 

@@ -46,6 +46,7 @@ public class DiscordController : MonoBehaviour
 
     public void SetMenuState(string state)
     {
+        if (VanillaPreferences.Get("DiscordRPC", 1) == 0) return;
         DiscordPresence presence = new DiscordPresence
         {
             details = "In the Main Menu",
@@ -64,7 +65,7 @@ public class DiscordController : MonoBehaviour
                 }
             }
         };
-        DiscordManager.current.SetPresence(presence);
+        DiscordManager.current?.SetPresence(presence);
     }
 
     public void RefreshStartGameTime()
@@ -74,6 +75,7 @@ public class DiscordController : MonoBehaviour
 
     public void SetGameState()
     {
+        if (VanillaPreferences.Get("DiscordRPC", 1) == 0) return;
         SongMetaV2 songMeta = Song.currentSongMeta;
         DiscordPresence presence = new DiscordPresence
         {
@@ -96,7 +98,7 @@ public class DiscordController : MonoBehaviour
         
         presence.startTime = Song.instance.musicSources[0].isPlaying ? DiscordTimestamp.ToUnixMilliseconds(_startDateTime) : 0;
         presence.endTime = Song.instance.musicSources[0].isPlaying ? DiscordTimestamp.ToUnixMilliseconds(GetEndTime()) : 0;
-        DiscordManager.current.SetPresence(presence);
+        DiscordManager.current?.SetPresence(presence);
     }
 
     DateTime GetEndTime()

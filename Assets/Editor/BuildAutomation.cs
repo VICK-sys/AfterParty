@@ -38,4 +38,28 @@ public static class BuildAutomation
 
         Debug.Log("Windows build succeeded: " + report.summary.outputPath);
     }
+
+    [MenuItem("Build/Xbox UWP x64")]
+    public static void BuildXboxUwp()
+    {
+        string output = OutputOverride;
+        if (string.IsNullOrWhiteSpace(output)) output = "Builds/XboxUWP";
+        EditorUserBuildSettings.wsaArchitecture = "x64";
+        EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.D3D;
+        PlayerSettings.SetScriptingBackend(NamedBuildTarget.WindowsStoreApps, ScriptingImplementation.IL2CPP);
+        PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.WSAPlayer, false);
+        PlayerSettings.SetGraphicsAPIs(BuildTarget.WSAPlayer, new[] { UnityEngine.Rendering.GraphicsDeviceType.Direct3D11 });
+        Directory.CreateDirectory(Path.GetFullPath(output));
+        BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+        {
+            scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray(),
+            locationPathName = output,
+            target = BuildTarget.WSAPlayer,
+            extraScriptingDefines = new[] { "DISABLE_DISCORD" },
+            options = BuildOptions.None
+        });
+        if (report.summary.result != BuildResult.Succeeded)
+            throw new BuildFailedException("Xbox UWP export failed: " + report.summary.result);
+        Debug.Log("Xbox UWP export succeeded: " + report.summary.outputPath);
+    }
 }
