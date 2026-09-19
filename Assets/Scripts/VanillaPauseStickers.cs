@@ -24,14 +24,14 @@ public sealed class VanillaPauseStickers : MonoBehaviour
     private bool waiting;
     public static bool Active { get; private set; }
 
-    public static void Begin(Action action)
+    public static void Begin(Action action, string character = null)
     {
         var root = new GameObject("Pause Stickers", typeof(RectTransform));
         DontDestroyOnLoad(root);
-        root.AddComponent<VanillaPauseStickers>().Build(action);
+        root.AddComponent<VanillaPauseStickers>().Build(action, character);
     }
 
-    private void Build(Action action)
+    private void Build(Action action, string character)
     {
         Active = true;
         changeScene = action;
@@ -57,7 +57,9 @@ public sealed class VanillaPauseStickers : MonoBehaviour
         viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
         sound = gameObject.AddComponent<AudioSource>();
         sounds = Resources.LoadAll<AudioClip>("FunkinPause/stickerSounds");
-        Texture2D[] textures = Resources.LoadAll<Texture2D>("FunkinPause/stickers");
+        string player = character ?? Song.instance?.vanillaPlayback?.PlayerId;
+        string pack = player == null ? "stickers" : "stickerPacks/" + (player.StartsWith("pico", StringComparison.Ordinal) ? "pico" : "bf");
+        Texture2D[] textures = Resources.LoadAll<Texture2D>("FunkinPause/" + pack);
         float x = -100;
         float y = -100;
         while (x <= 1280)

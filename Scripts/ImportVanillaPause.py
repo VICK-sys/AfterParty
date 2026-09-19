@@ -20,6 +20,12 @@ def run(source, release, output):
     pack = json.loads((assets / 'data/stickerpacks/default.json').read_text(encoding='utf-8-sig'))
     for sticker in pack['stickers']:
         files['stickers/' + Path(sticker).name + '.png'] = 'shared/images/' + sticker + '.png'
+    for character in ['bf', 'pico']:
+        pack_path = f'data/stickerpacks/standard-{character}.json'
+        pack = json.loads((assets / pack_path).read_text(encoding='utf-8-sig'))
+        files[f'stickerPacks/{character}.json'] = pack_path
+        for sticker in pack['stickers']:
+            files[f'stickerPacks/{character}/' + Path(sticker).name + '.png'] = 'shared/images/' + sticker + '.png'
     for sound in (assets / 'shared/sounds/stickersounds/keys').glob('*.ogg'):
         files['stickerSounds/' + sound.name] = sound.relative_to(assets).as_posix()
     output.mkdir(parents=True, exist_ok=True)

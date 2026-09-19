@@ -24,6 +24,9 @@ public static class VanillaPauseValidation
     private static bool finishing;
     private static bool countdownChecked;
     private static bool countdownPaused;
+    private static AudioSource countdownAudio;
+    private static RawImage countdownGraphic;
+    private static float countdownAlpha;
     private static Vector3 cameraPosition;
     private static string Output => Environment.GetEnvironmentVariable("UNITY_PARTY_PAUSE_TEST_PATH") ?? Path.GetFullPath("Builds/PauseValidation");
 
@@ -76,6 +79,9 @@ public static class VanillaPauseValidation
                     Pause.ResetSession();
                     Pause.SetGlobalOffset(0);
                     OptionsV2.DesperateMode = OptionsV2.LiteMode = OptionsV2.Middlescroll = false;
+                    OptionsV2.menuVolume = 0.8f;
+                    OptionsV2.miscVolume = 0.6f;
+                    InGameVolume.menuVolume = 0;
                     VanillaStoryCampaign.ReturnToMenu();
                     VanillaFreeplay.ReturnToFreeplay = true;
                     Song.currentSongMeta = VanillaFreeplayCatalog.Discover(Path.Combine(Application.streamingAssetsPath, "Bundles"))
@@ -91,6 +97,15 @@ public static class VanillaPauseValidation
                     {
                         if (!countdownPaused)
                         {
+                            var presentation = song.vanillaPlayback.Presentation;
+                            countdownGraphic = presentation.GetComponentsInChildren<RawImage>()
+                                .FirstOrDefault(image => image.name == "Countdown" && image.texture.name == "ready");
+                            if (countdownGraphic == null) return;
+                            countdownAudio = (AudioSource)typeof(VanillaCampaignPresentation).GetField("sound",
+                                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(presentation);
+                            Require(countdownAudio.isPlaying && countdownGraphic.color.a > 0, "Countdown control has no visible graphic or playing audio.");
+                            Require(!LoadingTransition.instance.toggled, "Loading screen covered the countdown.");
+                            countdownAlpha = countdownGraphic.color.a;
                             Pause.instance.PauseSong();
                             pausedPosition = song.SongPosition;
                             changed = EditorApplication.timeSinceStartup;
@@ -98,9 +113,10 @@ public static class VanillaPauseValidation
                         }
                         else if (elapsed >= 0.3)
                         {
-                            Require(song.SongPosition == pausedPosition && !song.soundSource.isPlaying, "Countdown advanced while paused.");
+                            Require(song.SongPosition == pausedPosition && !countdownAudio.isPlaying, "Countdown advanced while paused.");
+                            Require(countdownGraphic != null && countdownGraphic.color.a == countdownAlpha, "Countdown graphic faded while paused.");
                             Pause.instance.ContinueSong();
-                            Require(song.soundSource.isPlaying, "Countdown audio did not resume.");
+                            Require(countdownAudio.isPlaying, "Countdown audio did not resume.");
                             countdownChecked = true;
                         }
                         return;
@@ -136,6 +152,14 @@ public static class VanillaPauseValidation
                     Require(song.mainCamera.transform.position == cameraPosition, "Paused camera moved.");
                     Require(song.musicSources.Select(source => source.timeSamples).SequenceEqual(audioSamples), "Paused audio samples advanced.");
                     Require(Pause.instance.View.Music.isPlaying && Pause.instance.View.Music.time > 0, "Breakfast did not play while gameplay paused.");
+                    Require(Pause.instance.View.Music.volume > 0, "Breakfast used the inactive volume setting.");
+                    Pause.instance.View.Render(5);
+                    Require(Mathf.Approximately(Pause.instance.View.Music.volume, 0.6f), "Breakfast did not use the music volume setting.");
+                    OptionsV2.menuVolume = 0;
+                    Pause.instance.View.Render(0);
+                    Require(Pause.instance.View.Music.volume == 0, "Muted music control remained audible.");
+                    OptionsV2.menuVolume = 0.8f;
+                    Pause.instance.View.Render(0);
                     Capture("standard.png", 1280, 720, false);
                     Capture("blank.png", 1280, 720, true);
                     Pause.instance.View.ChangeSelection(-1);

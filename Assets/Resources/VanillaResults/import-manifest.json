@@ -1,0 +1,576 @@
+{
+  "source": "Funkin 0.8.6 source and local Funkin Windows assets",
+  "files": {
+    "images/diff_easy.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\diff_easy.png",
+      "sourceSha256": "ac855f0f6251119005d70dfe13a8ed3c657b971736fdcf8fd1bee06153644e0e",
+      "sha256": "ac855f0f6251119005d70dfe13a8ed3c657b971736fdcf8fd1bee06153644e0e"
+    },
+    "images/diff_erect.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\diff_erect.png",
+      "sourceSha256": "692b73530d07a2486c06ade418d3494402e9fec21eee4216fefc9189bf5e5e7c",
+      "sha256": "692b73530d07a2486c06ade418d3494402e9fec21eee4216fefc9189bf5e5e7c"
+    },
+    "images/diff_hard.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\diff_hard.png",
+      "sourceSha256": "be01edbb5c4ac4db14aa14d634d9fed85c562e6146b0be1a8b68eea3cca0b1b6",
+      "sha256": "be01edbb5c4ac4db14aa14d634d9fed85c562e6146b0be1a8b68eea3cca0b1b6"
+    },
+    "images/diff_nightmare.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\diff_nightmare.png",
+      "sourceSha256": "e5aa7f586a4abd3a22ef370342e0611ce7a450da0930bb002738c7eb15595a66",
+      "sha256": "e5aa7f586a4abd3a22ef370342e0611ce7a450da0930bb002738c7eb15595a66"
+    },
+    "images/diff_normal.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\diff_normal.png",
+      "sourceSha256": "9fbe37231c4b2ea1d91849932f49f74d52d062c950f85c725fc3d9d9c25e5887",
+      "sha256": "9fbe37231c4b2ea1d91849932f49f74d52d062c950f85c725fc3d9d9c25e5887"
+    },
+    "images/highscoreNew.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\highscoreNew.png",
+      "sourceSha256": "79c3c08b69d72de0afe8350fe0a1ae43c1ec19744371c00d70f65a077cacacd5",
+      "sha256": "79c3c08b69d72de0afe8350fe0a1ae43c1ec19744371c00d70f65a077cacacd5"
+    },
+    "images/highscoreNew.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\highscoreNew.xml",
+      "sourceSha256": "762aed642ede1c229cb4c202c312e70db22ff4537118e3d83c79ba60791a9a2f",
+      "sha256": "762aed642ede1c229cb4c202c312e70db22ff4537118e3d83c79ba60791a9a2f"
+    },
+    "images/ratingsPopin.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\ratingsPopin.png",
+      "sourceSha256": "80e0479820bca87a14940a1cb2872f76e6181c4360d31db9108186e0d024ecc7",
+      "sha256": "80e0479820bca87a14940a1cb2872f76e6181c4360d31db9108186e0d024ecc7"
+    },
+    "images/ratingsPopin.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\ratingsPopin.xml",
+      "sourceSha256": "51dbad77904ec74f626b79c0063775c1cccfa4c169ce60e012d75ed700b3fb5f",
+      "sha256": "51dbad77904ec74f626b79c0063775c1cccfa4c169ce60e012d75ed700b3fb5f"
+    },
+    "images/results.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results.png",
+      "sourceSha256": "efeea14b89559b748befeeb71ef663d566b2d3d4a1fb644acfef0c228736b776",
+      "sha256": "efeea14b89559b748befeeb71ef663d566b2d3d4a1fb644acfef0c228736b776"
+    },
+    "images/results.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results.xml",
+      "sourceSha256": "18f57110e3226a7496dd85c0456cb7ea9a06f2ed39ae95bd628986bb669060d0",
+      "sha256": "18f57110e3226a7496dd85c0456cb7ea9a06f2ed39ae95bd628986bb669060d0"
+    },
+    "images/score-digital-numbers.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\score-digital-numbers.png",
+      "sourceSha256": "d79003ff912501516d83ff65d502965eb7b0d5c4bf3dc0a5ab9de3424779d360",
+      "sha256": "d79003ff912501516d83ff65d502965eb7b0d5c4bf3dc0a5ab9de3424779d360"
+    },
+    "images/score-digital-numbers.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\score-digital-numbers.xml",
+      "sourceSha256": "d8e4e715ddd0c32b464fbdbca421a06dee38a3135b7d6a017d95b19f7ed50dfc",
+      "sha256": "d8e4e715ddd0c32b464fbdbca421a06dee38a3135b7d6a017d95b19f7ed50dfc"
+    },
+    "images/scorePopin.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\scorePopin.png",
+      "sourceSha256": "5e0a118e74cefb7aa096243930645ec23447fa32457d5520435e379ad13d03fd",
+      "sha256": "5e0a118e74cefb7aa096243930645ec23447fa32457d5520435e379ad13d03fd"
+    },
+    "images/scorePopin.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\scorePopin.xml",
+      "sourceSha256": "aebe159a4c1b78df2b7407ceddc83bd0e409fc16f199cb9165624b01c81acc74",
+      "sha256": "aebe159a4c1b78df2b7407ceddc83bd0e409fc16f199cb9165624b01c81acc74"
+    },
+    "images/soundSystem.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\soundSystem.png",
+      "sourceSha256": "8f693da5aa15db5795daf6d37745c96984b2b481e284523e99c59de729d5bdf0",
+      "sha256": "8f693da5aa15db5795daf6d37745c96984b2b481e284523e99c59de729d5bdf0"
+    },
+    "images/soundSystem.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\soundSystem.xml",
+      "sourceSha256": "0ee28fd439cdab86cf4cf0907e16364c5d74b9366cc8bf51e81cdd0cb0473768",
+      "sha256": "0ee28fd439cdab86cf4cf0907e16364c5d74b9366cc8bf51e81cdd0cb0473768"
+    },
+    "images/tallieNumber.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\tallieNumber.png",
+      "sourceSha256": "c6b2884c40d8723250a08a73d874bbdbd3cfb29e9a88c9bb7d2b73cf3f9aea06",
+      "sha256": "c6b2884c40d8723250a08a73d874bbdbd3cfb29e9a88c9bb7d2b73cf3f9aea06"
+    },
+    "images/tallieNumber.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\tallieNumber.xml",
+      "sourceSha256": "d3b49bceb19d7e204979aa4b4128554be16e3e02579b35e28d7481e5107716fa",
+      "sha256": "d3b49bceb19d7e204979aa4b4128554be16e3e02579b35e28d7481e5107716fa"
+    },
+    "images/tardlingSpritesheet.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\tardlingSpritesheet.png",
+      "sourceSha256": "a9c9f7971ea60a7a3f7adf3d6bd057a0cea5fcd13a497a80bbd34c9f2cd7470a",
+      "sha256": "a9c9f7971ea60a7a3f7adf3d6bd057a0cea5fcd13a497a80bbd34c9f2cd7470a"
+    },
+    "images/topBarBlack.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\topBarBlack.png",
+      "sourceSha256": "dcd3fc0334a8dcfeaf0943765a5729d32dbd5ae03a09924a43ccc08a1e482395",
+      "sha256": "dcd3fc0334a8dcfeaf0943765a5729d32dbd5ae03a09924a43ccc08a1e482395"
+    },
+    "images/clearPercent/clearPercentNumberLeft.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentNumberLeft.png",
+      "sourceSha256": "f2e084c8242446b0ee4791c2ae2fedd9f7be83be93483ea6a3ee5dbe710fa0ab",
+      "sha256": "f2e084c8242446b0ee4791c2ae2fedd9f7be83be93483ea6a3ee5dbe710fa0ab"
+    },
+    "images/clearPercent/clearPercentNumberLeft.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentNumberLeft.xml",
+      "sourceSha256": "6228c30a84f2a1a9c9490af9a98a561dacb22090e2e8732915e51f84d5d63d2b",
+      "sha256": "6228c30a84f2a1a9c9490af9a98a561dacb22090e2e8732915e51f84d5d63d2b"
+    },
+    "images/clearPercent/clearPercentNumberRight.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentNumberRight.png",
+      "sourceSha256": "0337cf7549872230bb68423f4db7831937d2b77d014092a30c0c1403714db791",
+      "sha256": "0337cf7549872230bb68423f4db7831937d2b77d014092a30c0c1403714db791"
+    },
+    "images/clearPercent/clearPercentNumberRight.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentNumberRight.xml",
+      "sourceSha256": "9c0700f242b028532b2b899c606658e3acf6fff298108cdad0314b65a25c2ccf",
+      "sha256": "9c0700f242b028532b2b899c606658e3acf6fff298108cdad0314b65a25c2ccf"
+    },
+    "images/clearPercent/clearPercentNumberSmall.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentNumberSmall.png",
+      "sourceSha256": "14a2ea82aba1962a3db79d2ce021fab4946ab94f200d1b9cb53b234f51b27005",
+      "sha256": "14a2ea82aba1962a3db79d2ce021fab4946ab94f200d1b9cb53b234f51b27005"
+    },
+    "images/clearPercent/clearPercentNumberSmall.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentNumberSmall.xml",
+      "sourceSha256": "bc4b29092b40cf7c3c4fcd6136335c1a0e5947f4a2ba9296e40fe16b7942b284",
+      "sha256": "bc4b29092b40cf7c3c4fcd6136335c1a0e5947f4a2ba9296e40fe16b7942b284"
+    },
+    "images/clearPercent/clearPercentText.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentText.png",
+      "sourceSha256": "6eb67601811b2534c3d0b8930d93dde77ed89c5b342c46ccf0e471382362bde7",
+      "sha256": "6eb67601811b2534c3d0b8930d93dde77ed89c5b342c46ccf0e471382362bde7"
+    },
+    "images/clearPercent/clearPercentTextSmall.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\clearPercentTextSmall.png",
+      "sourceSha256": "e5bab2702a0912a7a4c847d3843d484a2a82bc1fb5d27a3b06c572b3f719979f",
+      "sha256": "e5bab2702a0912a7a4c847d3843d484a2a82bc1fb5d27a3b06c572b3f719979f"
+    },
+    "images/clearPercent/numbers small0001.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0001.png",
+      "sourceSha256": "6d92958f0df17a59ea5d924b95cb41d5576aeca4511fe93443ddaad2e110dc56",
+      "sha256": "6d92958f0df17a59ea5d924b95cb41d5576aeca4511fe93443ddaad2e110dc56"
+    },
+    "images/clearPercent/numbers small0002.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0002.png",
+      "sourceSha256": "e66c8c30973d155eb86df88f01c7f150cdf7dd2ef3c5d16dd17dc7a989d5dabe",
+      "sha256": "e66c8c30973d155eb86df88f01c7f150cdf7dd2ef3c5d16dd17dc7a989d5dabe"
+    },
+    "images/clearPercent/numbers small0003.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0003.png",
+      "sourceSha256": "fe1ab1653a6f0a531a2af29db09d131794752207b97adfc9c5a98c7c4c24ffbf",
+      "sha256": "fe1ab1653a6f0a531a2af29db09d131794752207b97adfc9c5a98c7c4c24ffbf"
+    },
+    "images/clearPercent/numbers small0004.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0004.png",
+      "sourceSha256": "2ea2dbf84ed1176459b7fa84307796daf987c91b9f25b4fa37881f1d09c0ce05",
+      "sha256": "2ea2dbf84ed1176459b7fa84307796daf987c91b9f25b4fa37881f1d09c0ce05"
+    },
+    "images/clearPercent/numbers small0005.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0005.png",
+      "sourceSha256": "4c5da239acd0d32428c08a82cbdc144c6170c028783be5be1d4006a7538e45bb",
+      "sha256": "4c5da239acd0d32428c08a82cbdc144c6170c028783be5be1d4006a7538e45bb"
+    },
+    "images/clearPercent/numbers small0006.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0006.png",
+      "sourceSha256": "3c28732946f5618f2a1abc144f645a027a1bfdd3bcff447f460745ee25947a40",
+      "sha256": "3c28732946f5618f2a1abc144f645a027a1bfdd3bcff447f460745ee25947a40"
+    },
+    "images/clearPercent/numbers small0007.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0007.png",
+      "sourceSha256": "29893c06ff6a982f2e74bbc8142d6b8f15f461c91352571c990e82a5729a1363",
+      "sha256": "29893c06ff6a982f2e74bbc8142d6b8f15f461c91352571c990e82a5729a1363"
+    },
+    "images/clearPercent/numbers small0008.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0008.png",
+      "sourceSha256": "df9165aef75e69ecf0891087c5c1929f5f70ac0a077aa7f9e4f3a6fbe33c16f0",
+      "sha256": "df9165aef75e69ecf0891087c5c1929f5f70ac0a077aa7f9e4f3a6fbe33c16f0"
+    },
+    "images/clearPercent/numbers small0009.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0009.png",
+      "sourceSha256": "80e61a5cd261da207fbc691bbd912c6b088ccf20cd415314bb3fbb5916a22239",
+      "sha256": "80e61a5cd261da207fbc691bbd912c6b088ccf20cd415314bb3fbb5916a22239"
+    },
+    "images/clearPercent/numbers small0010.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\clearPercent\\numbers small0010.png",
+      "sourceSha256": "d381a31579b8b29495b914d5ce27bd9f14cf4c8de6931c29ef5c2d13506ed4b5",
+      "sha256": "d381a31579b8b29495b914d5ce27bd9f14cf4c8de6931c29ef5c2d13506ed4b5"
+    },
+    "images/rankText/rankScrollEXCELLENT.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankScrollEXCELLENT.png",
+      "sourceSha256": "b7231ce3c60c4bea76111306370d7697b0f72c96653bf0c8a8c470d93db5e660",
+      "sha256": "b7231ce3c60c4bea76111306370d7697b0f72c96653bf0c8a8c470d93db5e660"
+    },
+    "images/rankText/rankScrollGOOD.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankScrollGOOD.png",
+      "sourceSha256": "cf38bc8ceab73a6017ff9bc1e4cfe64a3137798320e25c7994f203939231c7a1",
+      "sha256": "cf38bc8ceab73a6017ff9bc1e4cfe64a3137798320e25c7994f203939231c7a1"
+    },
+    "images/rankText/rankScrollGREAT.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankScrollGREAT.png",
+      "sourceSha256": "7e95b6173365f63cf4055b57a3f9b8d54762f0f604441efa55f0d74a4e74b37a",
+      "sha256": "7e95b6173365f63cf4055b57a3f9b8d54762f0f604441efa55f0d74a4e74b37a"
+    },
+    "images/rankText/rankScrollLOSS.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankScrollLOSS.png",
+      "sourceSha256": "d62cd97d4966aef3987390cac14c94974211700cb737ca68742a0db8f5d83fc6",
+      "sha256": "d62cd97d4966aef3987390cac14c94974211700cb737ca68742a0db8f5d83fc6"
+    },
+    "images/rankText/rankScrollPERFECT.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankScrollPERFECT.png",
+      "sourceSha256": "d565301d41af8e7e332e38e369f3355f0e319bc4966cde8d849e038b687e30ed",
+      "sha256": "d565301d41af8e7e332e38e369f3355f0e319bc4966cde8d849e038b687e30ed"
+    },
+    "images/rankText/rankTextEXCELLENT.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankTextEXCELLENT.png",
+      "sourceSha256": "841ed017f7d1ee0a35ebe1eac1917c115d102cdfc115e4078d5b91759aa20d7f",
+      "sha256": "841ed017f7d1ee0a35ebe1eac1917c115d102cdfc115e4078d5b91759aa20d7f"
+    },
+    "images/rankText/rankTextGOOD.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankTextGOOD.png",
+      "sourceSha256": "d4b1e1d54bcb910eb81049f6c2f426692d5c1aa273975e9aec4e5db3c4fdf338",
+      "sha256": "d4b1e1d54bcb910eb81049f6c2f426692d5c1aa273975e9aec4e5db3c4fdf338"
+    },
+    "images/rankText/rankTextGREAT.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankTextGREAT.png",
+      "sourceSha256": "5a85b4500fbd9b8b0cf313d6e051df750ed767ec61a4de6252352e098a8e1b53",
+      "sha256": "5a85b4500fbd9b8b0cf313d6e051df750ed767ec61a4de6252352e098a8e1b53"
+    },
+    "images/rankText/rankTextLOSS.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankTextLOSS.png",
+      "sourceSha256": "b92d2ec268712de91f1b7bcd4b6cab64789f674ef1b3df34cc4be31dcc1d5aac",
+      "sha256": "b92d2ec268712de91f1b7bcd4b6cab64789f674ef1b3df34cc4be31dcc1d5aac"
+    },
+    "images/rankText/rankTextPERFECT.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\rankText\\rankTextPERFECT.png",
+      "sourceSha256": "bd942b957d0ccd1da024888c0b7531ed36381a3f32c1c7f337e5fe8e216f23c7",
+      "sha256": "bd942b957d0ccd1da024888c0b7531ed36381a3f32c1c7f337e5fe8e216f23c7"
+    },
+    "images/results-pico/resultsGOOD/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsGOOD\\Animation.json",
+      "sourceSha256": "1aa9d6351799c2d246367d3fcf0e8d45d5db10e6f6a8824082efc4e1c5180262",
+      "sha256": "9168823058031e812442059a4310194fc1dd252d1345d5293a83b67fd64fc6fc",
+      "transform": "HaxeFlixel movie clip filter bake"
+    },
+    "images/results-pico/resultsGOOD/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsGOOD\\spritemap1.json",
+      "sourceSha256": "247ea4da72bb43c943fdeeb832d787b87ea554aae79a544bc1d035c325a5ec5f",
+      "sha256": "6bb88ab1839b441e8fe70e956d40a226bb73e31a1273a085275016beb24cd4a0",
+      "transform": "HaxeFlixel movie clip filter bake"
+    },
+    "images/results-pico/resultsGOOD/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsGOOD\\spritemap1.png",
+      "sourceSha256": "0faafa663180fd0488b67a34a2c2e2930db61074acf5f8d04fbcc67f06597b22",
+      "sha256": "458d8fd0e3911d5328311c10fccbda68c5c13566c36502dcbf7f8408a2940ffa",
+      "transform": "HaxeFlixel movie clip filter bake"
+    },
+    "images/results-pico/resultsGREAT/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsGREAT\\Animation.json",
+      "sourceSha256": "93b0163c8d0be7fb5233f0e05691a7803673ec258e8ffa3606f4bd96717144e4",
+      "sha256": "2bc53aef82cff1333bac7f5657c9a6e6ee5da787e00b3d47ca68833b65bdc954"
+    },
+    "images/results-pico/resultsGREAT/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsGREAT\\spritemap1.json",
+      "sourceSha256": "e08db0d45321e224c3d74562d90c8adc05fd03f5628ee453e7de42ea752a3962",
+      "sha256": "e08db0d45321e224c3d74562d90c8adc05fd03f5628ee453e7de42ea752a3962"
+    },
+    "images/results-pico/resultsGREAT/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsGREAT\\spritemap1.png",
+      "sourceSha256": "404d4c5bdfe746365790afdd7f5b74ecf001cc83e1cbe7d37e94b4e51ec376cb",
+      "sha256": "404d4c5bdfe746365790afdd7f5b74ecf001cc83e1cbe7d37e94b4e51ec376cb"
+    },
+    "images/results-pico/resultsPERFECT/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsPERFECT\\Animation.json",
+      "sourceSha256": "bedffa5950974f16fc7bc5a228ebbe24eeac8da9fd13cdcb71d31f39bdfb2eea",
+      "sha256": "c87d09a87fa36686ae8abc6ad3bafcf334989f85df50362c06a04289de8ee963"
+    },
+    "images/results-pico/resultsPERFECT/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsPERFECT\\spritemap1.json",
+      "sourceSha256": "00998a820864cc000e7cd0eca81b959f4c59496f5ccc6612065d5d79038f2ecf",
+      "sha256": "00998a820864cc000e7cd0eca81b959f4c59496f5ccc6612065d5d79038f2ecf"
+    },
+    "images/results-pico/resultsPERFECT/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsPERFECT\\spritemap1.png",
+      "sourceSha256": "4682db3b9f9aeb51ea896e2a337fc7499b915758919ec92f71eb7806d0ad930b",
+      "sha256": "4682db3b9f9aeb51ea896e2a337fc7499b915758919ec92f71eb7806d0ad930b"
+    },
+    "images/results-pico/resultsSHIT/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsSHIT\\Animation.json",
+      "sourceSha256": "82fb38727f84efaada8432ae6a5b48ebf7ff31fe3207b985389c2413331e6b47",
+      "sha256": "fadd0a6e19064cb8811ddc2c9f95b1906b1f9f8062bd982d4fa0b2df69b5d6ef"
+    },
+    "images/results-pico/resultsSHIT/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsSHIT\\spritemap1.json",
+      "sourceSha256": "b17c963d001d43ba15e996215a0dd02fa5c1fd06495ed76ef651b78fc9e56e08",
+      "sha256": "b17c963d001d43ba15e996215a0dd02fa5c1fd06495ed76ef651b78fc9e56e08"
+    },
+    "images/results-pico/resultsSHIT/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-pico\\resultsSHIT\\spritemap1.png",
+      "sourceSha256": "688ca1ab1d205ebb543773aa18aa7b602067177f5bc2cd4baf07ad730317b158",
+      "sha256": "688ca1ab1d205ebb543773aa18aa7b602067177f5bc2cd4baf07ad730317b158"
+    },
+    "images/results-bf/resultsEXCELLENT/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsEXCELLENT\\Animation.json",
+      "sourceSha256": "6e5f7de5c5a367f343bdc15b003d655b867b0b9ba7a761edeba2092a9f4c4d12",
+      "sha256": "dd35fabddc236d7fdaeea8782945238d06e89ab9fdf1ae5a9c3e42a915de7929"
+    },
+    "images/results-bf/resultsEXCELLENT/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsEXCELLENT\\spritemap1.json",
+      "sourceSha256": "f5c4ea1fa0b56e0f713beb44a625127a76bf9f0aeb6b20ec250ab20c6b73cfda",
+      "sha256": "f5c4ea1fa0b56e0f713beb44a625127a76bf9f0aeb6b20ec250ab20c6b73cfda"
+    },
+    "images/results-bf/resultsEXCELLENT/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsEXCELLENT\\spritemap1.png",
+      "sourceSha256": "23677f23b89ecb6c30d8a2eaa24d8b90c2a3e11d9e8897139036c11d44ba8953",
+      "sha256": "23677f23b89ecb6c30d8a2eaa24d8b90c2a3e11d9e8897139036c11d44ba8953"
+    },
+    "images/results-bf/resultsGOOD/resultGirlfriendGOOD.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGOOD\\resultGirlfriendGOOD.png",
+      "sourceSha256": "6db8bd5343f5b3c62264b09c8666b15730bfa5abcfe5dd349f4f79cd1bab8494",
+      "sha256": "6db8bd5343f5b3c62264b09c8666b15730bfa5abcfe5dd349f4f79cd1bab8494"
+    },
+    "images/results-bf/resultsGOOD/resultGirlfriendGOOD.xml": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGOOD\\resultGirlfriendGOOD.xml",
+      "sourceSha256": "f8c7580961b7c78720082ed7fd998995c02fd3b6bc9f3080db4fd2b9279cc53d",
+      "sha256": "f8c7580961b7c78720082ed7fd998995c02fd3b6bc9f3080db4fd2b9279cc53d"
+    },
+    "images/results-bf/resultsSHIT/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsSHIT\\Animation.json",
+      "sourceSha256": "21bf0740681aeb7c1ffc3672cf3045bea4ed65ab94c45d9871a9928e0caeb063",
+      "sha256": "e74cc5989311600f5435502dd4914d7b16803846166471c6c075a2cafa67878e"
+    },
+    "images/results-bf/resultsSHIT/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsSHIT\\spritemap1.json",
+      "sourceSha256": "b15e3a53b23a884224cb62d74799fc44775fa9b7582e4dcd1d977a5a5d39dd52",
+      "sha256": "b15e3a53b23a884224cb62d74799fc44775fa9b7582e4dcd1d977a5a5d39dd52"
+    },
+    "images/results-bf/resultsSHIT/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsSHIT\\spritemap1.png",
+      "sourceSha256": "dfb0ea911066a45aa70e4f647a3da27d02dafe92da55a6b60e65fb4f8865b0f0",
+      "sha256": "dfb0ea911066a45aa70e4f647a3da27d02dafe92da55a6b60e65fb4f8865b0f0"
+    },
+    "images/results-bf/resultsPERFECT/bed/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\bed\\Animation.json",
+      "sourceSha256": "041092c3aed785cfb8f83b2367960b1f51956c1e0b9c8dd7df6e0a6e494452fc",
+      "sha256": "753a81cf0d04d73f80f174a8d292bbd6a63b37808a5237312fb24fd3d2c067d0"
+    },
+    "images/results-bf/resultsPERFECT/bed/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\bed\\spritemap1.json",
+      "sourceSha256": "c81c494d79224c1f8c508ff5d750e1687abf799247e388e7c16de3f174f921b2",
+      "sha256": "c81c494d79224c1f8c508ff5d750e1687abf799247e388e7c16de3f174f921b2"
+    },
+    "images/results-bf/resultsPERFECT/bed/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\bed\\spritemap1.png",
+      "sourceSha256": "5cd0a34ae756691c422587beb9d385ea0fbef05a7805c217609b95c573be7e94",
+      "sha256": "5cd0a34ae756691c422587beb9d385ea0fbef05a7805c217609b95c573be7e94"
+    },
+    "images/results-bf/resultsPERFECT/hearts/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\hearts\\Animation.json",
+      "sourceSha256": "b3b2b526ebc10172ba93e59c5393c0f06fa9b2f12fb8b073478d9ca4ff507ff1",
+      "sha256": "302d544182953e09ea79d8e2c7dbd7240e1975e67622e0f08112284485700d73"
+    },
+    "images/results-bf/resultsPERFECT/hearts/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\hearts\\spritemap1.json",
+      "sourceSha256": "4abe77f2901a7d433560fc79e2ed71934d1df1dc246d197bdd359a4015f479c5",
+      "sha256": "4abe77f2901a7d433560fc79e2ed71934d1df1dc246d197bdd359a4015f479c5"
+    },
+    "images/results-bf/resultsPERFECT/hearts/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\hearts\\spritemap1.png",
+      "sourceSha256": "ac5eaed0ef4b58be8720ada9f89285eae4df7ff6a495676996e596084e399517",
+      "sha256": "ac5eaed0ef4b58be8720ada9f89285eae4df7ff6a495676996e596084e399517"
+    },
+    "images/results-bf/resultsPERFECT/tickleFight/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\tickleFight\\Animation.json",
+      "sourceSha256": "d239e3497f73e025270523c5485781f333c618c436c779cc5cfe4647361c3644",
+      "sha256": "3e18ba6478741d5f587ed2312490bca39a5196e81922442df81ad096469d660a",
+      "transform": "HaxeFlixel mask bake"
+    },
+    "images/results-bf/resultsPERFECT/tickleFight/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\tickleFight\\spritemap1.json",
+      "sourceSha256": "ea50cbd728dc3b48e4af69eff2f0dc090b2198fe2c2463532c197addeb2a447e",
+      "sha256": "0da7447a64640baec6487b0ea627a330f68f3a0f3220fc3b915743a89875d3bf",
+      "transform": "HaxeFlixel mask bake"
+    },
+    "images/results-bf/resultsPERFECT/tickleFight/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsPERFECT\\tickleFight\\spritemap1.png",
+      "sourceSha256": "548b4e900767cef36b2ea8b7a5568ff076de5285a480ed57bcd88f3b5bfbb138",
+      "sha256": "b664c0a2d405e4f8b21ff07ac362566b60a218d07670e4cc58e8e30cb1786732",
+      "transform": "HaxeFlixel mask bake"
+    },
+    "images/results-bf/resultsGREAT/bf/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGREAT\\bf\\Animation.json",
+      "sourceSha256": "a23d1649358eacba535882efb1cffa704ea21a54200df95a23fccb8666235a4e",
+      "sha256": "eb5944632f82a2842cf686b1fb76f0a0b4aa74e46a817aaab3e469d6836a62d6"
+    },
+    "images/results-bf/resultsGREAT/bf/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGREAT\\bf\\spritemap1.json",
+      "sourceSha256": "efa988a3bb8b48da484870cd1f0d38420ae2aef90b2ee77b5d8266dc8ca48969",
+      "sha256": "efa988a3bb8b48da484870cd1f0d38420ae2aef90b2ee77b5d8266dc8ca48969"
+    },
+    "images/results-bf/resultsGREAT/bf/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGREAT\\bf\\spritemap1.png",
+      "sourceSha256": "c49804af0db6c030ec2483cef660cc11e8e6712aa7dcd83c84571ee452b9f575",
+      "sha256": "c49804af0db6c030ec2483cef660cc11e8e6712aa7dcd83c84571ee452b9f575"
+    },
+    "images/results-bf/resultsGREAT/gf/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGREAT\\gf\\Animation.json",
+      "sourceSha256": "d23f29c36d610895f2ca231cbec83ac4ff4b4620f669c8c614fc237a24717250",
+      "sha256": "7b9c261fa73eb7eaae09adc2f7c80a1b71e28715652622c413d0d3b9096cff69"
+    },
+    "images/results-bf/resultsGREAT/gf/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGREAT\\gf\\spritemap1.json",
+      "sourceSha256": "f635e1a61819ef6c0edb2b7c0f603100cb03c841f1550913051ec1a30216d6ce",
+      "sha256": "f635e1a61819ef6c0edb2b7c0f603100cb03c841f1550913051ec1a30216d6ce"
+    },
+    "images/results-bf/resultsGREAT/gf/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGREAT\\gf\\spritemap1.png",
+      "sourceSha256": "92686335fa6264cf60386e552b733c6c26e2faea8261a724626a29345e01e47c",
+      "sha256": "92686335fa6264cf60386e552b733c6c26e2faea8261a724626a29345e01e47c"
+    },
+    "images/results-bf/resultsGOOD/bf/Animation.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGOOD\\bf\\Animation.json",
+      "sourceSha256": "372e1f3556ee8f12358e0ed419b9f1d00331ec16bafd294d995e153e0e62425a",
+      "sha256": "2767d3a39c86280fcdc3bc892d48a905e5ce0039fe7670ecfc02b921e662f640"
+    },
+    "images/results-bf/resultsGOOD/bf/spritemap1.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGOOD\\bf\\spritemap1.json",
+      "sourceSha256": "1820560210db80fccf2411d05558ebad23ad116f65b3217dc969d98ae491398e",
+      "sha256": "1820560210db80fccf2411d05558ebad23ad116f65b3217dc969d98ae491398e"
+    },
+    "images/results-bf/resultsGOOD/bf/spritemap1.png": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\images\\resultScreen\\results-bf\\resultsGOOD\\bf\\spritemap1.png",
+      "sourceSha256": "75130e24c1f40fd1f401d4af59ec348993ebb928a0292efae62b4506345b63d1",
+      "sha256": "75130e24c1f40fd1f401d4af59ec348993ebb928a0292efae62b4506345b63d1"
+    },
+    "music/resultsEXCELLENT-intro.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsEXCELLENT\\resultsEXCELLENT-intro.ogg",
+      "sourceSha256": "7ec16dad7a186da80bf2354c923b185c7934430b5cfe85ece3740d4abea107af",
+      "sha256": "7ec16dad7a186da80bf2354c923b185c7934430b5cfe85ece3740d4abea107af"
+    },
+    "music/resultsEXCELLENT.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsEXCELLENT\\resultsEXCELLENT.ogg",
+      "sourceSha256": "bf50645504d37b4282582d1e9404eec4c7c79b53e157d3ad1a1193dbafb9fab9",
+      "sha256": "bf50645504d37b4282582d1e9404eec4c7c79b53e157d3ad1a1193dbafb9fab9"
+    },
+    "music/resultsEXCELLENT-pico-intro.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsEXCELLENT-pico\\resultsEXCELLENT-pico-intro.ogg",
+      "sourceSha256": "80d98b150e4e2c91b6ffb1eab2101048664b4f9865f0ca9feb76ae910620480c",
+      "sha256": "80d98b150e4e2c91b6ffb1eab2101048664b4f9865f0ca9feb76ae910620480c"
+    },
+    "music/resultsEXCELLENT-pico.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsEXCELLENT-pico\\resultsEXCELLENT-pico.ogg",
+      "sourceSha256": "80fbb8da48469a344071e716cd969054973008b965485238e294290762f9e17c",
+      "sha256": "80fbb8da48469a344071e716cd969054973008b965485238e294290762f9e17c"
+    },
+    "music/resultsNORMAL.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsNORMAL\\resultsNORMAL.ogg",
+      "sourceSha256": "97113956e309f3481c6018837c4e28f055559deb636d940a44a76b29a1672f5d",
+      "sha256": "97113956e309f3481c6018837c4e28f055559deb636d940a44a76b29a1672f5d"
+    },
+    "music/resultsNORMAL-pico.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsNORMAL-pico\\resultsNORMAL-pico.ogg",
+      "sourceSha256": "1aa89b87a0acc53903a4be56e087b2dfac2ea87211ba852b6dd9b070877ed709",
+      "sha256": "1aa89b87a0acc53903a4be56e087b2dfac2ea87211ba852b6dd9b070877ed709"
+    },
+    "music/resultsPERFECT.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsPERFECT\\resultsPERFECT.ogg",
+      "sourceSha256": "ce7ed24c04f1b48b6ebd244930a50bd6a3c1ad43cb068887bbe76ef1465efcaa",
+      "sha256": "ce7ed24c04f1b48b6ebd244930a50bd6a3c1ad43cb068887bbe76ef1465efcaa"
+    },
+    "music/resultsPERFECT-pico-intro.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsPERFECT-pico\\resultsPERFECT-pico-intro.ogg",
+      "sourceSha256": "2e9b6f5aeaff74fb26412973714a0c71ae1ceb025407b16a813ea89f8cd021a0",
+      "sha256": "2e9b6f5aeaff74fb26412973714a0c71ae1ceb025407b16a813ea89f8cd021a0"
+    },
+    "music/resultsPERFECT-pico.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsPERFECT-pico\\resultsPERFECT-pico.ogg",
+      "sourceSha256": "a3e60de3be0f608136bf394940677f7e64957306c3da649afebc343df77c4198",
+      "sha256": "a3e60de3be0f608136bf394940677f7e64957306c3da649afebc343df77c4198"
+    },
+    "music/resultsSHIT-intro.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsSHIT\\resultsSHIT-intro.ogg",
+      "sourceSha256": "761b43732443eeb7da7613bca648b9c216f34e3480a8fd44c5e8bebdd22ff0c5",
+      "sha256": "761b43732443eeb7da7613bca648b9c216f34e3480a8fd44c5e8bebdd22ff0c5"
+    },
+    "music/resultsSHIT.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsSHIT\\resultsSHIT.ogg",
+      "sourceSha256": "5511b8f57144a9371833a5b13f9160ab50e505db4cca8759a250d752ef9b7466",
+      "sha256": "5511b8f57144a9371833a5b13f9160ab50e505db4cca8759a250d752ef9b7466"
+    },
+    "music/resultsSHIT-pico.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\music\\resultsSHIT-pico\\resultsSHIT-pico.ogg",
+      "sourceSha256": "eaaf2af787e9702ece8de9f9b9c15bdb96aba812b460d39d92d8df916a5fab32",
+      "sha256": "eaaf2af787e9702ece8de9f9b9c15bdb96aba812b460d39d92d8df916a5fab32"
+    },
+    "players/bf.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\data\\players\\bf.json",
+      "sourceSha256": "c5f92ede6216e139f9a30845d68497c436bf2637971412019c93fb230312290e",
+      "sha256": "c5f92ede6216e139f9a30845d68497c436bf2637971412019c93fb230312290e"
+    },
+    "players/pico.json": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\data\\players\\pico.json",
+      "sourceSha256": "da1221132dfb8b4838fe64bd637481a4c827af36157155dfebba21a04c527345",
+      "sha256": "da1221132dfb8b4838fe64bd637481a4c827af36157155dfebba21a04c527345"
+    },
+    "Source/BFBedPerfectResults.hxc": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\scripts\\players\\results\\bf\\BFBedPerfectResults.hxc",
+      "sourceSha256": "2723e120c2ee853e8c06ee40c72a471b2cf50acb6ba1219ddebc663e4cc92049",
+      "sha256": "2723e120c2ee853e8c06ee40c72a471b2cf50acb6ba1219ddebc663e4cc92049"
+    },
+    "Source/BFShitResults.hxc": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\scripts\\players\\results\\bf\\BFShitResults.hxc",
+      "sourceSha256": "a96ff87f4f20499237df39c3edb922a4df933e8977605407c1c81a89961f5529",
+      "sha256": "a96ff87f4f20499237df39c3edb922a4df933e8977605407c1c81a89961f5529"
+    },
+    "Source/PicoGoodResults.hxc": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\scripts\\players\\results\\pico\\PicoGoodResults.hxc",
+      "sourceSha256": "59bac5f0196aea634b8d13afdc2bb2a3e06784b2c6f01e1ef59f26bb0f79530e",
+      "sha256": "59bac5f0196aea634b8d13afdc2bb2a3e06784b2c6f01e1ef59f26bb0f79530e"
+    },
+    "Source/PicoGreatResults.hxc": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\scripts\\players\\results\\pico\\PicoGreatResults.hxc",
+      "sourceSha256": "5d138c5194133c1f58fdf746da749c9c9cb5ce4df63b8f230b6b6e9b0b6f06d1",
+      "sha256": "5d138c5194133c1f58fdf746da749c9c9cb5ce4df63b8f230b6b6e9b0b6f06d1"
+    },
+    "Source/PicoPerfectResults.hxc": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\scripts\\players\\results\\pico\\PicoPerfectResults.hxc",
+      "sourceSha256": "e4ba7ba33546d3cb89d4a9b4beda7492268b7670f20d044f8929c8adc639df2a",
+      "sha256": "e4ba7ba33546d3cb89d4a9b4beda7492268b7670f20d044f8929c8adc639df2a"
+    },
+    "Source/ResultState.hx": {
+      "source": "C:\\Users\\aaron\\Downloads\\Funkin-0.8.6\\source\\funkin\\play\\ResultState.hx",
+      "sourceSha256": "a3477a3c502a28f67188a23549839f49c5ee325f87c94e7e464f4a28efcedcf1",
+      "sha256": "a3477a3c502a28f67188a23549839f49c5ee325f87c94e7e464f4a28efcedcf1"
+    },
+    "Source/ResultScore.hx": {
+      "source": "C:\\Users\\aaron\\Downloads\\Funkin-0.8.6\\source\\funkin\\play\\ResultScore.hx",
+      "sourceSha256": "20abec5f229944d06d915e7b85af6cd4f3118c9047c04b70412dfa5126e8ce4a",
+      "sha256": "20abec5f229944d06d915e7b85af6cd4f3118c9047c04b70412dfa5126e8ce4a"
+    },
+    "Source/ClearPercentCounter.hx": {
+      "source": "C:\\Users\\aaron\\Downloads\\Funkin-0.8.6\\source\\funkin\\play\\components\\ClearPercentCounter.hx",
+      "sourceSha256": "e51e0f95f7f312245f3843fbcacc580959cc05cea2212bf0778a375840681280",
+      "sha256": "e51e0f95f7f312245f3843fbcacc580959cc05cea2212bf0778a375840681280"
+    },
+    "Source/TallyCounter.hx": {
+      "source": "C:\\Users\\aaron\\Downloads\\Funkin-0.8.6\\source\\funkin\\play\\components\\TallyCounter.hx",
+      "sourceSha256": "312d8cf046b779ee5fb1a6c3242a6304f13d1658d4853904dd4ec82522835025",
+      "sha256": "312d8cf046b779ee5fb1a6c3242a6304f13d1658d4853904dd4ec82522835025"
+    },
+    "Source/Scoring.hx": {
+      "source": "C:\\Users\\aaron\\Downloads\\Funkin-0.8.6\\source\\funkin\\play\\scoring\\Scoring.hx",
+      "sourceSha256": "6b7cf28b15ac19e65d5b112fbae05e92a5a54eec45efa6b0130e06f3860024a8",
+      "sha256": "6b7cf28b15ac19e65d5b112fbae05e92a5a54eec45efa6b0130e06f3860024a8"
+    },
+    "sounds/tickleFight.ogg": {
+      "source": "C:\\Users\\aaron\\Downloads\\funkin-windows-64bit\\assets\\shared\\sounds\\tickleFight.ogg",
+      "sourceSha256": "ba44fce3e32e32c70ec9eaf61610bc99d171b2d283c4350561ef7bc5903bc0f3",
+      "sha256": "ba44fce3e32e32c70ec9eaf61610bc99d171b2d283c4350561ef7bc5903bc0f3"
+    },
+    "LICENSE.md": {
+      "source": "C:\\Users\\aaron\\Downloads\\Funkin-0.8.6\\LICENSE.md",
+      "sourceSha256": "48e37081f9fa120e42cdc79603a3b167ad470b86749c8e0ba6cc3b2f4efeecce",
+      "sha256": "48e37081f9fa120e42cdc79603a3b167ad470b86749c8e0ba6cc3b2f4efeecce"
+    }
+  }
+}

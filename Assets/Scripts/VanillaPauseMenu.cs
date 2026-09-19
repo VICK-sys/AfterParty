@@ -83,9 +83,9 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         offsetHold = 0;
         fastOffset = false;
         openingFrame = Time.frameCount;
-        previousVertical = Input.GetAxisRaw("Vertical");
+        previousVertical = Player.MenuAxis("Vertical");
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
-        music.clip = Resources.Load<AudioClip>("FunkinPause/breakfast" + (Song.instance != null && Song.instance.vanillaPlayback != null && Song.instance.vanillaPlayback.IsPixel ? "-pixel" : ""));
+        music.clip = Resources.Load<AudioClip>("FunkinPause/breakfast" + (Song.instance != null && Song.instance.vanillaPlayback != null && Song.instance.vanillaPlayback.IsPixel ? "-pixel" : Song.instance?.vanillaPlayback?.PlayerId.StartsWith("pico") == true ? "-pico" : ""));
         music.volume = 0;
         if (music.clip != null)
         {
@@ -120,6 +120,14 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         DifficultyMenu = false;
         ClearEntries();
         Add("Resume", owner.ContinueSong);
+        if (owner.IsVideo)
+        {
+            Add("Skip Cutscene", () => { Song.instance.vanillaPlayback.Presentation.SkipVideo(); owner.ContinueSong(); });
+            Add("Restart Cutscene", () => { Song.instance.vanillaPlayback.Presentation.RestartVideo(); owner.ContinueSong(); });
+            Add("Exit to Menu", owner.QuitSong);
+            FinishEntries();
+            return;
+        }
         Add("Restart Song", owner.RestartSong);
         Add("Change Difficulty", ShowDifficulties);
         if (!Pause.PracticeMode) Add("Enable Practice Mode", owner.EnablePractice);
@@ -170,7 +178,7 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         if (entries.Count == 0 || owner.Transitioning) return;
         int previous = SelectedIndex;
         SelectedIndex = (SelectedIndex + change % entries.Count + entries.Count) % entries.Count;
-        if (SelectedIndex != previous && scroll != null) sound.PlayOneShot(scroll, 0.4f * InGameVolume.menuVolume);
+        if (SelectedIndex != previous && scroll != null) sound.PlayOneShot(scroll, 0.4f * OptionsV2.miscVolume);
         foreach (Entry entry in entries) entry.from = entry.text.rectTransform.anchoredPosition;
         selectionAge = 0;
         RenderEntries();
@@ -186,13 +194,13 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         if (!focused || owner == null) return;
         Render(Time.unscaledDeltaTime);
         if (owner.Transitioning || Time.frameCount == openingFrame) return;
-        float vertical = Input.GetAxisRaw("Vertical");
-        bool up = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || vertical > 0.5f && previousVertical <= 0.5f;
-        bool down = Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || vertical < -0.5f && previousVertical >= -0.5f;
+        float vertical = Player.MenuAxis("Vertical");
+        bool up = VanillaControls.Pressed("UI_UP");
+        bool down = VanillaControls.Pressed("UI_DOWN");
         previousVertical = vertical;
         bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        bool heldUp = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) || vertical > 0.5f;
-        bool heldDown = Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S) || vertical < -0.5f;
+        bool heldUp = VanillaControls.Held("UI_UP");
+        bool heldDown = VanillaControls.Held("UI_DOWN");
         if (shift && (heldUp || heldDown))
         {
             offsetHold += Time.unscaledDeltaTime;
@@ -210,10 +218,13 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         offsetHold = 0;
         if (up) ChangeSelection(-1);
         if (down) ChangeSelection(1);
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)
-            || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0)) Accept();
-        else if (Input.GetKeyDown(Player.pauseKey) || Input.GetKeyDown(KeyCode.Escape)
-            || Input.GetKeyDown(KeyCode.JoystickButton7)) owner.ContinueSong();
+        if (VanillaControls.Pressed("ACCEPT")) Accept();
+        else if (VanillaControls.Pressed("PAUSE")) owner.ContinueSong();
+        else if (VanillaControls.Pressed("BACK"))
+        {
+            if (DifficultyMenu) ShowStandard();
+            else owner.ContinueSong();
+        }
     }
 
     public void Render(float delta)
@@ -221,7 +232,7 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         age += delta;
         selectionAge += delta;
         background.color = new Color(0, 0, 0, 0.6f * Ease(age / 0.8f));
-        music.volume = Mathf.Clamp01(age / 5) * 0.75f * InGameVolume.menuVolume;
+        music.volume = Mathf.Clamp01(age / 5) * 0.75f * OptionsV2.menuVolume;
         SongMetaV2 meta = Song.currentSongMeta;
         SongVariation variation = meta?.GetVariation(Song.difficulty);
         Dictionary<string, string> credits = variation?.credits ?? meta?.credits;

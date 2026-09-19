@@ -14,10 +14,12 @@ public class Pause : MonoBehaviour
     public static bool PracticeMode { get; private set; }
     public static int DeathCount { get; private set; }
     public static bool PlayedCampaignIntro { get; set; }
+    public static bool MixOpponentExploded { get; set; }
     public static int GlobalOffset => PlayerPrefs.GetInt("Funkin.GlobalOffset", 0);
     public bool IsPaused => pauseScreen != null && pauseScreen.activeSelf;
     public bool Transitioning { get; private set; }
     public VanillaPauseMenu View { get; private set; }
+    public bool IsVideo => Song.instance?.vanillaPlayback?.Presentation?.VideoActive == true;
     private static string sessionSong;
     private float previousTimeScale = 1;
     private bool clockPaused;
@@ -42,18 +44,18 @@ public class Pause : MonoBehaviour
     {
         Song song = Song.instance;
         if (song == null || Transitioning || IsPaused || editingVolume) return;
-        if (song.vanillaPlayback?.Presentation != null && song.vanillaPlayback.Presentation.Busy) return;
-        if (!Input.GetKeyDown(Player.pauseKey) && !Input.GetKeyDown(KeyCode.Escape)
-            && !Input.GetKeyDown(KeyCode.JoystickButton7)) return;
-        if (song.isDead || !song.songStarted && !song.IsCountingDown) return;
+        if (song.vanillaPlayback?.Presentation?.Busy == true && !IsVideo) return;
+        if (!VanillaControls.Pressed("PAUSE")) return;
+        if (song.isDead || !song.songStarted && !song.IsCountingDown && !IsVideo) return;
         PauseSong();
     }
 
     public void PauseSong()
     {
         Song song = Song.instance;
-        if (song == null || IsPaused || Transitioning || song.isDead || !song.songStarted && !song.IsCountingDown) return;
-        if (song.vanillaPlayback?.Presentation != null && song.vanillaPlayback.Presentation.Busy) return;
+        if (song == null || IsPaused || Transitioning || song.isDead || !song.songStarted && !song.IsCountingDown && !IsVideo) return;
+        if (song.vanillaPlayback?.Presentation?.Busy == true && !IsVideo) return;
+        if (IsVideo) song.vanillaPlayback.Presentation.PauseVideo(true);
         song.modInstance?.Invoke("OnPause");
         song.subtitleDisplayer.paused = true;
         songClockRunning = song.stopwatch?.IsRunning ?? false;
@@ -75,6 +77,11 @@ public class Pause : MonoBehaviour
         pauseScreen.SetActive(true);
     }
 
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus && VanillaPreferences.AutoPause) PauseSong();
+    }
+
     public void ContinueSong()
     {
         if (Transitioning || (!IsPaused && !editingVolume)) return;
@@ -90,6 +97,7 @@ public class Pause : MonoBehaviour
             if (source != null) source.UnPause();
         pausedAudio.Clear();
         song.modInstance?.Invoke("OnUnpause");
+        if (IsVideo) song.vanillaPlayback.Presentation.PauseVideo(false);
     }
 
     private void RestoreClock()
@@ -142,6 +150,7 @@ public class Pause : MonoBehaviour
         PracticeMode = false;
         DeathCount = 0;
         PlayedCampaignIntro = false;
+        MixOpponentExploded = false;
         sessionSong = null;
     }
 

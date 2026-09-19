@@ -34,6 +34,190 @@
       "source": "shared/images/transitionSwag/stickers-set-1/bfSticker3.png",
       "sha256": "4c09b0fac08cf3cc7e3f3bb8a216cc75e56c63ab12d69f2498bcb515ffdab0da"
     },
+    "stickerPacks/bf.json": {
+      "source": "data/stickerpacks/standard-bf.json",
+      "sha256": "ea55d7285fae73f36b2067444a512b5a583318c180c84edba570a01c8e00de6d"
+    },
+    "stickerPacks/bf/bfSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/bfSticker1.png",
+      "sha256": "cfd4f08f10e0cb95dc8b7f8e749d5ab4a9e820c602440fa8ad19cd87c1a726e5"
+    },
+    "stickerPacks/bf/bfSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/bfSticker2.png",
+      "sha256": "1fc82fa6c2d205c51d7d7862536f7c259e33426abbdb4a60f8ac11b055d30bd0"
+    },
+    "stickerPacks/bf/bfSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/bfSticker3.png",
+      "sha256": "4c09b0fac08cf3cc7e3f3bb8a216cc75e56c63ab12d69f2498bcb515ffdab0da"
+    },
+    "stickerPacks/bf/dadSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/dadSticker1.png",
+      "sha256": "ca4c92d57e9f7becc583cadeedda76c5920c2b3c9123014738eb5dfcd1f445f4"
+    },
+    "stickerPacks/bf/dadSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/dadSticker2.png",
+      "sha256": "32bae17ee86a629489c5a65f51c5164072d916a4615d3e19f254b1fb075828ce"
+    },
+    "stickerPacks/bf/dadSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/dadSticker3.png",
+      "sha256": "6ad014fe646880c9a1aa3d0bde05432097fd5e08035331a260978d5dfbf769ab"
+    },
+    "stickerPacks/bf/picoSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/picoSticker1.png",
+      "sha256": "0999447081d64979925726884d8826132a2ed0cd2bca0d88d0820042919d3dc2"
+    },
+    "stickerPacks/bf/picoSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/picoSticker2.png",
+      "sha256": "fc420d441fa8ce2f195ae7713d0b4a59b2a83f8f78b931076f4043be2ab008ea"
+    },
+    "stickerPacks/bf/picoSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/picoSticker3.png",
+      "sha256": "5a690d35daf78371e86fbc6c5aab403ea4ef505668a7f3cbfc87a1b71d3431d1"
+    },
+    "stickerPacks/bf/momSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/momSticker1.png",
+      "sha256": "5c08ca9f7a4587c0f8d6d8d68d1560964685fe62774865d3d9c46b833a85da47"
+    },
+    "stickerPacks/bf/momSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/momSticker2.png",
+      "sha256": "31c765374ca001622a2b89f11959734bdfed5ce175648d430dc648a1c5809d6a"
+    },
+    "stickerPacks/bf/momSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/momSticker3.png",
+      "sha256": "5df912ca4b8e1ae620039b1818f363f812056d929ac1b55a73a6f334a6ae8581"
+    },
+    "stickerPacks/bf/monsterSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/monsterSticker1.png",
+      "sha256": "8178cfe824f6eed850a64e5a93f905fd2d28792f9c39867f681f0ddf4633c7e0"
+    },
+    "stickerPacks/bf/monsterSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/monsterSticker2.png",
+      "sha256": "69bf3a011ad96e4d1f54ab68af32a9c5aa595ffe5acfde40f099978aa5bc410b"
+    },
+    "stickerPacks/bf/monsterSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/monsterSticker3.png",
+      "sha256": "e7041f952a081bae3f039eb3cd140cafb90567b1de01a4276ad352d9bf6da250"
+    },
+    "stickerPacks/bf/gfSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/gfSticker1.png",
+      "sha256": "5c1228cea1840394ba30a6311910fc436b38cbe766053355302f638c28d5c8ce"
+    },
+    "stickerPacks/bf/gfSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/gfSticker2.png",
+      "sha256": "fbc16a2b430107efaba4f3a919d65fb51a8528d5ce6ac6d987e56d432de21d9c"
+    },
+    "stickerPacks/bf/gfSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-1/gfSticker3.png",
+      "sha256": "c1378a617e90087c072c0d024b21726d5982126987681cf13ec25b5797542c14"
+    },
+    "stickerPacks/pico.json": {
+      "source": "data/stickerpacks/standard-pico.json",
+      "sha256": "cbf93f66f4678ed4a13efa9318e45f3b32ffe5b696328ffe10afa3f69606091a"
+    },
+    "stickerPacks/pico/alucardSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/alucardSticker1.png",
+      "sha256": "c8f5f92594fd5930f27448672eaeeca3a84ff872270c8655357bc6c1c5cf6708"
+    },
+    "stickerPacks/pico/alucardSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/alucardSticker2.png",
+      "sha256": "575a9969f2490a593276611a1d9bb3446c85b9432cd0e229d16abd6015b9bbbe"
+    },
+    "stickerPacks/pico/cassandraSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/cassandraSticker1.png",
+      "sha256": "f25b6f770746251fa4f917e9c6024965add496f2ecfb817c20edf77aeff6a692"
+    },
+    "stickerPacks/pico/cassandraSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/cassandraSticker2.png",
+      "sha256": "c1aec6df256e89083981d2396e85ffa263f431e66595b4492bb0df741aa039e6"
+    },
+    "stickerPacks/pico/cassandraSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/cassandraSticker3.png",
+      "sha256": "37eaf2e4963e0fdf8dae65d59f14995e94b918b31dea4ceabb04520cbb294922"
+    },
+    "stickerPacks/pico/cyclopsSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/cyclopsSticker1.png",
+      "sha256": "68babb633645bba3a25c5ea2de8acf9dfe4d3dbe19ea249a109774717b36fc0b"
+    },
+    "stickerPacks/pico/cyclopsSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/cyclopsSticker2.png",
+      "sha256": "1dee71de5fbb544cd570a7a532f682efdb36858d8512c503a8187f55ac062111"
+    },
+    "stickerPacks/pico/dadSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/dadSticker1.png",
+      "sha256": "b718e30a76a1de465e43ec568c05a25f5b2af8fef0c52031f51054554076741f"
+    },
+    "stickerPacks/pico/dadSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/dadSticker2.png",
+      "sha256": "19753c5af3b3f90437e69ac141d13f9f3de65d22d3b06c2f10c912138ded2b9d"
+    },
+    "stickerPacks/pico/dadSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/dadSticker3.png",
+      "sha256": "36c2b778cb0799ce1d8c4d81b86a1ed5ef77a1a61be320e4cae45989a0af3704"
+    },
+    "stickerPacks/pico/darnellSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/darnellSticker1.png",
+      "sha256": "cc8f4476b39895694401a7afd733ba185a18e7ad6a88383c8cfc9100597794eb"
+    },
+    "stickerPacks/pico/darnellSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/darnellSticker2.png",
+      "sha256": "4e5999261e072e185640a4305265eb7a5c7dbc15def1f4338bd325bbe94d14c5"
+    },
+    "stickerPacks/pico/darnellSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/darnellSticker3.png",
+      "sha256": "3da43ba0b488d8ce49c2cb5454854a69f31920bb8f38f82a96671121064aa3be"
+    },
+    "stickerPacks/pico/neneSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/neneSticker1.png",
+      "sha256": "e74b7ca9f2f6c3d093fc28b9b9de89d88ce25c2159bb521a63603d1a994acc45"
+    },
+    "stickerPacks/pico/neneSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/neneSticker2.png",
+      "sha256": "8977746e521ff2d7624a85c84a5b61dcb6a5d6ee84f2b066f0960db8007d6d36"
+    },
+    "stickerPacks/pico/neneSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/neneSticker3.png",
+      "sha256": "6ea3792b432cf74d14c070341dc0b6402ed20b5310e7d3d40202859734c06d65"
+    },
+    "stickerPacks/pico/picoSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/picoSticker1.png",
+      "sha256": "46fd9c090ac213148606ec868d3d94e66448fea849b46dbbb5981fdf5d8a07df"
+    },
+    "stickerPacks/pico/picoSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/picoSticker2.png",
+      "sha256": "2fd2abc7799bca17020d16e970aae0572d8733badacb3ad073043ec18833243c"
+    },
+    "stickerPacks/pico/picoSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/picoSticker3.png",
+      "sha256": "231a3f648df56829a2bae04907e206df03c595fd5aae670a09d7c9e3e8e6f80e"
+    },
+    "stickerPacks/pico/someDeadGuySticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/someDeadGuySticker1.png",
+      "sha256": "721d11575ee431389335a05589b232c1e3f448bd7ac8bdb5899a57b6a5404958"
+    },
+    "stickerPacks/pico/someDeadGuySticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/someDeadGuySticker2.png",
+      "sha256": "4e654c7014b86eda4d00d085055a17e756a32592f9f17175eb4e2ea9f05d5ae4"
+    },
+    "stickerPacks/pico/miscSticker1.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/miscSticker1.png",
+      "sha256": "769caa97feecd2bd4b1308be80c8d6ea256f4764e084e0a790e880b3d3af2f92"
+    },
+    "stickerPacks/pico/miscSticker2.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/miscSticker2.png",
+      "sha256": "d4c7ec43240b077eb72019156ec9a1afd1e78adc88893e9969f22c514bf01fd8"
+    },
+    "stickerPacks/pico/miscSticker3.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/miscSticker3.png",
+      "sha256": "e721ec3ee31c0723ebdb96ca630cde0ed4213ca7358fa6c02f462b4455467b79"
+    },
+    "stickerPacks/pico/miscSticker4.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/miscSticker4.png",
+      "sha256": "a20910646f69fb0491ec2bf6c1cde403c90a5b9b395d388039cfe5034fa42686"
+    },
+    "stickerPacks/pico/miscSticker5.png": {
+      "source": "shared/images/transitionSwag/stickers-set-2/miscSticker5.png",
+      "sha256": "57988e46070e42c7c09411eb9c1a6f924ac988a15164c5e5f7bfc21ab0c41be0"
+    },
     "stickerSounds/keyClick1.ogg": {
       "source": "shared/sounds/stickersounds/keys/keyClick1.ogg",
       "sha256": "867dc404ffa971926d449c24f799567c67e3edba45da6464dc68c7efa30ba51e"
