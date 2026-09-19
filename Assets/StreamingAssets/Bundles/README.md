@@ -148,7 +148,7 @@ Select `Tools > AfterParty > Build Tutorial Character` to regenerate the charact
 Set `UNITY_PARTY_SONG_TEST_PATH` to an empty output directory.
 Set `AFTERPARTY_BUILD_PATH` to the output executable path.
 Run Unity with `-batchmode -executeMethod VanillaSongValidation.Begin`.
-The probe checks all 163 charts through the gameplay parser.
+The probe checks all 166 charts through the gameplay parser.
 It rejects controls for swapped note sides, rounded scroll speeds, and incorrect linear camera easing.
 The default probe completes the six Week 1 remix charts and the Tutorial and Week 1 Hard charts in autoplay.
 It checks note counts, misses, audio selection, opponents, camera events, stage loading, and menu return.
@@ -165,7 +165,7 @@ Set `UNITY_PARTY_SONG_STAGE_ONLY=1` to check stage behavior and menu return with
 Run this probe in an isolated batch editor.
 The probe uses separate validation preferences.
 
-Run `Scripts/TestFunkinRules.ps1` to simulate all 88,736 note heads at 30, 60, and 144 frames per second.
+Run `Scripts/TestFunkinRules.ps1` to simulate all 90,437 note heads at 30, 60, and 144 frames per second.
 Run `python Scripts/TestVanillaCharacterAssets.py --assets "path/to/assets"` to verify character files and animation indices.
 Set `UNITY_PARTY_CHARACTER_TEST_PATH` to an output directory.
 Run `VanillaCharacterValidation.Begin` in an isolated batch editor to check character timing, pause, and retry.
@@ -270,7 +270,7 @@ Run `python Scripts/TestMixAssets.py --assets "path/to/assets"` to verify source
 The test rejects swapped lanes and original instrumentals used for mix audio.
 
 Set `UNITY_PARTY_MIX_TEST=1` and `UNITY_PARTY_SONG_TEST_PATH` before running `VanillaSongValidation.Begin`.
-The probe checks the 43 catalog entries, original Story playlists, all 163 parsed charts, and the mix stages.
+The probe checks the 44 catalog entries, original Story playlists, all 166 parsed charts, and the mix stages.
 Set `UNITY_PARTY_SONG_STAGE_ONLY=1` for stage loading checks.
 Clear that variable to check complete playback and event consumption.
 The gameplay probe suppresses intros so random cutscene outcomes cannot skip its chart checks.
@@ -282,3 +282,58 @@ Set `UNITY_PARTY_MIX_IDS` to a comma-separated song ID list to select targeted m
 Stage probes also check source event transitions, special animations, vocal restoration, and reset controls.
 Run `VanillaMixPresentationValidation.Begin` with `UNITY_PARTY_MIX_PRESENTATION_PATH` to check Freeplay dialogue, video, endings, and randomized intro outcomes.
 Run `VanillaWeek2LifecycleValidation.Begin` with `UNITY_PARTY_MIX_TEST=1` and `UNITY_PARTY_CAMPAIGN_LIFECYCLE_PATH` to check eight mix death and retry paths.
+
+## Spaghetti
+
+Spaghetti includes Easy, Normal, and Hard in Freeplay, Story Mode, and the bundle picker.
+The import preserves 1,701 note heads, 468 events, source scroll speeds, and both original Ogg files.
+The final non-scoreable note does not affect score, combo, misses, or result totals.
+
+The diner includes all six performers, the perspective floor, dust, truck lights, pulse lights, and source color adjustments.
+Performer events select which characters follow each strumline.
+Mouth animations follow the song clock at 24 frames per second.
+Sakura retains the joint, BF1, and BF2 hit and miss animations.
+Girlfriend retains the alternate singing animations.
+Health icons follow the chart events.
+Opponent receptors, ratings, and combo popups remain hidden.
+
+The intro plays before the first countdown in each session.
+The first advance input arms skipping after half a second.
+The second input starts the skip fade.
+Retries restore the diner and skip the intro.
+The ending displays both source cards and completes the song after nine seconds.
+Desktop guitar vibration events have no effect, as in the source desktop build.
+
+Run `Scripts/ImportSpaghetti.py` with `--assets`, `--audio`, and `--source` to import the release files.
+Use the release assets directory, the Spaghetti Ogg directory, and the Funkin 0.8.6 source checkout.
+Run `Scripts/SpaghettiReference/Build.ps1` with HaxeFlixel 6.2.0 and flixel-animate 1.4.0 installed.
+Run `python Scripts/ImportSpaghettiMasks.py` to pack the source renderer's clipped frames.
+The masked atlases preserve the original source files alongside their generated graphics.
+
+Run `Scripts/TestSpaghettiAssets.py` with the same three source arguments to check charts, events, audio, masks, and asset hashes.
+Run Unity with `-batchmode -quit -executeMethod SpaghettiValidation.CheckAssets` for parser, playlist, atlas, and lighting checks.
+Set `UNITY_PARTY_SPAGHETTI_TEST=1` before running `VanillaSongValidation.Begin` in an isolated batch editor.
+The probe checks all three difficulties, performer routing, note variants, pause, intro skipping, ending cards, and completion.
+Controls reject inactive performers singing, scored ending notes, early cutscene completion, and blank stage renders.
+
+Set `UNITY_PARTY_SPAGHETTI_REFERENCE_PATH` to the absolute `Builds/SpaghettiReference` directory.
+Run `SpaghettiRendererValidation.Capture` in Unity batch mode.
+Run `python Scripts/TestSpaghettiRenderer.py` to compare 90 Unity poses with the Flixel captures.
+Controls reject shifted characters, frozen mouths, and mouths drawn over Yunjin's foreground hair.
+The pose comparison uses the installed Flixel renderer.
+Full-song pixel parity with the released executable has not been verified.
+
+Set `UNITY_PARTY_CAMPAIGN_LIFECYCLE_SONG` to `SPAGHETTI (feat. j-hope of BTS) (Clean ver.)` for death and retry checks.
+Set `UNITY_PARTY_CAMPAIGN_LIFECYCLE_PATH` before running `VanillaWeek2LifecycleValidation.Begin`.
+
+## Cutscene boundary checks
+
+Set `UNITY_PARTY_CUTSCENE_PATH` before running `VanillaCutsceneBoundaryValidation.Begin` in an isolated batch editor.
+The probe checks 15 intros, five outros, and five retry or no-intro controls.
+Intro checks require an opaque cover before the loading screen clears.
+They also check HUD restoration and reject a transparent cover.
+Outro checks require presentation ownership and blocked song completion until the cutscene ends.
+The checks preserve the visible stage in in-game outros, including Eggnog Erect and 2hot.
+Use `UNITY_PARTY_CUTSCENE_CASES` to select semicolon-separated `song|variation|story|mode` cases.
+The story field is `1` or `0`.
+Mode is `intro`, `outro`, `retry`, or `control`.

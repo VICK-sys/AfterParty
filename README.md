@@ -7,6 +7,7 @@ AfterParty forks [Unity Party](https://github.com/Team-Determination/Unity-Party
 
 - Intro, title, menus, credits, and gameplay behavior adapted from Friday Night Funkin' 0.8.6.
 - Tutorial, Weeks 1 through 7, and Weekend 1, with available Erect and Nightmare charts.
+- Spaghetti on Easy, Normal, and Hard, with its diner stage, performers, lighting, and cutscenes.
 - All 15 Pico mixes and both BF mixes from Friday Night Funkin' 0.8.6.
 - BF and Pico results screens with rank animations, song tallies, and campaign totals.
 - Boyfriend, Opponent, and AutoPlay modes.
