@@ -1,0 +1,36 @@
+1
+00:00:00,270 --> 00:00:02,660
+<font face="VCR OSD Mono" size="30">Back for some tasty revenge, huh?</font>
+
+2
+00:00:02,660 --> 00:00:04,160
+<font face="VCR OSD Mono" size="30">Oh, that's cute.</font>
+
+3
+00:00:04,730 --> 00:00:06,540
+<font face="VCR OSD Mono" size="30">Boys... Light 'em up.</font>
+
+4
+00:00:08,980 --> 00:00:11,500
+<font face="VCR OSD Mono" size="30">{\an1}*SCREAMS*</font>
+
+5
+00:00:09,500 --> 00:00:11,500
+<font face="VCR OSD Mono" size="30">*LAUGHS*</font>
+
+6
+00:00:11,500 --> 00:00:12,880
+<font face="VCR OSD Mono" size="30">*Music slows to a stop*</font>
+
+7
+00:00:24,680 --> 00:00:27,860
+<font face="VCR OSD Mono" size="30">Oh, come on, who the **** is this knockoff?</font>
+
+8
+00:00:29,470 --> 00:00:30,720
+<font face="VCR OSD Mono" size="30"></font>
+
+9
+00:00:30,720 --> 00:00:32,720
+<font face="VCR OSD Mono" size="30">Alright, alright.</font>
+

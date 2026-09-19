@@ -1,0 +1,56 @@
+1
+00:00:00,250 --> 00:00:02,500
+<font face="VCR OSD Mono" size="30">God effing damn it.</font>
+
+2
+00:00:03,180 --> 00:00:05,200
+<font face="VCR OSD Mono" size="30">Well played, you little SHIT.</font>
+
+3
+00:00:05,600 --> 00:00:06,840
+<font face="VCR OSD Mono" size="30">But this is WAR.</font>
+
+4
+00:00:06,860 --> 00:00:09,440
+<font face="VCR OSD Mono" size="30">...and in war, people DIE.</font>
+
+5
+00:00:09,440 --> 00:00:11,440
+<font face="VCR OSD Mono" size="30">Men, get ready to FIRE!</font>
+
+6
+00:00:11,440 --> 00:00:14,380
+<font face="VCR OSD Mono" size="30">Sorry, no prom for you this year!</font>
+
+7
+00:00:14,520 --> 00:00:15,800
+<font face="VCR OSD Mono" size="30">Ha ha ha!</font>
+
+8
+00:00:19,980 --> 00:00:21,360
+<font face="VCR OSD Mono" size="30">Ah, look who it is...</font>
+
+9
+00:00:21,360 --> 00:00:24,140
+<font face="VCR OSD Mono" size="30">...your sexually ambiguous, angry little friend.</font>
+
+10
+00:00:24,140 --> 00:00:26,440
+<font face="VCR OSD Mono" size="30">Don't you have a school to shoot up?</font>
+
+11
+00:00:26,880 --> 00:00:28,740
+<font face="VCR OSD Mono" size="30">There's one way to settle this...</font>
+
+12
+00:00:28,940 --> 00:00:31,240
+<font face="VCR OSD Mono" size="30">Let's rock, you little <b><font color="#ff0000">****</font></b>!</font>
+
+13
+00:00:31,440 --> 00:00:33,220
+<font face="VCR OSD Mono" size="30"><i>laughs</i></font>
+
+14
+00:00:33,220 --> 00:00:35,220
+<font face="VCR OSD Mono" size="30">You little ****s!</font>
+

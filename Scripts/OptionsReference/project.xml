@@ -1,0 +1,11 @@
+<project>
+    <meta title="Options Reference" package="local.options.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="OptionsReference" path="../../Builds/OptionsReference/compiled" />
+    <window width="1280" height="720" hidden="true" />
+    <source path="." />
+    <source path="../../Temp/OptionsReferenceSource" />
+    <haxelib name="flixel" version="6.2.0" />
+    <assets path="../../Assets/Resources/VanillaOptions" rename="assets" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/vcr.ttf" rename="assets/vcr.ttf" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

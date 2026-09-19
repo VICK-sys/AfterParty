@@ -1,0 +1,143 @@
+{
+  "source": "Funkin-0.8.6",
+  "assets": {
+    "menuBG.png": {
+      "source": "images/menuBG.png",
+      "sha256": "0f657b3b810bff85c3e46fd5714124001bcabc36a4c68d231408597692d6bcb7"
+    },
+    "checkboxThingie.png": {
+      "source": "images/checkboxThingie.png",
+      "sha256": "bca166d8b0ff6c32543409ae2fe6ea29294507e69742b4ca39e854498c4fe60f"
+    },
+    "checkboxThingie.xml": {
+      "source": "images/checkboxThingie.xml",
+      "sha256": "eabcc6b9a144cc9dc34e88d707d76437682adddd3718d2cb6f5258d81ccd9303"
+    },
+    "bold.png": {
+      "source": "images/fonts/bold.png",
+      "sha256": "9a7ba6c9a41cbeeeffe73794953699afbd463671a01a7fecc017e4a0f473dfe2"
+    },
+    "bold.xml": {
+      "source": "images/fonts/bold.xml",
+      "sha256": "3f766fd6fb36f375f0e989224903e9fea58977c45c2dac9d922010eee0e7830a"
+    },
+    "default.png": {
+      "source": "images/fonts/default.png",
+      "sha256": "6ebc4385a703e3dccae5c771e037beeb05f8f262a57338c131b78c705b1fd0dd"
+    },
+    "default.xml": {
+      "source": "images/fonts/default.xml",
+      "sha256": "7d4e9dfef4b38a04e743f5c9897c0be48c65b85f06bcd5d1e35d939d20dade86"
+    },
+    "latencyArrow.png": {
+      "source": "shared/images/latencyArrow.png",
+      "sha256": "0f4eea76ac75e3fcf76b5865388f39e75a954e216ddf6208c057671491878417"
+    },
+    "latencyReceptor.png": {
+      "source": "shared/images/latencyReceptor.png",
+      "sha256": "80cb269b33d3420a253121eb95870f74a6b2a592c0289e6c336361c2c3f3a53e"
+    },
+    "offsetsLoop.ogg": {
+      "source": "music/offsetsLoop/offsetsLoop.ogg",
+      "sha256": "156dca15f97fffce4ab4b5d0922353c5b3f7c1f767158540ad915cfc38522b2c"
+    },
+    "drumsLoop.ogg": {
+      "source": "music/offsetsLoop/drumsLoop.ogg",
+      "sha256": "e1158349bbd75d7ecd72a23a82feee0ec56a3d245c9e1d6761a222e0ddc3947d"
+    },
+    "scrollMenu.ogg": {
+      "source": "sounds/scrollMenu.ogg",
+      "sha256": "ed2468c8977630867663409dfacf99a38d7fcd2a00f57204d021d607d09530c4"
+    },
+    "confirmMenu.ogg": {
+      "source": "sounds/confirmMenu.ogg",
+      "sha256": "aa884bea3e4ab2d32525ccf4e319afb7fc2a9ec5989e800fa3ba06d03bd867bb"
+    },
+    "cancelMenu.ogg": {
+      "source": "sounds/cancelMenu.ogg",
+      "sha256": "614761147214e02cd9d0f5d90bd2de61c7be3d364bcbc0a4f4b24e2db9e5a3df"
+    },
+    "soundtray/bars_1.png": {
+      "sha256": "6352daa9434ac13949439efe8893e565eb644afba8d29b443ff2d22aeaad0588",
+      "source": "images/soundtray/bars_1.png"
+    },
+    "soundtray/bars_10.png": {
+      "sha256": "3a6a012f1dbe7a6def40fef9e2d7d2e3d93e45b4c354b114f41e74c647ed25dd",
+      "source": "images/soundtray/bars_10.png"
+    },
+    "soundtray/bars_2.png": {
+      "sha256": "60fbf6518d37e10d01652691a81fde385fae299eca36ed13991efad57bf98c59",
+      "source": "images/soundtray/bars_2.png"
+    },
+    "soundtray/bars_3.png": {
+      "sha256": "a6a4128d601e422e1a1b2d63dd3dc9b57c75498a0b94fabaebd95b9af5fa9aff",
+      "source": "images/soundtray/bars_3.png"
+    },
+    "soundtray/bars_4.png": {
+      "sha256": "19ca7af983414c2713b7ddefe80949589f3d82aa4b05c4f194a90604695db226",
+      "source": "images/soundtray/bars_4.png"
+    },
+    "soundtray/bars_5.png": {
+      "sha256": "72b2d805c179fc5d07b277d26e83f5dbab7cb904ad0038160681b47d6576aa04",
+      "source": "images/soundtray/bars_5.png"
+    },
+    "soundtray/bars_6.png": {
+      "sha256": "ab6fcc1091e7d7c5737cd39a204290726304fff2ecad5235f5ec575552017065",
+      "source": "images/soundtray/bars_6.png"
+    },
+    "soundtray/bars_7.png": {
+      "sha256": "dc5e64fb78b2b4bb05396fee8d44461ccbaab616f47ca1feb7e7b1f13320ecb8",
+      "source": "images/soundtray/bars_7.png"
+    },
+    "soundtray/bars_8.png": {
+      "sha256": "12de821d77a803d92cb33dbe9dbb55f5a20dfa3dc78b358cf233cfadd0574986",
+      "source": "images/soundtray/bars_8.png"
+    },
+    "soundtray/bars_9.png": {
+      "sha256": "c70b6559fe0adb37d70c9f2e9e1d75d0690bf36fbde99dce1e21fcb73441609a",
+      "source": "images/soundtray/bars_9.png"
+    },
+    "soundtray/Voldown.ogg": {
+      "sha256": "0c7e7b17543ec9df1ff96ae6c5b38c2bbc25694f37c903fb1b6289d6e74d145b",
+      "source": "sounds/soundtray/Voldown.ogg"
+    },
+    "soundtray/VolMAX.ogg": {
+      "sha256": "32b3cb94bcd339b24941edf41d10f57a3ccd0ddb3003d3de8ffbb066f2d84e6f",
+      "source": "sounds/soundtray/VolMAX.ogg"
+    },
+    "soundtray/volumebox.png": {
+      "sha256": "2b7de93c782691b49fdc506147002b4eac0b91e4ea0418a427c4d62df38b46ef",
+      "source": "images/soundtray/volumebox.png"
+    },
+    "soundtray/Volup.ogg": {
+      "sha256": "c561c92b1447fb81d967c6210d1b65ab8e9eb70c163a8c27cf4cd7a72c4ba6fb",
+      "source": "sounds/soundtray/Volup.ogg"
+    },
+    "funkay.png": {
+      "sha256": "be67d6b5b8aa266d5998c144c395c76f961c66c11ab5f7e21df07801dc627c31",
+      "source": "images/funkay.png"
+    }
+  },
+  "sourceFiles": {
+    "source/funkin/ui/options/ColorsMenu.hx": "88e86c406ee1e36f3cdc41e5533de0d5a8936faf98aa0ce00a97d61916b8e679",
+    "source/funkin/ui/options/ControlsMenu.hx": "0d08e088a7c78be7c9431bf656227cfefdf702d492d459df12630ccc038d75ac",
+    "source/funkin/ui/options/FunkinSoundTray.hx": "dbd7fb3325e3ca4c65fc6aafff7b609dfb047d31d8e1ef6cab53cab14819f144",
+    "source/funkin/ui/options/items/CheckboxPreferenceItem.hx": "2740b37ce6d3f0b603cfa24456bccc7c30851e0862641629ae33e8f79b4d8087",
+    "source/funkin/ui/options/items/EnumPreferenceItem.hx": "152059e4453d67511210b619ffafd905a1f6ba768c6b72400f74c4910e0f8c3e",
+    "source/funkin/ui/options/items/NumberPreferenceItem.hx": "4fb67fb8c05d0b9dcd7fcfb317a3332f6507f9b07b95e18d5ba982bbf97d2927",
+    "source/funkin/ui/options/MenuItemEnums.hx": "6e621b91f4d75977d9c607d5e1561af9a801e6ca41a4a8f66122aec0f66c3e08",
+    "source/funkin/ui/options/ModMenu.hx": "3245f7370cfa37e53fef90d58d8f0e0a61bd6953ac316abe5560abcc0474d409",
+    "source/funkin/ui/options/OffsetMenu.hx": "e7601983f0b40150c29a6a150b0079006ab04bc069ca6278fd35b55e5039bb2e",
+    "source/funkin/ui/options/OptionsState.hx": "8fb32b668a1729b5f072f670a4c0a491bc2d0838df430c63dfe3d190f2fec730",
+    "source/funkin/ui/options/PreferencesMenu.hx": "c6fc8ca3edce2cdb98688e934184065dda0aedaaea818bd0afffa5fa53ea6171",
+    "source/funkin/ui/options/SaveDataMenu.hx": "eb7aa8605e68a5c7950e6618573e888a267070b8c5add081ab905cd476d07266"
+  },
+  "censoredVideos": {
+    "stress-censored.mp4": "20cced1aeb06726955c87c01b8a2a2544ebc73274432a5a9a725a33a86f7767b",
+    "stress-censored.wav": "6cc4e881964ba4993c5dfef55bd03572b80d5715717e082db9fc2713714fd078",
+    "stress-censored.srt": "a9572f8466c95a1c02d24f13936562f97dd6b2792df6244ac6e6adf6937995a5",
+    "stress-pico-censored.mp4": "745f2dbce1c6c8c7f373867547811fee8605e34853b9435f05e79ac7d007ac0c",
+    "stress-pico-censored.wav": "fef5761a69cc79831ffedf6158e077ae9a599f22942a1f75fd5816932738bb49",
+    "stress-pico-censored.srt": "275c05a85b7c633aa788ff376aea6f5be4d55bd7590cda8aeefe47036689a03a"
+  }
+}
