@@ -16,7 +16,7 @@ public static class VanillaWeek2Validation
     public static void CheckAssets()
     {
         VanillaSongValidation.CheckCharts();
-        Require(VanillaStoryCatalog.Load().Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1", "week2", "week3", "week4", "week5", "week6" }), "Installed story weeks changed.");
+        Require(VanillaStoryCatalog.Load().Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1", "week2", "week3", "week4", "week5", "week6", "week7", "weekend1" }), "Installed story weeks changed.");
         VanillaStoryLevel level = VanillaStoryCatalog.Load().Single(item => item.id == "week2");
         foreach (string difficulty in new[] { "easy", "normal", "hard" })
         {

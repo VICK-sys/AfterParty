@@ -37626,7 +37626,7 @@ MonoBehaviour:
   applicationID: 982132227028705411
   steamID: 
   targetPipe: -1
-  logLevel: 1
+  logLevel: 3
   registerUriScheme: 0
   active: 1
   _currentUser:

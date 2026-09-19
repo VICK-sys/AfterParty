@@ -22,6 +22,7 @@ public static class FunkinRuleTests
         Inputs();
         Holds();
         Bots();
+        HitGate();
         Hud();
         Console.WriteLine("FUNKIN RULE TESTS PASSED: " + assertions + " assertions.");
     }
@@ -279,7 +280,8 @@ public static class FunkinRuleTests
             .Where(path => Path.GetFileName(Path.GetDirectoryName(path)) == "Source"))
         {
             using JsonDocument data = JsonDocument.Parse(File.ReadAllText(path));
-            foreach (string difficulty in data.RootElement.GetProperty("notes").EnumerateObject().Select(entry => entry.Name))
+            using JsonDocument metadata = JsonDocument.Parse(File.ReadAllText(Path.Combine(Path.GetDirectoryName(path), Path.GetFileName(path).Replace("chart", "metadata"))));
+            foreach (string difficulty in metadata.RootElement.GetProperty("playData").GetProperty("difficulties").EnumerateArray().Select(entry => entry.GetString()))
             {
                 var entries = data.RootElement.GetProperty("notes").GetProperty(difficulty).EnumerateArray().ToArray();
                 foreach (int fps in new[] { 30, 60, 144 })
@@ -309,7 +311,21 @@ public static class FunkinRuleTests
                 heads += entries.Length;
             }
         }
-        Require(charts == 87 && heads == 41590, "Expected all 87 bundled charts and 41,590 note heads.");
+        Require(charts == 163 && heads == 88736, "Expected all 163 bundled charts and 88,736 note heads.");
         Console.WriteLine("FUNKIN CHART TESTS PASSED: " + charts + " charts, " + heads + " heads, 30/60/144 FPS.");
+    }
+
+    private static void HitGate()
+    {
+        var note = new FunkinNoteState(1000, 0, 0);
+        var line = new FunkinStrumline { Controlled = true, BotPlay = false, CanHit = _ => false };
+        line.Add(note);
+        line.Hit(note, 0, false, 1000);
+        Require(!note.Hit && line.HeadsHit == 0, "A rejected special note cannot receive hit credit.");
+        line.CanHit = _ => true;
+        line.Hit(note, 0, false, 1000);
+        Require(note.Hit && line.HeadsHit == 1, "The same special note can be hit after its condition is met.");
+        line.Hit(note, 0, false, 1000);
+        Require(line.HeadsHit == 1, "The condition cannot bypass duplicate-hit rejection.");
     }
 }

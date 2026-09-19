@@ -11,6 +11,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
     public int EventsApplied { get; private set; }
     public string SongId { get; private set; }
     public bool IsErect { get; private set; }
+    public string Variation { get; private set; }
     public VanillaErectStage Stage { get; private set; }
     public VanillaWeek2Stage Week2Stage { get; private set; }
     public VanillaWeek3Stage Week3Stage { get; private set; }
@@ -78,6 +79,12 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                 case "quadInOut":
                     eased = t <= 0.5f ? 2 * t * t : 1 - 2 * (t - 1) * (t - 1);
                     break;
+                case "cubeInOut":
+                    eased = t < .5f ? 4 * t * t * t : 1 - Mathf.Pow(-2 * t + 2, 3) / 2;
+                    break;
+                case "quartInOut":
+                    eased = t < .5f ? 8 * Mathf.Pow(t, 4) : 1 - Mathf.Pow(-2 * t + 2, 4) / 2;
+                    break;
                 case "quadOut":
                     eased = 1 - (1-t)*(1-t);
                     break;
@@ -133,26 +140,35 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         song = owner;
         enabled = true;
         SongId = (string)data["song"];
-        IsErect = (string)data["variation"] == "erect";
+        Variation = (string)data["variation"] ?? "";
+        IsErect = Variation == "erect";
         IsWeek2 = ((string)data["stage"])?.StartsWith("spookyMansion") == true;
         IsWeek3 = ((string)data["stage"])?.StartsWith("phillyTrain") == true;
         string stageId = (string)data["stage"] ?? "";
         IsMainStage = stageId.StartsWith("mainStage");
-        IsCampaign = stageId.StartsWith("limo") || stageId.StartsWith("mall") || stageId.StartsWith("school");
+        IsCampaign = stageId.StartsWith("limo") || stageId.StartsWith("mall") || stageId.StartsWith("school") || stageId.StartsWith("tankmanBattlefield") || stageId.StartsWith("phillyStreets") || stageId == "phillyBlazin";
         IsPixel = (string)data["noteStyle"] == "pixel";
         sourceData = data;
-        if (IsCampaign && Presentation == null) Presentation = song.gameObject.AddComponent<VanillaCampaignPresentation>();
+        if (Presentation == null) Presentation = song.gameObject.AddComponent<VanillaCampaignPresentation>();
         if (IsPixel)
         {
             song.deadNoise = Resources.Load<AudioClip>("FunkinHud/Pixel/loss");
             song.deadTheme = Resources.Load<AudioClip>("FunkinHud/Pixel/gameOver");
             song.deadConfirm = Resources.Load<AudioClip>("FunkinHud/Pixel/gameOverEnd");
         }
+        if (PlayerId.StartsWith("pico"))
+        {
+            string loss = PlayerId == "pico-blazin" ? "pico-gutpunch" : PlayerId == "pico-pixel" ? "pixel-pico" : PlayerId == "pico-holding-nene" ? "pico-and-nene" : "pico";
+            string music = PlayerId == "pico-pixel" ? "pixel-pico" : "pico";
+            song.deadNoise = Resources.Load<AudioClip>("FunkinHud/Pico/loss-" + loss);
+            song.deadTheme = Resources.Load<AudioClip>("FunkinHud/Pico/gameOver-" + music);
+            song.deadConfirm = Resources.Load<AudioClip>("FunkinHud/Pico/gameOverEnd-" + music);
+        }
         timeChanges = data["timeChanges"]?.ToArray();
         stageZoom = IsWeek3 ? 1.1f : IsWeek2 ? 1 : IsErect ? 0.85f : 1.1f;
         if (IsCampaign || IsMainStage)
         {
-            int week = IsMainStage ? 1 : stageId.StartsWith("limo") ? 4 : stageId.StartsWith("mall") ? 5 : 6;
+            int week = IsMainStage ? 1 : stageId.StartsWith("limo") ? 4 : stageId.StartsWith("mall") ? 5 : stageId.StartsWith("school") ? 6 : stageId.StartsWith("tankman") ? 7 : 8;
             string path = Path.Combine(Application.streamingAssetsPath, "Bundles/Week" + week + "Assets/stages", stageId, "stage.json");
             stageZoom = (float)JObject.Parse(File.ReadAllText(path))["cameraZoom"];
         }
@@ -217,6 +233,8 @@ public sealed class VanillaSongPlayback : MonoBehaviour
             else Week2Stage.ResetStage();
         }
         else if (Stage == null) Stage = VanillaErectStage.Create(song);
+        Transform graphicRoot = CampaignStage != null ? CampaignStage.transform : Week3Stage != null ? Week3Stage.transform : Week2Stage != null ? Week2Stage.transform : Stage.transform;
+        foreach (var graphic in graphicRoot.GetComponentsInChildren<VanillaWeek2Graphic>(true)) graphic.WarmFrames();
         cameraTo = CameraTargets[2];
         song.mainCamera.transform.position = cameraTo;
         song.mainCamera.orthographicSize = 3.6f / zoom;
@@ -264,7 +282,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
             while (lastStep < step)
             {
                 lastStep++;
-                if (BopRate > 0 && Mathf.Abs((lastStep + bopOffset * 4) % (BopRate * 4)) < 0.001f && hudBop < 1.35f)
+                if (VanillaPreferences.CameraZooms && BopRate > 0 && Mathf.Abs((lastStep + bopOffset * 4) % (BopRate * 4)) < 0.001f && hudBop < 1.35f)
                 {
                     gameBop = 1 + 0.015f * BopIntensity;
                     hudBop += 0.03f * BopIntensity;
@@ -318,6 +336,8 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                     scrollTransition = MakeTransition(value, eventTime, scroll, target);
                     break;
                 case "PlayAnimation":
+                    if (PlayerId.StartsWith("pico") && ((string)value["target"] == "bf" || (string)value["target"] == "boyfriend")
+                        && new[] { "burpShit", "burpSmile", "burpSmileLong" }.Contains((string)value["anim"])) song.vocalSource.mute = false;
                     if (CharacterStage != null)
                     {
                         CharacterStage.PlayAnimation((string)value["target"], (string)value["anim"]);
@@ -328,11 +348,23 @@ public sealed class VanillaSongPlayback : MonoBehaviour
                     string animation = (string)value["anim"];
                     song.PlayChartAnimation(player, player && animation == "hey" ? "BF Hey" : animation == "cheer" ? "Cheer" : animation);
                     break;
+                case "EnableMask":
+                    CampaignStage?.EnableTankmanMask();
+                    break;
+                case "SetHealthIcon":
+                    song.FunkinHud?.SetIcon((int?)value["char"] ?? 0, (string)value["id"]);
+                    break;
             }
         }
     }
 
-    private JToken TempoAt(double time) => timeChanges?.LastOrDefault(change => (double)change["t"] <= time) ?? timeChanges?.FirstOrDefault();
+    private JToken TempoAt(double time)
+    {
+        if (timeChanges == null || timeChanges.Length == 0) return null;
+        for (int index = timeChanges.Length - 1; index >= 0; index--)
+            if ((double)timeChanges[index]["t"] <= time) return timeChanges[index];
+        return timeChanges[0];
+    }
 
     public float BeatAt(double time)
     {

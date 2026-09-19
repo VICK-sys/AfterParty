@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -16,6 +17,7 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
     public bool TrainMoving { get; private set; }
     public bool TrainStarted { get; private set; }
     public bool TrainFinishing { get; private set; }
+    public bool OpponentExploded { get => Pause.MixOpponentExploded; set => Pause.MixOpponentExploded = value; }
     public int TrainCars { get; private set; } = 8;
     public int TrainCooldown { get; private set; }
     public int TrainCount { get; private set; }
@@ -39,19 +41,45 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
     private int lastDanceStep = int.MinValue;
     private VanillaWeek2Graphic death;
     private Vector3 deathTarget;
+    private VanillaMixCompanion companion;
+    private VanillaWeek2Graphic deathKnife;
+    private readonly List<VanillaWeek2Graphic> mixEffects = new List<VanillaWeek2Graphic>();
+
+    public VanillaWeek2Graphic CreateMixEffect(string name, int order)
+    {
+        var graphic = Graphic(Path.Combine(root, "effects", name), name, order);
+        graphic.PhillyColor = Erect;
+        mixEffects.Add(graphic);
+        return graphic;
+    }
+
+    public void HideMixActor(int side, bool hidden)
+    {
+        actors[side].hidden = hidden;
+        actors[side].original.gameObject.SetActive(!hidden && actors[side].graphic == actors[side].original);
+        foreach (var graphic in actors[side].alternates) graphic.gameObject.SetActive(!hidden && graphic == actors[side].graphic);
+    }
 
     private sealed class Actor
     {
         public string id;
         public JObject data;
         public VanillaWeek2Graphic graphic;
+        public VanillaWeek2Graphic original;
+        public readonly List<VanillaWeek2Graphic> alternates = new List<VanillaWeek2Graphic>();
         public float holdTimer;
         public bool alternate;
         public bool locked;
+        public bool hidden;
 
         public void Play(string name, bool protect = false)
         {
-            if (!graphic.Play(name)) return;
+            var target = original.Has(name) ? original : alternates.FirstOrDefault(item => item.Has(name));
+            if (target == null) return;
+            original.gameObject.SetActive(!hidden && target == original);
+            foreach (var alternate in alternates) alternate.gameObject.SetActive(!hidden && target == alternate);
+            graphic = target;
+            graphic.Play(name);
             locked = protect;
         }
 
@@ -114,13 +142,29 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
             JObject character = JObject.Parse(File.ReadAllText(Path.Combine(root, "characters", id, "character.json")));
             JToken placement = data["characters"][stageRoles[index]];
             var graphic = Graphic(Path.Combine(root, "characters", id), id, (int)placement["zIndex"]);
-            graphic.Position = Point(placement["position"]) + new Vector3(-graphic.Size.x / 200, graphic.Size.y / 100, 0)
+            bool mix = (string)chart["variation"] == "pico";
+            Vector2 hitbox = mix ? new Vector2((int)graphic.HitboxSize.x, (int)graphic.HitboxSize.y) : graphic.Size;
+            graphic.Position = Point(placement["position"]) + new Vector3(-hitbox.x / 200, hitbox.y / 100, 0)
                 + Point(character["offsets"]);
+            if (mix) graphic.GlobalOffset = Point(character["offsets"]);
             graphic.FlipX = index == 0 ? !((bool?)character["flipX"] ?? false) : (bool?)character["flipX"] ?? false;
             graphic.PhillyColor = Erect;
-            CameraTargets[index] = Point(placement["position"]) + new Vector3(0, graphic.Size.y / 200, -10)
+            CameraTargets[index] = Point(placement["position"]) + new Vector3(0, hitbox.y / 200, -10)
                 + Point(character["offsets"]) + Point(character["cameraOffsets"]) + Point(placement["cameraOffsets"]);
-            actors[index] = new Actor { id = id, data = character, graphic = graphic };
+            var actor = new Actor { id = id, data = character, graphic = graphic, original = graphic };
+            string folder = Path.Combine(root, "characters", id);
+            foreach (string extra in Directory.GetDirectories(folder).Where(path => Path.GetFileName(path).StartsWith("alternate") || Path.GetFileName(path) == "censor"))
+            {
+                var alternate = Graphic(extra, id + " alternate", (int)placement["zIndex"]);
+                alternate.Position = graphic.Position;
+                alternate.GlobalOffset = graphic.GlobalOffset;
+                alternate.transform.localScale = graphic.transform.localScale;
+                alternate.FlipX = graphic.FlipX;
+                alternate.PhillyColor = graphic.PhillyColor;
+                alternate.gameObject.SetActive(false);
+                actor.alternates.Add(alternate);
+            }
+            actors[index] = actor;
         }
         foreach (GameObject character in new[] { song.boyfriendObject, song.opponentObject, song.girlfriendObject })
             character.GetComponent<SpriteRenderer>().enabled = false;
@@ -128,7 +172,31 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         trainSound = gameObject.AddComponent<AudioSource>();
         trainSound.outputAudioMixerGroup = song.oopsSource.outputAudioMixerGroup;
         StartCoroutine(LoadTrain());
+        if (actors[2].id.StartsWith("nene"))
+        {
+            companion = new VanillaMixCompanion();
+            companion.Initialize(song, actors[2].id, (int)data["characters"]["gf"]["zIndex"],
+                (path, order) => Graphic(Path.Combine(root, path), Path.GetFileName(path), order),
+                animation => actors[2].Play(animation, true), () => actors[2].graphic);
+        }
         ResetStage();
+        if (OpponentExploded)
+        {
+            var corpse = CreateMixEffect("doppleganger", 300);
+            corpse.Position = actors[1].graphic.Position + new Vector3(-3.33f, 1.445f);
+            corpse.Play("loopOpponent");
+            var blood = CreateMixEffect("bloodPool", 299);
+            blood.Position = actors[1].graphic.Position + new Vector3(-.3f, -4.6f);
+            blood.Play("poolAnim");
+            blood.SetAnimationFrame(int.MaxValue);
+        }
+    }
+
+    public void MixIntroBeat()
+    {
+        if (!actors[2].graphic.Finished) return;
+        actors[2].Dance(true);
+        companion?.Beat();
     }
 
     private IEnumerator LoadTrain()
@@ -145,6 +213,8 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
     public void ResetStage()
     {
         if (death != null) Destroy(death.gameObject);
+        if (deathKnife != null) Destroy(deathKnife.gameObject);
+        companion?.Reset();
         lastBeat = -1;
         lastDanceStep = int.MinValue;
         TrainMoving = TrainStarted = TrainFinishing = false;
@@ -157,9 +227,10 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         trainSound.Stop();
         foreach (Actor actor in actors)
         {
+            actor.hidden = actor == actors[1] && OpponentExploded;
             actor.holdTimer = 0;
             actor.locked = actor.alternate = false;
-            actor.graphic.Play((string)actor.data["startingAnimation"] ?? "idle");
+            actor.Play((string)actor.data["startingAnimation"] ?? "idle");
         }
         Render(0);
     }
@@ -168,11 +239,23 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
     {
         string name = "sing" + new[] { "LEFT", "DOWN", "UP", "RIGHT" }[direction] + (miss ? "miss" : "");
         Actor actor = actors[side];
-        actor.Play(actor.graphic.Has(name) ? name : name.Replace("miss", ""));
+        actor.Play(actor.original.Has(name) || actor.alternates.Any(item => item.Has(name)) ? name : name.Replace("miss", ""));
         if (!miss) actor.holdTimer = 0;
     }
 
-    public void Hit(int side, int direction, double time) => Sing(side, direction, false);
+    public void Hit(int side, int direction, double time)
+    {
+        if (side == 1 && OpponentExploded) return;
+        string kind = (string)chart["noteKinds"]?[Song.difficulty.ToLowerInvariant()]?.FirstOrDefault(note =>
+            (int)note["d"] == side * 4 + direction && Math.Abs((double)note["t"] - time) < .01)?["k"];
+        string animation = "sing" + new[] { "LEFT", "DOWN", "UP", "RIGHT" }[direction] + "-censor";
+        if (kind == "censor" && !VanillaPreferences.Naughtyness && actors[side].alternates.Any(item => item.Has(animation)))
+        {
+            actors[side].Play(animation);
+            actors[side].holdTimer = 0;
+        }
+        else Sing(side, direction, false);
+    }
 
     public void Press(int side)
     {
@@ -214,7 +297,8 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         if (soundMilliseconds >= 4700)
         {
             TrainStarted = true;
-            if (actors[2].graphic.Animation != "hairBlow") actors[2].Play("hairBlow", true);
+            if (companion != null) companion.Train(true);
+            else if (actors[2].graphic.Animation != "hairBlow" || actors[2].graphic.Finished) actors[2].Play("hairBlow", true);
         }
         if (!TrainStarted) return;
         var train = props["train"];
@@ -227,7 +311,8 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         }
         if (train.Position.x < -40 && TrainFinishing)
         {
-            actors[2].Play("hairFall", true);
+            if (companion != null) companion.Train(false);
+            else actors[2].Play("hairFall", true);
             train.Position = new Vector3(14.8f, train.Position.y, 0);
             TrainMoving = TrainStarted = TrainFinishing = false;
             TrainCars = 8;
@@ -252,10 +337,12 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
 
     public void BeginDeath()
     {
-        death = Graphic(Path.Combine(root, "characters/bf-death"), "Boyfriend Death", 0);
+        death = Graphic(Path.Combine(root, actors[0].id.StartsWith("pico") ? "characters/" + actors[0].id + "/death" : "characters/bf-death"), "Player Death", 0);
         death.gameObject.layer = song.deadBoyfriend.layer;
         death.Position = actors[0].graphic.Position;
+        death.GlobalOffset = actors[0].graphic.GlobalOffset;
         death.Play("firstDeath");
+        deathKnife = companion?.DeathKnife();
         foreach (SpriteRenderer renderer in song.deadBoyfriend.GetComponentsInChildren<SpriteRenderer>(true)) renderer.enabled = false;
         song.deadBoyfriendAnimator.enabled = false;
         song.deadCamera.orthographic = true;
@@ -282,10 +369,15 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
                 song.deadCamera.transform.position = Vector3.Lerp(song.deadCamera.transform.position, deathTarget, amount);
                 song.deadCamera.orthographicSize = Mathf.Lerp(song.deadCamera.orthographicSize, 3.6f / CameraZoom, amount);
                 death.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
+                if (deathKnife != null)
+                {
+                    deathKnife.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
+                    if (deathKnife.Finished) deathKnife.gameObject.SetActive(false);
+                }
             }
             return;
         }
-        bool paused = song.songStarted && !song.musicSources[0].isPlaying || Pause.instance != null && Pause.instance.pauseScreen.activeSelf;
+        bool paused = song.songStarted && !song.musicSources[0].isPlaying && song.vanillaPlayback.Presentation?.Busy != true || Pause.instance != null && Pause.instance.pauseScreen.activeSelf;
         if (paused) { trainSound.Pause(); return; }
         trainSound.UnPause();
         float delta = Time.deltaTime;
@@ -309,7 +401,8 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         VanillaCharacterTiming.Advance(song, ref lastDanceStep, step =>
         {
             foreach (Actor actor in actors)
-                if (actor.graphic.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
+                if ((actor != actors[2] || companion?.BlocksDance != true) && actor.graphic.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
+            if (step % 4 == 0) companion?.Beat();
         });
         if (song.songStarted)
         {
@@ -324,6 +417,13 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         Vector3 camera = song.mainCamera.transform.position;
         foreach (VanillaWeek2Graphic prop in props.Values) prop.Advance(delta, camera, clock);
         foreach (Actor actor in actors) actor.graphic.Advance(delta, camera, clock);
+        foreach (var graphic in mixEffects.Where(item => item != null && item.gameObject.activeSelf))
+        {
+            graphic.Advance(delta, camera, clock);
+            if (graphic.name == "bloodPool" && (graphic.Finished || graphic.FrozenFrame >= 0))
+                graphic.transform.localScale += Vector3.one * (.02f * delta);
+        }
+        companion?.Advance(delta, camera, clock);
     }
 
     private static Vector3 Point(JToken value) => value == null ? Vector3.zero

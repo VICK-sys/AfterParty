@@ -345,7 +345,7 @@ public class MenuV2 : MonoBehaviour
         Song.modeOfPlay = PlayModes.FromIndex(songModeDropdown.value);
         Song.currentSongMeta = _currentMeta;
 
-        LoadingTransition.instance.Show(() => SceneManager.LoadScene("Game_Backup3"));
+        LoadingTransition.instance.LoadScene("Game_Backup3");
     }
 
     IEnumerator LoadSongAudio(string path)
@@ -497,6 +497,12 @@ public class MenuV2 : MonoBehaviour
 
     public void OptionsScreenTransition(bool toOptions)
     {
+        if (vanillaMenu != null)
+        {
+            if (toOptions) VanillaOptionsMenu.Open(this);
+            else if (VanillaOptionsMenu.Active != null) VanillaOptionsMenu.Active.Close();
+            return;
+        }
         if (toOptions)
         {
             TransitionScreen(mainScreen,optionsScreen, () =>

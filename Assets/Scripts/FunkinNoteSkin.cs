@@ -6,7 +6,9 @@ using UnityEngine;
 
 public static class FunkinNoteSkin
 {
-    private static readonly Dictionary<string, Sprite[]> animations = new Dictionary<string, Sprite[]>();
+    private static readonly Dictionary<(string atlas, string prefix), Sprite[]> animations = new Dictionary<(string, string), Sprite[]>();
+    private static readonly Sprite[][] headFrames = new Sprite[2][];
+    private static readonly Sprite[][][][] receptorFrames = new Sprite[2][][][];
     private static readonly Dictionary<string, Dictionary<string, Sprite>> atlases = new Dictionary<string, Dictionary<string, Sprite>>();
     private static readonly HashSet<Sprite> rotatedFrames = new HashSet<Sprite>();
     public static readonly string[] Directions = { "Left", "Down", "Up", "Right" };
@@ -74,7 +76,7 @@ public static class FunkinNoteSkin
 
     public static Sprite[] Frames(string atlas, string prefix)
     {
-        string key = atlas + "/" + prefix;
+        var key = (atlas, prefix);
         if (animations.TryGetValue(key, out Sprite[] frames)) return frames;
         if (!atlases.TryGetValue(atlas, out var sprites))
         {
@@ -109,7 +111,55 @@ public static class FunkinNoteSkin
         return frames;
     }
 
-    public static Sprite Head(int direction) => Frames(Pixel ? "Pixel/arrows-pixels" : "notes", "note" + Directions[direction])[0];
+    private static void Prepare(bool pixel)
+    {
+        int skin = pixel ? 1 : 0;
+        if (headFrames[skin] != null) return;
+        var heads = new Sprite[4];
+        var receptors = new Sprite[4][][];
+        for (int direction = 0; direction < 4; direction++)
+        {
+            heads[direction] = Frames(pixel ? "Pixel/arrows-pixels" : "notes", "note" + Directions[direction])[0];
+            receptors[direction] = new Sprite[4][];
+            receptors[direction][(int)FunkinStrumline.Animation.Static] = Frames(pixel ? "Pixel/arrows-pixels" : "noteStrumline", "static" + Directions[direction] + "0");
+            receptors[direction][(int)FunkinStrumline.Animation.Press] = Frames(pixel ? "Pixel/arrows-pixels" : "noteStrumline", (pixel ? "pressed" : "press") + Directions[direction] + "0");
+            receptors[direction][(int)FunkinStrumline.Animation.Confirm] = Frames(pixel ? "Pixel/arrows-pixels" : "noteStrumline", "confirm" + Directions[direction] + "0");
+            receptors[direction][(int)FunkinStrumline.Animation.ConfirmHold] = receptors[direction][(int)FunkinStrumline.Animation.Confirm];
+        }
+        headFrames[skin] = heads;
+        receptorFrames[skin] = receptors;
+    }
+
+    public static void WarmGameplay()
+    {
+        bool pixel = Pixel;
+        Prepare(pixel);
+        for (int direction = 0; direction < 4; direction++)
+        {
+            string color = Colors[direction];
+            if (pixel)
+            {
+                string lower = direction == 3 ? "orange" : color.ToLowerInvariant();
+                for (int variant = 1; variant <= 3; variant++) Frames("Pixel/pixelNoteSplash", lower + variant);
+            }
+            else
+            {
+                for (int variant = 1; variant <= 2; variant++)
+                    Frames("noteSplashes", "note impact " + variant + " " + (direction == 1 && variant == 1 ? " " : "") + color.ToLowerInvariant() + "0");
+                foreach (string phase in new[] { "Start", "", "End" }) Frames("holdCover" + color, "holdCover" + phase + color + "0");
+            }
+        }
+        if (pixel)
+            foreach (string phase in new[] { "loop0000", "loop", "explode" }) Frames("Pixel/pixelNoteHoldCover", phase);
+        _ = HoldMaterial;
+    }
+
+    public static Sprite Head(int direction)
+    {
+        bool pixel = Pixel;
+        Prepare(pixel);
+        return headFrames[pixel ? 1 : 0][direction];
+    }
 
     public static void ApplyFrame(SpriteRenderer renderer, Sprite sprite)
     {
@@ -117,13 +167,18 @@ public static class FunkinNoteSkin
         renderer.transform.localRotation = Quaternion.Euler(0, 0, rotatedFrames.Contains(sprite) ? 90 : 0);
     }
 
-    public static double ConfirmDuration(int direction) => Frames(Pixel ? "Pixel/arrows-pixels" : "noteStrumline", "confirm" + Directions[direction] + "0").Length / 24.0;
+    public static double ConfirmDuration(int direction)
+    {
+        bool pixel = Pixel;
+        Prepare(pixel);
+        return receptorFrames[pixel ? 1 : 0][direction][(int)FunkinStrumline.Animation.Confirm].Length / 24.0;
+    }
 
     public static Sprite Receptor(int direction, FunkinStrumline.Animation animation, double time)
     {
-        string prefix = animation == FunkinStrumline.Animation.Static ? "static" : animation == FunkinStrumline.Animation.Press ? "press" : "confirm";
-        if (Pixel && prefix == "press") prefix = "pressed";
-        Sprite[] frames = Frames(Pixel ? "Pixel/arrows-pixels" : "noteStrumline", prefix + Directions[direction] + "0");
+        bool pixel = Pixel;
+        Prepare(pixel);
+        Sprite[] frames = receptorFrames[pixel ? 1 : 0][direction][(int)animation];
         return frames[Math.Min((int)(time * 24), frames.Length - 1)];
     }
 

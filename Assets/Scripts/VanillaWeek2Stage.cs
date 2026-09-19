@@ -36,22 +36,32 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
     private string root;
     private VanillaWeek2Graphic death;
     private Vector3 deathTarget;
+    private VanillaMixCompanion companion;
+    private VanillaWeek2Graphic deathKnife;
 
     private sealed class Actor
     {
         public string id;
         public VanillaWeek2Graphic graphic;
         public VanillaWeek2Graphic light;
+        public readonly List<VanillaWeek2Graphic> lightGraphics = new List<VanillaWeek2Graphic>();
         public JObject data;
         public float holdTimer;
         public bool alternate;
         public bool locked;
 
-        public void Play(string name, bool protect = false)
+        public void Play(string name, bool protect = false, bool interrupt = false)
         {
-            if (locked && !graphic.Finished && !(graphic.Animation == "scared" && name.StartsWith("sing"))) return;
+            if (!interrupt && locked && !graphic.Finished && !(graphic.Animation == "scared" && name.StartsWith("sing"))) return;
             if (!graphic.Play(name)) return;
-            light?.Play(name);
+            var lit = lightGraphics.FirstOrDefault(item => item.Has(name));
+            if (lit != null)
+            {
+                lit.Alpha = light == null ? 0 : light.Alpha;
+                foreach (var item in lightGraphics) item.gameObject.SetActive(item == lit);
+                light = lit;
+                light.Play(name);
+            }
             locked = protect;
         }
 
@@ -130,24 +140,45 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
             JObject character = JObject.Parse(File.ReadAllText(Path.Combine(root, "characters", id, "character.json")));
             JToken placement = data["characters"][stageRoles[index]];
             var graphic = Graphic(Path.Combine(root, "characters", id), id, (int)placement["zIndex"]);
+            graphic.FlipX = index == 0 ? !((bool?)character["flipX"] ?? false) : (bool?)character["flipX"] ?? false;
             graphic.Play((string)character["startingAnimation"] ?? "idle");
             graphic.CompositeAlpha = (bool?)character["atlasSettings"]?["useRenderTexture"] ?? false;
-            Vector3 corner = Point(placement["position"]) + new Vector3(-graphic.Size.x / 200, graphic.Size.y / 100, 0);
+            bool mix = (string)chart["variation"] == "pico";
+            Vector2 hitbox = mix ? new Vector2((int)graphic.HitboxSize.x, (int)graphic.HitboxSize.y) : graphic.Size;
+            Vector3 corner = Point(placement["position"]) + new Vector3(-hitbox.x / 200, hitbox.y / 100, 0);
             graphic.Position = corner + Point(character["offsets"]);
+            if (mix) graphic.GlobalOffset = Point(character["offsets"]);
             if (!Erect && id == "spooky") graphic.Position += Vector3.up * 0.24f;
-            CameraTargets[index] = Point(placement["position"]) + new Vector3(0, graphic.Size.y / 200, -10)
+            CameraTargets[index] = Point(placement["position"]) + new Vector3(0, hitbox.y / 200, -10)
                 + Point(character["offsets"]) + Point(character["cameraOffsets"]) + Point(placement["cameraOffsets"]);
             actors[index] = new Actor { id = id, graphic = graphic, data = character };
             if (id.EndsWith("-dark"))
             {
-                string normal = id.Substring(0, id.Length - 5);
+                string normal = id == "pico-dark" ? "pico-playable" : id.Substring(0, id.Length - 5);
                 var light = Graphic(Path.Combine(root, "characters", normal), normal + " lightning", (int)placement["zIndex"] - 1);
                 JObject normalData = JObject.Parse(File.ReadAllText(Path.Combine(root, "characters", normal, "character.json")));
                 light.Position = corner + Point(normalData["offsets"])
-                    + (index == 0 ? new Vector3(-0.01f, 0.11f, 0) : index == 2 ? new Vector3(-0.455f, 0, 0) : Vector3.zero);
+                    + (id == "bf-dark" ? new Vector3(-0.01f, 0.11f, 0) : id == "gf-dark" ? new Vector3(-0.455f, 0, 0) : Vector3.zero);
                 light.Play((string)character["startingAnimation"] ?? "idle");
+                if (mix)
+                {
+                    light.Position = graphic.Position;
+                    light.GlobalOffset = Point(normalData["offsets"]);
+                }
+                light.FlipX = graphic.FlipX;
                 light.Alpha = 0;
                 actors[index].light = light;
+                actors[index].lightGraphics.Add(light);
+                foreach (string alternate in Directory.GetDirectories(Path.Combine(root, "characters", normal), "alternate*"))
+                {
+                    var extra = Graphic(alternate, normal + " lightning " + Path.GetFileName(alternate), (int)placement["zIndex"] - 1);
+                    extra.Position = light.Position;
+                    extra.GlobalOffset = light.GlobalOffset;
+                    extra.FlipX = light.FlipX;
+                    extra.Alpha = 0;
+                    extra.gameObject.SetActive(false);
+                    actors[index].lightGraphics.Add(extra);
+                }
             }
         }
         foreach (GameObject character in new[] { song.boyfriendObject, song.opponentObject, song.girlfriendObject })
@@ -156,6 +187,14 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
         sound = gameObject.AddComponent<AudioSource>();
         sound.outputAudioMixerGroup = song.oopsSource.outputAudioMixerGroup;
         StartCoroutine(LoadThunder());
+        if (actors[2].id.StartsWith("nene"))
+        {
+            companion = new VanillaMixCompanion();
+            companion.Initialize(song, actors[2].id, (int)data["characters"]["gf"]["zIndex"],
+                (path, order) => Graphic(Path.Combine(root, path), Path.GetFileName(path), order),
+                animation => actors[2].Play(animation, true, true), () => actors[2].graphic);
+            companion.ApplyLighting(root, 2);
+        }
         ResetStage();
     }
 
@@ -176,6 +215,8 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
     public void ResetStage()
     {
         if (death != null) Destroy(death.gameObject);
+        if (deathKnife != null) Destroy(deathKnife.gameObject);
+        companion?.Reset();
         lastBeat = -1;
         lastDanceStep = int.MinValue;
         LastStrikeBeat = 0;
@@ -189,8 +230,7 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
             actor.holdTimer = 0;
             actor.locked = false;
             actor.alternate = false;
-            actor.graphic.Play((string)actor.data["startingAnimation"] ?? "idle");
-            actor.light?.Play((string)actor.data["startingAnimation"] ?? "idle");
+            actor.Play((string)actor.data["startingAnimation"] ?? "idle", false, true);
         }
         if (!Erect) props["halloweenBG"].Play("idle");
         if (sound != null) sound.Stop();
@@ -223,9 +263,9 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
     {
         if (dropped)
         {
-            if (count >= 70) actors[2].Play("drop70", true);
+            if (count >= 70) actors[2].Play("drop70", true, true);
         }
-        else actors[2].Play("combo" + count, true);
+        else actors[2].Play("combo" + count, true, true);
     }
 
     public void Press(int side)
@@ -242,15 +282,17 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
     public void PlayAnimation(string target, string animation)
     {
         int index = target == "gf" || target == "girlfriend" ? 2 : target == "bf" || target == "boyfriend" ? 0 : 1;
-        actors[index].Play(animation, true);
+        actors[index].Play(animation, true, index == 2);
     }
 
     public void BeginDeath()
     {
-        death = Graphic(Path.Combine(root, "characters/bf-death"), "Boyfriend Death", 0);
+        death = Graphic(Path.Combine(root, actors[0].id.StartsWith("pico") ? "characters/" + actors[0].id + "/death" : "characters/bf-death"), "Player Death", 0);
         death.gameObject.layer = song.deadBoyfriend.layer;
         death.Position = actors[0].graphic.Position;
+        death.GlobalOffset = actors[0].graphic.GlobalOffset;
         death.Play("firstDeath");
+        deathKnife = companion?.DeathKnife();
         foreach (SpriteRenderer renderer in song.deadBoyfriend.GetComponentsInChildren<SpriteRenderer>(true)) renderer.enabled = false;
         song.deadBoyfriendAnimator.enabled = false;
         song.deadCamera.orthographic = true;
@@ -274,7 +316,7 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
         LightningAge = 0;
         if (!Erect) props["halloweenBG"].Play("lightning");
         if (actors[0].graphic.Animation != "cheer" && !actors[0].graphic.Animation.StartsWith("sing")) actors[0].Play("scared", true);
-        actors[2].Play("scared", true);
+        actors[2].Play("scared", true, true);
         UpdateLighting();
     }
 
@@ -305,6 +347,11 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
                 song.deadCamera.transform.position = Vector3.Lerp(song.deadCamera.transform.position, deathTarget, amount);
                 song.deadCamera.orthographicSize = Mathf.Lerp(song.deadCamera.orthographicSize, 3.6f / CameraZoom, amount);
                 death.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
+                if (deathKnife != null)
+                {
+                    deathKnife.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
+                    if (deathKnife.Finished) deathKnife.gameObject.SetActive(false);
+                }
             }
             return;
         }
@@ -322,7 +369,8 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
         VanillaCharacterTiming.Advance(song, ref lastDanceStep, step =>
         {
             foreach (Actor actor in actors)
-                if (actor.graphic.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
+                if ((actor != actors[2] || companion?.BlocksDance != true) && actor.graphic.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
+            if (step % 4 == 0) companion?.Beat();
         });
         if (song.songStarted)
         {
@@ -347,6 +395,7 @@ public sealed class VanillaWeek2Stage : MonoBehaviour, IVanillaCharacterStage
             actor.graphic.Advance(delta, camera, clock);
             actor.light?.Advance(delta, camera, clock);
         }
+        companion?.Advance(delta, camera, clock);
     }
 
     private static Vector3 Point(JToken value) => value == null ? Vector3.zero

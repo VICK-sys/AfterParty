@@ -17,17 +17,27 @@ using Object = UnityEngine.Object;
 [InitializeOnLoad]
 public static class VanillaSongValidation
 {
+    private static readonly string[] MixIds = (Environment.GetEnvironmentVariable("UNITY_PARTY_MIX_IDS") ?? "bopeebo,fresh,dadbattle,spookeez,south,pico,philly-nice,blammed,cocoa,eggnog,senpai,roses,ugh,guns,stress,darnell,lit-up").Split(',');
+    private static bool MixOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_MIX_TEST") == "1";
+    private static bool WeekendOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEKEND_TEST") == "1";
+    private static bool Week7Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEK7_TEST") == "1";
     private static bool Week2Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEK2_TEST") == "1";
     private static bool Week3Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEK3_TEST") == "1";
     private static bool Weeks456Only => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEKS456_TEST") == "1";
     private static bool StageOnly => Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_STAGE_ONLY") == "1";
     private static int RunLimit => int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_LIMIT"), out int limit) && limit > 0 ? limit : int.MaxValue;
     private static int RunStart => int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_START"), out int start) ? start : 0;
-    private static readonly string[] Ids = (Weeks456Only ? new[] { "satin-panties", "high", "milf", "cocoa", "eggnog", "winter-horrorland", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns" }
+    private static readonly string[] Ids = (MixOnly ? MixIds
+        : WeekendOnly ? new[] { "darnell", "lit-up", "2hot", "blazin", "darnell", "darnell" }
+        : Week7Only ? new[] { "ugh", "guns", "stress", "ugh", "ugh" }
+        : Weeks456Only ? new[] { "satin-panties", "high", "milf", "cocoa", "eggnog", "winter-horrorland", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns", "satin-panties", "high", "cocoa", "eggnog", "senpai", "roses", "thorns" }
         : Week3Only ? new[] { "pico", "philly-nice", "blammed", "pico", "philly-nice", "blammed", "pico", "philly-nice", "blammed" }
         : Week2Only ? new[] { "spookeez", "south", "monster", "spookeez", "south", "spookeez", "south" }
         : new[] { "bopeebo", "fresh", "dadbattle", "bopeebo", "fresh", "dadbattle", "tutorial", "bopeebo", "fresh", "dadbattle" }).Skip(RunStart).Take(RunLimit).ToArray();
-    private static readonly string[] Difficulties = (Weeks456Only ? Enumerable.Repeat("Hard", 9).Concat(Enumerable.Repeat("Erect", 7)).Concat(Enumerable.Repeat("Nightmare", 7)).ToArray()
+    private static readonly string[] Difficulties = (MixOnly ? Enumerable.Repeat("Hard", MixIds.Length).ToArray()
+        : WeekendOnly ? new[] { "Hard", "Hard", "Hard", "Hard", "Erect", "Nightmare" }
+        : Week7Only ? new[] { "Hard", "Hard", "Hard", "Erect", "Nightmare" }
+        : Weeks456Only ? Enumerable.Repeat("Hard", 9).Concat(Enumerable.Repeat("Erect", 7)).Concat(Enumerable.Repeat("Nightmare", 7)).ToArray()
         : Week3Only ? new[] { "Erect", "Erect", "Erect", "Hard", "Hard", "Hard", "Nightmare", "Nightmare", "Nightmare" }
         : Week2Only ? new[] { "Erect", "Erect", "Hard", "Hard", "Hard", "Nightmare", "Nightmare" }
         : new[] { "Erect", "Erect", "Erect", "Nightmare", "Nightmare", "Nightmare", "Hard", "Hard", "Hard", "Hard" }).Skip(RunStart).Take(RunLimit).ToArray();
@@ -44,6 +54,38 @@ public static class VanillaSongValidation
     private static int headsOpponent;
     private static bool checkedEnd;
     private static bool captured;
+    private static Song countdownSong;
+    private static double countdownPosition;
+    private static double countdownRealtime;
+    private static bool countdownObserved;
+
+    private static void CheckCountdownClock()
+    {
+        if (Environment.GetEnvironmentVariable("UNITY_PARTY_COUNTDOWN_TEST") != "1") return;
+        Song song = Song.instance;
+        if (song == null) return;
+        double realtime = Time.realtimeSinceStartupAsDouble * 1000;
+        double position = song.SongPosition;
+        if (song != countdownSong)
+        {
+            countdownSong = song;
+            countdownObserved = false;
+        }
+        if (countdownObserved && song.songStarted)
+        {
+            double jump = position - countdownPosition - (realtime - countdownRealtime);
+            Debug.Log("COUNTDOWN CLOCK TRANSITION: jump=" + jump + "ms, previous=" + countdownPosition + ", current=" + position);
+            Require(Math.Abs(jump) < 35, "Countdown clock jumped when the music started: " + jump + "ms.");
+            countdownObserved = false;
+        }
+        if (song.IsCountingDown)
+        {
+            countdownObserved = true;
+            countdownPosition = position;
+            countdownRealtime = realtime;
+        }
+    }
+    private static int weekendCombatBeforeProbe;
     private static JToken[] sourceEvents;
     private static string Output => Environment.GetEnvironmentVariable("UNITY_PARTY_SONG_TEST_PATH");
 
@@ -67,6 +109,9 @@ public static class VanillaSongValidation
         {
             CheckCharts();
             CheckEasing();
+            if (MixOnly) VanillaMixValidation.CheckAssets();
+            if (WeekendOnly) VanillaWeekend1Validation.CheckAssets();
+            if (Week7Only) VanillaWeek7Validation.CheckAssets();
             if (Week3Only) VanillaWeek3Validation.CheckAssets();
             if (Weeks456Only) VanillaWeeks456Validation.CheckAssets();
             EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
@@ -91,7 +136,7 @@ public static class VanillaSongValidation
         {
             JObject source = JObject.Parse(File.ReadAllText(sourcePath));
             string directory = Directory.GetParent(Path.GetDirectoryName(sourcePath)).FullName;
-            foreach (string difficulty in ((JObject)source["notes"]).Properties().Select(property => property.Name))
+            foreach (string difficulty in JObject.Parse(File.ReadAllText(Path.Combine(Path.GetDirectoryName(sourcePath), Path.GetFileName(sourcePath).Replace("chart", "metadata"))))["playData"]["difficulties"].Values<string>())
             {
                 var chart = new FNFSong(Path.Combine(directory, "Chart-" + difficulty + ".json"));
                 var expected = source["notes"][difficulty].Select(n =>
@@ -111,8 +156,8 @@ public static class VanillaSongValidation
                 chartCount++;
             }
         }
-        Require(chartCount == 87 && control && speedControl, "Expected 87 charts and rejected side and integer-speed controls.");
-        Debug.Log("SONG CHARTS PASSED: all 87 charts preserve timing, note sides, directions, sustains, and speeds. Swapped-side control rejected.");
+        Require(chartCount == 163 && control && speedControl, "Expected 163 charts and rejected side and integer-speed controls.");
+        Debug.Log("SONG CHARTS PASSED: all 163 charts preserve timing, note sides, directions, sustains, and speeds. Swapped-side control rejected.");
     }
 
     private static void CheckEasing()
@@ -189,7 +234,8 @@ public static class VanillaSongValidation
         double elapsed = EditorApplication.timeSinceStartup - changedAt;
         try
         {
-            Require(EditorApplication.timeSinceStartup - started < 1800, "Song validation timed out.");
+            Require(EditorApplication.timeSinceStartup - started < Math.Max(1800, Ids.Length * 210), "Song validation timed out.");
+            CheckCountdownClock();
             Require(errors == 0, "Runtime reported errors during song validation.");
             if (phase == 0)
             {
@@ -215,9 +261,10 @@ public static class VanillaSongValidation
                 if (elapsed < 1) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 var bundles = menu.songListRect.GetComponentsInChildren<BundleButtonV2>(true);
-                Require(bundles.Length == 7 && bundles.Sum(b => b.SongButtons.Count) == 19, "Built-in Tutorial and Weeks 1 through 6 did not appear in the song picker.");
+                Require(bundles.Length == 9 && bundles.Sum(b => b.SongButtons.Count) == 43, "Built-in songs and mixes did not appear in the song picker.");
                 SongButtonV2 button = bundles.SelectMany(b => b.SongButtons).Single(b =>
-                    (string)JObject.Parse(File.ReadAllText(Path.Combine(b.Meta.songPath, "Vanilla.json")))["song"] == Ids[songIndex]);
+                    (string)JObject.Parse(File.ReadAllText(Path.Combine(b.Meta.songPath, "Vanilla.json")))["song"] == Ids[songIndex]
+                    && (string)JObject.Parse(File.ReadAllText(Path.Combine(b.Meta.songPath, "Vanilla.json")))["variation"] == (MixOnly ? Ids[songIndex] == "darnell" || Ids[songIndex] == "lit-up" ? "bf" : "pico" : ""));
                 button.GetComponent<Button>().onClick.Invoke();
                 Next(2);
             }
@@ -226,7 +273,7 @@ public static class VanillaSongValidation
                 if (elapsed < 3) return;
                 MenuV2 menu = Object.FindFirstObjectByType<MenuV2>();
                 Require(menu.songInfoScreen.activeInHierarchy && menu.canChangeSongs && menu.musicSource.isPlaying, "Bundled song preview did not load.");
-                string[] options = new[] { "tutorial", "monster", "milf", "winter-horrorland" }.Contains(Ids[songIndex]) ? new[] { "Easy", "Normal", "Hard" }
+                string[] options = MixOnly || new[] { "tutorial", "monster", "milf", "winter-horrorland", "guns", "stress", "lit-up", "2hot", "blazin" }.Contains(Ids[songIndex]) ? new[] { "Easy", "Normal", "Hard" }
                     : new[] { "Easy", "Normal", "Hard", "Erect", "Nightmare" };
                 Require(menu.songDifficultiesDropdown.options.Select(o => o.text).SequenceEqual(options), "Difficulty order is incorrect.");
                 menu.songDifficultiesDropdown.value = Array.IndexOf(options, Difficulties[songIndex]);
@@ -243,6 +290,11 @@ public static class VanillaSongValidation
                     "Bundle picker must offer exactly the three single-player modes.");
                 menu.songModeDropdown.value = 2;
                 menu.PlaySong();
+                if (MixOnly)
+                {
+                    typeof(Pause).GetField("sessionSong", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, Song.currentSongMeta.songPath);
+                    Pause.PlayedCampaignIntro = true;
+                }
                 Require(Song.modeOfPlay == PlayModes.Autoplay, "Bundle picker launched the wrong mode.");
                 checkedEnd = false;
                 captured = false;
@@ -254,14 +306,14 @@ public static class VanillaSongValidation
                 if (SceneManager.GetActiveScene().name != "Game_Backup3") return;
                 activeSong = Object.FindFirstObjectByType<Song>();
                 if (activeSong == null || !activeSong.songStarted) return;
-                Require(activeSong.musicSources[0].isPlaying && activeSong.hasVoiceLoaded && activeSong.vocalSource.isPlaying, "Gameplay audio did not start.");
-                Require(Math.Abs(activeSong.musicClip.length - activeSong.vocalClip.length) < 0.05, "Instrumental and mixed vocals have different durations.");
+                Require(activeSong.musicSources[0].isPlaying && (Ids[songIndex] == "blazin" ? !activeSong.hasVoiceLoaded : activeSong.hasVoiceLoaded && activeSong.vocalSource.isPlaying), "Gameplay audio did not start.");
+                if (!MixOnly && Ids[songIndex] != "blazin") Require(Math.Abs(activeSong.musicClip.length - activeSong.vocalClip.length) < 0.05, "Instrumental and mixed vocals have different durations.");
                 Require(activeSong.vanillaPlayback != null && activeSong.vanillaPlayback.SongId == Ids[songIndex], "Vanilla chart events did not attach.");
                 bool erect = Difficulties[songIndex] != "Hard";
                 Require(activeSong.selectedInstrumentalPath.EndsWith("Inst-erect.ogg") == erect, "Wrong instrumental variation loaded.");
                 Require(activeSong.selectedVocalsPath.EndsWith("Voices-erect.ogg") == erect, "Wrong vocal variation loaded.");
                 Require(activeSong.vanillaPlayback.IsErect == erect, "Wrong chart events loaded.");
-                if (erect && !Week2Only && !Week3Only && !Weeks456Only)
+                if (erect && !Week2Only && !Week3Only && !Weeks456Only && !Week7Only && !WeekendOnly)
                 {
                     Require(activeSong.vanillaPlayback.CampaignStage != null && activeSong.vanillaPlayback.CampaignStage.PropCount == 9, "Erect stage did not load.");
                     Require(activeSong.defaultSceneObjects.All(item => !item.activeSelf), "Original stage overlaps Erect stage.");
@@ -277,11 +329,19 @@ public static class VanillaSongValidation
                 string sourceName = erect ? "chart-erect.json" : "chart.json";
                 sourceEvents = JObject.Parse(File.ReadAllText(Path.Combine(activeSong.selectedSongDir, "Source", sourceName)))["events"]
                     .OrderBy(entry => (double)entry["t"]).ToArray();
-                Require(activeSong.enemy.characterName == (Weeks456Only ? activeSong.vanillaPlayback.OpponentId : Week3Only ? "Pico" : Week2Only ? Ids[songIndex] == "monster" ? "Monster" : "Spooky Kids"
+                Require(MixOnly || activeSong.enemy.characterName == (Weeks456Only || Week7Only || WeekendOnly ? activeSong.vanillaPlayback.OpponentId : Week3Only ? "Pico" : Week2Only ? Ids[songIndex] == "monster" ? "Monster" : "Spooky Kids"
                     : Ids[songIndex] == "tutorial" ? "Girlfriend" : "Dad"), "Wrong opponent loaded.");
+                if (WeekendOnly)
+                {
+                    weekendCombatBeforeProbe = activeSong.vanillaPlayback.CampaignStage.CombatNotes;
+                    VanillaWeekend1Validation.CheckStage(activeSong);
+                }
+                if (Week7Only) VanillaWeek7Validation.CheckStage(activeSong);
                 if (Week2Only) VanillaWeek2Validation.CheckStage(activeSong);
                 if (Week3Only) VanillaWeek3Validation.CheckStage(activeSong);
                 if (Weeks456Only) VanillaWeeks456Validation.CheckStage(activeSong);
+                if (MixOnly) VanillaMixValidation.CheckStage(activeSong);
+                else CheckGirlfriendReactions(activeSong);
                 if (Ids[songIndex] == "tutorial")
                     Require(!activeSong.girlfriendObject.activeSelf, "Tutorial displays a duplicate Girlfriend.");
                 var chart = (FNFSong)typeof(Song).GetField("_song", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeSong);
@@ -294,6 +354,7 @@ public static class VanillaSongValidation
                 if (StageOnly)
                 {
                     CaptureStage(Ids[songIndex] + "-" + Difficulties[songIndex].ToLowerInvariant() + ".png");
+                    if (MixOnly) VanillaMixValidation.CheckRuntimeEvents(activeSong);
                     Debug.Log("SONG STAGE COMPLETED: " + Ids[songIndex] + " " + Difficulties[songIndex]);
                     Pause.instance.QuitSong();
                     Next(7);
@@ -302,7 +363,7 @@ public static class VanillaSongValidation
             }
             else if (phase == 4)
             {
-                if (activeSong != null && activeSong.vanillaPlayback.IsErect)
+                if (activeSong != null && (activeSong.vanillaPlayback.IsErect || MixOnly))
                 {
                     var applied = sourceEvents.Take(activeSong.vanillaPlayback.EventsApplied).ToArray();
                     JToken focus = applied.LastOrDefault(entry => (string)entry["e"] == "FocusCamera")?["v"];
@@ -332,6 +393,22 @@ public static class VanillaSongValidation
                     Require(activeSong.playerOneStats.missedHits == 0 && activeSong.playerTwoStats.missedHits == 0, "Autoplay missed notes.");
                     int events = JObject.Parse(File.ReadAllText(activeSong.selectedVanillaPath))["events"].Count();
                     Require(activeSong.vanillaPlayback.EventsApplied == events, "Song ended before all chart events were consumed.");
+                    if (WeekendOnly)
+                    {
+                        var stage = activeSong.vanillaPlayback.CampaignStage;
+                        var kinds = JObject.Parse(File.ReadAllText(activeSong.selectedVanillaPath))["noteKinds"][Difficulties[songIndex].ToLowerInvariant()];
+                        Require(stage.CansShot == kinds.Count(n => (string)n["k"] == "weekend-1-firegun") && stage.CansMissed == 0, "Can notes were skipped or duplicated.");
+                        if (Ids[songIndex] == "blazin") Require(stage.CombatNotes + weekendCombatBeforeProbe == kinds.Count(),
+                            "Combat notes were skipped or duplicated: " + stage.CombatNotes + " after probe + " + weekendCombatBeforeProbe + " before probe, expected " + kinds.Count());
+                    }
+                    if (Week7Only)
+                    {
+                        var stage = activeSong.vanillaPlayback.CampaignStage;
+                        int expectedSpecial = JObject.Parse(File.ReadAllText(activeSong.selectedVanillaPath))["noteKinds"][Difficulties[songIndex].ToLowerInvariant()].Count();
+                        Require(stage.SpecialNoteHits == expectedSpecial, "Week 7 special notes were skipped or duplicated.");
+                        if (Ids[songIndex] == "stress") Require(stage.SpeakerShots == 546, "Stress did not consume all speaker cues.");
+                    }
+                    if (MixOnly && Ids[songIndex] == "stress") Require(activeSong.vanillaPlayback.CampaignStage.SpeakerShots == 584, "Stress Pico did not consume all Otis cues.");
                     if (Week2Only)
                     {
                         int noAnimation = JObject.Parse(File.ReadAllText(activeSong.selectedVanillaPath))["noteKinds"][Difficulties[songIndex].ToLowerInvariant()].Count();
@@ -339,6 +416,12 @@ public static class VanillaSongValidation
                     }
                     checkedEnd = true;
                     Debug.Log("SONG COMPLETED: " + Ids[songIndex] + " " + Difficulties[songIndex] + ", all heads hit, all events consumed, zero misses.");
+                }
+                if (VanillaResultsScreen.Active != null)
+                {
+                    Require(checkedEnd && VanillaResultsScreen.Active.Data.score == 0 && !VanillaResultsScreen.Active.Data.rankImproved,
+                        "Autoplay results changed score eligibility.");
+                    VanillaResultsScreen.Active.Accept();
                 }
                 if (SceneManager.GetActiveScene().name != "Title") return;
                 Require(checkedEnd, "Song returned to menu before its completion checks.");
@@ -364,6 +447,36 @@ public static class VanillaSongValidation
     {
         if (state == PlayModeStateChange.EnteredEditMode)
             EditorApplication.delayCall += () => Finish(phase == 5 && songIndex == Ids.Length && errors == 0);
+    }
+
+    private static void CheckGirlfriendReactions(Song song)
+    {
+        var stage = song.vanillaPlayback.CharacterStage;
+        var graphic = song.vanillaPlayback.CampaignStage != null ? song.vanillaPlayback.CampaignStage.CharacterGraphic(2)
+            : song.vanillaPlayback.Week2Stage != null ? song.vanillaPlayback.Week2Stage.CharacterGraphic(2)
+            : song.vanillaPlayback.Week3Stage?.CharacterGraphic(2);
+        if (graphic == null || graphic.name.IndexOf("nene", StringComparison.OrdinalIgnoreCase) >= 0) return;
+        string previous = graphic.Animation;
+        stage.PlayAnimation("gf", "danceLeft");
+        string dance = graphic.Animation;
+        stage.Combo(49, false);
+        Require(graphic.Animation == dance, "GF reacted below her combo milestone.");
+        stage.Combo(50, false);
+        Require(graphic.Animation == (graphic.Has("combo50") ? "combo50" : dance), "GF combo50 reaction differs from available source animations.");
+        stage.PlayAnimation("gf", "danceLeft");
+        stage.Combo(69, true);
+        Require(graphic.Animation == dance, "GF reacted below her combo-drop threshold.");
+        stage.Combo(70, true);
+        Require(graphic.Animation == (graphic.Has("drop70") ? "drop70" : dance), "GF drop70 reaction differs from available source animations.");
+        if (graphic.Has("combo50") && graphic.Has("drop70"))
+        {
+            stage.Combo(50, false);
+            Require(graphic.Animation == "combo50", "GF's previous reaction blocked her combo reaction.");
+            stage.Combo(70, true);
+            Require(graphic.Animation == "drop70", "GF's combo reaction blocked her drop reaction.");
+        }
+        stage.PlayAnimation("gf", previous);
+        Debug.Log("GF REACTIONS PASSED: combo50 and drop70 with below-threshold controls.");
     }
 
     public static void CaptureStage(string name)

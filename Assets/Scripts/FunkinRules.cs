@@ -245,9 +245,11 @@ public sealed class FunkinStrumline
         Releases.Clear();
     }
 
+    public Func<FunkinNoteState, bool> CanHit;
+
     public void Hit(FunkinNoteState note, double difference, bool automatic, double position)
     {
-        if (note.Hit || note.HandledMiss) return;
+        if (note.Hit || note.HandledMiss || CanHit != null && !CanHit(note)) return;
         note.Hit = true;
         note.MayHit = false;
         note.HeadVisible = !automatic && FunkinRules.BreaksCombo(FunkinRules.Judge(difference));

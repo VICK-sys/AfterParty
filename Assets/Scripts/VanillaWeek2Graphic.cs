@@ -8,13 +8,37 @@ using UnityEngine.Rendering;
 
 public sealed class VanillaWeek2Graphic : MonoBehaviour
 {
+    private sealed class Clip
+    {
+        public int[] frames;
+        public float fps;
+        public bool loop;
+        public Vector3 offset;
+    }
+
+    private sealed class Asset
+    {
+        public JObject data;
+        public Texture2D texture;
+        public int users;
+        public readonly Dictionary<int, Mesh> meshes = new Dictionary<int, Mesh>();
+        public readonly Dictionary<string, Clip> clips = new Dictionary<string, Clip>(StringComparer.Ordinal);
+        public Vector4[] frameBounds;
+        public Vector2[] frameSizes;
+    }
+    private static readonly Dictionary<string, Asset> Assets = new Dictionary<string, Asset>(StringComparer.OrdinalIgnoreCase);
+    public static int TextureLoads { get; private set; }
+    private Asset asset;
+    private string assetKey;
     public Vector2 Size { get; private set; }
+    public Vector2 HitboxSize { get; private set; }
     public string Animation { get; private set; }
     public bool Finished { get; private set; }
-    public int Frame { get; private set; }
+    public int Frame { get; private set; } = -1;
     public float Alpha { get; set; } = 1;
     public Vector3 Position { get; set; }
     public Vector3 GlobalOffset { get; set; }
+    public bool ApplyAnimationOffsets { get; set; } = true;
     public Vector2 Scroll { get; set; } = Vector2.one;
     public float Rain { get; set; }
     public bool CompositeAlpha { get; set; }
@@ -26,30 +50,91 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
     public Vector3 Wiggle { get; set; }
     public int FrozenFrame { get; set; } = -1;
     public bool Additive { get; set; }
+    public bool Multiply { get; set; }
+    public int AnimationFrame => clip == null ? 0 : Mathf.Min((int)(age * clip.fps), clip.frames.Length - 1);
+
+    public void SetAnimationFrame(int frame)
+    {
+        FrozenFrame = clip.frames[Mathf.Clamp(frame, 0, clip.frames.Length - 1)];
+    }
+    public float Angle { get; set; }
+    public float Duration => clip == null ? 0 : clip.frames.Length / clip.fps;
+    public Vector2 FrameSize => asset.frameSizes == null ? Size : asset.frameSizes[Frame];
+    public bool HasRim { get; private set; }
+    private float rimAngle = 90;
+    private bool compositeRim;
+    private Vector4 rimSettings;
+    private Vector4 rimAdjustment;
+    private Color rimColor;
     private JObject data;
-    private JToken clip;
+    private Clip clip;
+    private bool scaledOffsets;
     private MeshFilter filter;
     private MeshRenderer meshRenderer;
     private Material material;
     private Texture2D texture;
     private Texture2D rimMask;
+    private Texture2D replacementTexture;
     private Vector2 origin;
     private Rect compositeBounds;
     private float age;
+    private bool reversed;
     private RenderTexture composite;
     private Mesh compositeMesh;
     private Material compositeMaterial;
+    private CommandBuffer compositeCommands;
     private int compositeFrame = -1;
-    private readonly Dictionary<int, Mesh> meshes = new Dictionary<int, Mesh>();
+    private Dictionary<int, Mesh> meshes;
 
     public void Load(string directory, int order)
     {
-        data = JObject.Parse(File.ReadAllText(Path.Combine(directory, "graphic.json")));
+        assetKey = Path.GetFullPath(directory);
+        if (!Assets.TryGetValue(assetKey, out asset))
+        {
+            var parsed = JObject.Parse(File.ReadAllText(Path.Combine(directory, "graphic.json")));
+            string[] images = parsed["frames"].SelectMany(frame => frame).Select(quad => (string)quad["image"]).Distinct().ToArray();
+            if (images.Length != 1) throw new InvalidDataException("Source graphic requires one atlas: " + directory);
+            var loadedTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            loadedTexture.LoadImage(File.ReadAllBytes(Path.Combine(directory, images[0])));
+            loadedTexture.wrapMode = TextureWrapMode.Clamp;
+            loadedTexture.filterMode = (bool?)parsed["pixel"] == true ? FilterMode.Point : FilterMode.Bilinear;
+            asset = new Asset { data = parsed, texture = loadedTexture };
+            foreach (JProperty animation in ((JObject)parsed["animations"]).Properties())
+            {
+                JToken value = animation.Value;
+                asset.clips.Add(animation.Name, new Clip
+                {
+                    frames = value["frames"].Values<int>().ToArray(),
+                    fps = (float)value["fps"],
+                    loop = (bool)value["loop"],
+                    offset = new Vector3(-(float)value["offset"][0] / 100, (float)value["offset"][1] / 100, 0)
+                });
+            }
+            var sourceFrames = (JArray)parsed["frames"];
+            asset.frameBounds = new Vector4[sourceFrames.Count];
+            for (int i = 0; i < sourceFrames.Count; i++)
+            {
+                JToken rect = sourceFrames[i].First?["rect"];
+                if (rect == null) continue;
+                asset.frameBounds[i] = new Vector4((float)rect[0] / loadedTexture.width, 1 - (float)rect[1] / loadedTexture.height,
+                    (float)rect[2] / loadedTexture.width, -(float)rect[3] / loadedTexture.height);
+            }
+            if (parsed["frameSizes"] is JArray sizes)
+                asset.frameSizes = sizes.Select(size => new Vector2((float)size[0], (float)size[1])).ToArray();
+            Assets.Add(assetKey, asset);
+            TextureLoads++;
+        }
+        asset.users++;
+        data = asset.data;
+        texture = asset.texture;
+        meshes = asset.meshes;
         JToken bounds = data["bounds"];
         origin = new Vector2((float)bounds[0], (float)bounds[1]);
         Size = new Vector2((float)bounds[2], (float)bounds[3]);
+        HitboxSize = data["hitboxSize"] == null ? Size : new Vector2((float)data["hitboxSize"][0], (float)data["hitboxSize"][1]);
+        scaledOffsets = (bool?)data["scaledOffsets"] == true;
         compositeBounds = new Rect(0, -Size.y / 100, Size.x / 100, Size.y / 100);
-        if ((bool?)data["scaledOffsets"] == true)
+        if (scaledOffsets)
             foreach (JToken quad in data["frames"].SelectMany(frame => frame))
                 for (int corner = 0; corner < 4; corner++)
                 {
@@ -58,12 +143,6 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
                     compositeBounds = Rect.MinMaxRect(Mathf.Min(compositeBounds.xMin, x), Mathf.Min(compositeBounds.yMin, y),
                         Mathf.Max(compositeBounds.xMax, x), Mathf.Max(compositeBounds.yMax, y));
                 }
-        string[] images = data["frames"].SelectMany(frame => frame).Select(quad => (string)quad["image"]).Distinct().ToArray();
-        if (images.Length != 1) throw new InvalidDataException("Source graphic requires one atlas: " + directory);
-        texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-        texture.LoadImage(File.ReadAllBytes(Path.Combine(directory, images[0])));
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.filterMode = (bool?)data["pixel"] == true ? FilterMode.Point : FilterMode.Bilinear;
         material = new Material(Resources.Load<Shader>("VanillaSongs/Week2Graphic"));
         material.mainTexture = texture;
         filter = gameObject.AddComponent<MeshFilter>();
@@ -73,51 +152,110 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
         Play(((JObject)data["animations"]).Properties().First().Name);
     }
 
-    public bool Has(string name) => data["animations"][name] != null;
+    public bool Has(string name) => asset.clips.ContainsKey(name);
 
-    public void SetRim(string path, float distance, float threshold, Vector4 adjustment)
+    public void ReplaceTexture(string path)
     {
-        rimMask = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-        rimMask.LoadImage(File.ReadAllBytes(path));
-        rimMask.filterMode = FilterMode.Point;
-        rimMask.wrapMode = TextureWrapMode.Clamp;
-        material.SetTexture("_RimMask", rimMask);
-        material.SetVector("_Rim", new Vector4(distance, threshold, 1, 1));
-        material.SetVector("_RimAdjustment", adjustment);
+        Release(replacementTexture);
+        replacementTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+        replacementTexture.LoadImage(File.ReadAllBytes(path));
+        replacementTexture.filterMode = texture.filterMode;
+        replacementTexture.wrapMode = TextureWrapMode.Clamp;
+        material.mainTexture = replacementTexture;
+        compositeFrame = -1;
     }
 
-    public bool Play(string name)
+    public void WarmFrames()
     {
-        if (!Has(name)) return false;
+        int current = Frame;
+        Mesh displayed = filter.sharedMesh;
+        foreach (Clip animation in asset.clips.Values)
+            foreach (int index in animation.frames)
+                if (!meshes.ContainsKey(index)) SetFrame(index);
+        SetFrame(current);
+        filter.sharedMesh = displayed;
+    }
+
+    public void SetRim(string path, float distance, float threshold, Vector4 adjustment, Color? color = null, float angle = 90, float maskThreshold = 1, bool composite = false)
+    {
+        if (path != null)
+        {
+            Release(rimMask);
+            rimMask = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            rimMask.LoadImage(File.ReadAllBytes(path));
+            rimMask.filterMode = texture.filterMode;
+            rimMask.wrapMode = TextureWrapMode.Clamp;
+            material.SetTexture("_RimMask", rimMask);
+        }
+        HasRim = true;
+        rimAngle = angle;
+        compositeRim = composite;
+        rimSettings = new Vector4(distance, threshold, maskThreshold, 1);
+        rimAdjustment = adjustment;
+        rimColor = color ?? new Color(82 / 255f, 53 / 255f, 29 / 255f);
+        material.SetVector("_Rim", composite ? Vector4.zero : rimSettings);
+        material.SetVector("_RimAdjustment", adjustment);
+        material.SetColor("_RimColor", rimColor);
+        UpdateRimAngle();
+    }
+
+    public void ClearRimMask()
+    {
+        Release(rimMask);
+        rimMask = null;
+        material.SetTexture("_RimMask", Texture2D.blackTexture);
+    }
+
+    private void UpdateRimAngle()
+    {
+        float radians = rimAngle * Mathf.Deg2Rad;
+        material.SetVector("_RimDirection", new Vector4(Mathf.Cos(radians), Mathf.Sin(radians), 0, 0));
+    }
+
+    public bool Play(string name, bool reverse = false)
+    {
+        if (!asset.clips.TryGetValue(name, out Clip next)) return false;
         Animation = name;
-        clip = data["animations"][name];
+        FrozenFrame = -1;
+        clip = next;
         age = 0;
+        reversed = reverse;
         Finished = false;
-        SetFrame((int)clip["frames"][0]);
+        SetFrame(clip.frames[reversed ? clip.frames.Length - 1 : 0]);
         return true;
     }
 
     public void Advance(float delta, Vector3 camera, float clock)
     {
         age += delta;
-        int index = Mathf.FloorToInt(age * (float)clip["fps"]);
-        int count = clip["frames"].Count();
-        Finished = !(bool)clip["loop"] && index >= count;
-        index = (bool)clip["loop"] ? index % count : Mathf.Min(index, count - 1);
-        SetFrame(FrozenFrame >= 0 ? FrozenFrame : (int)clip["frames"][index]);
+        int index = Mathf.FloorToInt(age * clip.fps);
+        int count = clip.frames.Length;
+        Finished = !clip.loop && index >= count;
+        index = clip.loop ? index % count : Mathf.Min(index, count - 1);
+        if (reversed) index = count - 1 - index;
+        SetFrame(FrozenFrame >= 0 ? FrozenFrame : clip.frames[index]);
         Vector3 scrollOrigin = camera - new Vector3(6.4f, -3.6f, camera.z);
-        Vector3 offset = GlobalOffset + new Vector3(-(float)clip["offset"][0] / 100, (float)clip["offset"][1] / 100, 0);
-        if ((bool?)data["scaledOffsets"] == true)
+        Vector3 offset = GlobalOffset + (ApplyAnimationOffsets ? clip.offset : Vector3.zero);
+        if (scaledOffsets)
             offset = Vector3.Scale(offset, new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, 1));
         transform.localPosition = Position + offset + new Vector3(scrollOrigin.x * (1 - Scroll.x), scrollOrigin.y * (1 - Scroll.y), 0);
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * (FlipX ? -1 : 1), transform.localScale.y, 1);
         if (FlipX)
         {
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, 1);
-            transform.localPosition += Vector3.right * Size.x / 100 * Mathf.Abs(transform.localScale.x);
+            transform.localPosition += Vector3.right * FrameSize.x / 100 * Mathf.Abs(transform.localScale.x);
         }
-        bool grouped = PhillyColor || ColorAdjustment != Vector4.zero || CompositeAlpha && Alpha > 0 && Alpha < 1;
+        transform.localRotation = Quaternion.Euler(0, 0, -Angle);
+        if (Angle != 0)
+        {
+            Vector3 pivot = new Vector3(FrameSize.x * transform.localScale.x / 200, -FrameSize.y * transform.localScale.y / 200, 0);
+            transform.localPosition += pivot - transform.localRotation * pivot;
+        }
+        bool grouped = compositeRim || PhillyColor || ColorAdjustment != Vector4.zero || CompositeAlpha && Alpha > 0 && Alpha < 1;
         material.SetFloat("_Opacity", grouped ? 1 : Alpha);
         material.SetFloat("_DstBlend", (float)(Additive ? BlendMode.One : BlendMode.OneMinusSrcAlpha));
+        material.SetFloat("_Multiply", Multiply ? 1 : 0);
+        material.SetFloat("_SrcBlend", (float)(Multiply ? BlendMode.DstColor : BlendMode.SrcAlpha));
         material.SetColor("_Tint", Tint);
         material.SetFloat("_BuildingFade", BuildingFade);
         material.SetFloat("_Rain", Rain);
@@ -133,20 +271,17 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
 
     private void SetFrame(int index)
     {
+        if (Frame == index) return;
         Frame = index;
-        JToken firstQuad = data["frames"][index].FirstOrDefault();
-        if (firstQuad != null)
-        {
-            JToken rect = firstQuad["rect"];
-            material.SetVector("_FrameBounds", new Vector4((float)rect[0] / texture.width, 1 - (float)rect[1] / texture.height,
-                (float)rect[2] / texture.width, -(float)rect[3] / texture.height));
-        }
+        material.SetVector("_FrameBounds", asset.frameBounds[index]);
         if (!meshes.TryGetValue(index, out Mesh mesh))
         {
             var vertices = new List<Vector3>();
             var uv = new List<Vector2>();
             var colors = new List<Color>();
             var additions = new List<Vector4>();
+            var frameBounds = new List<Vector4>();
+            var rotations = new List<Vector2>();
             var triangles = new List<int>();
             foreach (JToken quad in data["frames"][index])
             {
@@ -166,6 +301,8 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
                         : new Color((float)quad["tint"][0], (float)quad["tint"][1], (float)quad["tint"][2], (float)quad["tint"][3]));
                     additions.Add(quad["add"] == null ? Vector4.zero
                         : new Vector4((float)quad["add"][0], (float)quad["add"][1], (float)quad["add"][2], (float)quad["add"][3]));
+                    frameBounds.Add(new Vector4(x, y - h, x + w, y));
+                    rotations.Add(new Vector2((bool)quad["rotated"] ? 1 : 0, 0));
                 }
                 triangles.AddRange(new[] { first, first + 1, first + 2, first + 2, first + 3, first });
             }
@@ -174,6 +311,8 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
             mesh.SetUVs(0, uv);
             mesh.SetColors(colors);
             mesh.SetUVs(1, additions);
+            mesh.SetUVs(2, frameBounds);
+            mesh.SetUVs(3, rotations);
             mesh.SetTriangles(triangles, 0);
             mesh.RecalculateBounds();
             meshes[index] = mesh;
@@ -189,6 +328,7 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
             composite.filterMode = texture.filterMode;
             composite.Create();
             compositeMaterial = new Material(Resources.Load<Shader>("VanillaSongs/Week2Composite"));
+            compositeCommands = new CommandBuffer { name = "Week 2 character opacity" };
             compositeMaterial.mainTexture = composite;
             compositeMesh = new Mesh
             {
@@ -200,30 +340,39 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
         }
         if (compositeFrame != Frame)
         {
-            using (var commands = new CommandBuffer { name = "Week 2 character opacity" })
-            {
-                commands.SetRenderTarget(composite);
-                commands.ClearRenderTarget(false, true, Color.clear);
-                Matrix4x4 projection = GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(compositeBounds.xMin, compositeBounds.xMax,
-                    compositeBounds.yMin, compositeBounds.yMax, -1, 1), true);
-                commands.SetViewProjectionMatrices(Matrix4x4.identity, projection);
-                commands.DrawMesh(meshes[Frame], Matrix4x4.identity, material);
-                Graphics.ExecuteCommandBuffer(commands);
-            }
+            compositeCommands.Clear();
+            compositeCommands.SetRenderTarget(composite);
+            compositeCommands.ClearRenderTarget(false, true, Color.clear);
+            Matrix4x4 projection = GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(compositeBounds.xMin, compositeBounds.xMax,
+                compositeBounds.yMin, compositeBounds.yMax, -1, 1), true);
+            compositeCommands.SetViewProjectionMatrices(Matrix4x4.identity, projection);
+            compositeCommands.DrawMesh(meshes[Frame], Matrix4x4.identity, material);
+            Graphics.ExecuteCommandBuffer(compositeCommands);
             compositeFrame = Frame;
         }
         compositeMaterial.SetFloat("_Opacity", Alpha);
         compositeMaterial.SetFloat("_PhillyColor", PhillyColor ? 1 : 0);
         compositeMaterial.SetVector("_Adjustment", ColorAdjustment);
+        compositeMaterial.SetVector("_Rim", compositeRim ? rimSettings : Vector4.zero);
+        compositeMaterial.SetTexture("_RimMask", rimMask != null ? rimMask : Texture2D.blackTexture);
+        compositeMaterial.SetVector("_RimAdjustment", rimAdjustment);
+        compositeMaterial.SetColor("_RimColor", rimColor);
+        compositeMaterial.SetVector("_RimDirection", material.GetVector("_RimDirection"));
         filter.sharedMesh = compositeMesh;
         meshRenderer.sharedMaterial = compositeMaterial;
     }
 
     private void OnDestroy()
     {
-        foreach (Mesh mesh in meshes.Values) Release(mesh);
-        Release(texture);
+        compositeCommands?.Release();
+        if (asset != null && --asset.users == 0)
+        {
+            Assets.Remove(assetKey);
+            foreach (Mesh mesh in asset.meshes.Values) Release(mesh);
+            Release(asset.texture);
+        }
         Release(rimMask);
+        Release(replacementTexture);
         Release(material);
         Release(composite);
         Release(compositeMesh);

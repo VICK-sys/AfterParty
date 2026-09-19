@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 public static class VanillaCampaignPresentationValidation
 {
     private static readonly string[] Songs = { "Senpai", "Roses", "Thorns", "Eggnog" };
-    private static int index;
+    private static int index = int.TryParse(Environment.GetEnvironmentVariable("UNITY_PARTY_PRESENTATION_START"), out int start) ? start : 0;
     private static int phase;
     private static int errors;
     private static bool captured;
@@ -23,6 +23,10 @@ public static class VanillaCampaignPresentationValidation
     private static double changed;
     private static double lastAdvance;
     private static int exitAttempts;
+    private static bool skipArmed;
+    private static double skipStarted;
+    private static bool sawSkipFade;
+    private static bool SkipTest => Environment.GetEnvironmentVariable("UNITY_PARTY_PRESENTATION_SKIP_TEST") == "1";
     private static Song song;
     private static bool InputTest => Environment.GetEnvironmentVariable("UNITY_PARTY_PRESENTATION_INPUT_TEST") == "1";
     private static readonly MethodInfo manualStartExit = typeof(Song).GetMethod("HandleManualStartExit", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -94,6 +98,7 @@ public static class VanillaCampaignPresentationValidation
                     if (!song.songStarted) return;
                     foreach (AudioSource source in song.musicSources) source.Stop();
                     song.respawning = true;
+                    Require(!presentation.OwnsCamera, "Camera ownership control failed before the outro.");
                     Require(!presentation.AllowEnd(song), "Eggnog outro did not delay completion.");
                     Next(3);
                     return;
@@ -147,6 +152,24 @@ public static class VanillaCampaignPresentationValidation
             else if (phase == 3)
             {
                 var presentation = song.vanillaPlayback.Presentation;
+                Require(presentation.OwnsCamera, "Eggnog did not claim the cutscene camera.");
+                Vector3 position = song.mainCamera.transform.position;
+                OptionsV2.LiteMode = true;
+                song.vanillaPlayback.MoveCamera(song.mainCamera);
+                OptionsV2.LiteMode = false;
+                Require(song.mainCamera.transform.position == position, "Gameplay overwrote the outro camera.");
+                var santa = GameObject.Find("Santa Outro");
+                if (santa == null && !presentation.OutroFinished)
+                {
+                    Require(elapsed < 5, "Eggnog cutscene preparation did not finish.");
+                    return;
+                }
+                Require(!song.vanillaPlayback.CampaignStage.CharacterGraphic(1).gameObject.activeSelf,
+                    "The normal parents reappeared during the Eggnog outro.");
+                Require(!song.vanillaPlayback.CampaignStage.PropGraphic("santa").gameObject.activeSelf,
+                    "The normal Santa overlaps the Eggnog outro.");
+                Require(song.vanillaPlayback.CampaignStage.CharacterGraphic(0).gameObject.activeSelf,
+                    "Eggnog outro visibility control hid Boyfriend.");
                 if (!captured && elapsed > 4)
                 {
                     Require(presentation.Busy && GameObject.Find("Santa Outro") != null && GameObject.Find("Parents Outro") != null,
@@ -154,7 +177,29 @@ public static class VanillaCampaignPresentationValidation
                     VanillaSongValidation.CaptureStage(song,Path.Combine(Output,"Eggnog-outro.png"));
                     captured = true;
                 }
+                if (SkipTest && elapsed > 4 && !skipArmed)
+                {
+                    presentation.AdvanceDialogue();
+                    skipArmed = true;
+                }
+                else if (SkipTest && elapsed > 4.8 && skipStarted == 0)
+                {
+                    presentation.AdvanceDialogue();
+                    skipStarted = EditorApplication.timeSinceStartup;
+                }
+                if (skipStarted > 0)
+                {
+                    double skipAge = EditorApplication.timeSinceStartup - skipStarted;
+                    if (skipAge > .15 && skipAge < .4)
+                    {
+                        Require(!presentation.OutroFinished, "Skip ended before its fade completed.");
+                        Require(presentation.GetComponentsInChildren<Image>().Any(image => image.color == Color.black
+                            || image.color.r == 0 && image.color.a > 0 && image.color.a < 1), "Skip fade did not render.");
+                        sawSkipFade = true;
+                    }
+                }
                 if (!presentation.OutroFinished) return;
+                if (SkipTest) Require(sawSkipFade && elapsed < 8, "Skip fade or completion timing failed.");
                 Require(captured && presentation.AllowEnd(song), "Eggnog did not release song completion.");
                 Debug.Log("PRESENTATION PASSED: Eggnog Erect, cutscene actors, timed outro, completion.");
                 ExitSong();

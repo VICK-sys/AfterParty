@@ -350,7 +350,7 @@ public class OptionsV2 : MonoBehaviour
 
     public void OpenOffset()
     {
-        LoadingTransition.instance.Show(() => SceneManager.LoadScene("Calibration"));
+        LoadingTransition.instance.LoadScene("Calibration");
     }
     #endregion
     #region Misc
@@ -413,10 +413,10 @@ public class OptionsV2 : MonoBehaviour
         switch (type)
         {
             case 1:
-                LoadingTransition.instance.Show(() => SceneManager.LoadScene("SceneEditor"));
+                LoadingTransition.instance.LoadScene("SceneEditor");
                 break;
             case 2:
-                LoadingTransition.instance.Show(() => SceneManager.LoadScene("CharacterCreator"));
+                LoadingTransition.instance.LoadScene("CharacterCreator");
                 break;
         }
     }
@@ -431,11 +431,7 @@ public class OptionsV2 : MonoBehaviour
         //again to confirm deletion.
         if (deleteConfirmationNeeded)
         {
-            LoadingTransition.instance.Show(() =>
-            {
-                PlayerPrefs.DeleteAll();
-                SceneManager.LoadScene("Title");
-            });
+            LoadingTransition.instance.LoadScene("Title", PlayerPrefs.DeleteAll);
         }
         else
         {

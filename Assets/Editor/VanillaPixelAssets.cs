@@ -7,6 +7,7 @@ public sealed class VanillaPixelAssets : AssetPostprocessor
     {
         bool pixel = assetPath.StartsWith("Assets/Resources/FunkinNotes/Pixel/") || assetPath.StartsWith("Assets/Resources/FunkinHud/Pixel/")
             || assetPath == "Assets/Resources/FunkinHud/Icons/icon-bf-pixel.png"
+            || assetPath == "Assets/Resources/FunkinHud/Icons/icon-pico-pixel.png"
             || assetPath == "Assets/Resources/FunkinHud/Icons/icon-senpai.png"
             || assetPath == "Assets/Resources/FunkinHud/Icons/icon-senpai-angry.png"
             || assetPath == "Assets/Resources/FunkinHud/Icons/icon-spirit.png";

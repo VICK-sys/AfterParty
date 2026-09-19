@@ -93,7 +93,7 @@ public class NoteObject : MonoBehaviour
         }
         bool holdDone = State.Length <= 0 || State.HoldFinished ||
             (State.HoldDropped && position >= State.Time + State.Length + FunkinRules.HitWindow + song.FunkinRenderDistance / 8);
-        if ((State.Hit && !State.HeadVisible || headOffscreen) && holdDone)
+        if ((State.Hit && !State.HeadVisible || headOffscreen && (State.Hit || State.HandledMiss)) && holdDone)
             song.ReleaseFunkinNote(this);
     }
 }

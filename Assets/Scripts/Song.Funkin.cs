@@ -47,6 +47,7 @@ public partial class Song
 
     private void SetFunkinVocalMuted(int side, bool muted)
     {
+        if (side == 1 && vanillaPlayback?.Week3Stage?.OpponentExploded == true) muted = true;
         if (OpponentVocals != null && SplitPlayerVocalsPath != null)
             (side == 0 ? vocalSource : OpponentVocals).mute = muted;
         else if (hasVoiceLoaded) vocalSource.mute = muted;
@@ -109,6 +110,8 @@ public partial class Song
 
     public void InitializeFunkinStrums()
     {
+        FunkinNoteSkin.WarmGameplay();
+        if (GetComponent<FunkinStrumlineBackground>() == null) gameObject.AddComponent<FunkinStrumlineBackground>().Initialize(this);
         for (int side = 0; side < 2; side++)
         {
             var sprites = side == 0 ? player1NoteSprites : player2NoteSprites;
@@ -145,11 +148,12 @@ public partial class Song
                 float worldScale = FunkinWorldPixelSize;
                 FunkinNoteSkin.WorldScale(sprite.transform, 100 * worldScale * FunkinNoteSkin.Scale);
                 float x = (side == 0 ? 688 : 48) + 112 * direction + 52;
-                if (OptionsV2.Middlescroll) x = 420 + 112 * direction + 52;
+                if (OptionsV2.Middlescroll || vanillaPlayback?.SongId == "blazin") x = 420 + 112 * direction + 52;
                 float y = OptionsV2.Downscroll ? 720 - 24 - 82.6f : 24 + 82.6f;
                 Vector3 point = new Vector3(uiCamera.transform.position.x + (x - 640) * worldScale,
                     uiCamera.transform.position.y + (360 - y) * worldScale, sprite.transform.position.z);
                 sprite.transform.position = point;
+                if (vanillaPlayback?.SongId == "blazin" && side == 1) sprite.enabled = false;
             }
         }
     }
@@ -158,6 +162,7 @@ public partial class Song
     {
         if (note == null) return;
         int side = note.mustHit ? 0 : 1;
+        if (vanillaPlayback?.CampaignStage?.Week == 8) vanillaPlayback.CampaignStage.WeekendJudgement = automatic ? FunkinRules.Judgement.Sick : FunkinRules.Judge(timing);
         if (vanillaPlayback?.CharacterStage != null) vanillaPlayback.CharacterStage.Hit(side, note.type, note.State.Time);
         else PlayFunkinCharacter(side, note.type, false);
         SetFunkinVocalMuted(side, false);
@@ -196,7 +201,8 @@ public partial class Song
         stats.missedHits++;
         BreakFunkinCombo(side);
         AddFunkinScore(side, -100, -8);
-        PlayFunkinCharacter(side, note.type, true);
+        if (vanillaPlayback?.CampaignStage?.Week == 8) vanillaPlayback.CampaignStage.Miss(side, note.type, note.State.Time);
+        else PlayFunkinCharacter(side, note.type, true);
         PlayFunkinMissSound(side, 0.5f, 0.6f);
     }
 

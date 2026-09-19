@@ -16,7 +16,7 @@ public static class VanillaWeek3Validation
     {
         CheckLightShader();
         var levels = VanillaStoryCatalog.Load();
-        Require(levels.Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1", "week2", "week3", "week4", "week5", "week6" }), "Installed story weeks changed.");
+        Require(levels.Select(level => level.id).SequenceEqual(new[] { "tutorial", "week1", "week2", "week3", "week4", "week5", "week6", "week7", "weekend1" }), "Installed story weeks changed.");
         var level = levels.Single(item => item.id == "week3");
         foreach (string difficulty in new[] { "easy", "normal", "hard", "erect", "nightmare" })
         {
@@ -115,12 +115,36 @@ public static class VanillaWeek3Validation
         stage.AdvanceTrain(4700);
         Require(stage.TrainStarted && stage.PropGraphic("train").Position.x == initial.x - 4
             && stage.CharacterGraphic(2).Animation == "hairBlow", "Train cue, 400-pixel movement, or hair animation changed.");
+        var girlfriend = stage.CharacterGraphic(2);
+        int firstHairFrame = girlfriend.Frame;
+        girlfriend.Advance(1.1f / 24, Vector3.zero, 0);
+        int nextHairFrame = girlfriend.Frame;
+        Require(nextHairFrame != firstHairFrame && !girlfriend.Finished, "Hair animation did not advance past its first frame.");
+        stage.AdvanceTrain(4700);
+        Require(girlfriend.Frame == nextHairFrame, "Train tick restarted unfinished hair animation.");
+        for (int cycle = 0; cycle < 3; cycle++)
+        {
+            girlfriend.Advance(4f / 24, Vector3.zero, 0);
+            Require(girlfriend.Finished, "Hair completion control failed.");
+            stage.AdvanceTrain(4700);
+            Require(girlfriend.Animation == "hairBlow" && !girlfriend.Finished && girlfriend.Frame == firstHairFrame,
+                "Train did not restart completed hair animation.");
+            bool alternate = false;
+            Require(VanillaCharacterTiming.DanceAnimation(girlfriend, false, true, ref alternate) == null,
+                "Dance interrupted restarted hair animation.");
+        }
         for (int i = 0; i < 9; i++) stage.AdvanceTrain(4700);
         typeof(VanillaWeek3Stage).GetMethod("Render", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(stage, new object[] { 0.1f });
         VanillaSongValidation.CaptureStage(song.vanillaPlayback.SongId + (stage.Erect ? "-erect" : "") + "-train.png");
         for (int i = 0; i < 100 && stage.TrainMoving; i++) stage.AdvanceTrain(4700);
         Require(!stage.TrainMoving && stage.TrainCars == 8 && Mathf.Abs(stage.PropGraphic("train").Position.x - 14.8f) < 0.0001f
             && stage.CharacterGraphic(2).Animation == "hairFall", "Train did not finish eight cars and restore Girlfriend.");
+        bool hairAlternate = false;
+        Require(VanillaCharacterTiming.DanceAnimation(girlfriend, false, true, ref hairAlternate) == null,
+            "Dance interrupted hair landing.");
+        girlfriend.Advance(12f / 24, Vector3.zero, 0);
+        Require(VanillaCharacterTiming.DanceAnimation(girlfriend, false, true, ref hairAlternate) == "danceLeft",
+            "Girlfriend did not resume dancing after hair landing.");
         stage.ResetStage();
         stage.StartTrain();
         stage.AdvanceTrain(4700);

@@ -10,6 +10,9 @@ public sealed class VanillaDialogueGraphic : MaskableGraphic
     public Vector2 Size { get; private set; }
     public float DrawScale = 1;
     public bool Finished { get; private set; }
+    public string Animation { get; private set; }
+    public bool FlipX;
+    public bool FlipY;
     private JObject data;
     private JToken clip;
     private Texture2D atlas;
@@ -33,7 +36,10 @@ public sealed class VanillaDialogueGraphic : MaskableGraphic
 
     public void Play(string animation)
     {
-        clip = data["animations"][animation] ?? data["animations"]["idle"] ?? ((JObject)data["animations"]).Properties().First().Value;
+        if (data["animations"][animation] == null) animation = "idle";
+        if (data["animations"][animation] == null) return;
+        Animation = animation;
+        clip = data["animations"][animation];
         age = 0;
         Finished = false;
         SetVerticesDirty();
@@ -43,7 +49,7 @@ public sealed class VanillaDialogueGraphic : MaskableGraphic
     {
         if (clip == null) return;
         age += Time.deltaTime;
-        Finished = age * (float)clip["fps"] >= clip["frames"].Count();
+        Finished = !(bool)clip["loop"] && age * (float)clip["fps"] >= clip["frames"].Count();
         SetVerticesDirty();
     }
 
@@ -65,9 +71,13 @@ public sealed class VanillaDialogueGraphic : MaskableGraphic
             int first = mesh.currentVertCount;
             for (int corner = 0; corner < 4; corner++)
             {
-                Vector3 position = new Vector3((float)quad["xy"][corner * 2] - (float)clip["offset"][0],
-                    -(float)quad["xy"][corner * 2 + 1] + (float)clip["offset"][1]) * DrawScale;
-                mesh.AddVert(position, color, uv[(corner + ((bool)quad["rotated"] ? 1 : 0)) % 4]);
+                float px = (float)quad["xy"][corner * 2];
+                float py = (float)quad["xy"][corner * 2 + 1];
+                Vector3 position = new Vector3((FlipX ? Size.x - px : px) * DrawScale + (float)clip["offset"][0],
+                    -(FlipY ? Size.y - py : py) * DrawScale - (float)clip["offset"][1]);
+                Color tint = color;
+                tint.a *= (float?)quad["alpha"] ?? 1;
+                mesh.AddVert(position, tint, uv[(corner + ((bool)quad["rotated"] ? 1 : 0)) % 4]);
             }
             mesh.AddTriangle(first,first+1,first+2);
             mesh.AddTriangle(first+2,first+3,first);

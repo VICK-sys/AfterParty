@@ -38,6 +38,7 @@ public class Blit : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
+        if (renderingData.cameraData.camera.GetComponent<VanillaFreeplayTransition>() != null) return;
         if (settings.blitMaterial == null)
             return;
 

@@ -37,6 +37,8 @@ public sealed class FunkinHud : MonoBehaviour
     private bool oldPlayerIcon;
     private bool wasVisible;
     private float pixel;
+    private int displayedScore;
+    private bool displayedAutoplay;
 
     public void Initialize(Song owner, string opponent)
     {
@@ -46,8 +48,11 @@ public sealed class FunkinHud : MonoBehaviour
         DisplayHealth = 100;
         previousStep = int.MinValue;
         oldPlayerIcon = false;
+        string imagePrefix = song.vanillaPlayback != null && song.vanillaPlayback.IsPixel ? "Pixel/" : "";
+        foreach (string rating in new[] { "sick", "good", "bad", "shit" }) FunkinHudAssets.Image(imagePrefix + rating);
+        for (int digit = 0; digit < 10; digit++) FunkinHudAssets.Image(imagePrefix + "num" + digit);
         iconFrames[0] = FunkinHudAssets.Icon(song.vanillaPlayback?.PlayerId ?? "bf");
-        iconFrames[1] = FunkinHudAssets.Icon(opponent);
+        iconFrames[1] = FunkinHudAssets.Icon(opponent == "tankman-bloody" ? "tankman" : opponent);
         foreach (var icon in Icons) icon.Reset();
         if (background == null)
         {
@@ -105,8 +110,15 @@ public sealed class FunkinHud : MonoBehaviour
     public void TogglePlayerIcon()
     {
         oldPlayerIcon = !oldPlayerIcon;
-        iconFrames[0] = FunkinHudAssets.Icon(oldPlayerIcon ? "bf-old" : "bf");
+        iconFrames[0] = FunkinHudAssets.Icon(oldPlayerIcon ? "bf-old" : song.vanillaPlayback?.PlayerId ?? "bf");
         Icons[0].Reset();
+    }
+
+    public void SetIcon(int side, string id)
+    {
+        if (side < 0 || side >= iconFrames.Length || string.IsNullOrEmpty(id)) return;
+        iconFrames[side] = FunkinHudAssets.Icon(id);
+        Icons[side].Reset();
     }
 
     public void Advance(double elapsed, double position)
@@ -234,9 +246,13 @@ public sealed class FunkinHud : MonoBehaviour
             Place(popup.Renderer, popup.State.X, popup.State.Y, popup.Renderer.sprite.rect.width * popup.Scale,
                 popup.Renderer.sprite.rect.height * popup.Scale);
         }
-        string text = Player.demoMode ? "Bot Play Enabled" : "Score: " +
-            (Player.playAsEnemy ? song.playerTwoStats.currentScore : song.playerOneStats.currentScore).ToString("N0", CultureInfo.InvariantCulture);
-        if (ScoreText != text) BuildScore(text);
+        int score = Player.playAsEnemy ? song.playerTwoStats.currentScore : song.playerOneStats.currentScore;
+        if (ScoreText == null || displayedAutoplay != Player.demoMode || !Player.demoMode && displayedScore != score)
+        {
+            displayedScore = score;
+            displayedAutoplay = Player.demoMode;
+            BuildScore(Player.demoMode ? "Bot Play Enabled" : "Score: " + score.ToString("N0", CultureInfo.InvariantCulture));
+        }
         foreach (Letter letter in letters)
             if (letter.Renderer.enabled)
                 Place(letter.Renderer, x + 601 - 190 + letter.X, y + 30 + letter.Y,

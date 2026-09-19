@@ -23,6 +23,22 @@ public class Player : MonoBehaviour
     public static float visualOffset;
     public static KeyMode currentKeyMode = KeyMode.FourKey;
     public static SavedKeybinds keybinds;
+    public static bool ControllerConfirmPressed => VanillaControls.PadPressed("ACCEPT");
+    public static bool ControllerBackPressed => VanillaControls.PadPressed("BACK");
+    public static bool ControllerPausePressed => VanillaControls.PadPressed("PAUSE");
+    public static bool ControllerFavoritePressed => VanillaControls.PadPressed("FREEPLAY_FAVORITE");
+
+    public static bool ControllerPressed(GamepadButton button)
+    {
+        foreach (Gamepad pad in Gamepad.all)
+            if (pad[button].wasPressedThisFrame) return true;
+        return false;
+    }
+
+    public static float MenuAxis(string name)
+    {
+        return VanillaControls.Axis(name == "Horizontal");
+    }
     public List<NoteObject> player1DummyNotes = new List<NoteObject>();
     public List<NoteObject> player2DummyNotes = new List<NoteObject>();
     public readonly FunkinStrumline[] Strumlines = { new FunkinStrumline(), new FunkinStrumline() };
@@ -57,6 +73,7 @@ public class Player : MonoBehaviour
         owner = Song.instance;
         inputOffset = PlayerPrefs.GetFloat("Input Offset", 0);
         visualOffset = PlayerPrefs.GetFloat("Visual Offset", 0);
+        VanillaControls.Reload();
         if (keybinds != null)
         {
             if (keybinds.primary4K.Count == 4) primaryKeyCodes = keybinds.primary4K;
@@ -65,6 +82,7 @@ public class Player : MonoBehaviour
         for (int side = 0; side < 2; side++)
         {
             int index = side;
+            Strumlines[side].CanHit = note => owner.vanillaPlayback?.CampaignStage?.Week != 8 || owner.vanillaPlayback.CampaignStage.CanHitWeekendNote(index, note.Direction, note.Time);
             Strumlines[side].NoteHit += (note, timing, automatic) => owner.ApplyFunkinHit((NoteObject)note.View, timing, automatic);
             Strumlines[side].NoteMissed += note => owner.ApplyFunkinMiss((NoteObject)note.View);
             Strumlines[side].GhostMissed += direction => owner.ApplyFunkinGhost(index, direction);
@@ -151,22 +169,12 @@ public class Player : MonoBehaviour
         if (device is Gamepad pad)
         {
             int side = playAsEnemy ? 1 : 0;
-            CaptureButton(input, pad.dpad.left, side, 0, 512);
-            CaptureButton(input, pad.dpad.down, side, 1, 513);
-            CaptureButton(input, pad.dpad.up, side, 2, 514);
-            CaptureButton(input, pad.dpad.right, side, 3, 515);
-            CaptureButton(input, pad.buttonWest, side, 0, 516);
-            CaptureButton(input, pad.buttonSouth, side, 1, 517);
-            CaptureButton(input, pad.buttonNorth, side, 2, 518);
-            CaptureButton(input, pad.buttonEast, side, 3, 519);
-            CaptureButton(input, pad.leftStick.left, side, 0, 520);
-            CaptureButton(input, pad.leftStick.down, side, 1, 521);
-            CaptureButton(input, pad.leftStick.up, side, 2, 522);
-            CaptureButton(input, pad.leftStick.right, side, 3, 523);
-            CaptureButton(input, pad.rightStick.left, side, 0, 524);
-            CaptureButton(input, pad.rightStick.down, side, 1, 525);
-            CaptureButton(input, pad.rightStick.up, side, 2, 526);
-            CaptureButton(input, pad.rightStick.right, side, 3, 527);
+            for (int direction = 0; direction < 4; direction++)
+                foreach (int code in VanillaControls.Bindings[direction].buttons)
+                {
+                    ButtonControl control = VanillaControls.Button(pad, code);
+                    if (control != null) CaptureButton(input, control, side, direction, 512 + code);
+                }
             return;
         }
         if (!(device is Keyboard keyboard)) return;
@@ -217,6 +225,7 @@ public class Player : MonoBehaviour
             return;
         }
         accepting = true;
+        if (VanillaControls.Pressed("RESET") && !demoMode && !playAsEnemy && !Pause.PracticeMode) owner.health = 0;
         double position = owner.SongPosition - visualOffset;
         double realtime = Time.realtimeSinceStartupAsDouble * 1000;
         AdvanceFrame(position, realtime, Time.deltaTime);

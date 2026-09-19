@@ -8,11 +8,12 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 
 [DefaultExecutionOrder(300)]
-public sealed class VanillaCampaignPresentation : MonoBehaviour
+public sealed partial class VanillaCampaignPresentation : MonoBehaviour
 {
     public bool Busy { get; private set; }
     public bool OutroFinished { get; private set; }
-    public bool OwnsCamera => winterIntro || winterTransition;
+    public bool OwnsCamera => winterIntro || winterTransition || weekendCamera || eggnogCamera;
+    private bool eggnogCamera;
     public float HudAlpha { get; private set; } = 1;
     private bool winterIntro;
     private bool winterTransition;
@@ -38,16 +39,18 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
     {
         get
         {
-            bool value = advanceRequested || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape);
+            bool value = advanceRequested || VanillaControls.Pressed("CUTSCENE_ADVANCE") || VanillaControls.Pressed("BACK");
             advanceRequested = false;
             return value;
         }
     }
 
     public void AdvanceDialogue() => advanceRequested = true;
+    public bool TakeAdvanceInput() => Advance;
 
     private void Update()
     {
+        ReturnWeekendCamera();
         if (winterTransition && (song.IsCountingDown || song.songStarted))
         {
             float t = Mathf.Clamp01((float)((song.SongPosition - Pause.GlobalOffset - transitionStart) / 2000));
@@ -135,9 +138,9 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
         return image;
     }
 
-    private IEnumerator LoadAudio(int week, string name, Action<AudioClip> assign)
+    private IEnumerator LoadAudio(int week, string name, Action<AudioClip> assign, AudioType type = AudioType.OGGVORBIS)
     {
-        using (var request = UnityWebRequestMultimedia.GetAudioClip(new Uri(Path.Combine(Root(week), "audio", name + ".ogg")).AbsoluteUri, AudioType.OGGVORBIS))
+        using (var request = UnityWebRequestMultimedia.GetAudioClip(new Uri(Path.Combine(Root(week), "audio", name + (type == AudioType.WAV ? ".wav" : ".ogg"))).AbsoluteUri, type))
         {
             yield return request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success) throw new IOException(request.error);
@@ -154,7 +157,29 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
         playedIntro = true;
         Pause.PlayedCampaignIntro = true;
         string id = song.vanillaPlayback.SongId;
-        if (id != "winter-horrorland" && (!song.vanillaPlayback.IsPixel || !VanillaStoryCampaign.Running)) yield break;
+        bool pico = song.vanillaPlayback.Variation == "pico";
+        if (pico && song.vanillaPlayback.IsWeek3)
+        {
+            yield return PicoDoppelgangerIntro();
+            yield break;
+        }
+        if (pico && id == "stress")
+        {
+            yield return Week7Video("stress-pico", keepCovered: true);
+            yield break;
+        }
+        if (id == "darnell" && VanillaStoryCampaign.Running)
+        {
+            yield return Week7Video(id, 8, 0, true);
+            yield return DarnellIntro();
+            yield break;
+        }
+        if (id == "ugh" || id == "guns" || id == "stress")
+        {
+            if (VanillaStoryCampaign.Running) yield return Week7Video(id);
+            yield break;
+        }
+        if (id != "winter-horrorland" && (!song.vanillaPlayback.IsPixel || !VanillaStoryCampaign.Running && !pico)) yield break;
         Busy = true;
         bool hud = song.uiCamera.enabled;
         bool battle = song.battleCanvas.enabled;
@@ -196,7 +221,7 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
                 sound.PlayOneShot(sound.clip);
             }
             if (id == "thorns") yield return Explosion();
-            yield return Dialogue(id);
+            yield return Dialogue(id + (pico ? "-pico" : ""));
         }
         song.uiCamera.enabled = hud;
         song.battleCanvas.enabled = battle;
@@ -247,6 +272,7 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
     private IEnumerator Dialogue(string id)
     {
         string root = Path.Combine(Root(6), "dialogue");
+        if (!VanillaPreferences.Naughtyness && File.Exists(Path.Combine(root,id+"-censored.json"))) id += "-censored";
         JObject conversation = JObject.Parse(File.ReadAllText(Path.Combine(root, id + ".json")));
         var backdrop = Overlay(new Color(179/255f,223/255f,216/255f,0));
         dialogueAge = 0;
@@ -270,64 +296,81 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
         text.raycastTarget = false;
         var shadow = text.gameObject.AddComponent<Shadow>();
         string lastBox = null;
+        string lastSpeaker = null;
         foreach (JToken line in conversation["dialogue"])
         {
             string speaker = (string)line["speaker"];
-            JObject character = JObject.Parse(File.ReadAllText(Path.Combine(root,"speakers",speaker,"data.json")));
-            portrait.Load(Path.Combine(root,"speakers",speaker));
-            portrait.DrawScale = (float)character["scale"];
-            portrait.rectTransform.anchoredPosition = new Vector2((1280-portrait.Size.x)/2+(float)character["offsets"][0],
-                -((720-portrait.Size.y)/2+(float)character["offsets"][1]));
-            portrait.Play((string)line["speakerAnimation"]);
+            if (speaker == "senpai-bwuh") music.Pause();
+            else if (music.clip != null && !music.isPlaying) music.UnPause();
             string boxId = (string)line["box"];
-            if (boxId != lastBox) box.Load(Path.Combine(root,"boxes",boxId));
+            bool continuing = boxId == lastBox;
+            if (!continuing) box.Load(Path.Combine(root,"boxes",boxId));
             lastBox = boxId;
             JObject boxData = JObject.Parse(File.ReadAllText(Path.Combine(root,"boxes",boxId,"data.json")));
             box.DrawScale = (float)boxData["scale"];
             box.rectTransform.anchoredPosition = new Vector2(640+(float)boxData["offsets"][0],-(360+(float)boxData["offsets"][1]));
-            box.Play((string)line["boxAnimation"]);
-            if (boxId == "roses") sound.PlayOneShot(click,.6f);
+            box.FlipX = (bool?)boxData["flipX"] ?? false;
+            box.FlipY = (bool?)boxData["flipY"] ?? false;
+            box.Play(continuing ? "click" : (string)line["boxAnimation"]);
+            if (continuing && boxId == "roses") sound.PlayOneShot(click,.6f);
             text.text = "";
-            portrait.color = Color.clear;
+            if (!continuing) portrait.color = Color.clear;
             while (!box.Finished)
             {
                 FadeDialogue(backdrop);
                 yield return null;
             }
+            JObject character = JObject.Parse(File.ReadAllText(Path.Combine(root,"speakers",speaker,"data.json")));
+            if (speaker != lastSpeaker) portrait.Load(Path.Combine(root,"speakers",speaker));
+            lastSpeaker = speaker;
+            portrait.FlipX = (bool?)character["flipX"] ?? false;
+            portrait.FlipY = (bool?)character["flipY"] ?? false;
+            portrait.DrawScale = (float)character["scale"];
+            portrait.rectTransform.anchoredPosition = new Vector2((1280-portrait.Size.x)/2+(float)character["offsets"][0],
+                -((720-portrait.Size.y)/2+(float)character["offsets"][1]));
+            box.Play("speaking");
             portrait.color = Color.white;
             portrait.Play((string)line["speakerAnimation"]);
             text.rectTransform.anchoredPosition = box.rectTransform.anchoredPosition + new Vector2((float)boxData["text"]["offsets"][0],-(float)boxData["text"]["offsets"][1]);
             text.rectTransform.sizeDelta = new Vector2((float)boxData["text"]["width"],200);
             ColorUtility.TryParseHtmlString((string)boxData["text"]["color"],out Color color);
             text.color = color;
-            shadow.effectColor = boxId == "thorns" ? Color.clear : new Color32(216,148,148,255);
-            shadow.effectDistance = new Vector2(2,-2);
-            string content = string.Concat(line["text"].Select(value => (string)value));
-            int shown = 0;
-            float age = 0;
-            while (shown < content.Length)
+            text.fontSize = (int?)boxData["text"]["size"] ?? 32;
+            ColorUtility.TryParseHtmlString((string)boxData["text"]["shadowColor"], out Color shadowColor);
+            shadow.effectColor = shadowColor;
+            float shadowWidth = (float?)boxData["text"]["shadowWidth"] ?? 2;
+            shadow.effectDistance = new Vector2(shadowWidth,-shadowWidth);
+            string content = "";
+            foreach (JToken segment in line["text"])
             {
-                age += Time.deltaTime;
-                int next = Mathf.Min(content.Length,(int)(age / (.05f * ((float?)line["speed"] ?? 1))));
-                if (Advance) next = content.Length;
-                if (next > shown) sound.PlayOneShot(sound.clip,.6f);
-                shown = next;
-                text.text = content.Substring(0,shown);
-                FadeDialogue(backdrop);
-                if (portrait.Finished) portrait.Play("talk");
-                if (box.Finished) box.Play("speaking");
+                int previousLength = content.Length;
+                content += (string)segment;
+                int shown = previousLength;
+                float age = 0;
+                while (shown < content.Length)
+                {
+                    age += Time.deltaTime;
+                    int next = Mathf.Min(content.Length,previousLength + (int)(age / (.05f * ((float?)line["speed"] ?? 1))));
+                    if (Advance) next = content.Length;
+                    if (next > shown) sound.PlayOneShot(sound.clip,.6f);
+                    shown = next;
+                    text.text = content.Substring(0,shown);
+                    FadeDialogue(backdrop);
+                    yield return null;
+                }
+                box.Play("sentenceEnd");
                 yield return null;
-            }
-            box.Play("sentenceEnd");
-            yield return null;
-            while (!Advance)
-            {
-                FadeDialogue(backdrop);
-                if (box.Finished) box.Play("idle");
+                while (!Advance)
+                {
+                    FadeDialogue(backdrop);
+                    if (box.Finished && box.Animation == "sentenceEnd") box.Play("idle");
+                    yield return null;
+                }
                 yield return null;
+                if (segment != line["text"].Last) box.Play("speaking");
             }
-            yield return null;
         }
+        if (lastBox == "roses") sound.PlayOneShot(click,.6f);
         box.Play("exit");
         text.enabled = false;
         for (float time = 0; time < 1; time += Time.deltaTime)
@@ -370,6 +413,13 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
         float beat = song.beatsPerSecond;
         song.BeginFunkinCountdown(beat*5);
         transitionStart = -beat*5000;
+        if (videoHandoffCover != null)
+        {
+            var cover = videoHandoffCover;
+            videoHandoffCover = null;
+            Busy = false;
+            StartCoroutine(RevealVideoGameplay(cover));
+        }
         string folder = song.vanillaPlayback.IsPixel ? "Pixel" : "Countdown";
         string[] sounds = { "introTHREE", "introTWO", "introONE", "introGO" };
         string[] images = { null, "ready", "set", "go" };
@@ -400,6 +450,16 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
     public bool AllowEnd(Song owner)
     {
         Initialize(owner);
+        if (song.vanillaPlayback.SongId == "stress" && song.vanillaPlayback.Variation == "pico" && !OptionsV2.DesperateMode)
+        {
+            if (!outroStarted) { outroStarted = true; StartCoroutine(StressPicoOutro()); }
+            return OutroFinished;
+        }
+        if (VanillaStoryCampaign.Running && (song.vanillaPlayback.SongId == "2hot" || song.vanillaPlayback.SongId == "blazin"))
+        {
+            if (!outroStarted) { outroStarted = true; StartCoroutine(WeekendOutro()); }
+            return OutroFinished;
+        }
         if (song.vanillaPlayback.SongId != "eggnog" || !song.vanillaPlayback.IsErect || OptionsV2.DesperateMode) return true;
         if (!outroStarted) { outroStarted = true; StartCoroutine(Outro()); }
         return OutroFinished;
@@ -408,6 +468,7 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
     private IEnumerator Outro()
     {
         Busy = true;
+        eggnogCamera = true;
         yield return song.vanillaPlayback.CampaignStage.EggnogOutro();
         OutroFinished = true;
         Busy = false;
@@ -415,6 +476,7 @@ public sealed class VanillaCampaignPresentation : MonoBehaviour
 
     private void OnDestroy()
     {
+        ReleaseVideo();
         foreach (AudioClip clip in clips) if (clip != null) Destroy(clip);
     }
 }

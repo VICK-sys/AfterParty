@@ -434,6 +434,32 @@ public static class FunkinGameplayValidation
         Player.instance.AdvanceFrame(position, clock * 1000, 0);
         Require(padNote.State.Hit && song.playerOneStats.currentScore == 500,
             "Controller button mapping or timestamp failed: hit=" + padNote.State.Hit + ", score=" + song.playerOneStats.currentScore + ", events=" + padEvents);
+        Require(Player.ControllerConfirmPressed && !Player.ControllerBackPressed && !Player.ControllerPausePressed,
+            "Controller confirm also triggered back or pause.");
+        foreach (var direction in new[] { GamepadButton.DpadLeft, GamepadButton.DpadDown, GamepadButton.DpadUp, GamepadButton.DpadRight })
+        {
+            InputSystem.QueueStateEvent(gamepad, new GamepadState(), clock);
+            InputSystem.Update();
+            InputSystem.QueueStateEvent(gamepad, new GamepadState().WithButton(direction), clock);
+            InputSystem.Update();
+            bool horizontal = direction == GamepadButton.DpadLeft || direction == GamepadButton.DpadRight;
+            float expected = direction == GamepadButton.DpadLeft || direction == GamepadButton.DpadDown ? -1 : 1;
+            Require(Player.MenuAxis(horizontal ? "Horizontal" : "Vertical") == expected,
+                "D-pad menu navigation failed: " + direction);
+        }
+        Player.instance.ClearInput();
+        InputSystem.QueueStateEvent(gamepad, new GamepadState().WithButton(GamepadButton.Start), clock);
+        InputSystem.Update();
+        Require(Player.ControllerPausePressed && !Player.ControllerConfirmPressed && !Player.ControllerBackPressed
+            && line.Presses.Count == 0, "Controller pause triggered another action or a note.");
+        InputSystem.QueueStateEvent(gamepad, new GamepadState().WithButton(GamepadButton.East), clock);
+        InputSystem.Update();
+        Require(Player.ControllerBackPressed && !Player.ControllerConfirmPressed && !Player.ControllerPausePressed,
+            "Controller back triggered another menu action.");
+        InputSystem.QueueStateEvent(gamepad, new GamepadState(), clock);
+        InputSystem.Update();
+        Require(!Player.ControllerBackPressed && !Player.ControllerConfirmPressed && !Player.ControllerPausePressed,
+            "Released controller buttons retained menu actions.");
         InputSystem.RemoveDevice(gamepad);
         ClearCase();
         CheckSplashPool();

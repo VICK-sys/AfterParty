@@ -1058,15 +1058,19 @@ public partial class Song : MonoBehaviour
                 Directory.Delete(Application.persistentDataPath + "/tmp");
         }
 
-        startSongTooltip.SetActive(true);
-        startSongTooltip.GetComponentInChildren<TMP_Text>().text = $"Press {Player.keybinds.startSongKeyCode} to start the song.";
+        startSongTooltip.SetActive(false);
 
         LoadingTransition.instance.Hide();
+        while (LoadingTransition.instance != null && LoadingTransition.instance.toggled) yield return null;
 
         DiscordController.instance.EnableGameStateLoop = true;
 
         if (vanillaPlayback == null)
-            yield return new WaitUntil(() => Input.GetKeyDown(Player.keybinds.startSongKeyCode));
+        {
+            startSongTooltip.GetComponentInChildren<TMP_Text>().text = $"Press {Player.keybinds.startSongKeyCode} to start the song.";
+            startSongTooltip.SetActive(true);
+            yield return new WaitUntil(() => Input.GetKeyDown(Player.keybinds.startSongKeyCode) || Player.ControllerConfirmPressed || Player.ControllerPausePressed);
+        }
         startSongTooltip.SetActive(false);
         /*
         * Start the countdown audio.
@@ -1076,6 +1080,7 @@ public partial class Song : MonoBehaviour
         if (vanillaPlayback != null && vanillaPlayback.Presentation != null)
         {
             yield return vanillaPlayback.Presentation.Intro(this);
+            if (!songSetupDone || Pause.instance != null && Pause.instance.Transitioning) yield break;
             yield return vanillaPlayback.Presentation.Countdown(this);
         }
         else
@@ -1083,7 +1088,7 @@ public partial class Song : MonoBehaviour
             BeginFunkinCountdown(delay);
             soundSource.clip = startSound;
             soundSource.Play();
-            yield return new WaitForSeconds(delay);
+            while (SongPosition - Pause.GlobalOffset < 0) yield return null;
         }
         
         /*
@@ -1115,6 +1120,7 @@ public partial class Song : MonoBehaviour
          * In case we have more than one audio source,
          * let's tell them all to play.
          */
+        if (OpponentVocals != null) OpponentVocals.mute = vanillaPlayback?.Week3Stage?.OpponentExploded == true;
         foreach (AudioSource source in musicSources)
         {
             source.Play();
@@ -1182,14 +1188,173 @@ public partial class Song : MonoBehaviour
         Pause.instance.RestartSong();
     }
 
+    public void CompleteScriptedSong()
+    {
+        if (!songSetupDone || FreeplayAborted || isDead) return;
+        foreach (AudioSource source in musicSources) source.Stop();
+        vocalSource.Stop();
+        Player.instance?.ClearInput();
+        FinishSong(true);
+    }
+
+    private bool enteringResults;
+
+    private void FinishSong(bool scriptedCompletion, bool afterTransition = false)
+    {
+        if (enteringResults && !afterTransition) return;
+        bool finished = !FreeplayAborted && (scriptedCompletion || musicClip != null
+            && stopwatch.Elapsed.TotalMilliseconds >= musicClip.length * 1000 - 100);
+        if (!afterTransition && finished && (!VanillaStoryCampaign.Running || VanillaStoryCampaign.IsLastSong))
+        {
+            enteringResults = true;
+            songSetupDone = false;
+            songStarted = false;
+            Player.instance?.ClearInput();
+            foreach (AudioSource source in musicSources) source.Stop();
+            vocalSource.Stop();
+            StartCoroutine(VanillaResultsScreen.Enter(() => FinishSong(scriptedCompletion, true)));
+            return;
+        }
+        MenuV2.startPhase = MenuV2.StartPhase.SongList;
+
+        LeanTween.cancelAll();
+
+        stopwatch?.Stop();
+        beatStopwatch?.Stop();
+
+        bool completed = !FreeplayAborted && (scriptedCompletion || musicClip != null
+            && stopwatch.Elapsed.TotalMilliseconds >= musicClip.length * 1000 - 100);
+
+        if (usingSubtitles)
+        {
+            subtitleDisplayer.StopSubtitles();
+            subtitleDisplayer.paused = false;
+            usingSubtitles = false;
+
+        }
+
+        girlfriendAnimator.Play("GF Dance Loop");
+        boyfriendAnimator.Play("BF Idle Loop");
+
+        Player.demoMode = false;
+
+        songSetupDone = false;
+        songStarted = false;
+        foreach (List<NoteObject> noteList in player1NotesObjects.ToList())
+        {
+            foreach (NoteObject noteObject in noteList.ToList())
+            {
+                noteList.Remove(noteObject);
+            }
+        }
+
+        foreach (List<NoteObject> noteList in player2NotesObjects.ToList())
+        {
+            foreach (NoteObject noteObject in noteList.ToList())
+            {
+                noteList.Remove(noteObject);
+
+            }
+        }
+
+        leftNotesPool.ReleaseAll();
+        downNotesPool.ReleaseAll();
+        upNotesPool.ReleaseAll();
+        rightNotesPool.ReleaseAll();
+        holdNotesPool.ReleaseAll();
+
+        battleCanvas.enabled = false;
+
+        player1Notes.gameObject.SetActive(false);
+        player2Notes.gameObject.SetActive(false);
+
+        healthBar.SetActive(false);
+
+        menuScreen.SetActive(false);
+
+        string highScoreSave = currentSongMeta.songName + currentSongMeta.bundleMeta.bundleName +
+            difficulty.ToLower() +
+            modeOfPlay;
+
+        int playerNotes = _noteBehaviours.Count(note => note.noteData.ConvertToNote()[1] > 3 ? !note.section.MustHitSection : note.section.MustHitSection);
+        var rankChange = VanillaFreeplayCatalog.SaveCompletion(currentSongMeta, difficulty, modeOfPlay, playerOneStats,
+            completed && !Pause.PracticeMode, playerNotes);
+
+        int overallScore = 0;
+
+        int currentHighScore = PlayerPrefs.GetInt(highScoreSave, 0);
+
+        switch (modeOfPlay)
+        {
+            case PlayModes.Boyfriend:
+                overallScore = playerOneStats.currentScore;
+                break;
+            case PlayModes.Opponent:
+                overallScore = playerTwoStats.currentScore;
+                break;
+            case PlayModes.Autoplay:
+                overallScore = 0;
+                break;
+        }
+
+        bool newHighscore = completed && !Pause.PracticeMode && modeOfPlay != PlayModes.Autoplay && overallScore > currentHighScore;
+        if (newHighscore)
+        {
+            PlayerPrefs.SetInt(highScoreSave, overallScore);
+            PlayerPrefs.Save();
+        }
+
+        bool storyResults = VanillaStoryCampaign.Running;
+        int previousWeekScore = storyResults ? VanillaStoryCampaign.HighScore(VanillaStoryCampaign.LevelId, difficulty) : 0;
+        var results = VanillaResultsData.Capture(modeOfPlay == PlayModes.Opponent ? playerTwoStats : playerOneStats,
+            modeOfPlay == PlayModes.Opponent ? _noteBehaviours.Count - playerNotes : playerNotes);
+        if (modeOfPlay == PlayModes.Autoplay && Player.instance != null)
+        {
+            results.sick = results.totalNotesHit = Player.instance.Strumlines[0].HeadsHit;
+            results.missed = Math.Max(0, playerNotes - results.totalNotesHit);
+            results.maxCombo = results.totalNotesHit;
+        }
+        string resultTitle = currentSongMeta.GetVariation(difficulty)?.songName ?? currentSongMeta.songName;
+        var resultCredits = currentSongMeta.GetVariation(difficulty)?.credits ?? currentSongMeta.credits;
+        if (resultCredits != null && resultCredits.TryGetValue("Composer", out string resultArtist)) resultTitle += " by " + resultArtist;
+        string resultDifficulty = difficulty;
+        string resultCharacter = vanillaPlayback?.PlayerId ?? _song.Player1;
+        bool nextStorySong = VanillaStoryCampaign.CompleteSong(currentSongMeta, difficulty, modeOfPlay, overallScore,
+            completed, !Pause.PracticeMode, results);
+        if (storyResults && !nextStorySong && completed)
+        {
+            results = VanillaStoryCampaign.Results;
+            resultTitle = VanillaStoryCatalog.Load().Find(level => level.id == VanillaStoryCampaign.LevelId)?.name ?? resultTitle;
+            newHighscore = !Pause.PracticeMode && VanillaStoryCampaign.Score > previousWeekScore
+                && VanillaStoryCampaign.HighScore(VanillaStoryCampaign.LevelId, resultDifficulty) > previousWeekScore;
+        }
+        results.title = resultTitle;
+        results.difficulty = resultDifficulty;
+        results.characterId = resultCharacter;
+        results.storyMode = storyResults;
+        results.newHighscore = newHighscore;
+        results.rankImproved = rankChange != null && !storyResults;
+        Pause.ResetSession();
+        if (completed && !nextStorySong)
+        {
+            if (!storyResults) VanillaFreeplay.PrepareResultsReturn(currentSongMeta, resultDifficulty, modeOfPlay, results.Character, rankChange);
+            foreach (AudioSource source in musicSources) source.Stop();
+            vocalSource.Stop();
+            Player.instance?.ClearInput();
+            VanillaResultsScreen.Open(results, () =>
+            {
+                SceneManager.LoadScene("Title");
+                DiscordController.instance.EnableGameStateLoop = false;
+            });
+            return;
+        }
+        LoadingTransition.instance.LoadScene(nextStorySong ? "Game_Backup3" : "Title", () => DiscordController.instance.EnableGameStateLoop = false);
+    }
+
     private void HandleManualStartExit(bool pressed)
     {
         if (!pressed || vanillaPlayback != null) return;
-        LoadingTransition.instance.Show(() =>
-        {
-            SceneManager.LoadScene("Title");
-            DiscordController.instance.EnableGameStateLoop = false;
-        });
+        LoadingTransition.instance.LoadScene("Title", () => DiscordController.instance.EnableGameStateLoop = false);
     }
 
     public void QuitSong()
@@ -1334,6 +1499,7 @@ public partial class Song : MonoBehaviour
         int side = note.mustHit ? 0 : 1;
         var line = Player.instance.Strumlines[side];
         double position = SongPosition - Player.visualOffset;
+        if (vanillaPlayback?.CampaignStage?.Week == 8 && !vanillaPlayback.CampaignStage.CanHitWeekendNote(note.mustHit ? 0 : 1, note.type, note.State.Time)) return;
         line.Hit(note.State, position - note.strumTime - Player.inputOffset, !line.Controlled || Player.demoMode, position);
     }
 
@@ -1429,7 +1595,7 @@ public partial class Song : MonoBehaviour
             }
             else if (!songStarted && !IsCountingDown && !musicSources[0].isPlaying)
             {
-                HandleManualStartExit(Input.GetKeyDown(Player.keybinds.pauseKeyCode));
+                HandleManualStartExit(Input.GetKeyDown(Player.keybinds.pauseKeyCode) || Player.ControllerBackPressed);
             }
             
             
@@ -1444,7 +1610,7 @@ public partial class Song : MonoBehaviour
                     {
                         if (!respawning)
                         {
-                            if (Input.GetKeyDown(Player.pauseKey))
+                            if (VanillaControls.Pressed("ACCEPT") || VanillaControls.Pressed("PAUSE"))
                             {
                                 musicSources[0].Stop();
                                 respawning = true;
@@ -1456,23 +1622,15 @@ public partial class Song : MonoBehaviour
 
                                 deathBlackout.rectTransform.LeanAlpha(1, 1.8f).setDelay(1).setOnComplete(() =>
                                 {
-                                    LoadingTransition.instance.Show(() =>
-                                    {
-                                        SceneManager.LoadScene("Game_Backup3");
-                                        DiscordController.instance.EnableGameStateLoop = false;
-                                    });
+                                    LoadingTransition.instance.LoadScene("Game_Backup3", () => DiscordController.instance.EnableGameStateLoop = false);
                                 });
-                            } else if (Input.GetKeyDown(KeyCode.Escape))
+                            } else if (Input.GetKeyDown(KeyCode.Escape) || Player.ControllerBackPressed)
                             {
                                 Pause.ResetSession();
                                 musicSources[0].Stop();
                                 respawning = true;
 
-                                LoadingTransition.instance.Show(() =>
-                                {
-                                    SceneManager.LoadScene("Title");
-                                    DiscordController.instance.EnableGameStateLoop = false;
-                                });
+                                LoadingTransition.instance.LoadScene("Title", () => DiscordController.instance.EnableGameStateLoop = false);
                             }
                         }
                     }
@@ -1524,7 +1682,7 @@ public partial class Song : MonoBehaviour
                         LeanTween.move(deadCamera.gameObject, newPos, .5f).setEaseOutExpo();
                         vanillaPlayback?.CharacterStage?.BeginDeath();
 
-                        LeanTween.delayedCall(2.417f, () =>
+                        LeanTween.delayedCall(vanillaPlayback?.CampaignStage != null ? vanillaPlayback.CampaignStage.DeathDuration : vanillaPlayback?.PlayerId.StartsWith("pico") == true ? 35f / 24 : 2.417f, () =>
                         {
                             if (!respawning)
                             {
@@ -1543,113 +1701,7 @@ public partial class Song : MonoBehaviour
             if (!musicSources[0].isPlaying & songStarted & !isDead & !respawning & !Pause.instance.pauseScreen.activeSelf & !Pause.instance.editingVolume)
             {
                 if (vanillaPlayback != null && vanillaPlayback.Presentation != null && !vanillaPlayback.Presentation.AllowEnd(this)) return;
-                //Song is done.
-                
-                MenuV2.startPhase = MenuV2.StartPhase.SongList;
-                
-
-                LeanTween.cancelAll();
-
-                stopwatch.Stop();
-                beatStopwatch.Stop();
-
-                if (usingSubtitles)
-                {
-                    subtitleDisplayer.StopSubtitles();
-                    subtitleDisplayer.paused = false;
-                    usingSubtitles = false;
-
-                }
-
-                girlfriendAnimator.Play("GF Dance Loop");
-                boyfriendAnimator.Play("BF Idle Loop");
-
-
-                Player.demoMode = false;
-
-                songSetupDone = false;
-                songStarted = false;
-                foreach (List<NoteObject> noteList in player1NotesObjects.ToList())
-                {
-                    foreach (NoteObject noteObject in noteList.ToList())
-                    {
-                        noteList.Remove(noteObject);
-                    }
-                }
-                
-                
-                foreach (List<NoteObject> noteList in player2NotesObjects.ToList())
-                {
-                    foreach (NoteObject noteObject in noteList.ToList())
-                    {
-                        noteList.Remove(noteObject);
-                        
-                    }
-                }
-                
-                leftNotesPool.ReleaseAll();
-                downNotesPool.ReleaseAll();
-                upNotesPool.ReleaseAll();
-                rightNotesPool.ReleaseAll();
-                holdNotesPool.ReleaseAll();
-                
-                battleCanvas.enabled = false;
-                
-                player1Notes.gameObject.SetActive(false);
-                player2Notes.gameObject.SetActive(false);
-
-                healthBar.SetActive(false);
-
-                
-                menuScreen.SetActive(false);
-                
-                string highScoreSave = currentSongMeta.songName + currentSongMeta.bundleMeta.bundleName +
-                    difficulty.ToLower() +
-                    modeOfPlay;
-
-                var rankChange = VanillaFreeplayCatalog.SaveCompletion(currentSongMeta, difficulty, modeOfPlay, playerOneStats,
-                    !FreeplayAborted && !Pause.PracticeMode && musicClip != null && stopwatch.Elapsed.TotalMilliseconds >= musicClip.length * 1000 - 100,
-                    _noteBehaviours.Count(note => note.noteData.ConvertToNote()[1] > 3 ? !note.section.MustHitSection : note.section.MustHitSection));
-                if (VanillaFreeplay.ReturnToFreeplay && !VanillaStoryCampaign.Running) VanillaFreeplay.QueueRankReturn(rankChange);
-
-                int overallScore = 0;
-                
-                int currentHighScore = PlayerPrefs.GetInt(highScoreSave, 0);
-
-                switch (modeOfPlay)
-                {
-                    //Boyfriend
-                    case PlayModes.Boyfriend:
-                        overallScore = playerOneStats.currentScore;
-                        break;
-                    //Opponent
-                    case PlayModes.Opponent:
-                        overallScore = playerTwoStats.currentScore;
-                        break;
-                    //Auto
-                    case PlayModes.Autoplay:
-                        overallScore = 0;
-                        break;
-                }
-
-                if (!FreeplayAborted && !Pause.PracticeMode && overallScore > currentHighScore)
-                {
-                    PlayerPrefs.SetInt(highScoreSave, overallScore);
-                    PlayerPrefs.Save();
-                }
-                
-                bool nextStorySong = VanillaStoryCampaign.CompleteSong(currentSongMeta, difficulty, modeOfPlay, overallScore,
-                    !FreeplayAborted && musicClip != null && stopwatch.Elapsed.TotalMilliseconds >= musicClip.length * 1000 - 100, !Pause.PracticeMode);
-                Pause.ResetSession();
-                LoadingTransition.instance.Show(() => 
-                { 
-                    SceneManager.LoadScene(nextStorySong ? "Game_Backup3" : "Title");
-                    DiscordController.instance.EnableGameStateLoop = false; 
-                });
-
-
-
-                
+                FinishSong(false);
             }
         }
         else

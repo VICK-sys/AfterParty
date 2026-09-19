@@ -22,6 +22,7 @@ public class SubtitleDisplayer : MonoBehaviour
 
   public void StartSubtitles()
   {
+    if (!VanillaPreferences.Subtitles) { StopSubtitles(); return; }
     if (process != null)
     {
       StopCoroutine(process);

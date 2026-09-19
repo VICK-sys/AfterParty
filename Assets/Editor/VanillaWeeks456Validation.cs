@@ -15,7 +15,7 @@ public static class VanillaWeeks456Validation
     public static void CheckAssets()
     {
         var levels = VanillaStoryCatalog.Load();
-        Require(levels.Count == 7, "Expected Tutorial and six installed weeks.");
+        Require(levels.Count == 9, "Expected Tutorial, seven weeks, and Weekend 1.");
         foreach (int week in new[] { 4, 5, 6 })
         {
             var level = levels.Single(item => item.id == "week" + week);

@@ -8,8 +8,12 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [DefaultExecutionOrder(100)]
-public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
+public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
 {
+    private static readonly float[] MistSpeeds = { 1700, 2100, 900, 700, 100 };
+    private static readonly float[] MistCenters = { 100, 0, -20, -180, -450 };
+    private static readonly float[] MistWaves = { 200, 100, 200, 300, 150 };
+    private static readonly float[] MistFrequencies = { 1, .8f, .5f, .4f, .2f };
     public Vector3[] CameraTargets { get; } = new Vector3[3];
     public float CameraZoom { get; private set; }
     public string StageId { get; private set; }
@@ -45,6 +49,10 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
     private AudioSource sound;
     private VanillaWeek2Graphic death;
     private Vector3 deathTarget;
+    private VanillaMixCompanion companion;
+    private bool eggnogOutroActive;
+    private VanillaWeek2Graphic outroSanta;
+    private VanillaWeek2Graphic outroParents;
 
     private sealed class Actor
     {
@@ -56,15 +64,21 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
         public float holdTimer;
         public bool alternate;
         public bool locked;
+        public bool bloody;
+        public bool hidden;
+        public readonly List<VanillaWeek2Graphic> alternates = new List<VanillaWeek2Graphic>();
 
-        public void Play(string name, bool protect = false)
+        public void Play(string name, bool protect = false, bool reverse = false)
         {
-            var target = graphic.Has(name) ? graphic : censor != null && censor.Has(name) ? censor : null;
+            if (bloody && (graphic.Has(name + "-bloody") || censor != null && censor.Has(name + "-bloody") || alternates.Any(item => item.Has(name + "-bloody")))) name += "-bloody";
+            var target = graphic.Has(name) ? graphic : censor != null && censor.Has(name) ? censor : alternates.FirstOrDefault(item => item.Has(name));
             if (target == null) return;
-            graphic.gameObject.SetActive(target == graphic);
-            if (censor != null) censor.gameObject.SetActive(target == censor);
+            graphic.gameObject.SetActive(!hidden && target == graphic);
+            if (censor != null) censor.gameObject.SetActive(!hidden && target == censor);
+            foreach (var item in alternates) item.gameObject.SetActive(!hidden && item == target);
             current = target;
-            current.Play(name);
+            current.Play(name, reverse);
+            if (id == "tankman-bloody" && name == "redheadsAnim") bloody = true;
             locked = protect;
         }
 
@@ -112,7 +126,7 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
     private void Load()
     {
         StageId = (string)chart["stage"];
-        Week = StageId.StartsWith("mainStage") ? 1 : StageId.StartsWith("limo") ? 4 : StageId.StartsWith("mall") ? 5 : 6;
+        Week = StageId.StartsWith("mainStage") ? 1 : StageId.StartsWith("limo") ? 4 : StageId.StartsWith("mall") ? 5 : StageId.StartsWith("school") ? 6 : StageId.StartsWith("tankman") ? 7 : 8;
         root = Path.Combine(Application.streamingAssetsPath, "Bundles/Week" + Week + "Assets");
         string directory = Path.Combine(root, "stages", StageId);
         stageData = JObject.Parse(File.ReadAllText(Path.Combine(directory, "stage.json")));
@@ -141,8 +155,10 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             }
             var graphic = Graphic(Path.Combine(directory, name), name, (int?)prop["zIndex"] ?? 0);
             graphic.Position = Point(prop["position"]);
+            graphic.Angle = (float?)prop["angle"] ?? 0;
             graphic.Scroll = Scale(prop["scroll"]);
             graphic.Alpha = (float?)prop["alpha"] ?? 1;
+            graphic.FlipX = (bool?)prop["flipX"] ?? false;
             graphic.transform.localScale = new Vector3(scale.x, scale.y, 1);
             props.Add(name, graphic);
             graphic.Additive = StageId == "limoRideErect" && name == "shootingStar";
@@ -173,9 +189,12 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             JToken placement = stageData["characters"][stageRoles[index]];
             if (index == 1 && id == "gf") placement = stageData["characters"]["gf"];
             var graphic = Graphic(folder, id, (int)placement["zIndex"]);
+            Vector2 hitbox = graphic.HitboxSize;
+            if ((string)chart["variation"] == "pico" || (string)chart["variation"] == "bf")
+                hitbox = new Vector2((int)hitbox.x, (int)hitbox.y);
             float scale = ((float?)character["scale"] ?? 1) * ((float?)placement["scale"] ?? 1);
             graphic.transform.localScale = new Vector3(scale, scale, 1);
-            graphic.Position = Point(placement["position"]) + new Vector3(-graphic.Size.x * scale / 200, graphic.Size.y * scale / 100, 0)
+            graphic.Position = Point(placement["position"]) + new Vector3(-hitbox.x * scale / 200, hitbox.y * scale / 100, 0)
                 + Point(character["offsets"]);
             graphic.GlobalOffset = Point(character["offsets"]);
             graphic.FlipX = index == 0 ? !((bool?)character["flipX"] ?? false) : (bool?)character["flipX"] ?? false;
@@ -185,11 +204,11 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
                 : index == 1 ? new Vector4(-32, 0, -33, -23) : new Vector4(-9, 0, -30, -4);
             if (StageId == "schoolErect")
             {
-                string mask = index == 0 ? "bfPixel_mask" : index == 1 ? "senpai_mask" : "gfPixel_mask";
+                string mask = id == "pico-pixel" ? "picoPixel_mask" : id == "nene-pixel" ? "nenePixel_mask" : index == 0 ? "bfPixel_mask" : index == 1 ? "senpai_mask" : "gfPixel_mask";
                 graphic.SetRim(Path.Combine(root, "effects", mask + ".png"), index == 2 ? 3 : 5, index == 2 ? .3f : .1f,
                     index == 2 ? new Vector4(-10, -25, -42, 5) : new Vector4(-10, -23, -66, 24));
             }
-            CameraTargets[index] = Point(placement["position"]) + new Vector3(0, graphic.Size.y * scale / 200, -10)
+            CameraTargets[index] = Point(placement["position"]) + new Vector3(0, hitbox.y * scale / 200, -10)
                 + Point(character["offsets"]) + Point(character["cameraOffsets"]) + Point(placement["cameraOffsets"]);
             var actor = new Actor { id = id, data = character, graphic = graphic, current = graphic };
             if (Directory.Exists(Path.Combine(folder, "censor")))
@@ -202,6 +221,18 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
                 actor.censor.ColorAdjustment = graphic.ColorAdjustment;
                 actor.censor.gameObject.SetActive(false);
             }
+            if (Directory.Exists(folder))
+                foreach (string extra in Directory.GetDirectories(folder).Where(path => Path.GetFileName(path).StartsWith("alternate")))
+                {
+                    var alternate = Graphic(extra, id + " alternate", (int)placement["zIndex"]);
+                    alternate.Position = graphic.Position;
+                    alternate.GlobalOffset = graphic.GlobalOffset;
+                    alternate.transform.localScale = graphic.transform.localScale;
+                    alternate.FlipX = graphic.FlipX;
+                    alternate.ColorAdjustment = graphic.ColorAdjustment;
+                    alternate.gameObject.SetActive(false);
+                    actor.alternates.Add(alternate);
+                }
             actors[index] = actor;
         }
         foreach (GameObject character in new[] { song.boyfriendObject, song.opponentObject, song.girlfriendObject })
@@ -222,6 +253,17 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
                 trail.Alpha = .3f - index * .069f;
                 trails.Add(trail);
             }
+        if (Week == 7) LoadWeek7();
+        if (Week == 8) LoadWeekend1();
+        if (Week != 8 && (actors[2].id.StartsWith("nene") || actors[2].id == "otis-speaker"))
+        {
+            companion = new VanillaMixCompanion();
+            companion.Initialize(song, actors[2].id, (int)stageData["characters"]["gf"]["zIndex"],
+                (path, order) => Graphic(Path.Combine(root, path), Path.GetFileName(path), order),
+                animation => actors[2].Play(animation, true), () => actors[2].current, SortRenderer);
+            companion.ApplyLighting(root, Week);
+        }
+        if ((string)chart["song"] == "eggnog" && StageId == "mallXmasErect") PrepareEggnogGraphics();
         ResetStage();
     }
 
@@ -258,6 +300,8 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
 
     public void ResetStage()
     {
+        if (eggnogOutroActive) props["santa"].gameObject.SetActive(true);
+        eggnogOutroActive = false;
         if (death != null) Destroy(death.gameObject);
         lastBeat = -1;
         lastDanceStep = int.MinValue;
@@ -274,7 +318,9 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             }
         foreach (Actor actor in actors)
         {
+            actor.hidden = false;
             actor.holdTimer = 0;
+            actor.bloody = false;
             actor.locked = actor.alternate = false;
             actor.Play((string)actor.data["startingAnimation"] ?? "idle");
         }
@@ -283,6 +329,9 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
         if (props.ContainsKey("freaks")) DanceProp("freaks", 0);
         trailAnimations.Clear();
         foreach (var trail in trails) { trail.Play("idle"); trail.gameObject.SetActive(false); }
+        if (Week == 7) ResetWeek7();
+        if (Week == 8) ResetWeekend1();
+        companion?.Reset();
         Render(0);
     }
 
@@ -294,10 +343,18 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
     private void SingKind(int side, int direction, bool miss, string kind)
     {
         if (kind == "noanim") return;
+        if (Week == 8 && WeekendNote(side, kind, miss)) return;
         Actor actor = actors[side];
+        if (side == 1 && Week == 7 && (kind == "ugh" || kind == "hehPrettyGood"))
+        {
+            SpecialNoteHits++;
+            actor.Play(kind, true);
+            actor.holdTimer = 0;
+            return;
+        }
         string name = "sing" + new[] { "LEFT", "DOWN", "UP", "RIGHT" }[direction] + (miss ? "miss" : "")
-            + (kind == "mom" ? "-alt" : kind == "censor" ? "-censor" : "");
-        if (!actor.graphic.Has(name) && (actor.censor == null || !actor.censor.Has(name))) name = name.Replace("miss", "");
+            + (kind == "mom" ? "-alt" : kind == "censor" && !VanillaPreferences.Naughtyness ? "-censor" : "");
+        if (!actor.graphic.Has(name) && (actor.censor == null || !actor.censor.Has(name)) && !actor.alternates.Any(item => item.Has(name))) name = name.Replace("miss", "");
         actor.Play(name);
         if (!miss) actor.holdTimer = 0;
     }
@@ -307,6 +364,7 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
         var notes = chart["noteKinds"]?[Song.difficulty.ToLowerInvariant()];
         string kind = (string)notes?.FirstOrDefault(n => (int)n["d"] == direction + side * 4 && Math.Abs((double)n["t"] - time) < .02)?["k"];
         SingKind(side, direction, false, kind);
+        if (Week == 8 && StageId == "phillyBlazin") rainTimeScale += .7f;
     }
 
     public void Press(int side)
@@ -365,6 +423,7 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
     private void DanceProp(string name, int beat)
     {
         var prop = props[name];
+        if (Week == 7 && name == "sniper" && prop.Animation == "sip" && !prop.Finished) return;
         string suffix = name == "freaks" && (string)chart["song"] == "roses" ? "-scared" : "";
         prop.Play(prop.Has("danceLeft" + suffix) ? (beat % 2 == 0 ? "danceLeft" : "danceRight") + suffix : "idle");
     }
@@ -376,49 +435,75 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             float every = (float?)prop["danceEvery"] ?? 0;
             if (every > 0 && Mathf.Abs(beat % every) < .001f) DanceProp((string)prop["name"], beat);
         }
+        if (Week == 8) WeekendBeat(beat);
         if (Week == 4 && UnityEngine.Random.value < .1f) DriveCar(Time.deltaTime);
         if (StageId == "limoRideErect" && beat > starBeat + starOffset && UnityEngine.Random.value < .1f) ShootStar(beat);
+        if (StageId == "tankmanBattlefieldErect" && UnityEngine.Random.value < .02f) props["sniper"].Play("sip");
     }
 
     public void BeginDeath()
     {
-        death = Graphic(Path.Combine(root, "characters", actors[0].id, "death"), "Boyfriend Death", 0);
+        string folder = Path.Combine(root, "characters", actors[0].id);
+        death = Graphic(Week == 8 ? WeekendDeathPath() : Directory.Exists(Path.Combine(folder, "death")) ? Path.Combine(folder, "death") : folder, "Player Death", 0);
         death.gameObject.layer = song.deadBoyfriend.layer;
         death.transform.localScale = actors[0].graphic.transform.localScale;
         death.Position = actors[0].graphic.Position;
         death.GlobalOffset = actors[0].graphic.GlobalOffset;
-        death.Play("firstDeath");
+        death.Play(Week == 8 && explosionDeath ? "firstDeath-explosion" : "firstDeath");
         foreach (SpriteRenderer renderer in song.deadBoyfriend.GetComponentsInChildren<SpriteRenderer>(true)) renderer.enabled = false;
         song.deadBoyfriendAnimator.enabled = false;
         song.deadCamera.orthographic = true;
-        float scale = (float?)actors[0].data["scale"] ?? 1;
-        deathTarget = death.Position + new Vector3(death.Size.x * scale / 200, -death.Size.y * scale / 200, -10)
+        float scale = Week == 8 ? Mathf.Abs(actors[0].graphic.transform.localScale.x) : (float?)actors[0].data["scale"] ?? 1;
+        Vector2 size = Week == 8 ? actors[0].graphic.Size : death.Size;
+        deathTarget = death.Position + new Vector3(size.x * scale / 200, -size.y * scale / 200, -10)
             + Point(actors[0].data["death"]?["cameraOffsets"]);
         LeanTween.cancel(song.deadCamera.gameObject);
         sound.Stop();
+        if (Week == 8) BeginWeekendDeath();
+        if (companion != null)
+        {
+            companion.Advance(0, song.mainCamera.transform.position, clock);
+            deathKnife = companion.DeathKnife();
+        }
+        if (Week == 7) StartCoroutine(LoadDeathQuote());
     }
 
-    public void PlayDeath(string animation) { if (death != null) death.Play(animation); }
+    public void PlayDeath(string animation)
+    {
+        if (death != null) death.Play(Week == 8 && explosionDeath ? animation + "-explosion" : animation);
+        if (Week == 7) Week7Death(animation);
+        if (Week == 8) WeekendDeathAnimation(animation);
+    }
 
     private void LateUpdate()
     {
         if (song == null) return;
+        if (eggnogOutroActive) return;
         if (song.isDead)
         {
             if (death != null)
             {
                 float amount = 1 - Mathf.Pow(.98f, Time.deltaTime * 60);
                 song.deadCamera.transform.position = Vector3.Lerp(song.deadCamera.transform.position, deathTarget, amount);
-                song.deadCamera.orthographicSize = Mathf.Lerp(song.deadCamera.orthographicSize, 3.6f / CameraZoom, amount);
+                float deathZoom = Week == 8 ? (float?)actors[0].data["death"]?["cameraZoom"] ?? 1 : 1;
+                song.deadCamera.orthographicSize = Mathf.Lerp(song.deadCamera.orthographicSize, 3.6f / (CameraZoom * deathZoom), amount);
                 death.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
+                if (Week == 7) AdvanceDeathQuote(Time.deltaTime);
+                if (deathKnife != null)
+                {
+                    deathKnife.Advance(Time.deltaTime, song.deadCamera.transform.position, clock);
+                    if (deathKnife.Finished) deathKnife.gameObject.SetActive(false);
+                }
             }
             return;
         }
-        bool paused = song.songStarted && !song.musicSources[0].isPlaying || Pause.instance != null && Pause.instance.pauseScreen.activeSelf;
+        bool paused = song.songStarted && !song.musicSources[0].isPlaying && song.vanillaPlayback.Presentation?.Busy != true || Pause.instance != null && Pause.instance.pauseScreen.activeSelf;
         if (paused) { sound.Pause(); return; }
         sound.UnPause();
         float delta = Time.deltaTime;
         clock += delta;
+        if (Week == 7) AdvanceWeek7(delta, song.SongPosition - Pause.GlobalOffset);
+        if (Week == 8) AdvanceWeekend1(delta);
         if (CarDriving)
         {
             props["fastCar"].Position += Vector3.right * (carVelocity * delta);
@@ -432,16 +517,19 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             {
                 string hold = actor.current.Animation + "-hold";
                 if (actor.current.Has(hold)) actor.Play(hold);
+                else if (actor.current.Has(actor.current.Animation + "-loop")) actor.Play(actor.current.Animation + "-loop");
                 else if (actor.id == "gf-car" && actor.current.Has("idle-hold")) actor.Play("idle-hold");
             }
             actor.UpdateSinging(delta, song.stepCrochet, VanillaCharacterTiming.IsHoldingInput(index));
         }
         VanillaCharacterTiming.Advance(song, ref lastDanceStep, step =>
         {
-            foreach (Actor actor in actors)
+            if (Week == 7 && step % 4 == 0) Beat(step / 4);
+            foreach (Actor actor in actors.Where(actor => actor.id != "pico-speaker" && !actor.id.EndsWith("-blazin") && (actor != actors[2] || (companion == null ? actor.id != "nene" || neneState == 0 : !companion.BlocksDance))))
                 if (actor.current.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
+            if (step % 4 == 0) companion?.Beat();
         });
-        if (song.songStarted)
+        if (song.songStarted && Week != 7)
         {
             int beat = Mathf.FloorToInt(song.vanillaPlayback.BeatAt(song.SongPosition));
             while (lastBeat < beat) Beat(++lastBeat);
@@ -471,31 +559,43 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             solid.renderer.transform.localPosition = solid.position + new Vector3(scrollOrigin.x*(1-solid.scroll.x),scrollOrigin.y*(1-solid.scroll.y));
         foreach (var prop in props.Values) prop.Advance(delta, camera, clock);
         foreach (Actor actor in actors) actor.current.Advance(delta, camera, clock);
+        companion?.Advance(delta, camera, clock);
         foreach (var trail in trails) trail.Advance(0, camera, clock);
-        float[] speeds = { 1700, 2100, 900, 700, 100 };
-        float[] centers = { 100, 0, -20, -180, -450 };
-        float[] waves = { 200, 100, 200, 300, 150 };
-        float[] frequencies = { 1, .8f, .5f, .4f, .2f };
+        if (Week == 7) RenderWeek7(delta, camera);
+        if (Week == 8) RenderWeekend1(delta, camera);
         for (int i = 0; i < mist.Count; i++)
         {
             int layer = i / 5;
             var graphic = mist[i];
             float width = graphic.Size.x * graphic.transform.localScale.x;
-            graphic.Position = new Vector3((-650 + (clock * speeds[layer] % width) + (i % 5 - 2) * width) / 100,
-                -(centers[layer] + Mathf.Sin(clock * frequencies[layer]) * waves[layer]) / 100, 0);
+            graphic.Position = new Vector3((-650 + (clock * MistSpeeds[layer] % width) + (i % 5 - 2) * width) / 100,
+                -(MistCenters[layer] + Mathf.Sin(clock * MistFrequencies[layer]) * MistWaves[layer]) / 100, 0);
             graphic.Advance(delta, camera, clock);
+        }
+    }
+
+    private void PrepareEggnogGraphics()
+    {
+        if (outroSanta != null) return;
+        outroSanta = Graphic(Path.Combine(root,"cutscene/santa_speaks_assets"),"Santa Outro",209);
+        outroParents = Graphic(Path.Combine(root,"cutscene/parents_shoot_assets"),"Parents Outro",208);
+        outroSanta.Position = new Vector3(-13,-1,0);
+        outroParents.Position = new Vector3(-6.02f,.035f,0);
+        foreach (var graphic in new[] { outroSanta, outroParents })
+        {
+            graphic.gameObject.SetActive(false);
+            graphic.ColorAdjustment = new Vector4(5,20,0,0);
+            graphic.WarmFrames();
+            graphic.Advance(0, song.mainCamera.transform.position, clock);
         }
     }
 
     public IEnumerator EggnogOutro()
     {
-        props["santa"].gameObject.SetActive(false);
-        actors[1].current.gameObject.SetActive(false);
-        var santa = Graphic(Path.Combine(root,"cutscene/santa_speaks_assets"),"Santa Outro",209);
-        var parents = Graphic(Path.Combine(root,"cutscene/parents_shoot_assets"),"Parents Outro",208);
-        santa.Position = new Vector3(-13,-1,0);
-        parents.Position = new Vector3(-6.02f,.035f,0);
-        santa.ColorAdjustment = parents.ColorAdjustment = new Vector4(5,20,0,0);
+        eggnogOutroActive = true;
+        PrepareEggnogGraphics();
+        var santa = outroSanta;
+        var parents = outroParents;
         AudioClip emotion = null;
         AudioClip shot = null;
         foreach (string name in new[] { "santa_emotion", "santa_shot_n_falls" })
@@ -506,27 +606,44 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
                 if (name == "santa_emotion") emotion = DownloadHandlerAudioClip.GetContent(request);
                 else shot = DownloadHandlerAudioClip.GetContent(request);
             }
-        sound.clip = emotion;
-        sound.Play();
+        props["santa"].gameObject.SetActive(false);
+        actors[1].hidden = true;
+        actors[1].current.gameObject.SetActive(false);
         santa.Play("cutscene");
         parents.Play("cutscene");
+        santa.gameObject.SetActive(true);
+        parents.gameObject.SetActive(true);
         Vector3 from = song.mainCamera.transform.position;
         float fromZoom = song.mainCamera.orthographicSize;
         bool fired = false;
         float skipAt = -1;
+        float skipFadeAt = -1;
         var skipText = song.vanillaPlayback.Presentation.CreateSkipText();
         var fade = song.vanillaPlayback.Presentation.CreateFade();
-        for (float time = 0; time < 16; time += Time.deltaTime)
+        sound.clip = emotion;
+        sound.Play();
+        double started = AudioSettings.dspTime;
+        float previousTime = 0;
+        while (true)
         {
-            bool advance = Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape);
-            if (advance)
+            float time = (float)(AudioSettings.dspTime - started);
+            float delta = time - previousTime;
+            previousTime = time;
+            if (time >= 16 || skipFadeAt >= 0 && time - skipFadeAt >= .5f) break;
+            bool advance = song.vanillaPlayback.Presentation.TakeAdvanceInput();
+            if (advance && skipFadeAt < 0)
             {
-                if (skipAt >= 0 && time - skipAt >= .5f) break;
-                skipAt = time;
+                if (skipAt < 0) skipAt = time;
+                else if (time - skipAt >= .5f)
+                {
+                    skipFadeAt = time;
+                    sound.Stop();
+                }
             }
-            if (skipAt >= 0) skipText.color = new Color(1,1,1,Mathf.Clamp01((time-skipAt)/.5f));
-            fade.color = new Color(0,0,0,Mathf.Clamp01(time-15));
-            if (!fired && time >= 11.375f) { sound.PlayOneShot(shot); fired = true; }
+            float skipFade = skipFadeAt < 0 ? 0 : Mathf.Clamp01((time-skipFadeAt)/.5f);
+            if (skipAt >= 0) skipText.color = new Color(1,1,1,Mathf.Clamp01((time-skipAt)/.5f)*(1-skipFade));
+            fade.color = new Color(0,0,0,Mathf.Max(Mathf.Clamp01(time-15),skipFade));
+            if (!fired && time >= 11.375f && skipFadeAt < 0) { sound.PlayOneShot(shot); fired = true; }
             Vector3 target = new Vector3(-1,-4,-10);
             if (time < 2.8f) song.mainCamera.transform.position = Vector3.Lerp(from,target,1-Mathf.Pow(2,-10*time/2.8f));
             else if (time < 12.83f)
@@ -538,19 +655,20 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
             else song.mainCamera.transform.position = Vector3.Lerp(new Vector3(-2.5f,-4,-10),new Vector3(-2.4f,-4.8f,-10),1-Mathf.Pow(2,-10*(time-12.83f)/5));
             if (time >= 12.83f && time < 13.03f)
                 song.mainCamera.transform.position += new Vector3(UnityEngine.Random.Range(-.064f,.064f),UnityEngine.Random.Range(-.036f,.036f),0);
-            float zoomT = Mathf.Clamp01(time / 2);
+            float zoomT = Mathf.Clamp01(time < 2.8f ? time / 2 : (time-2.8f)/9);
             float zoomEase = zoomT < .5f ? 2*zoomT*zoomT : 1-Mathf.Pow(-2*zoomT+2,2)/2;
-            song.mainCamera.orthographicSize = time < 2.8f ? Mathf.Lerp(fromZoom,3.6f/.73f,zoomEase)
-                : Mathf.Lerp(3.6f/.73f,3.6f/.79f,Mathf.Clamp01((time-2.8f)/9));
-            Render(Time.deltaTime);
-            santa.Advance(Time.deltaTime,song.mainCamera.transform.position,clock);
-            parents.Advance(Time.deltaTime,song.mainCamera.transform.position,clock);
+            float zoom = time < 2.8f ? Mathf.Lerp(3.6f/fromZoom,.73f,zoomEase) : Mathf.Lerp(.73f,.79f,zoomEase);
+            song.mainCamera.orthographicSize = 3.6f/zoom;
+            clock += delta;
+            Render(delta);
+            santa.Advance(delta,song.mainCamera.transform.position,clock);
+            parents.Advance(delta,song.mainCamera.transform.position,clock);
             yield return null;
         }
         sound.Stop();
         sound.clip = null;
+        fade.color = Color.black;
         Destroy(skipText.gameObject);
-        Destroy(fade.gameObject);
         Destroy(emotion);
         Destroy(shot);
         Destroy(santa.gameObject);
@@ -564,5 +682,8 @@ public sealed class VanillaCampaignStage : MonoBehaviour, IVanillaCharacterStage
     private void OnDestroy()
     {
         foreach (AudioClip clip in carClips) if (clip != null) Destroy(clip);
+        if (deathQuote != null) Destroy(deathQuote);
+        foreach (var clip in weekendSounds.Values) if (clip != null) Destroy(clip);
+        if (rain != null) Destroy(rain);
     }
 }

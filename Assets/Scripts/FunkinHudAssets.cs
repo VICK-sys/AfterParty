@@ -43,15 +43,17 @@ public static class FunkinHudAssets
 
     public static Sprite[] Icon(string character)
     {
+        if (character.StartsWith("pico-") && character != "pico-pixel") character = "pico";
+        if (character == "darnell-blazin") character = "darnell";
         if (character == "spooky-dark") character = "spooky";
-        if (character == "bf-car" || character == "bf-christmas") character = "bf";
+        if (character == "bf-dark" || character == "bf-car" || character == "bf-christmas" || character == "bf-holding-gf") character = "bf";
         if (character == "mom-car") character = "mom";
         if (character == "parents-christmas") character = "parents";
         if (character == "monster-christmas") character = "monster";
         if (icons.TryGetValue(character, out Sprite[] frames)) return frames;
         Texture2D texture = Resources.Load<Texture2D>("FunkinHud/Icons/icon-" + character);
         if (texture == null) return Icon("face");
-        if (character == "bf-pixel" || character == "senpai" || character == "senpai-angry" || character == "spirit")
+        if (character == "bf-pixel" || character == "pico-pixel" || character == "senpai" || character == "senpai-angry" || character == "spirit")
             texture.filterMode = FilterMode.Point;
         int size = texture.height;
         frames = new Sprite[texture.width / size];

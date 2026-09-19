@@ -184,6 +184,6 @@ public class SceneEditorManager : MonoBehaviour
 
     public void ExitToMenu()
     {
-        LoadingTransition.instance.Show(() => SceneManager.LoadScene("Title"));
+        LoadingTransition.instance.LoadScene("Title");
     }
 }
