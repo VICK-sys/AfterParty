@@ -15,6 +15,7 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
         public Vector2 size;
         public Vector2 trim;
         public Vector2 full;
+        public bool rotated;
     }
 
     private static readonly Dictionary<string, Frame[]> Cache = new Dictionary<string, Frame[]>();
@@ -60,12 +61,14 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
                     .OrderBy(e => (string)e.Attribute("name"), StringComparer.Ordinal).Select(e =>
                     {
                         float w = (float)e.Attribute("width"), h = (float)e.Attribute("height");
+                        bool rotated = (bool?)e.Attribute("rotated") ?? false;
                         return new Frame
                         {
                             name = (string)e.Attribute("name"),
                             uv = new Rect((float)e.Attribute("x") / atlas.width, 1 - ((float)e.Attribute("y") + h) / atlas.height, w / atlas.width, h / atlas.height),
-                            size = new Vector2(w, h),
-                            full = new Vector2((float?)e.Attribute("frameWidth") ?? w, (float?)e.Attribute("frameHeight") ?? h),
+                            rotated = rotated,
+                            size = rotated ? new Vector2(h, w) : new Vector2(w, h),
+                            full = new Vector2((float?)e.Attribute("frameWidth") ?? (rotated ? h : w), (float?)e.Attribute("frameHeight") ?? (rotated ? w : h)),
                             trim = new Vector2(-((float?)e.Attribute("frameX") ?? 0), -((float?)e.Attribute("frameY") ?? 0))
                         };
                     }).ToArray();
@@ -138,12 +141,16 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
         float x = offset.x + frame.trim.x * scale.x;
         float y = -offset.y - frame.trim.y * scale.y;
         float width = frame.size.x * scale.x, height = frame.size.y * scale.y;
-        float u0 = flipX ? frame.uv.xMax : frame.uv.xMin;
-        float u1 = flipX ? frame.uv.xMin : frame.uv.xMax;
-        vh.AddVert(new Vector3(x, y), color, new Vector2(u0, frame.uv.yMax));
-        vh.AddVert(new Vector3(x + width, y), color, new Vector2(u1, frame.uv.yMax));
-        vh.AddVert(new Vector3(x + width, y - height), color, new Vector2(u1, frame.uv.yMin));
-        vh.AddVert(new Vector3(x + leftSlant, y - height), color, new Vector2(Mathf.Lerp(u0, u1, leftSlant / width), frame.uv.yMin));
+        Vector2 Uv(float horizontal, float vertical)
+        {
+            if (flipX) horizontal = 1 - horizontal;
+            return new Vector2(Mathf.Lerp(frame.uv.xMin, frame.uv.xMax, frame.rotated ? vertical : horizontal),
+                Mathf.Lerp(frame.uv.yMin, frame.uv.yMax, frame.rotated ? 1 - horizontal : vertical));
+        }
+        vh.AddVert(new Vector3(x, y), color, Uv(0, 1));
+        vh.AddVert(new Vector3(x + width, y), color, Uv(1, 1));
+        vh.AddVert(new Vector3(x + width, y - height), color, Uv(1, 0));
+        vh.AddVert(new Vector3(x + leftSlant, y - height), color, Uv(leftSlant / width, 0));
         vh.AddTriangle(0, 1, 2);
         vh.AddTriangle(0, 2, 3);
         if (angle != 0)
