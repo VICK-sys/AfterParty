@@ -97,7 +97,7 @@ public sealed class VanillaOptionsText : MaskableGraphic
     private void Update()
     {
         int previous = (int)(age * 24);
-        age += Time.unscaledDeltaTime;
+        age += VanillaMenuTiming.Delta;
         if ((int)(age * 24) != previous) SetVerticesDirty();
     }
 

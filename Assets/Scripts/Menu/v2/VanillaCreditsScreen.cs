@@ -127,12 +127,13 @@ public sealed class VanillaCreditsScreen : MonoBehaviour
     {
         Cursor.visible = false;
         ApplyLayout(((RectTransform)transform).rect.width);
-        bool fast = Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Space);
+        bool fast = Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Space)
+            || VanillaControls.PadHeld("ACCEPT");
         bool pause = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)
             || Input.GetKey(KeyCode.P) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.JoystickButton7);
         bool back = Time.frameCount != openedFrame && !VanillaCreditsTransition.BlocksInput && (Input.GetKeyDown(KeyCode.Escape)
             || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Backspace) || Player.ControllerBackPressed);
-        Tick(Time.unscaledDeltaTime, fast, pause, back);
+        Tick(VanillaMenuTiming.Delta, fast, pause, back);
     }
 
     public void Tick(double delta, bool fast = false, bool pause = false, bool back = false)

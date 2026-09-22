@@ -9,6 +9,8 @@ public sealed class VanillaStoryProp
     private string signature;
     private bool danced;
     private bool confirming;
+    private float nextDanceStep;
+    private float previousStep;
     public string Animation { get; private set; }
     public float DanceEvery => data?.danceEvery ?? 0;
 
@@ -17,7 +19,7 @@ public sealed class VanillaStoryProp
         sprite = graphic;
     }
 
-    public void Apply(VanillaStoryPropData value, int index)
+    public void Apply(VanillaStoryPropData value, int index, float songStep = 0)
     {
         sprite.gameObject.SetActive(value != null);
         if (value == null) return;
@@ -27,25 +29,28 @@ public sealed class VanillaStoryProp
             data = value;
             signature = next;
             confirming = false;
+            previousStep = songStep;
+            nextDanceStep = songStep + data.danceEvery * 4;
             sprite.scale = data.scale * (data.isPixel ? 6 : 1);
             sprite.color = new Color(1, 1, 1, data.alpha);
             if (!string.IsNullOrEmpty(data.startingAnimation)) Play(data.startingAnimation);
-            else if (data.animations.Length > 0)
-            {
-                Dance();
-                sprite.paused = true;
-            }
+            else if (data.animations.Length > 0) Dance();
             else sprite.Load(data.assetPath);
             sprite.mainTexture.filterMode = data.isPixel ? FilterMode.Point : FilterMode.Bilinear;
         }
         sprite.rectTransform.anchoredPosition = new Vector2(data.offsets[0] + 320 * index, -data.offsets[1]);
     }
 
-    public void Step(int step)
+    public void Step(float step)
     {
         if (data == null || !sprite.gameObject.activeSelf || data.danceEvery <= 0) return;
+        if (step < previousStep) nextDanceStep = step + Mathf.Max(0, nextDanceStep - previousStep);
+        previousStep = step;
+        if (step < nextDanceStep) return;
+        float interval = data.danceEvery * 4;
+        nextDanceStep += (Mathf.Floor((step - nextDanceStep) / interval) + 1) * interval;
         if (confirming && !sprite.Finished) return;
-        if (Mathf.Abs(step % (data.danceEvery * 4)) < 0.001f) Dance();
+        Dance();
     }
 
     public void Dance()

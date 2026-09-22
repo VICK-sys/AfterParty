@@ -72,7 +72,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
     private void Update()
     {
         if (freeplaySuspended) return;
-        float delta = Time.unscaledDeltaTime;
+        float delta = VanillaMenuTiming.Delta;
         CameraScroll = Mathf.Lerp(CameraScroll, TargetScroll, 1 - Mathf.Pow(0.94f, delta * 60));
         Draw(delta);
         if (Time.frameCount == enabledFrame) return;
@@ -135,7 +135,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
     public void ReturnToTitle()
     {
         if (Busy || showingCredits || freeplaySuspended || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
-        if (!VanillaTitleTransition.Begin(() => VanillaTitleScreen.Open(menu))) return;
+        if (!VanillaCreditsTransition.Begin(() => VanillaTitleScreen.Open(menu))) return;
         effects.PlayOneShot(cancelSound, OptionsV2.miscVolume);
     }
 
@@ -146,7 +146,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
         {
             magenta.enabled = flashingLights && Mathf.FloorToInt(elapsed / 0.15f) % 2 == 1;
             items[SelectedIndex].image.enabled = !flashingLights || Mathf.FloorToInt(elapsed / 0.06f) % 2 == 0;
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += VanillaMenuTiming.Delta;
             yield return null;
         }
         items[SelectedIndex].image.enabled = true;
@@ -156,7 +156,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
             while (elapsed < MagentaDuration)
             {
                 magenta.enabled = flashingLights && Mathf.FloorToInt(elapsed / 0.15f) % 2 == 1;
-                elapsed += Time.unscaledDeltaTime;
+                elapsed += VanillaMenuTiming.Delta;
                 yield return null;
             }
             magenta.enabled = false;
@@ -172,7 +172,7 @@ public sealed class VanillaMainMenu : MonoBehaviour
                 foreach (VanillaMenuItem item in items)
                     item.image.color = new Color(1, 1, 1, alpha);
                 magenta.enabled = flashingLights && elapsed < MagentaDuration && Mathf.FloorToInt(elapsed / 0.15f) % 2 == 1;
-                elapsed += Time.unscaledDeltaTime;
+                elapsed += VanillaMenuTiming.Delta;
                 yield return null;
             }
         }

@@ -28,6 +28,7 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
     private double lastUpdateTime;
     private int index;
     private bool frozen;
+    private bool reversed;
     public float fps = 24;
     public bool loop = true;
     public float drawScale = 1;
@@ -48,6 +49,7 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
         resourceRoot = root;
         nextPrefix = null;
         frozen = false;
+        reversed = false;
         atlas = Resources.Load<Texture2D>(resourceRoot + "/" + path);
         if (atlas == null) throw new InvalidOperationException("Missing Freeplay texture: " + path);
         string key = resourceRoot + "/" + path + ":" + prefix;
@@ -106,8 +108,17 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
             if (TryPlay(nextAnimation)) { Tick(remainder); return; }
         }
         int next = loop ? (int)(clock * fps) % frames.Length : Mathf.Min((int)(clock * fps), frames.Length - 1);
+        if (reversed) next = frames.Length - 1 - next;
         if (index == next) return;
         index = next;
+        SetVerticesDirty();
+    }
+
+    public void PlayReverse(string prefix, string then)
+    {
+        if (!TryPlay(prefix, false, then)) return;
+        reversed = true;
+        index = frames.Length - 1;
         SetVerticesDirty();
     }
 
@@ -127,7 +138,7 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
     private void Update()
     {
         double now = Time.realtimeSinceStartupAsDouble;
-        Tick((float)(now - lastUpdateTime));
+        Tick(VanillaMenuTiming.Clamp((float)(now - lastUpdateTime)));
         lastUpdateTime = now;
     }
 

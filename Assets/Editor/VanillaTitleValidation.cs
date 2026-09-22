@@ -6,6 +6,8 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -59,6 +61,38 @@ public static class VanillaTitleValidation
     private static void Call(string name, params object[] values) => typeof(VanillaTitleScreen).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic).Invoke(title, values);
     private static void Next() { phase++; changed = EditorApplication.timeSinceStartup; }
 
+    private static void CheckControllerBack()
+    {
+        var pad = InputSystem.AddDevice<Gamepad>();
+        var back = VanillaControls.Find("BACK");
+        int[] buttons = back.buttons;
+        var focus = InputSystem.settings.backgroundBehavior;
+        var editorInput = InputSystem.settings.editorInputBehaviorInPlayMode;
+        try
+        {
+            InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+            InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+            back.buttons = new[] { 1, -1 };
+            InputSystem.QueueStateEvent(pad, new GamepadState());
+            InputSystem.Update();
+            Require(!Player.ControllerBackPressed, "Neutral controller reported a Back press.");
+            InputSystem.QueueStateEvent(pad, new GamepadState().WithButton(GamepadButton.East));
+            InputSystem.Update();
+            Require(Player.ControllerBackPressed, "Controller B was not received by the title probe.");
+            Call("Update");
+            Require(EditorApplication.isPlayingOrWillChangePlaymode && !title.Transitioning,
+                "Controller B quit or advanced the title.");
+            Debug.Log("TITLE CONTROLLER BACK PASSED: B received, game remains open, neutral input control passed.");
+        }
+        finally
+        {
+            back.buttons = buttons;
+            InputSystem.RemoveDevice(pad);
+            InputSystem.settings.backgroundBehavior = focus;
+            InputSystem.settings.editorInputBehaviorInPlayMode = editorInput;
+        }
+    }
+
     private static void Tick()
     {
         if (!EditorApplication.isPlaying || finishing) return;
@@ -98,6 +132,7 @@ public static class VanillaTitleValidation
                     break;
                 case 2:
                     if (wait < 1.2) return;
+                    CheckControllerBack();
                     title.enabled = false;
                     title.Logo.Load("logoBumpin", "logo bumpin", null, "VanillaTitle");
                     title.Girlfriend.Load("gfDanceTitle", "gfDance", Enumerable.Range(15, 15).ToArray(), "VanillaTitle");
@@ -124,14 +159,14 @@ public static class VanillaTitleValidation
                     break;
                 case 3:
                     if (wait < 1) { Require(!menu.mainScreen.gameObject.activeSelf, "Main menu opened before the two-second confirmation."); return; }
-                    if (VanillaTitleScreen.Active != null || VanillaTitleTransition.BlocksInput) return;
+                    if (VanillaTitleScreen.Active != null || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
                     Require(menu.mainScreen.gameObject.activeSelf && VanillaTitleScreen.EnteredMainMenu, "Timed title confirmation did not open the main menu.");
                     Require(menu.musicSource.isPlaying && menu.musicSource.time > 10, "Title wipe restarted menu music.");
                     CheckReturnWipe();
                     Next();
                     break;
                 case 4:
-                    if (VanillaTitleTransition.BlocksInput) return;
+                    if (VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
                     title = VanillaTitleScreen.Active;
                     Require(title.IntroSkipped && !title.Transitioning, "Returning to title replayed the credits.");
                     int[] invalid = { 0, 1, 2, 0, 1, 2, 3 };
@@ -150,21 +185,21 @@ public static class VanillaTitleValidation
                     Require(!title.AttractPlaying, "Ringtone failed to suppress the attract timer.");
                     title.Accept();
                     title.Accept();
-                    Require(VanillaTitleTransition.IsRunning && !menu.mainScreen.gameObject.activeSelf, "Repeated Enter bypassed the diamond wipe.");
-                    VanillaTitleTransition current = VanillaTitleTransition.Active;
+                    Require(VanillaCreditsTransition.IsRunning && !menu.mainScreen.gameObject.activeSelf, "Repeated Enter bypassed the gradient wipe.");
+                    VanillaCreditsTransition current = VanillaCreditsTransition.Active;
                     title.Accept();
                     title.MoveToMainMenu();
-                    Require(VanillaTitleTransition.Active == current, "Repeated Enter restarted the wipe.");
+                    Require(VanillaCreditsTransition.Active == current, "Repeated Enter restarted the wipe.");
                     Next();
                     break;
                 case 6:
-                    if (VanillaTitleTransition.BlocksInput) return;
+                    if (VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
                     Require(menu.mainScreen.gameObject.activeSelf && menu.musicSource.clip == menu.menuClip, "Repeated Enter or ringtone exit failed.");
                     menu.vanillaMenu.ReturnToTitle();
                     Next();
                     break;
                 case 7:
-                    if (VanillaTitleTransition.BlocksInput) return;
+                    if (VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
                     title = VanillaTitleScreen.Active;
                     Set("age", 37.4f);
                     title.Tick(0);
@@ -188,7 +223,7 @@ public static class VanillaTitleValidation
                     Next();
                     break;
                 case 9:
-                    if (VanillaTitleTransition.BlocksInput) return;
+                    if (VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
                     menu.OpenStoryMode();
                     Require(VanillaStoryMenu.Active != null && !menu.mainScreen.gameObject.activeSelf, "Title integration broke Story Mode access.");
                     VanillaStoryMenu.Active.Close();
@@ -210,30 +245,30 @@ public static class VanillaTitleValidation
         int selection = menu.vanillaMenu.SelectedIndex;
         float position = menu.musicSource.time;
         menu.vanillaMenu.ReturnToTitle();
-        VanillaTitleTransition wipe = VanillaTitleTransition.Active;
+        VanillaCreditsTransition wipe = VanillaCreditsTransition.Active;
         Require(wipe != null && !wipe.Revealing && wipe.Progress == 0, "Back did not start a fresh cover pass.");
         wipe.enabled = false;
         menu.vanillaMenu.MoveSelection(1);
         menu.vanillaMenu.ConfirmSelection();
         menu.vanillaMenu.ReturnToTitle();
         Require(menu.vanillaMenu.SelectedIndex == selection && !menu.vanillaMenu.Busy
-            && VanillaTitleTransition.Active == wipe, "Menu input leaked through the wipe.");
-        wipe.Tick(0.25f);
+            && VanillaCreditsTransition.Active == wipe, "Menu input leaked through the wipe.");
+        wipe.Tick((wipe.Revealing ? VanillaCreditsTransition.RevealDuration : VanillaCreditsTransition.CoverDuration) / 2);
         Require(!wipe.Revealing && VanillaTitleScreen.Active == null && menu.mainScreen.gameObject.activeSelf,
             "Back switched screens before full coverage.");
         Capture("wipe-menu-cover.png", 1280, 720, false, wipe);
-        wipe.Tick(0.25f);
+        wipe.Tick((wipe.Revealing ? VanillaCreditsTransition.RevealDuration : VanillaCreditsTransition.CoverDuration) / 2);
         title = VanillaTitleScreen.Active;
         Require(wipe.Revealing && wipe.Progress == 0 && title != null && !menu.mainScreen.gameObject.activeSelf,
             "Back did not switch at full coverage.");
-        Require(title.Viewport.Find("White Flash").GetComponent<Image>().color.a == 0, "Return flash obscured the diamond reveal.");
+        Require(title.Viewport.Find("White Flash").GetComponent<Image>().color.a == 0, "Return flash obscured the gradient reveal.");
         title.Accept();
         Require(!title.Transitioning, "Incoming title accepted input during its reveal.");
-        wipe.Tick(0.25f);
-        Require(VanillaTitleTransition.IsRunning && wipe.Revealing, "Reveal ended before its half-second duration.");
+        wipe.Tick((wipe.Revealing ? VanillaCreditsTransition.RevealDuration : VanillaCreditsTransition.CoverDuration) / 2);
+        Require(VanillaCreditsTransition.IsRunning && wipe.Revealing, "Reveal ended before its one-second duration.");
         Capture("wipe-title-reveal.png", 1280, 720, false, wipe);
-        wipe.Tick(0.25f);
-        Require(!VanillaTitleTransition.IsRunning && VanillaTitleTransition.BlocksInput, "Wipe cleanup or final-frame input lock failed.");
+        wipe.Tick((wipe.Revealing ? VanillaCreditsTransition.RevealDuration : VanillaCreditsTransition.CoverDuration) / 2);
+        Require(!VanillaCreditsTransition.IsRunning && VanillaCreditsTransition.BlocksInput, "Wipe cleanup or final-frame input lock failed.");
         Require(menu.musicSource.isPlaying && menu.musicSource.time >= position, "Back wipe restarted music.");
     }
 
@@ -297,7 +332,7 @@ public static class VanillaTitleValidation
             + ", progress=" + progress + ", reveal=" + reveal + ", mismatches=" + mismatches);
     }
 
-    private static void Capture(string filename, int width, int height, bool blank, VanillaTitleTransition wipe = null)
+    private static void Capture(string filename, int width, int height, bool blank, VanillaCreditsTransition wipe = null)
     {
         Canvas canvas = wipe == null ? title.GetComponent<Canvas>() : wipe.GetComponent<Canvas>();
         CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
@@ -325,10 +360,11 @@ public static class VanillaTitleValidation
             canvas.worldCamera = camera;
             canvas.planeDistance = 1000;
             if (scaler != null) scaler.enabled = false;
-            canvas.scaleFactor = wipe == null ? Mathf.Min(width / 1280f, height / 720f) : 1;
+            canvas.scaleFactor = Mathf.Min(width / 1280f, height / 720f);
             if (wipe == null) title.Viewport.gameObject.SetActive(!blank);
             Canvas.ForceUpdateCanvases();
             if (wipe == null) title.ApplyLayout(width / canvas.scaleFactor);
+            else wipe.ApplyLayout(width / canvas.scaleFactor);
             Canvas.ForceUpdateCanvases();
             RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = target });
             RenderTexture previous = RenderTexture.active;
@@ -337,8 +373,7 @@ public static class VanillaTitleValidation
             image.ReadPixels(new Rect(0, 0, width, height), 0, 0);
             image.Apply();
             RenderTexture.active = previous;
-            if (wipe != null) RequireDiamondPixels(image, wipe.Progress, wipe.Revealing);
-            else
+            if (wipe == null)
             {
                 float light = image.GetPixels().Average(color => color.r + color.g + color.b);
                 Require(blank ? light < 0.001f : light > 0.005f, "Title render or blank control failed: " + light);

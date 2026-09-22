@@ -15,11 +15,15 @@ public sealed class VanillaFreeplayTransition : MonoBehaviour
     private int[] layers;
     private Material blue;
     private RectTransform gradient;
+    private bool characterSelect;
+    private Image flash;
+    private float width;
 
-    public static VanillaFreeplayTransition Create(Canvas source)
+    public static VanillaFreeplayTransition Create(Canvas source, bool characterSelect = false)
     {
         var effect = new GameObject("Freeplay Transition Camera").AddComponent<VanillaFreeplayTransition>();
         effect.source = source;
+        effect.characterSelect = characterSelect;
         effect.Initialize();
         return effect;
     }
@@ -38,13 +42,14 @@ public sealed class VanillaFreeplayTransition : MonoBehaviour
         transforms = source.GetComponentsInChildren<Transform>(true);
         layers = transforms.Select(item => item.gameObject.layer).ToArray();
         foreach (var item in transforms) item.gameObject.layer = 31;
-        Texture = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32);
+        width = ((RectTransform)source.transform.Find("Viewport")).rect.width;
+        Texture = new RenderTexture(Mathf.RoundToInt(width), 720, 24, RenderTextureFormat.ARGB32);
         Texture.Create();
         capture = gameObject.AddComponent<Camera>();
         capture.enabled = false;
         capture.orthographic = true;
         capture.orthographicSize = 360;
-        capture.aspect = 1280f / 720;
+        capture.aspect = width / 720;
         capture.clearFlags = CameraClearFlags.SolidColor;
         capture.backgroundColor = Color.black;
         capture.cullingMask = 1 << 31;
@@ -59,10 +64,10 @@ public sealed class VanillaFreeplayTransition : MonoBehaviour
         source.scaleFactor = 1;
         Overlay = new GameObject("Freeplay Character Transition", typeof(RectTransform)).AddComponent<Canvas>();
         Overlay.renderMode = RenderMode.ScreenSpaceOverlay;
-        Overlay.sortingOrder = 12;
+        Overlay.sortingOrder = source.sortingOrder + 1;
         var scaler = Overlay.gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1280, 720);
+        scaler.referenceResolution = new Vector2(width, 720);
         scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
         var black = Rect("Black", Overlay.transform, Vector2.zero).gameObject.AddComponent<Image>();
         black.color = Color.black;
@@ -70,18 +75,19 @@ public sealed class VanillaFreeplayTransition : MonoBehaviour
         black.rectTransform.anchorMax = Vector2.one;
         black.rectTransform.anchorMin = Vector2.zero;
         black.rectTransform.offsetMin = black.rectTransform.offsetMax = Vector2.zero;
-        var viewport = Rect("Viewport", Overlay.transform, new Vector2(1280, 720));
+        var viewport = Rect("Viewport", Overlay.transform, new Vector2(width, 720));
         viewport.anchorMin = viewport.anchorMax = viewport.pivot = Vector2.one * .5f;
         viewport.gameObject.AddComponent<RectMask2D>();
-        var image = Rect("Blue Fade", viewport, new Vector2(1280, 720)).gameObject.AddComponent<RawImage>();
+        var image = Rect("Blue Fade", viewport, new Vector2(width, 720)).gameObject.AddComponent<RawImage>();
         image.raycastTarget = false;
         image.texture = Texture;
         blue = new Material(Resources.Load<Shader>("VanillaFreeplay/BlueFade"));
         image.material = blue;
-        gradient = Rect("Gradient Wipe", viewport, new Vector2(1280, 720));
+        gradient = Rect("Gradient Wipe", viewport, new Vector2(width, 720));
         var wipe = gradient.gameObject.AddComponent<RawImage>();
         wipe.raycastTarget = false;
         wipe.texture = Resources.Load<Texture2D>("VanillaFreeplay/freeplay/transitionGradient");
+        if (characterSelect) wipe.uvRect = new UnityEngine.Rect(0, 1, 1, -1);
         Draw(0);
     }
 
@@ -90,7 +96,22 @@ public sealed class VanillaFreeplayTransition : MonoBehaviour
         Progress = Mathf.Clamp01(elapsed / .8f);
         blue.SetFloat("_Fade", 1 - Progress * Progress);
         float eased = 2.70158f * Progress * Progress * Progress - 1.70158f * Progress * Progress;
-        gradient.anchoredPosition = new Vector2(0, -720 + 720 * eased);
+        gradient.anchoredPosition = new Vector2(0, characterSelect ? 720 - 570 * eased : -720 + 720 * eased);
+    }
+
+    public void DrawEntrance(float elapsed)
+    {
+        float t = Mathf.Clamp01(elapsed / .8f);
+        blue.SetFloat("_Fade", 1 - (1 - t) * (1 - t));
+        gradient.anchoredPosition = new Vector2(0, elapsed >= 1 ? 720 : 720 * (1 - Mathf.Pow(2, -10 * elapsed)));
+        if (flash != null) flash.color = new Color(1, 1, 1, Mathf.Clamp01(1 - elapsed));
+    }
+
+    public void Flash()
+    {
+        flash = Rect("Lights Flash", Overlay.transform.Find("Viewport"), new Vector2(width, 720)).gameObject.AddComponent<Image>();
+        flash.raycastTarget = false;
+        flash.color = Color.white;
     }
 
     private void LateUpdate()

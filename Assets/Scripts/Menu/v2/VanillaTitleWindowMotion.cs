@@ -27,7 +27,7 @@ public sealed class VanillaTitleWindowMotion : MonoBehaviour
             age = 0;
         }
         if (!moving) return;
-        age += Mathf.Min(Time.unscaledDeltaTime, 0.1f);
+        age += VanillaMenuTiming.Delta;
         float x = age < 0.35f ? 0 : Ease(Mathf.PingPong((age - 0.35f) / 1.4f, 1)) * 300;
         float y = Ease(Mathf.PingPong(age / 0.7f, 1)) * 100;
         SetWindowPos(window, System.IntPtr.Zero, origin.left + Mathf.RoundToInt(x), origin.top + Mathf.RoundToInt(y), 0, 0, 0x15);

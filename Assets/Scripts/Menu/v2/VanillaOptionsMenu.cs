@@ -263,7 +263,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
     private void Update()
     {
         Cursor.visible = false;
-        float delta = Time.unscaledDeltaTime;
+        float delta = VanillaMenuTiming.Delta;
         Draw(delta);
         if (CurrentPage == Page.Offsets) TickOffsets(delta);
         if (Time.frameCount == openedFrame || VanillaTitleTransition.BlocksInput || Busy) return;
@@ -347,7 +347,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         while (age < 1)
         {
             row.text.enabled = !VanillaPreferences.FlashingLights || (int)(age/.06f)%2 == 0;
-            age += Time.unscaledDeltaTime;
+            age += VanillaMenuTiming.Delta;
             yield return null;
         }
         row.text.enabled = true;

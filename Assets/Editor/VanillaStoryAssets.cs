@@ -11,7 +11,8 @@ public sealed class VanillaStoryAssets : AssetPostprocessor
         importer.textureType = TextureImporterType.Default;
         importer.npotScale = TextureImporterNPOTScale.None;
         importer.textureCompression = TextureImporterCompression.Uncompressed;
-        importer.maxTextureSize = 4096;
+        importer.GetSourceTextureWidthAndHeight(out int width, out int height);
+        importer.maxTextureSize = Mathf.Max(4096, Mathf.NextPowerOfTwo(Mathf.Max(width, height)));
         importer.mipmapEnabled = false;
         importer.alphaIsTransparency = true;
         importer.filterMode = FilterMode.Bilinear;

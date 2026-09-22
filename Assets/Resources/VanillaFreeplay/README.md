@@ -81,7 +81,18 @@ The results screen retains the existing AfterParty behavior.
 Character select preserves the BF and Pico animations, selection grid, introduction video, and selection music.
 Escape cancels confirmation before the exit transition.
 Character selection persists between sessions.
-Character select preloads Freeplay textures and parses the DJ atlases in the background.
+Character select preloads character atlases, Freeplay textures, and DJ timelines in the background.
+Cursor interpolation uses the source precision curve and separate afterimage durations.
+Confirmation cancellation reverses the icon animation and restores music over one second.
+Exit applies the original blue-channel fade, flipped gradient, camera motion, and cursor opacity.
+BF, GF, Pico, static character, and lock frames retain the source masks and blend effects.
+Cancellation poses composite purple face layers with Overlay blending before atlas packing.
+The reference capture separates base artwork, Overlay layers, and foreground details.
+The importer combines these captures in sRGB to retain skin colors and eye details.
+Nene retains the source blur and blend effects. Her speaker visualizer remains animated.
+`Scripts/CharacterSelectReference/Build.ps1` renders the imported timelines with HaxeFlixel.
+`Scripts/ImportCharacterSelectFrames.py` packs these frames into their existing atlases.
+`charSelect/rendered-frames.json` records frame counts and output hashes.
 Character switching reuses the current song catalog.
 The Animate renderer preserves affine transforms, frame labels, atlas rotation, and the color multipliers used by these assets.
 Character select and the Pico backing card use additive, screen, and multiply blending.
@@ -123,3 +134,12 @@ The probe checks the introduction video, fresh-save Pico access, confirmation ca
 It checks that BF excludes original Weekend 1 songs before and after switching to Pico.
 It rejects a finished intro held for 100 milliseconds and checks that Pico resumes animation with his backing card visible.
 Character filtering, missing charts, and blank renders provide controls.
+
+Set `UNITY_PARTY_CHARACTER_PARITY_TEST=1` to run character rendering and timing checks with the character select probe.
+Use `Builds/CharacterSelectParity` as the output directory for `Scripts/TestCharacterSelectRendering.py`.
+The comparison checks 38 reference frames, flat colours, blank controls, and shifted controls.
+Nene checks include local pixel differences, removed filters, and separate visualizer changes.
+All four characters include an opaque face overlay control.
+Face checks also reject incorrect foreground order around Pico and Nene eye outlines.
+Use `VanillaCharacterSelectValidation.RunRendering` to capture reference poses without entering Play mode.
+The runtime probe checks cursor delays, locked denial, confirmation cancellation, music recovery, exit fading, and cleanup.

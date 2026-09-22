@@ -147,7 +147,7 @@ public sealed partial class VanillaFreeplay
         menuContent = (RectTransform)list.parent;
         CancelPreview();
         rankLayer = Rect("Rank Celebration", viewport, 0, 0, 1280, 720);
-        rankDim = Rect("Dim", rankLayer, 0, 0, 1280, 720).gameObject.AddComponent<Image>();
+        rankDim = Rect("Dim", rankLayer, 0, 0, viewportWidth, 720).gameObject.AddComponent<Image>();
         rankDim.raycastTarget = false;
         rankZoom = Rect("Rank Camera", rankLayer, 0, 0, 1280, 720);
         rankedCapsule.root.SetParent(rankZoom, false);
@@ -171,9 +171,10 @@ public sealed partial class VanillaFreeplay
         rankVignette = Sprite("Rank Vignette", menuContent, "freeplay/rankVignette", 0, 0);
         rankVignette.centerScale = false;
         rankVignette.drawScale = 2;
+        rankVignette.stretch = new Vector2(viewportWidth / 1280, 1);
         rankVignette.material = RankMaterial;
         rankVignette.color = Color.clear;
-        rankFade = Rect("Fade In", rankLayer, 0, 0, 1280, 720).gameObject.AddComponent<Image>();
+        rankFade = Rect("Fade In", rankLayer, 0, 0, viewportWidth, 720).gameObject.AddComponent<Image>();
         rankFade.raycastTarget = false;
         dj.PlayRange(change.newRank == 0 ? "Fist Pump Loss" : "Fist Pump", 0, IsPico && change.newRank == 0 ? 1 : 4, true);
         DrawRankAnimation(0);

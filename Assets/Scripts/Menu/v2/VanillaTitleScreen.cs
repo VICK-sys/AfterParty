@@ -210,7 +210,7 @@ public sealed class VanillaTitleScreen : MonoBehaviour
     private void Update()
     {
         Cursor.visible = false;
-        float delta = Mathf.Min(Time.unscaledDeltaTime, 0.1f);
+        float delta = VanillaMenuTiming.Delta;
         if (AttractPlaying) { UpdateVideo(delta); return; }
         age += delta;
         if (!started)
@@ -219,11 +219,11 @@ public sealed class VanillaTitleScreen : MonoBehaviour
             return;
         }
         Tick(delta);
-        if (Time.frameCount == enabledFrame || closing || VanillaTitleTransition.BlocksInput) return;
+        if (Time.frameCount == enabledFrame || closing || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
         bool accept = Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)
             || Player.ControllerPausePressed || Player.ControllerConfirmPressed;
         if (accept) Accept();
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace) || Player.ControllerBackPressed) menu.QuitGame();
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace)) menu.QuitGame();
         float horizontal = Player.MenuAxis("Horizontal");
         float vertical = Player.MenuAxis("Vertical");
         ShiftHue(Mathf.Sign(horizontal) * (Mathf.Abs(horizontal) > 0.5f ? delta * 0.1f : 0));
@@ -329,7 +329,7 @@ public sealed class VanillaTitleScreen : MonoBehaviour
 
     public void Accept()
     {
-        if (!started || closing || AttractPlaying || VanillaTitleTransition.BlocksInput) return;
+        if (!started || closing || AttractPlaying || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
         if (!IntroSkipped) { SkipIntro(); return; }
         if (Transitioning) { MoveToMainMenu(); return; }
         prompt.Play("Confirm", true);
@@ -350,7 +350,7 @@ public sealed class VanillaTitleScreen : MonoBehaviour
 
     public void CodePress(int direction)
     {
-        if (!IntroSkipped || CheatActive || closing || AttractPlaying || VanillaTitleTransition.BlocksInput) return;
+        if (!IntroSkipped || CheatActive || closing || AttractPlaying || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
         if (direction != Cheat[cheatPosition]) { cheatPosition = 0; return; }
         if (++cheatPosition < Cheat.Length) return;
         CheatActive = true;
@@ -368,14 +368,14 @@ public sealed class VanillaTitleScreen : MonoBehaviour
 
     private void Flash()
     {
-        flashAge = menu.vanillaMenu.flashingLights && !VanillaTitleTransition.IsRunning ? 0 : 1;
+        flashAge = menu.vanillaMenu.flashingLights && !VanillaTitleTransition.IsRunning && !VanillaCreditsTransition.IsRunning ? 0 : 1;
         flash.color = new Color(1, 1, 1, 1 - flashAge);
     }
 
     public void MoveToMainMenu()
     {
-        if (closing || VanillaTitleTransition.BlocksInput) return;
-        if (!VanillaTitleTransition.Begin(CompleteMainMenuTransition)) return;
+        if (closing || VanillaTitleTransition.BlocksInput || VanillaCreditsTransition.BlocksInput) return;
+        if (!VanillaCreditsTransition.Begin(CompleteMainMenuTransition)) return;
         closing = true;
         attractFading = false;
         fade.color = Color.clear;

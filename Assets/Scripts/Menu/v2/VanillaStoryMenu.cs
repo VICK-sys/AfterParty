@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public sealed class VanillaStoryMenu : MonoBehaviour
@@ -20,7 +19,6 @@ public sealed class VanillaStoryMenu : MonoBehaviour
     private MenuV2 menu;
     private RectTransform viewport;
     private Image background;
-    private Image fade;
     private VanillaStoryText scoreText;
     private VanillaStoryText levelText;
     private VanillaStoryText trackText;
@@ -38,7 +36,6 @@ public sealed class VanillaStoryMenu : MonoBehaviour
     private float statusAge;
     private float confirmAge;
     private double lastUpdate;
-    private int lastStep;
     private int enabledFrame;
     private int displayedScore = 12345678;
     private bool leftPressed;
@@ -80,7 +77,6 @@ public sealed class VanillaStoryMenu : MonoBehaviour
         story.previousVertical = Player.MenuAxis("Vertical");
         story.previousHorizontal = Player.MenuAxis("Horizontal");
         story.lastUpdate = Time.realtimeSinceStartupAsDouble;
-        story.lastStep = Mathf.FloorToInt(owner.musicSource.time * 102 / 60 * 4);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
         return story;
     }
@@ -136,7 +132,6 @@ public sealed class VanillaStoryMenu : MonoBehaviour
         levelText.color = new Color(1, 1, 1, 0.7f);
         statusText = Label("Missing Songs", "", 0, 675, 20);
         statusText.color = Hex("#E55777");
-        fade = Solid("Launch Fade", viewport, 0, 0, 1280, 720, Color.clear);
         ChangeLevel(0);
         ChangeDifficulty(0);
     }
@@ -169,7 +164,8 @@ public sealed class VanillaStoryMenu : MonoBehaviour
             backgroundTo = nextColor;
             backgroundAge = 0;
         }
-        for (int i = 0; i < props.Count; i++) props[i].Apply(i < SelectedLevel.props.Length ? SelectedLevel.props[i] : null, i);
+        float songStep = menu.musicSource.time * 102 / 60 * 4;
+        for (int i = 0; i < props.Count; i++) props[i].Apply(i < SelectedLevel.props.Length ? SelectedLevel.props[i] : null, i, songStep);
         if (previous != SelectedIndex) Sound(menu.vanillaMenu.scrollSound, 0.4f);
         statusText.text = "";
         RefreshText();
@@ -210,20 +206,14 @@ public sealed class VanillaStoryMenu : MonoBehaviour
     private void Update()
     {
         double now = Time.realtimeSinceStartupAsDouble;
-        float delta = (float)(now - lastUpdate);
+        float delta = VanillaMenuTiming.Clamp((float)(now - lastUpdate));
         lastUpdate = now;
         Draw(delta);
         if (Time.frameCount == enabledFrame || closing || VanillaPauseStickers.Active) return;
         if (menu.musicSource.volume < OptionsV2.menuVolume * 0.8f)
             menu.musicSource.volume = Mathf.MoveTowards(menu.musicSource.volume, OptionsV2.menuVolume * 0.8f, delta * 0.5f);
-        int step = Mathf.FloorToInt(menu.musicSource.time * 102 / 60 * 4);
-        if (step != lastStep)
-        {
-            if (step < lastStep) lastStep = -1;
-            for (int current = Mathf.Max(lastStep + 1, step - 16); current <= step; current++)
-                foreach (VanillaStoryProp prop in props) prop.Step(current);
-            lastStep = step;
-        }
+        float step = menu.musicSource.time * 102 / 60 * 4;
+        foreach (VanillaStoryProp prop in props) prop.Step(step);
         float vertical = Player.MenuAxis("Vertical");
         float horizontal = Player.MenuAxis("Horizontal");
         if (!Busy)
@@ -310,15 +300,9 @@ public sealed class VanillaStoryMenu : MonoBehaviour
 
     private IEnumerator Launch(List<VanillaFreeplaySong> playlist)
     {
-        double started = Time.realtimeSinceStartupAsDouble;
-        while (Time.realtimeSinceStartupAsDouble - started < 1) yield return null;
+        for (float elapsed = 0; elapsed < 1; elapsed += VanillaMenuTiming.Delta) yield return null;
         VanillaStoryCampaign.Begin(SelectedLevel.id, Difficulty, playlist);
-        while (Time.realtimeSinceStartupAsDouble - started < 1.2)
-        {
-            fade.color = new Color(0, 0, 0, Mathf.Clamp01((float)(Time.realtimeSinceStartupAsDouble - started - 1) / 0.2f));
-            yield return null;
-        }
-        SceneManager.LoadScene("Game_Backup3");
+        LoadingTransition.instance.LoadScene("Game_Backup3", fadeThroughBlack: true);
     }
 
     public void Close()

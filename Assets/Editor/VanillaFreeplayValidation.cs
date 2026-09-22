@@ -387,6 +387,7 @@ public static class VanillaFreeplayValidation
                 surface.GetComponent<CanvasScaler>().enabled = false;
                 surface.scaleFactor = Mathf.Min(width / 1280f, height / 720f);
             }
+            freeplay.ApplyLayout(width / Mathf.Min(width / 1280f, height / 720f));
             freeplay.Viewport.gameObject.SetActive(!blank);
             Canvas.ForceUpdateCanvases();
             RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = target });

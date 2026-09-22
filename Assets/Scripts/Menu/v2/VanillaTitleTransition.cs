@@ -60,7 +60,7 @@ public sealed class VanillaTitleTransition : MonoBehaviour
 
     private void Update()
     {
-        if (Time.frameCount != startedFrame) Tick(Time.unscaledDeltaTime);
+        if (Time.frameCount != startedFrame) Tick(VanillaMenuTiming.Delta);
     }
 
     public void Tick(float delta)

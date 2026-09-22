@@ -1,0 +1,84 @@
+{
+  "lockedChill": {
+    "frames": 113,
+    "uniqueFrames": 78,
+    "size": [
+      8192,
+      4737
+    ],
+    "sha256": {
+      "Animation.json": "ed0051ab302fc93c9982bac7389fdbd34726a263913b7a3d9b2b08a17f4a0749",
+      "spritemap1.json": "545db893f4f74250809c6ed9412909d3e77b605004362b083a8ad4378a84218c",
+      "spritemap1.png": "d23f098c0b2ac5fba064efa0b89c3b01061cedcf4f22da05e3888560f5977ed8"
+    }
+  },
+  "bfChill": {
+    "frames": 56,
+    "uniqueFrames": 21,
+    "size": [
+      8192,
+      982
+    ],
+    "sha256": {
+      "Animation.json": "1b41641b9b106ade3edfa4ceb24319cf398309ea1a58e2db94bdf0bb26e938b9",
+      "spritemap1.json": "a2ec6b6c636c91f2b91176db59d30e1d02f33c14bccb914bee30f66359c321db",
+      "spritemap1.png": "a3f3569758a9e01506ed0ce4ca9645f3ac7eb4a5f8367ddde0b244de5c64b479"
+    },
+    "overlayBlend": "sRGB Overlay"
+  },
+  "picoChill": {
+    "frames": 79,
+    "uniqueFrames": 30,
+    "size": [
+      8192,
+      1392
+    ],
+    "sha256": {
+      "Animation.json": "44b2fdcfee60d28964d39b0f36c6d5311f8c0142f5c2b88e9ef9f31ed6ab3014",
+      "spritemap1.json": "a1b1bbfba2300eaffadf86d8cf99d048ef7d37609ce83f852a63d61f313fe403",
+      "spritemap1.png": "b8169f85aee4b8bb2c5ab926d1d0d59d4db3fc7c3e0e823b88f3bbed11523f1c"
+    },
+    "overlayBlend": "sRGB Overlay"
+  },
+  "lock": {
+    "frames": 95,
+    "uniqueFrames": 64,
+    "size": [
+      8192,
+      1783
+    ],
+    "sha256": {
+      "Animation.json": "a157d4d6bd87b33ac58b47758e19b04dd4b7af127a57df82757f4c82078f6de2",
+      "spritemap1.json": "a61ea57529bc6f6c6ff718a0ac12e0b12d88bf6bffc64f9badc0d830087c2573",
+      "spritemap1.png": "58f26ebb97d9299a1c775d1cb048ec4cf94c055f21f8dfc00d79d661d2962acb"
+    }
+  },
+  "neneChill": {
+    "frames": 52,
+    "uniqueFrames": 38,
+    "size": [
+      8192,
+      1933
+    ],
+    "sha256": {
+      "Animation.json": "b357c6f93e82a8cb6d3beb66f237e4c806d0557edf5c60bc7240469055016263",
+      "spritemap1.json": "898a281e098971ce9d3eadab649f26560c88005b2713c9eb3cd34e98e5531d68",
+      "spritemap1.png": "cbea234a9278ecbba2f619560e252679c44068e0edc13767d28ff16e1951110e"
+    },
+    "overlayBlend": "sRGB Overlay"
+  },
+  "gfChill": {
+    "frames": 106,
+    "uniqueFrames": 59,
+    "size": [
+      8192,
+      1977
+    ],
+    "sha256": {
+      "Animation.json": "96226a25b6756d398846418e70569ce3ec771c113c9ce8bab28fc5d48ed360b1",
+      "spritemap1.json": "bf5e206e22014c3977a35223bbe08fa1058b7b5861bc3a3d3673ffce2ac0a0d2",
+      "spritemap1.png": "dde03cfc4b66724b1b1234407d514b9c82f6cee48edb53b011a6f08de4b20d8a"
+    },
+    "overlayBlend": "sRGB Overlay"
+  }
+}

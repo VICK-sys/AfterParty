@@ -135,6 +135,32 @@ public static class VanillaStoryValidation
             string final = sprite.FrameName;
             sprite.Tick(5);
             Require(sprite.FrameName == final && sprite.Finished, "Non-looping animation did not hold its final frame.");
+            var prop = new VanillaStoryProp(sprite);
+            var boyfriend = VanillaStoryCatalog.Load().Single(level => level.id == "tutorial").props.Single(item => item.assetPath == "storymenu/props/bf");
+            prop.Apply(boyfriend, 0, 3.9f);
+            string initialIdle = sprite.FrameName;
+            sprite.Tick(0.2f);
+            Require(!sprite.paused && sprite.FrameName != initialIdle, "Week selection held the character until the next dance beat.");
+            string midIdle = sprite.FrameName;
+            prop.Step(4);
+            Require(sprite.FrameName == midIdle && sprite.fps == 24, "Week selection shortened the first dance at the next music beat.");
+            prop.Step(11.9f);
+            Require(sprite.FrameName == initialIdle, "Character did not restart after its complete dance interval.");
+            prop.Confirm();
+            string initialConfirm = sprite.FrameName;
+            prop.Step(19.9f);
+            Require(prop.Animation == "confirm" && sprite.FrameName == initialConfirm, "Dance beat interrupted character confirmation.");
+            sprite.Load("storymenu/props/spaghetti", "SPL_0");
+            Require(sprite.mainTexture.width == 4371 && sprite.mainTexture.height == 245, "Spaghetti atlas was resized during import.");
+            using (var mesh = new VertexHelper())
+            {
+                typeof(VanillaStorySprite).GetMethod("OnPopulateMesh", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Invoke(sprite, new object[] { mesh });
+                var vertices = new List<UIVertex>();
+                mesh.GetUIVertexStream(vertices);
+                Require(Mathf.Abs(vertices[1].uv0.x - 4370f / 4371) < 0.00001f, "Spaghetti frame samples the wrong atlas region.");
+                Require(4370f / 4096 > 1, "Resized atlas control no longer crosses the texture edge.");
+                Require(sprite.FrameSize == new Vector2(300, 260), "Spaghetti frame dimensions changed.");
+            }
         }
         finally { Object.DestroyImmediate(host); }
         Debug.Log("STORY SPRITE PASSED: rotated atlas geometry and UVs, indexed dance, animation advance, and terminal frame hold.");

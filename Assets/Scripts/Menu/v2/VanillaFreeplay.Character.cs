@@ -12,7 +12,7 @@ public sealed partial class VanillaFreeplay
     private VanillaFreeplaySprite picoDark;
     private VanillaFreeplaySprite picoBlue;
     private int picoBeat = -1;
-    private float picoGlowAge;
+    private float picoGlowAge = 1;
     private float characterTransitionAge = -1;
     private VanillaFreeplayTransition characterTransition;
     private float characterPreviewVolume;
@@ -33,7 +33,7 @@ public sealed partial class VanillaFreeplay
         StopCartoon(false);
         Sound("confirmMenu", 1);
         dj.Play("To Character Select", false);
-        yield return new WaitForSecondsRealtime(.45f);
+        for (float elapsed = 0; elapsed < .45f; elapsed += VanillaMenuTiming.Delta) yield return null;
         BeginCharacterWipe();
         while (characterTransitionAge < .9f || !dj.Finished || effects.isPlaying) yield return null;
         CancelPreview();
@@ -45,7 +45,7 @@ public sealed partial class VanillaFreeplay
             string root = userBundleRoot;
             Active = null;
             Destroy(gameObject);
-            Open(owner, false, root, availableSongs);
+            Open(owner, false, root, availableSongs, true);
         });
         gameObject.SetActive(false);
     }
@@ -63,6 +63,7 @@ public sealed partial class VanillaFreeplay
         AddCharacterMover(scoreRoot, 270);
         AddCharacterMover(topBar, 300);
         AddCharacterMover(headerRoot, 300);
+        AddCharacterMover(characterHint.rectTransform, 300);
         foreach (var capsule in capsules)
             if (Mathf.Abs(capsule.index - SelectedIndex) < 6) AddCharacterMover(capsule.root, 250);
         foreach (var line in marquees) AddCharacterMover(line.rectTransform, 60);
@@ -130,16 +131,23 @@ public sealed partial class VanillaFreeplay
         }
     }
 
+    private void UpdatePicoGlow(float delta, bool playing, float position, float bpm)
+    {
+        if (playing)
+        {
+            int beat = Mathf.FloorToInt(position * bpm / 60);
+            if (picoBeat >= 0 && beat > picoBeat && beat % (1 << Mathf.Clamp(Mathf.FloorToInt(bpm / 140), 0, 3)) == 0)
+                picoGlowAge = 0;
+            picoBeat = beat;
+        }
+        else picoBeat = -1;
+        picoGlowAge += delta;
+    }
+
     private void DrawPicoCard(float delta)
     {
         float bpm = SelectedSong == null ? 145 : SelectedSong.Bpm(Difficulty);
-        int beat = Mathf.FloorToInt((preview.isPlaying ? preview.time : age) * bpm / 60);
-        if (beat != picoBeat)
-        {
-            picoBeat = beat;
-            if (beat % (1 << Mathf.Clamp(Mathf.FloorToInt(bpm / 140), 0, 3)) == 0) picoGlowAge = 0;
-        }
-        picoGlowAge += delta;
+        UpdatePicoGlow(delta, preview.isPlaying, preview.time, bpm);
         picoGlow.color = new Color(1,1,1,Mathf.Pow(1-Mathf.Clamp01(picoGlowAge/(16f/24)),4));
         picoDark.color = new Color(1,1,1,1-Mathf.Pow(1-Mathf.Clamp01(picoGlowAge/(18f/24)),4));
         picoGlow.gameObject.SetActive(ready && confirmAge < 0);

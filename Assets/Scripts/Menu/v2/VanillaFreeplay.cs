@@ -61,16 +61,21 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private string StyleSuffix => IsPico ? "_pico" : "";
     private MenuV2 menu;
     private RectTransform viewport;
+    private float viewportWidth = 1280;
     private RectTransform list;
     private RectTransform filters;
     private RectTransform albumRoot;
     private RectTransform difficultyRoot;
     private RectTransform topBar;
     private RectTransform headerRoot;
+    private VanillaFreeplayHeaderText characterHint;
+    private float hintAge;
+    private bool skipCharacterHintIntro;
+    private readonly List<(RawImage image, Texture2D normal, Texture2D bold)> headerTexts = new List<(RawImage, Texture2D, Texture2D)>();
     private RectTransform scoreRoot;
     private VanillaFreeplayAnimate dj;
     private VanillaFreeplayAnimate album;
-    private VanillaFreeplayAnimate stars;
+    private VanillaFreeplayDifficultyStars stars;
     private VanillaFreeplaySprite albumTitle;
     private VanillaFreeplaySprite backing;
     private VanillaFreeplaySprite card;
@@ -126,7 +131,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public int SelectedIndex { get; private set; }
     public string Difficulty { get; private set; }
     public int Mode { get; private set; }
-    public bool Busy => !ready || closing || RankAnimationPlaying;
+    public bool Busy => !ready || closing || RankAnimationPlaying || instrumentalRoot != null;
     public int SongCount => songs?.Count ?? 0;
     public int VisibleSongCount => filtered?.Count ?? 0;
     public VanillaFreeplaySong SelectedSong => SelectedIndex > 0 && SelectedIndex <= filtered.Count ? filtered[SelectedIndex - 1] : null;
@@ -134,13 +139,14 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public AudioSource PreviewSource => preview;
     public RectTransform Viewport => viewport;
 
-    public static VanillaFreeplay Open(MenuV2 owner, bool skipIntro = false, string userRoot = null, List<VanillaFreeplaySong> catalog = null)
+    public static VanillaFreeplay Open(MenuV2 owner, bool skipIntro = false, string userRoot = null, List<VanillaFreeplaySong> catalog = null, bool fromCharacterSelect = false)
     {
         if (Active != null) return Active;
         var root = new GameObject("Vanilla Freeplay", typeof(RectTransform));
         root.SetActive(false);
         var freeplay = root.AddComponent<VanillaFreeplay>();
         freeplay.menu = owner;
+        freeplay.skipCharacterHintIntro = skipIntro || fromCharacterSelect;
         freeplay.Build(userRoot, catalog);
         owner.vanillaMenu?.SetFreeplaySuspended(true);
         owner.mainScreen.gameObject.SetActive(!skipIntro);
@@ -155,6 +161,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         freeplay.ready = skipIntro;
         freeplay.RebuildList(true);
         freeplay.dj.Play(skipIntro ? "Idle" : "Intro", skipIntro);
+        Canvas.ForceUpdateCanvases();
+        freeplay.ApplyLayout(((RectTransform)freeplay.transform).rect.width);
         freeplay.Draw(0);
         freeplay.ConsumeRankReturn(skipIntro);
         freeplay.lastUpdateTime = Time.realtimeSinceStartupAsDouble;
@@ -217,7 +225,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         backing.drawScale = 721f / backing.FrameSize.y;
         backing.leftSlant = 90 * backing.drawScale;
         list = Rect("Capsules", content, 0, 0, 1280, 720);
-        topBar = Rect("Top Bar", content, 0, -164, 1280, 164);
+        topBar = Rect("Top Bar", content, 0, 0, 1280, 720);
+        topBar.pivot = Vector2.zero;
         topBar.gameObject.AddComponent<Image>().color = Color.black;
         content = Rect("Chrome", content, 0, 0, 1280, 720);
         chrome = content.gameObject.AddComponent<CanvasGroup>();
@@ -230,7 +239,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         emptyText = Label("Empty Filter", content, "NO SONGS", 440, 420, 430, 100, 32, pixelFont);
         albumRoot = Rect("Album", content, 0, 0, 1280, 720);
         album = Animate("Album Art", albumRoot, "freeplay/albumRoll/freeplayAlbum", 920, 220, false);
-        stars = Animate("Difficulty Stars", albumRoot, "freeplay/freeplayStars", 950, 209, false);
+        stars = Rect("Difficulty Stars", albumRoot, 950, 209, 1280, 720).gameObject.AddComponent<VanillaFreeplayDifficultyStars>();
+        stars.Initialize();
         albumTitle = Sprite("Album Title", albumRoot, "freeplay/albumRoll/volume1-text", 925, 500, "idle");
         scoreRoot = Rect("Score", content, 0, 0, 1280, 720);
         Sprite("Highscore", scoreRoot, "freeplay/highscore", 860, 70, "highscore small instance 1").loop = false;
@@ -245,10 +255,12 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Sprite("Clear Box", scoreRoot, "freeplay/clearBox", 1165, 65);
         clearDigits = Rect("Clear Digits", scoreRoot, 1185, 87, 95, 30);
         headerRoot = Rect("Header", content, 0, 0, 1280, 64);
-        Label("Heading", headerRoot, "FREEPLAY", 8, 3, 280, 61, 48, vcrFont);
+        HeaderImage("Heading", "heading", 8, 8);
         Hit("Back", headerRoot, 0, 0, 285, 64, Close);
-        Text ost = Label("OST", headerRoot, "OFFICIAL OST", 600, 3, 670, 61, 48, vcrFont);
-        ost.alignment = TextAnchor.UpperRight;
+        HeaderImage("OST", "ost", 8, 8);
+        characterHint = Rect("Character Hint", (RectTransform)content.parent, -40, -82, 1264, 27).gameObject.AddComponent<VanillaFreeplayHeaderText>();
+        characterHint.Text = CharacterHintText();
+        characterHint.color = Hex("5F5F5F");
         modeHint = Label("Controls", content, "F: FAVORITE   Q/E: FILTER   TAB: CHARACTER   M: PLAY MODE", 8, 686, 900, 26, 20, pixelFont);
         modeHint.color = new Color(1, 1, 1, 0.75f);
         modeHint.gameObject.AddComponent<Outline>().effectDistance = new Vector2(1, -1);
@@ -296,10 +308,37 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         RebuildList(false);
     }
 
+    public void ApplyLayout(float availableWidth)
+    {
+        float width = Mathf.Clamp(Mathf.Round(availableWidth), 1280, 1600);
+        if (Mathf.Approximately(width, viewportWidth)) return;
+        viewportWidth = width;
+        float extra = width - 1280;
+        viewport.sizeDelta = new Vector2(width, 720);
+        topBar.sizeDelta = new Vector2(width, 720);
+        scoreRoot.anchoredPosition = new Vector2(extra, 0);
+        albumRoot.anchoredPosition = new Vector2(extra, 0);
+        ((RectTransform)headerRoot.Find("OST")).anchoredPosition = new Vector2(8 + extra, -8);
+        characterHint.rectTransform.sizeDelta = new Vector2(width - 16, 27);
+        backing.stretch = new Vector2(Mathf.Max(1, (width - 387.76f) / (backing.FrameSize.x * backing.drawScale)), 1);
+        backing.SetVerticesDirty();
+        Transform matte = transform.Find("Letterbox");
+        ((RectTransform)matte.Find("Left")).offsetMax = new Vector2(-width / 2, 0);
+        ((RectTransform)matte.Find("Right")).offsetMin = new Vector2(width / 2, 0);
+        if (rankDim != null) rankDim.rectTransform.sizeDelta = new Vector2(width, 720);
+        if (rankFade != null) rankFade.rectTransform.sizeDelta = new Vector2(width, 720);
+        if (rankVignette != null)
+        {
+            rankVignette.stretch = new Vector2(width / 1280, 1);
+            rankVignette.SetVerticesDirty();
+        }
+    }
+
     private void Update()
     {
+        if (characterTransition == null && exitAge < 0) ApplyLayout(((RectTransform)transform).rect.width);
         double now = Time.realtimeSinceStartupAsDouble;
-        float delta = (float)(now - lastUpdateTime);
+        float delta = VanillaMenuTiming.Clamp((float)(now - lastUpdateTime));
         lastUpdateTime = now;
         age += delta;
         capsuleAge += delta;
@@ -316,6 +355,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         DrawRankAnimation(delta);
         UpdateDJ(delta);
         UpdatePreview(delta);
+        if (instrumentalRoot != null && !closing) { UpdateInstrumentalMenu(); return; }
         if (Time.frameCount == openedFrame || Busy || VanillaPauseStickers.Active) return;
         if (selectingMode)
         {
@@ -435,7 +475,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         RefreshSelection();
         if (animateList)
             foreach (Capsule capsule in capsules)
-                capsule.root.anchoredPosition = initial && ready ? ToUI(Target(capsule.index)) : new Vector2(1280, -130 - 115.6f * capsule.index);
+                capsule.root.anchoredPosition = initial && ready ? ToUI(Target(capsule.index)) : new Vector2(viewportWidth, -130 - 115.6f * capsule.index);
     }
 
     private Capsule BuildCapsule(VanillaFreeplaySong song)
@@ -630,6 +670,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private void RefreshAlbum()
     {
         string id = SelectedSong?.Album(Difficulty);
+        stars.SetRating(SelectedSong?.Rating(Difficulty) ?? 0);
         Texture2D texture = id == null ? null : Resources.Load<Texture2D>("VanillaFreeplay/freeplay/albumRoll/" + id);
         albumRoot.gameObject.SetActive(texture != null);
         if (texture == null) return;
@@ -638,8 +679,6 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         albumTitle.Load("freeplay/albumRoll/" + id + "-text", "idle");
         Vector2 titleOffset = id == "volume1" ? new Vector2(8, 0) : id.StartsWith("volume", StringComparison.Ordinal) ? new Vector2(8, -7) : id == "spaghetti" ? new Vector2(-35, 0) : new Vector2(-22, -3);
         albumTitle.rectTransform.anchoredPosition = new Vector2(925 + titleOffset.x, -500 - titleOffset.y);
-        if (SelectedSong.Rating(Difficulty) <= 0) stars.SetFrame(1500);
-        else stars.PlayFrames((Mathf.Clamp(SelectedSong.Rating(Difficulty), 1, 15) - 1) * 100, 100, true);
     }
 
     private Vector2 Target(int index)
@@ -658,14 +697,22 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (exitAge >= 0) { DrawExit(delta); return; }
         float intro = Mathf.Clamp01(age / 0.6f);
         cardRoot.anchoredPosition = new Vector2(-524 * Mathf.Pow(1 - intro, 4), 0);
-        backing.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(1280, 387.76f, 1 - Mathf.Pow(1 - Mathf.Clamp01(age / 0.7f), 5)), 0);
+        backing.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(viewportWidth, 387.76f, 1 - Mathf.Pow(1 - Mathf.Clamp01(age / 0.7f), 5)), 0);
         chrome.alpha = ready ? 1 : 0;
-        topBar.anchoredPosition = new Vector2(0, 164 - 64 * (1 - Mathf.Pow(1 - Mathf.Clamp01(age / 0.3f), 4)));
+        topBar.anchoredPosition = new Vector2(0, -64 * (1 - Mathf.Pow(1 - Mathf.Clamp01(age / 0.3f), 4)));
         Transform difficultyName = difficultyRoot.Find("Name");
         if (difficultyName != null) ((RectTransform)difficultyName).anchoredPosition = new Vector2(90 - 390 * Mathf.Pow(1 - Mathf.Clamp01((age - IntroDuration) / 0.6f), 4), -80);
         headerRoot.gameObject.SetActive(age >= IntroDuration + 1f / 24);
+        SetHeaderStroke(age < IntroDuration + 2.5f / 24);
+        hintAge += delta;
+        characterHint.rectTransform.anchoredPosition = new Vector2(-40, -18 + (skipCharacterHintIntro ? 0 : 100 * Mathf.Pow(1 - Mathf.Clamp01(age / .8f), 4)));
+        Color hintColor = Hex("5F5F5F");
+        hintColor.a = .6f + .3f * Mathf.Sin(hintAge * 2);
+        characterHint.color = hintColor;
+        characterHint.Text = CharacterHintText();
         scoreRoot.gameObject.SetActive(age >= IntroDuration + 1f / 24);
-        stars.enabled = albumTitle.enabled = age >= IntroDuration + 0.75f;
+        stars.gameObject.SetActive(age >= IntroDuration + 0.75f);
+        albumTitle.enabled = age >= IntroDuration + 0.75f;
         card.color = ready ? Hex(IsPico ? "98A2F3" : "FFD863") : Hex(IsPico ? "84D7E8" : "FFD4E9");
         if (IsPico) DrawPicoCard(delta);
         cardRoot.Find("Band").gameObject.SetActive(!IsPico && ready && confirmAge < 0);
@@ -691,7 +738,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             DrawRankSparkle(capsule, delta);
             if (RankControlsCapsule(capsule)) continue;
             Vector2 target = ToUI(Target(capsule.index));
-            if (confirmAge >= 0 && capsule.index != SelectedIndex) target.x = Mathf.Lerp(target.x, 1536, Mathf.Clamp01(confirmAge / 0.3f));
+            if (confirmAge >= 0 && capsule.index != SelectedIndex) target.x = Mathf.Lerp(target.x, viewportWidth * 1.2f, Mathf.Clamp01(confirmAge / 0.3f));
             Vector2 current = capsule.root.anchoredPosition;
             capsule.root.anchoredPosition = new Vector2(Mathf.Lerp(target.x, current.x, Mathf.Pow(0.01f, delta / 0.256f)), Mathf.Lerp(target.y, current.y, Mathf.Pow(0.01f, delta / 0.192f)));
             if (capsule.index != SelectedIndex || selectionAge < 0.6f) continue;
@@ -725,6 +772,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void CancelPreview()
     {
+        picoBeat = -1;
         if (previewRoutine != null) StopCoroutine(previewRoutine);
         previewRoutine = null;
         if (previewLoad != null) { previewLoad.Abort(); previewLoad.Dispose(); previewLoad = null; }
@@ -794,11 +842,27 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     {
         if (Busy || selectingMode || filtered.Count == 0) return;
         StopCartoon(true);
+        if (SelectedSong == null || SelectedSong.Instrumentals(Difficulty).Length > 1)
+        {
+            OpenInstrumentalMenu();
+            return;
+        }
+        ConfirmInstrumental(SelectedSong.Instrumentals(Difficulty)[0]);
+    }
+
+    private void ConfirmInstrumental(string instrumental)
+    {
+        bool randomInstrumental = SelectedSong == null && instrumental == "random";
         if (SelectedSong == null)
         {
             SelectedIndex = Random.Range(1, filtered.Count + 1);
             RefreshSelection();
         }
+        string[] choices = SelectedSong.Instrumentals(Difficulty);
+        if (instrumental == "default" || randomInstrumental)
+            instrumental = choices[randomInstrumental ? Random.Range(0, choices.Length) : 0];
+        SelectedSong.meta.freeplayInstrumentalPath = SelectedSong.InstrumentalPath(Difficulty, instrumental);
+        SelectedSong.meta.freeplayInstrumentalStart = SelectedSong.InstrumentalStart(Difficulty, instrumental);
         closing = true;
         Capsule selected = capsules[SelectedIndex];
         selected.root.anchoredPosition = ToUI(Target(SelectedIndex));
@@ -819,11 +883,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private IEnumerator Launch()
     {
         VanillaFreeplaySong song = SelectedSong;
-        double started = Time.realtimeSinceStartupAsDouble;
         float elapsed = 0;
         while (elapsed < 1)
         {
-            elapsed = (float)(Time.realtimeSinceStartupAsDouble - started);
+            elapsed += VanillaMenuTiming.Delta;
             confirmAge = elapsed;
             foreach (Capsule capsule in capsules)
             {
@@ -837,7 +900,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Song.modeOfPlay = Mode;
         ArmRankReturn(song.meta, Song.difficulty, Mode);
         ReturnToFreeplay = true;
-        LoadingTransition.instance.LoadScene("Game_Backup3");
+        LoadingTransition.instance.LoadScene("Game_Backup3", fadeThroughBlack: true);
     }
 
     public void Close()
@@ -861,7 +924,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (picoGlow != null) picoGlow.gameObject.SetActive(false);
         QueueExit(cardRoot, 0.4f, -524);
         QueueExit(dj.rectTransform, 0.5f, -dj.rectTransform.rect.width * 1.6f);
-        QueueExit(backing.rectTransform, 0.4f, 1920);
+        QueueExit(backing.rectTransform, 0.4f, viewportWidth * 1.5f);
         Transform difficultyName = difficultyRoot.Find("Name");
         if (difficultyName != null) QueueExit((RectTransform)difficultyName, 0.25f, -300);
         foreach (VanillaFreeplaySprite arrow in difficultyRoot.GetComponentsInChildren<VanillaFreeplaySprite>())
@@ -872,8 +935,9 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         QueueExit(album.rectTransform, 0.4f, 1280);
         QueueExit(stars.rectTransform, 0.4f, 1280);
         QueueExit(albumTitle.rectTransform, 0.4f, 1280);
-        QueueExit(topBar, 0.2f, 0, -164);
+        QueueExit(topBar, 0.2f, 0, 0);
         QueueExit(headerRoot, 0.2f, 0, -164);
+        QueueExit(characterHint.rectTransform, 0.2f, null, -164);
         modeHint.gameObject.SetActive(false);
         status.gameObject.SetActive(false);
         emptyText.gameObject.SetActive(false);
@@ -917,7 +981,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             SetCapsuleStretch(capsule, exitAge);
             if (exitAge < 1f / 24) continue;
             int frame = Mathf.Clamp(Mathf.FloorToInt(exitAge * 24) - 1, 0, CapsuleExitX.Length - 1);
-            capsule.root.anchoredPosition = new Vector2(1280 * CapsuleExitX[frame], capsule.root.anchoredPosition.y);
+            capsule.root.anchoredPosition = new Vector2(viewportWidth * CapsuleExitX[frame], capsule.root.anchoredPosition.y);
         }
         if (exitAge < 0.5f) return;
         menu.musicSource.clip = menu.menuClip;
@@ -946,6 +1010,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (characterTransition != null) Destroy(characterTransition.gameObject);
         Destroy(picoMultiply);
         Destroy(picoAdditive);
+        Destroy(instrumentalWhite);
         StopCartoon(false);
         CancelPreview();
         if (rankAdditive != null) Destroy(rankAdditive);
@@ -997,6 +1062,31 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         var graphic = Rect(name, parent, x, y, 0, 0).gameObject.AddComponent<VanillaFreeplaySprite>();
         graphic.Load(path, prefix);
         return graphic;
+    }
+
+    private void HeaderImage(string name, string asset, float x, float y)
+    {
+        Texture2D texture = Resources.Load<Texture2D>("VanillaFreeplay/fonts/header/" + asset);
+        RawImage image = Rect(name, headerRoot, x, y, texture.width, texture.height).gameObject.AddComponent<RawImage>();
+        image.texture = texture;
+        image.raycastTarget = false;
+        headerTexts.Add((image, texture, Resources.Load<Texture2D>("VanillaFreeplay/fonts/header/" + asset + "-bold")));
+    }
+
+    private void SetHeaderStroke(bool bold)
+    {
+        foreach (var text in headerTexts) text.image.texture = bold ? text.bold : text.normal;
+    }
+
+    private static string CharacterHintText()
+    {
+        VanillaControls.Binding binding = VanillaControls.Find("FREEPLAY_CHAR_SELECT");
+        bool gamepad = UnityEngine.InputSystem.Gamepad.current != null
+            && (UnityEngine.InputSystem.Keyboard.current == null
+                || UnityEngine.InputSystem.Gamepad.current.lastUpdateTime > UnityEngine.InputSystem.Keyboard.current.lastUpdateTime);
+        int[] inputs = gamepad ? binding.buttons : binding.keys;
+        int input = inputs.Where(value => value >= 0).DefaultIfEmpty(-1).First();
+        return "Press [ " + VanillaControls.Label(input, gamepad).ToUpperInvariant() + " ] to change characters";
     }
 
     private static Text Label(string name, RectTransform parent, string text, float x, float y, float width, float height, int size, Font font)

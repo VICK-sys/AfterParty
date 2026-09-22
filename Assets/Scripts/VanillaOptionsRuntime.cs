@@ -9,6 +9,7 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
 {
     private static VanillaOptionsRuntime instance;
     private Canvas canvas;
+    private Canvas volumeCanvas;
     private Text debugText;
     private Image debugBackground;
     private RawImage preview;
@@ -40,7 +41,7 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
     private void Build()
     {
         canvas = new GameObject("System Overlay",typeof(RectTransform)).AddComponent<Canvas>();
-        canvas.transform.SetParent(transform,false);
+        DontDestroyOnLoad(canvas.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
         debugBackground = VanillaOptionsMenu.Rect("Debug Background",canvas.transform,0,0,210,68).gameObject.AddComponent<Image>();
@@ -58,8 +59,8 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
 
     private void BuildVolumeTray()
     {
-        var overlay = new GameObject("Volume Overlay", typeof(RectTransform)).AddComponent<Canvas>();
-        overlay.transform.SetParent(transform, false);
+        var overlay = volumeCanvas = new GameObject("Volume Overlay", typeof(RectTransform)).AddComponent<Canvas>();
+        DontDestroyOnLoad(overlay.gameObject);
         overlay.renderMode = RenderMode.ScreenSpaceOverlay;
         overlay.sortingOrder = 2000;
         var scaler = overlay.gameObject.AddComponent<CanvasScaler>();
@@ -91,6 +92,13 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
         volumeTray.gameObject.SetActive(masterMuted || masterVolume == 0);
     }
 
+    private void OnDestroy()
+    {
+        if (canvas != null) Destroy(canvas.gameObject);
+        if (volumeCanvas != null) Destroy(volumeCanvas.gameObject);
+        if (instance == this) instance = null;
+    }
+
     private RawImage VolumeImage(string asset, string label, float x, float y)
     {
         var texture = Resources.Load<Texture2D>("VanillaOptions/soundtray/" + asset);
@@ -116,7 +124,7 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
             masterVolume = Mathf.Clamp01(Mathf.Round(masterVolume * 10 + direction) / 10);
         }
         ApplyMasterVolume();
-        volumeTrayTimer = 1;
+        volumeTrayTimer = 2;
         volumeTray.gameObject.SetActive(true);
         if (direction != 0)
         {
@@ -135,7 +143,7 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
         bool visible = muted || volumeTrayTimer > 0;
         float targetY = visible ? -10 : volumeTrayHeight + 10;
         var position = volumeTray.anchoredPosition;
-        position.y = Mathf.Lerp(position.y, targetY, 1 - Mathf.Pow(.01f, delta / .768f));
+        position.y = Mathf.Lerp(position.y, targetY, 1 - Mathf.Pow(.01f, delta / .25f));
         volumeTray.anchoredPosition = position;
         volumeTrayAlpha.alpha = Mathf.Lerp(volumeTrayAlpha.alpha, visible ? 1 : 0, 1 - Mathf.Pow(.01f, delta / .307f));
         volumeTray.gameObject.SetActive(visible || position.y < volumeTrayHeight);

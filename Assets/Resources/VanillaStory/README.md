@@ -65,6 +65,13 @@ Abort, autoplay, wrong-song, missing-difficulty, and blank-render controls detec
 The probe captures each visible level, confirmation, return, and alternate aspect ratios.
 Run `python Scripts/TestVanillaStoryAssets.py` to check imported hashes, animation definitions, atlas bounds, and font metrics.
 
+Run `VanillaWeekendTransitionValidation.Begin` in an isolated batch editor with graphics enabled and without `-quit`.
+Set `UNITY_PARTY_WEEKEND_TRANSITION_PATH` to the output directory.
+The probe checks the transition from 2hot to Blazin', campaign scores, and the next song's HUD and clock.
+It covers natural video completion, skipping, video preparation errors, playback errors, and Desperate Mode.
+Injected video errors detect a false pass that only tests successful playback.
+Video or audio failures skip the cutscene and release campaign progression.
+
 `Scripts/StoryFont` regenerates the bitmap font with Haxe, Flixel 6.2.0, OpenFL 9.5.2, and Lime 8.3.2.
 Build its project with `haxelib run lime build project.xml neko -64` from that directory.
 Set `UNITY_PARTY_STORY_FONT_PATH` to this asset directory before running the exported executable.

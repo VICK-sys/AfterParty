@@ -1,0 +1,10 @@
+<project>
+    <meta title="Freeplay Header Font Export" package="local.freeplay.font" version="1.0.0" company="Local" />
+    <app main="Main" file="FreeplayHeaderFont" path="../../Builds/FreeplayHeaderFont" />
+    <window width="1280" height="720" hidden="true" />
+    <source path="." />
+    <haxelib name="flixel" version="6.2.0" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/vcr.ttf" rename="assets/vcr.ttf" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/5by7.ttf" rename="assets/5by7.ttf" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

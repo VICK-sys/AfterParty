@@ -1,0 +1,10 @@
+<project>
+    <meta title="Character Select Reference" package="local.characterselect.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="CharacterSelectReference" path="../../Builds/CharacterSelectReference/compiled" />
+    <window width="2048" height="1024" hidden="true" />
+    <source path="." /><source path="../../Builds/CharacterSelectReferenceSource" />
+    <haxelib name="flixel" version="6.2.0" />
+    <haxelib name="flixel-animate" version="1.4.0" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/charSelect" rename="assets" exclude="*.meta|*.md|*.hx" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

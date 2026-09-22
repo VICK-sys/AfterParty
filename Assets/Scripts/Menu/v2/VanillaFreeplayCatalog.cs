@@ -21,6 +21,27 @@ public sealed class VanillaFreeplaySong
     public int Rating(string difficulty) => (int?)Details(difficulty)?["playData"]?["ratings"]?[difficulty.ToLowerInvariant()] ?? 0;
     public string Icon(string difficulty) => (string)Details(difficulty)?["playData"]?["characters"]?["opponent"] ?? "bf";
     public string Album(string difficulty) => (string)Details(difficulty)?["playData"]?["album"];
+    public string[] Instrumentals(string difficulty)
+    {
+        JToken characters = Details(difficulty)?["playData"]?["characters"];
+        return new[] { (string)characters?["instrumental"] ?? "" }
+            .Concat(characters?["altInstrumentals"]?.Values<string>() ?? Enumerable.Empty<string>()).ToArray();
+    }
+
+    public string InstrumentalPath(string difficulty, string instrumental)
+    {
+        if (instrumental == Instrumentals(difficulty)[0]) return meta.AssetPath("Inst.ogg", difficulty);
+        string direct = Path.Combine(meta.songPath, "Inst" + (string.IsNullOrEmpty(instrumental) ? "" : "-" + instrumental) + ".ogg");
+        if (File.Exists(direct)) return direct;
+        string siblingName = Path.GetFileName(meta.songPath) + "-" + instrumental;
+        string sibling = Directory.GetDirectories(Path.GetDirectoryName(meta.songPath))
+            .FirstOrDefault(path => string.Equals(Path.GetFileName(path), siblingName, StringComparison.OrdinalIgnoreCase));
+        if (sibling == null) return direct;
+        return Path.Combine(sibling, "Inst.ogg");
+    }
+
+    public float InstrumentalStart(string difficulty, string instrumental) =>
+        -((float?)Details(difficulty)?["offsets"]?["altInstrumentals"]?[instrumental] ?? 0) / 1000;
     public string ScoreKey(string difficulty, int mode) => meta.songName + meta.bundleMeta.bundleName + difficulty.ToLowerInvariant() + mode;
 
     public void ToggleFavorite()

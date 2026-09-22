@@ -89,6 +89,9 @@ public static class VanillaOptionsValidation
             var tick = typeof(VanillaOptionsRuntime).GetMethod("UpdateVolumeTray", flags);
             for (int i = 0; i < 11; i++) runtime.ChangeMasterVolume(1);
             Require(AudioListener.volume == 1 && bars.All(bar => bar.enabled), "Maximum volume or ten-bar display failed.");
+            tick.Invoke(runtime, new object[] { .25f });
+            Require(tray.gameObject.activeSelf && tray.anchoredPosition.y < -8 && tray.GetComponent<CanvasGroup>().alpha > .9f,
+                "Volume tray did not become visible promptly after changing volume.");
             runtime.ChangeMasterVolume(-1);
             Require(Mathf.Approximately(AudioListener.volume, .9f) && bars.Count(bar => bar.enabled) == 9, "Volume decrement failed.");
             runtime.ChangeMasterVolume(0);

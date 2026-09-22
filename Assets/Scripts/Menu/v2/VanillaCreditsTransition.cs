@@ -64,7 +64,7 @@ public sealed class VanillaCreditsTransition : MonoBehaviour
     private void Update()
     {
         if (Time.frameCount == startedFrame) return;
-        Tick(Time.unscaledDeltaTime);
+        Tick(VanillaMenuTiming.Delta);
     }
 
     public void Tick(float delta)

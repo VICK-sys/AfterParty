@@ -14,7 +14,7 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
     public static string SelectedCharacter => PicoUnlocked && PlayerPrefs.GetString("Freeplay.Character", "bf") == "pico" ? "pico" : "bf";
     public string Character { get; private set; }
     public int SelectedSlot { get; private set; }
-    public bool Busy => age < 1.5f || introPlaying || leaving;
+    public bool Busy => age < 1.5f || !charactersReady || introPlaying || leaving;
     public bool Confirming => confirmAge >= 0;
     private RectTransform viewport;
     private RectTransform icons;
@@ -36,15 +36,25 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
     private float age;
     private float confirmAge = -1;
     private float exitAge;
-    private float heldAge;
-    private float repeatAge;
+    private Vector2 heldAge;
     private Vector2 held;
     private Vector2 cameraOffset;
     private bool leaving;
     private bool introPlaying;
     private bool freeplayReady;
+    private bool charactersReady;
     private int beat = -1;
-    private Image fade;
+    private VanillaFreeplayTransition transition;
+    private CanvasGroup cursorAlpha;
+    private Vector2 exitCamera;
+    private Vector2 nametagPosition;
+    private float recoveryAge = -1;
+    private float recoveryPitch;
+    private float recoveryVolume;
+    private float confirmPitch;
+    private float confirmVolume;
+    private float exitVolume;
+    private int step = -1;
     private VideoPlayer video;
     private RenderTexture videoTexture;
     private Material multiply;
@@ -72,12 +82,15 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         screen.SwitchCharacter(false);
         screen.StartCoroutine(screen.PreloadFreeplay());
         if (!skipIntro && PlayerPrefs.GetInt("CharacterSelect.SeenIntro", 0) == 0) screen.StartCoroutine(screen.Intro());
-        else screen.music.Play();
+        else { screen.music.Play(); screen.BeginEntrance(); }
         return screen;
     }
 
     private IEnumerator PreloadFreeplay()
     {
+        foreach (string character in new[] { "bfChill", "picoChill", "lockedChill", "gfChill", "neneChill" })
+            yield return VanillaFreeplayAnimate.Preload("charSelect/" + character);
+        charactersReady = true;
         var requests = new List<ResourceRequest>();
         foreach (string path in new[] {
             "digital_numbers_pico", "freeplay/freeplayBGweek1-pico", "freeplay/freeplaySelector/freeplaySelector_pico",
@@ -186,7 +199,7 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         nametagMaterial = Blend(UnityEngine.Rendering.BlendMode.SrcAlpha, UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha, false);
         nametag.material = nametagMaterial;
         CenterNametag();
-        icons = Rect("Icons", viewport, 450, 138);
+        icons = Rect("Icons", viewport, 450, 120);
         Enter(icons, 300, 1);
         for (int i = 0; i < 9; i++)
         {
@@ -206,14 +219,17 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
                 lockMaterials.Add(lockMaterial);
                 slotLocks[i] = item;
                 item.Play("idle", true);
-                item.rectTransform.anchoredPosition = SlotCenter(i) - item.CurrentBounds.center;
+                item.UseTimelineBounds();
+                item.rectTransform.anchoredPosition = new Vector2(i % 3 * 107 - 230, -i / 3 * 127 + 110);
             }
-            var hit = Rect("Slot " + i, icons, i % 3 * 110 + 21, i / 3 * 110 + 21, 86, 86);
+            var hit = Rect("Slot " + i, icons, i % 3 * 107 + 20, i / 3 * 127 + 20, 86, 86);
             hit.gameObject.AddComponent<Image>().color = Color.clear;
             int slot = i;
             hit.gameObject.AddComponent<Button>().onClick.AddListener(() => { if (SelectedSlot == slot) Confirm(); else SelectSlot(slot); });
         }
-        cursorRoot = Rect("Cursors", icons, 0, 0);
+        cursorRoot = Rect("Cursors", viewport, 450, 138);
+        cursorRoot.SetSiblingIndex(icons.GetSiblingIndex());
+        cursorAlpha = cursorRoot.gameObject.AddComponent<CanvasGroup>();
         Color[] colors = { new Color32(60,116,247,255), new Color32(62,187,255,255), Color.yellow };
         for (int i = 0; i < cursors.Length; i++)
         {
@@ -225,9 +241,6 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         denyCursor = Sprite("charSelectorDenied", cursorRoot, 0, 0, "cursor DENIED instance 1");
         confirmCursor.gameObject.SetActive(false);
         denyCursor.gameObject.SetActive(false);
-        fade = Rect("Transition", viewport, 0, 0).gameObject.AddComponent<Image>();
-        fade.color = Color.clear;
-        fade.raycastTarget = false;
         music = gameObject.AddComponent<AudioSource>();
         effects = gameObject.AddComponent<AudioSource>();
         staticSound = gameObject.AddComponent<AudioSource>();
@@ -267,7 +280,8 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
 
     private void CenterNametag()
     {
-        nametag.rectTransform.anchoredPosition = new Vector2(1008 - nametag.FrameSize.x * .77f / 2, -100 + nametag.FrameSize.y * .77f / 2);
+        nametagPosition = new Vector2(1008 - nametag.FrameSize.x * .77f / 2, -100 + nametag.FrameSize.y * .77f / 2);
+        nametag.rectTransform.anchoredPosition = nametagPosition;
     }
 
     private void Sound(string name, float volume = 1)
@@ -333,6 +347,11 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         }
         Sound("CS_confirm");
         confirmAge = 0;
+        recoveryAge = -1;
+        confirmPitch = music.pitch;
+        confirmVolume = music.volume;
+        held = Vector2.zero;
+        heldAge = Vector2.zero;
         player.Play("select", false);
         girlfriend.Play("confirm", true);
         foreach (var cursor in cursors) cursor.gameObject.SetActive(false);
@@ -346,6 +365,10 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         if (Confirming)
         {
             confirmAge = -1;
+            recoveryAge = 0;
+            recoveryPitch = music.pitch;
+            recoveryVolume = music.volume;
+            slotIcons[SelectedSlot].PlayReverse("confirm0", "idle0");
             player.Play("deselect", false);
             girlfriend.Play("deselect", false);
             foreach (var cursor in cursors) cursor.gameObject.SetActive(true);
@@ -353,9 +376,44 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         }
         else
         {
-            Character = original;
-            leaving = true;
+            effects.PlayOneShot(Resources.Load<AudioClip>("VanillaFreeplay/audio/cancelMenu"), OptionsV2.miscVolume);
+            BeginExit();
         }
+    }
+
+    private void BeginEntrance(bool lightsFlash = false)
+    {
+        transition = VanillaFreeplayTransition.Create(GetComponent<Canvas>(), true);
+        transition.DrawEntrance(0);
+        if (lightsFlash) transition.Flash();
+    }
+
+    private void BeginExit()
+    {
+        leaving = true;
+        exitCamera = cameraOffset;
+        exitVolume = music.volume;
+        if (transition == null) transition = VanillaFreeplayTransition.Create(GetComponent<Canvas>(), true);
+        transition.Draw(0);
+    }
+
+    private static float QuadInOut(float t)
+    {
+        t = Mathf.Clamp01(t);
+        return t < .5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
+    }
+
+    private static float ExpoOut(float t) => t >= 1 ? 1 : 1 - Mathf.Pow(2, -10 * Mathf.Max(0, t));
+
+    private static float BackIn(float t)
+    {
+        t = Mathf.Clamp01(t);
+        return 2.70158f * t * t * t - 1.70158f * t * t;
+    }
+
+    private static Vector2 CursorLerp(Vector2 current, Vector2 target, float delta, float duration)
+    {
+        return Vector2.Lerp(target, current, Mathf.Pow(.01f, delta / duration));
     }
 
     private Vector2 CursorPosition()
@@ -366,10 +424,12 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
 
     private static Vector2 SlotCenter(int slot) => new Vector2(slot % 3 * 110 + 64, -(slot / 3 * 110 + 64));
 
-    private void Update()
+    private void Update() => Tick(VanillaMenuTiming.Delta);
+
+    public void Tick(float delta)
     {
         if (introPlaying) return;
-        float delta = Time.unscaledDeltaTime;
+        bool wasLeaving = leaving;
         age += delta;
         nametagAge += delta;
         foreach (var item in slotIcons)
@@ -377,10 +437,9 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
             bool selected = item.Key == SelectedSlot;
             float scale = selected ? 2.6f : 2;
             item.Value.drawScale = scale;
-            item.Value.rectTransform.anchoredPosition = SlotCenter(item.Key) + new Vector2(-item.Value.FrameSize.x * scale / 2, item.Value.FrameSize.y * scale / 2);
+            item.Value.rectTransform.anchoredPosition = new Vector2(item.Key % 3 * 107 + 64, -(item.Key / 3 * 127 + 64)) + new Vector2(-item.Value.FrameSize.x * scale / 2, item.Value.FrameSize.y * scale / 2);
             foreach (var effect in item.Value.GetComponents<Shadow>()) effect.enabled = selected;
             if (selected && Confirming && item.Value.CurrentFrameName.StartsWith("idle")) item.Value.TryPlay("confirm0", false, "confirm-hold0");
-            if (!Confirming && !item.Value.CurrentFrameName.StartsWith("idle")) item.Value.TryPlay("idle0");
             item.Value.SetVerticesDirty();
         }
         int mosaicFrame = Mathf.FloorToInt(nametagAge * 30);
@@ -402,51 +461,77 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         if (Confirming)
         {
             confirmAge += delta;
-            float t = Mathf.Clamp01(confirmAge);
-            float ease = t < .5f ? 2*t*t : 1-Mathf.Pow(-2*t+2,2)/2;
-            music.pitch = Mathf.Lerp(1, .1f, ease);
-            music.volume = OptionsV2.menuVolume * Mathf.Clamp01(1-confirmAge/1.5f);
-            if (confirmAge >= 1.5f) leaving = true;
+            music.pitch = Mathf.Lerp(confirmPitch, .1f, QuadInOut(confirmAge));
+            music.volume = Mathf.Lerp(confirmVolume, 0, QuadInOut(confirmAge / 1.5f));
+            if (confirmAge >= 1.5f && !leaving) BeginExit();
         }
-        else { music.pitch = Mathf.MoveTowards(music.pitch, 1, delta); music.volume = OptionsV2.menuVolume; }
+        else if (recoveryAge >= 0)
+        {
+            recoveryAge += delta;
+            float t = Mathf.Clamp01(recoveryAge);
+            float ease = t < .5f ? 8 * t * t * t * t : 1 - Mathf.Pow(-2 * t + 2, 4) / 2;
+            music.pitch = Mathf.Lerp(recoveryPitch, 1, ease);
+            music.volume = Mathf.Lerp(recoveryVolume, OptionsV2.menuVolume, ease);
+            if (recoveryAge >= 1)
+            {
+                recoveryAge = -1;
+                if (player.CurrentLabel == "deselect" || player.CurrentLabel == "deselect loop start")
+                {
+                    player.Play("idle", true);
+                    girlfriend.Play("idle", true);
+                }
+            }
+        }
+        else if (!leaving) { music.pitch = 1; music.volume = OptionsV2.menuVolume; }
+        if (leaving) exitAge += wasLeaving ? delta : Mathf.Max(0, confirmAge - 1.5f);
         int currentBeat = Mathf.FloorToInt(music.time * 90 / 60);
         if (currentBeat != beat)
         {
             beat = currentBeat;
-            if (player.CurrentLabel == "idle" && player.Finished) player.Play("idle", false);
+            if (player.CurrentLabel == "idle" && player.Finished) player.Play("idle", Character == "locked");
             if (girlfriend.CurrentLabel == "idle" && beat % 2 == 0) girlfriend.Play("idle", false);
         }
         if (outgoing.gameObject.activeSelf && outgoing.Finished) outgoing.gameObject.SetActive(false);
         if (player.Finished)
         {
-            if (player.CurrentLabel == "slidein") player.Play(player.HasLabel("slidein idle point") ? "slidein idle point" : "idle", false);
+            if (player.CurrentLabel == "slidein")
+            {
+                string next = player.HasLabel("slidein idle point") ? "slidein idle point" : "idle";
+                player.Play(next, next == "idle" && Character == "locked");
+            }
             else if (player.CurrentLabel == "deselect") player.Play("deselect loop start", false);
-            else if (player.CurrentLabel != "idle" && player.CurrentLabel != "select") player.Play("idle", false);
+            else if (player.CurrentLabel == "slidein idle point" || player.CurrentLabel == "cannot select Label" || player.CurrentLabel == "unlock") player.Play("idle", Character == "locked");
         }
-        if (girlfriend.Finished && girlfriend.CurrentLabel == "deselect") girlfriend.Play("idle", false);
         if (denyCursor.FrameIndex == denyCursor.FrameCount - 1) denyCursor.gameObject.SetActive(false);
         Vector2 target = age < 1.5f ? new Vector2(0, -150 * Mathf.Pow(2, -10 * age / 1.5f))
-            : new Vector2((SelectedSlot % 3 - 1) * 20, (SelectedSlot / 3 - 1) * 20);
-        cameraOffset = Vector2.Lerp(cameraOffset, target, age < 1.5f ? 1 : 1-Mathf.Pow(.99f, delta*60));
+            : new Vector2((SelectedSlot % 3 - 1) * 10, (SelectedSlot / 3 - 1) * 10);
+        cameraOffset = leaving ? exitCamera + new Vector2(0, -150 * BackIn(exitAge / .8f))
+            : Vector2.Lerp(cameraOffset, target, age < 1.5f ? 1 : Mathf.Clamp01(.01f * delta * 60));
         foreach (var layer in layers) layer.rect.anchoredPosition = layer.position + new Vector2(-cameraOffset.x, cameraOffset.y) * layer.scroll;
         foreach (var item in entrance)
         {
-            float offset = item.offset * Mathf.Pow(2, -10 * Mathf.Clamp01(age / item.duration));
-            if (leaving) { float t = Mathf.Clamp01(exitAge/.8f); offset = item.offset * (2.70158f*t*t*t-1.70158f*t*t); }
+            float offset = item.offset * (1 - ExpoOut(age / item.duration));
+            if (leaving) offset = item.offset * BackIn(exitAge / .8f);
             item.rect.anchoredPosition = item.position + Vector2.down * offset;
         }
+        nametag.rectTransform.anchoredPosition = nametagPosition + Vector2.down * (leaving ? 80 * BackIn(exitAge / .8f) : 200 * (1 - ExpoOut(age)));
         Vector2 cursorTarget = CursorPosition();
-        cursors[2].rectTransform.anchoredPosition = Vector2.Lerp(cursors[2].rectTransform.anchoredPosition, cursorTarget, 1-Mathf.Exp(-delta/.1f));
-        cursors[1].rectTransform.anchoredPosition = Vector2.Lerp(cursors[1].rectTransform.anchoredPosition, cursors[2].rectTransform.anchoredPosition, 1-Mathf.Exp(-delta/.202f));
-        cursors[0].rectTransform.anchoredPosition = Vector2.Lerp(cursors[0].rectTransform.anchoredPosition, cursorTarget, 1-Mathf.Exp(-delta/.404f));
+        Vector2 main = CursorLerp(cursors[2].rectTransform.anchoredPosition, cursorTarget, delta, .1f);
+        if (Mathf.Abs(main.x - cursorTarget.x) <= 1) main.x = cursorTarget.x;
+        if (Mathf.Abs(main.y - cursorTarget.y) <= 1) main.y = cursorTarget.y;
+        cursors[2].rectTransform.anchoredPosition = main;
+        cursors[1].rectTransform.anchoredPosition = CursorLerp(cursors[1].rectTransform.anchoredPosition, main, delta, .202f);
+        cursors[0].rectTransform.anchoredPosition = CursorLerp(cursors[0].rectTransform.anchoredPosition, cursorTarget, delta, .404f);
         cursors[2].color = Color.Lerp(Color.yellow, new Color(1,.8f,0), Mathf.PingPong(age*5,1));
         confirmCursor.rectTransform.anchoredPosition = denyCursor.rectTransform.anchoredPosition = cursors[2].rectTransform.anchoredPosition + new Vector2(-2,4);
         if (leaving)
         {
-            exitAge += delta;
-            fade.color = new Color(.05f, .1f, .5f, Mathf.Clamp01(exitAge/.8f));
+            cursorAlpha.alpha = 1 - ExpoOut(exitAge / .8f);
+            transition.Draw(exitAge);
+            if (!Confirming) music.volume = exitVolume * (1 - QuadInOut(exitAge / .7f));
             if (exitAge >= .8f && freeplayReady)
             {
+                if (!Confirming) Character = original;
                 PlayerPrefs.SetString("Freeplay.Character", Character);
                 PlayerPrefs.Save();
                 completed?.Invoke(Character);
@@ -454,23 +539,29 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
             }
             return;
         }
+        if (transition != null)
+        {
+            transition.DrawEntrance(age);
+            if (age >= 1) { Destroy(transition.gameObject); transition = null; }
+        }
         if (Busy) return;
         if (VanillaControls.Pressed("BACK")) { Back(); return; }
         if (Confirming) return;
         if (VanillaControls.Pressed("ACCEPT")) { Confirm(); return; }
         Vector2 direction = new Vector2(Mathf.Round(Player.MenuAxis("Horizontal")), -Mathf.Round(Player.MenuAxis("Vertical")));
-        if (direction != held)
+        int currentStep = Mathf.FloorToInt(music.time * 90 / 60 * 4);
+        int moveX = direction.x != 0 && direction.x != held.x ? (int)direction.x : 0;
+        int moveY = direction.y != 0 && direction.y != held.y ? (int)direction.y : 0;
+        heldAge.x = direction.x == 0 || direction.x != held.x ? 0 : heldAge.x + delta;
+        heldAge.y = direction.y == 0 || direction.y != held.y ? 0 : heldAge.y + delta;
+        if (currentStep != step)
         {
-            held = direction;
-            heldAge = repeatAge = 0;
-            if (direction != Vector2.zero) Move((int)direction.x, (int)direction.y);
+            if (heldAge.x >= .5f) moveX = (int)direction.x;
+            if (heldAge.y >= .5f) moveY = (int)direction.y;
         }
-        else if (direction != Vector2.zero)
-        {
-            heldAge += delta;
-            repeatAge += delta;
-            if (heldAge >= .5f && repeatAge >= 1f/6) { repeatAge = 0; Move((int)direction.x, (int)direction.y); }
-        }
+        if (moveX != 0 || moveY != 0) Move(moveX, moveY);
+        held = direction;
+        step = currentStep;
     }
 
     private IEnumerator Intro()
@@ -513,10 +604,12 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         Sound("CS_Lights");
         music.Play();
         introPlaying = false;
+        BeginEntrance(true);
     }
 
     private void OnDestroy()
     {
+        if (transition != null) Destroy(transition.gameObject);
         Destroy(multiply);
         Destroy(additive);
         Destroy(screen);

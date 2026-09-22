@@ -70,6 +70,11 @@ public static class VanillaCharacterSelectValidation
         try
         {
             Require(errors == 0 && elapsed < 45, "Character select errors or timeout at phase " + phase);
+            if (Environment.GetEnvironmentVariable("UNITY_PARTY_CHARACTER_PARITY_TEST") == "1")
+            {
+                CheckParity(elapsed);
+                return;
+            }
             if (Environment.GetEnvironmentVariable("UNITY_PARTY_PICO_CONFIRM_TEST") == "1" || Environment.GetEnvironmentVariable("UNITY_PARTY_PICO_EXIT_TEST") == "1" || Environment.GetEnvironmentVariable("UNITY_PARTY_PICO_GUN_TEST") == "1")
             {
                 CheckPicoConfirmation(elapsed);
@@ -127,12 +132,15 @@ public static class VanillaCharacterSelectValidation
                     Capture(screen.GetComponent<Canvas>(), "bf.png");
                     screen.SelectSlot(0);
                     Require(screen.Character == "locked", "Unavailable character control failed.");
-                    screen.Confirm();
-                    Require(!screen.Confirming, "Locked confirmation control failed.");
                     Next();
                     break;
                 case 4:
-                    if (elapsed < .75) return;
+                    if (elapsed < 2) return;
+                    var lockedPlayer = (VanillaFreeplayAnimate)typeof(VanillaCharacterSelect).GetField("player", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(screen);
+                    Require(lockedPlayer.CurrentLabel == "idle" && lockedPlayer.CompletedLoops > 0 && !lockedPlayer.Finished,
+                        "Locked silhouette idle stopped or restarted on a beat instead of looping after entry.");
+                    screen.Confirm();
+                    Require(!screen.Confirming, "Locked confirmation control failed.");
                     Capture(screen.GetComponent<Canvas>(), "locked.png");
                     CheckGrid();
                     screen.SelectSlot(3);
@@ -204,7 +212,9 @@ public static class VanillaCharacterSelectValidation
         {
             var songs = (System.Collections.Generic.List<VanillaFreeplaySong>)typeof(VanillaFreeplay).GetField(field, flags).GetValue(VanillaFreeplay.Active);
             Require(songs.Any(song => song.week == "Week 1"), "BF catalog lost its Week 1 control songs.");
-            Require(songs.Count == 24 && songs.All(song => ((string)song.Details("Hard")["playData"]["characters"]["player"]).StartsWith("bf")), "BF catalog must include 22 originals and two BF mixes.");
+            Require(songs.Count == 25 && songs.Count(song => ((string)song.Details("Hard")["playData"]["characters"]["player"]).StartsWith("bf")) == 24
+                && songs.Count(song => Path.GetFileName(song.meta.songPath) == "01-Spaghetti" && ((string)song.Details("Hard")["playData"]["characters"]["player"]).StartsWith("sserafim")) == 1,
+                "BF catalog must include 22 originals, two BF mixes, and Spaghetti.");
         }
     }
 
@@ -259,7 +269,7 @@ public static class VanillaCharacterSelectValidation
     private static void CheckGrid()
     {
         var root = screen.transform.Find("Viewport/Icons");
-        var cursors = root.Find("Cursors").GetComponentsInChildren<VanillaFreeplaySprite>();
+        var cursors = screen.transform.Find("Viewport/Cursors").GetComponentsInChildren<VanillaFreeplaySprite>();
         var cursor = cursors.Where(item => item.name == "charSelector").Last();
         Vector2 cursorCenter = cursor.rectTransform.anchoredPosition + new Vector2(cursor.FrameSize.x / 2, -cursor.FrameSize.y / 2);
         Vector2 expected = new Vector2(screen.SelectedSlot % 3 * 110 + 64, -(screen.SelectedSlot / 3 * 110 + 64));
@@ -268,8 +278,155 @@ public static class VanillaCharacterSelectValidation
         {
             int slot = int.Parse(icon.name.Split(' ').Last());
             Vector2 center = icon.rectTransform.anchoredPosition + new Vector2(icon.FrameSize.x * icon.drawScale / 2, -icon.FrameSize.y * icon.drawScale / 2);
-            Require(Vector2.Distance(center, new Vector2(slot % 3 * 110 + 64, -(slot / 3 * 110 + 64))) < .01f, "Character icon is outside its cell.");
+            Require(Vector2.Distance(center, new Vector2(slot % 3 * 107 + 64, -(slot / 3 * 127 + 64))) < .01f, "Character icon is outside its cell.");
             Require(icon.GetComponent<Outline>().enabled == (slot == screen.SelectedSlot), "Selected icon outline is missing or applied to another icon.");
+        }
+    }
+
+    private static T Field<T>(object instance, string name) => (T)instance.GetType().GetField(name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(instance);
+
+    public static void RunRendering()
+    {
+        if (!Application.isBatchMode) throw new InvalidOperationException("Use the isolated batch editor.");
+        Directory.CreateDirectory(Output);
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        RenderReferenceFrames();
+        EditorApplication.Exit(0);
+    }
+
+    private static void RenderReferenceFrames()
+    {
+        var host = new GameObject("Character Reference", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+        var canvas = host.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        var background = new GameObject("Background", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        background.transform.SetParent(host.transform, false);
+        background.rectTransform.anchorMin = Vector2.zero;
+        background.rectTransform.anchorMax = Vector2.one;
+        background.rectTransform.offsetMin = background.rectTransform.offsetMax = Vector2.zero;
+        background.color = new Color32(128,128,128,255);
+        var graphic = new GameObject("Character", typeof(RectTransform)).AddComponent<VanillaFreeplayAnimate>();
+        graphic.transform.SetParent(host.transform, false);
+        graphic.rectTransform.anchorMin = graphic.rectTransform.anchorMax = new Vector2(0,1);
+        graphic.rectTransform.anchoredPosition = Vector2.zero;
+        foreach (string name in new[] { "lockedChill", "bfChill", "gfChill", "picoChill", "neneChill" })
+        {
+            graphic.Initialize("charSelect/" + name, true);
+            foreach (int frame in name == "lockedChill" ? new[] { 0,10,27,29,34,109 } : name == "gfChill" ? new[] { 0,15,30,54,55,56,60,80,105 } : name == "neneChill" ? new[] { 0,7,15,29,30,38,46,47,51 } : new[] { 0,15,17,22,28,30,35 })
+            {
+                graphic.SetFrame(frame);
+                Capture(canvas, name + "-" + frame + ".png");
+            }
+        }
+        graphic.SetFrame(38);
+        graphic.SetLayerFrames("VIZ_bars", new[] { 12,12,12,12,12,12,12 });
+        Capture(canvas, "neneChill-visualizer-control.png");
+        graphic.SetLayerFrames("VIZ_bars", new[] { 0,0,0,0,0,0,0 });
+        var root = Field<Newtonsoft.Json.Linq.JToken>(graphic, "root");
+        var layer = root["TL"]["L"].First(item => (string)item["LN"] == "Nene");
+        var rendered = layer["RB"];
+        ((Newtonsoft.Json.Linq.JObject)layer).Remove("RB");
+        graphic.SetLayerFrames("VIZ_bars", new[] { 0,0,0,0,0,0,0 });
+        Capture(canvas, "neneChill-unfiltered-control.png");
+        layer["RB"] = rendered;
+        foreach (string name in new[] { "bfChill", "gfChill", "picoChill", "neneChill" })
+        {
+            graphic.Initialize("charSelect/" + name, true);
+            int frame = name == "gfChill" ? 56 : name == "neneChill" ? 47 : 30;
+            graphic.SetFrame(frame);
+            var animation = Field<Newtonsoft.Json.Linq.JToken>(graphic, "root");
+            var owner = name == "neneChill" ? animation["TL"]["L"].First(item => (string)item["LN"] == "Nene") : animation;
+            var baked = owner["RB"];
+            ((Newtonsoft.Json.Linq.JObject)owner).Remove("RB");
+            graphic.SetLayerFrames("VIZ_bars", new[] { 0,0,0,0,0,0,0 });
+            Capture(canvas, name + "-overlay-control.png");
+            owner["RB"] = baked;
+        }
+        Object.DestroyImmediate(host);
+    }
+
+    private static void CheckParity(double elapsed)
+    {
+        if (phase == 0)
+        {
+            if (elapsed < 7) return;
+            RenderReferenceFrames();
+            PlayerPrefs.SetString("Freeplay.Character", "bf");
+            screen = VanillaCharacterSelect.Open(_ => { }, true);
+            Next();
+            return;
+        }
+        if (phase == 1)
+        {
+            if (screen.Busy) return;
+            CheckGrid();
+            screen.enabled = false;
+            var cursors = Field<VanillaFreeplaySprite[]>(screen, "cursors");
+            Vector2 start = cursors[2].rectTransform.anchoredPosition;
+            screen.Move(-1, 0);
+            for (int frame = 0; frame < 6; frame++) screen.Tick(1f / 60);
+            Require(Mathf.Abs(cursors[2].rectTransform.anchoredPosition.x - (start.x - 110)) < 1.2f, "Main cursor does not settle within the source 0.1-second interval.");
+            Require(Mathf.Abs(cursors[0].rectTransform.anchoredPosition.x - (start.x - 110)) > 20, "Afterimage negative control lost its distinct delay.");
+            for (int frame = 6; frame < 25; frame++) screen.Tick(1f / 60);
+            Require(Mathf.Abs(cursors[0].rectTransform.anchoredPosition.x - (start.x - 110)) < 1.1f, "Dark cursor does not settle within 0.404 seconds.");
+            screen.SelectSlot(0);
+            screen.Confirm();
+            Require(!screen.Confirming, "Locked character confirmation was accepted.");
+            Field<VanillaFreeplayAnimate>(screen, "player").SetFrame(0);
+            Field<VanillaFreeplayAnimate>(screen, "outgoing").gameObject.SetActive(false);
+            screen.Tick(.5f);
+            Capture(screen.GetComponent<Canvas>(), "locked-screen.png");
+            screen.SelectSlot(4);
+            screen.Tick(0);
+            screen.Confirm();
+            screen.Tick(.5f);
+            var music = Field<AudioSource>(screen, "music");
+            Require(Mathf.Abs(music.pitch - .55f) < .001f, "Confirmation pitch differs from quadInOut.");
+            Require(Mathf.Abs(music.volume - OptionsV2.menuVolume * 7 / 9) < .001f, "Confirmation volume differs from quadInOut.");
+            screen.Back();
+            var icon = Field<System.Collections.Generic.Dictionary<int, VanillaFreeplaySprite>>(screen, "slotIcons")[4];
+            Require(icon.FrameIndex == icon.FrameCount - 1 && icon.CurrentFrameName.StartsWith("confirm0"), "Cancellation did not reverse the icon.");
+            int lastFrame = icon.FrameIndex;
+            icon.Tick(.1f);
+            Require(icon.FrameIndex < lastFrame, "Reverse confirmation is not advancing backwards.");
+            screen.Tick(.5f);
+            Require(Mathf.Abs(music.pitch - .775f) < .001f, "Cancellation pitch did not recover with quartInOut.");
+            screen.Tick(.5f);
+            icon.Tick(2);
+            Require(!screen.Confirming && !screen.Busy && icon.CurrentFrameName.StartsWith("idle"), "Cancellation did not restore selection.");
+            Require(Field<VanillaFreeplayAnimate>(screen, "player").CurrentLabel == "idle", "Cancellation did not restore the player idle after one second.");
+            Capture(screen.GetComponent<Canvas>(), "bf-screen.png");
+            screen.SelectSlot(3);
+            screen.Tick(.5f);
+            screen.Back();
+            screen.Tick(.4f);
+            var transition = Field<VanillaFreeplayTransition>(screen, "transition");
+            Require(transition != null && transition.Texture.IsCreated(), "Exit has no captured scene.");
+            Require(Mathf.Abs(Field<Material>(transition, "blue").GetFloat("_Fade") - .75f) < .001f, "Exit does not use the source blue fade curve.");
+            Require(Field<CanvasGroup>(screen, "cursorAlpha").alpha < .04f, "Exit cursor did not fade independently.");
+            Next();
+            return;
+        }
+        if (phase == 2)
+        {
+            if (elapsed < .1) return;
+            var transition = Field<VanillaFreeplayTransition>(screen, "transition");
+            Capture(transition.Overlay, "exit-half.png");
+            screen.Tick(.4f);
+            Require(VanillaCharacterSelect.SelectedCharacter == "bf", "Back did not restore the remembered character.");
+            Next();
+            return;
+        }
+        if (phase == 3)
+        {
+            if (VanillaCharacterSelect.Active != null)
+            {
+                screen.Tick(.01f);
+                return;
+            }
+            Require(Object.FindObjectsByType<VanillaFreeplayTransition>(FindObjectsSortMode.None).Length == 0, "Exit leaked its capture camera.");
+            Debug.Log("CHARACTER PARITY PASSED: 29 reference frames, cursor timing and delay control, locked denial, confirm/cancel music, reverse icon, blue fade, cursor exit and remembered character.");
+            Finish(true);
         }
     }
 
