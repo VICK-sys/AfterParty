@@ -158,6 +158,11 @@ public sealed class FunkinHud : MonoBehaviour
 
     private void AddPopup(string image, float scale, FunkinPopupState state)
     {
+        if (song.vanillaPlayback?.SongId == "blazin")
+        {
+            state.X += 480;
+            state.Y -= 50;
+        }
         SpriteRenderer sprite;
         if (popupPool.Count == 0) sprite = CreateRenderer("Judgement Popup", 900);
         else

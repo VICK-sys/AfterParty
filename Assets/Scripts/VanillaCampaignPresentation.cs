@@ -39,6 +39,9 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
     private RectTransform viewport;
     private AudioSource sound;
     private AudioSource music;
+    private RawImage countdownImage;
+    private Material retryFadeMaterial;
+    private Canvas retryCanvas;
     private readonly System.Collections.Generic.List<AudioClip> clips = new System.Collections.Generic.List<AudioClip>();
     private string Root(int week) => Path.Combine(Application.streamingAssetsPath, week == 9 ? "Bundles/SpaghettiAssets" : "Bundles/Week" + week + "Assets");
     private bool Advance
@@ -54,16 +57,22 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
     public void AdvanceDialogue() => advanceRequested = true;
     public bool TakeAdvanceInput() => Advance;
 
+    public static bool HasIntro(string id, string variation, bool pixel, bool week3, bool campaignStage, bool story)
+    {
+        bool pico = variation == "pico";
+        return id == "spaghetti" && campaignStage || id == "winter-horrorland"
+            || pico && (week3 || id == "stress")
+            || story && (id == "darnell" || id == "ugh" || id == "guns" || id == "stress")
+            || pixel && (story || pico);
+    }
+
     public void PrepareIntro(Song owner)
     {
         var playback = owner.vanillaPlayback;
         if (playback == null || playedIntro || Pause.PlayedCampaignIntro || Pause.DeathCount > 0 || introPrepared) return;
         string id = playback.SongId;
-        bool pico = playback.Variation == "pico";
-        bool hasIntro = id == "spaghetti" && playback.CampaignStage != null || id == "winter-horrorland"
-            || pico && (playback.IsWeek3 || id == "stress")
-            || VanillaStoryCampaign.Running && (id == "darnell" || id == "ugh" || id == "guns" || id == "stress")
-            || playback.IsPixel && (VanillaStoryCampaign.Running || pico);
+        bool hasIntro = HasIntro(id, playback.Variation, playback.IsPixel, playback.IsWeek3,
+            playback.CampaignStage != null, VanillaStoryCampaign.Running);
         if (!hasIntro) return;
         Initialize(owner);
         introHud = owner.uiCamera.enabled;
@@ -231,7 +240,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
         }
         if (id == "ugh" || id == "guns" || id == "stress")
         {
-            if (VanillaStoryCampaign.Running) yield return Week7Video(id);
+            if (VanillaStoryCampaign.Running) yield return Week7Video(id, keepCovered: true);
             yield break;
         }
         if (id != "winter-horrorland" && (!song.vanillaPlayback.IsPixel || !VanillaStoryCampaign.Running && !pico)) yield break;
@@ -463,12 +472,89 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
 
     public Image CreateFade() => Overlay(Color.clear);
 
-    public IEnumerator Countdown(Song owner)
+    public void ResetForRetry(Song owner)
+    {
+        Initialize(owner);
+        StopAllCoroutines();
+        ReleaseVideo();
+        if (retryCanvas != null) Destroy(retryCanvas.gameObject);
+        retryCanvas = null;
+        sound.Stop();
+        music.Stop();
+        foreach (Transform child in viewport) Destroy(child.gameObject);
+        introCover = rosesFade = videoHandoffCover = null;
+        Busy = OutroFinished = outroStarted = introPrepared = false;
+        winterIntro = winterTransition = weekendCamera = eggnogCamera = spaghettiCamera = false;
+        weekendReturnAge = -1;
+        advanceRequested = false;
+        FadeHud(1);
+    }
+
+    public void RevealRetry()
+    {
+        StartCoroutine(RetryFade(1, 0, 1));
+    }
+
+    public IEnumerator RetryFade(float from, float to, float duration)
+    {
+        var root = new GameObject("Retry Fade", typeof(RectTransform));
+        root.transform.SetParent(transform, false);
+        retryCanvas = root.AddComponent<Canvas>();
+        retryCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        retryCanvas.worldCamera = song.isDead ? song.deadCamera : song.mainCamera;
+        retryCanvas.planeDistance = retryCanvas.worldCamera.nearClipPlane + .1f;
+        retryCanvas.sortingOrder = 32760;
+        int mask = retryCanvas.worldCamera.cullingMask;
+        for (int layer = 0; layer < 32; layer++)
+            if ((mask & (1 << layer)) != 0) { root.layer = layer; break; }
+        var cover = new GameObject("Retry Cover", typeof(RectTransform)).AddComponent<Image>();
+        cover.transform.SetParent(root.transform, false);
+        cover.gameObject.layer = root.layer;
+        cover.rectTransform.anchorMin = Vector2.zero;
+        cover.rectTransform.anchorMax = Vector2.one;
+        cover.rectTransform.offsetMin = cover.rectTransform.offsetMax = Vector2.zero;
+        cover.color = new Color(0, 0, 0, from);
+        cover.raycastTarget = false;
+        bool pixel = song.vanillaPlayback.IsPixel;
+        if (pixel)
+        {
+            if (retryFadeMaterial == null) retryFadeMaterial = new Material(Resources.Load<Shader>("FunkinHud/RetryFade"));
+            cover.material = retryFadeMaterial;
+        }
+        float end = duration + (pixel && to == 0 ? duration / 10 : 0);
+        for (float elapsed = 0; elapsed < end; elapsed += Time.deltaTime)
+        {
+            float progress = Mathf.Clamp01(elapsed / duration);
+            if (pixel) progress = Mathf.Clamp01((Mathf.Floor(elapsed / duration * 10) - 1) / 10);
+            cover.color = new Color(0, 0, 0, Mathf.Lerp(from, to, progress));
+            yield return null;
+        }
+        cover.color = new Color(0, 0, 0, to);
+        if (to == 0)
+        {
+            Destroy(root);
+            retryCanvas = null;
+        }
+    }
+
+    public void CancelCountdown()
+    {
+        if (sound != null) sound.Stop();
+        if (music != null) music.Stop();
+        if (countdownImage != null)
+        {
+            countdownImage.gameObject.SetActive(false);
+            Destroy(countdownImage.gameObject);
+            countdownImage = null;
+        }
+    }
+
+    public IEnumerator Countdown(Song owner, bool retry = false)
     {
         Initialize(owner);
         float beat = song.beatsPerSecond;
-        song.BeginFunkinCountdown(beat*5);
-        transitionStart = -beat*5000;
+        song.BeginFunkinCountdown(beat*5, retry);
+        transitionStart = song.SongPosition - Pause.GlobalOffset;
         if (videoHandoffCover != null)
         {
             var cover = videoHandoffCover;
@@ -482,7 +568,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
         for (int step = 0; step < 4; step++)
         {
             double start = -(4-step)*beat*1000;
-            while (song.SongPosition-Pause.GlobalOffset < start) yield return null;
+            while (song.CountdownPosition < start) yield return null;
             sound.PlayOneShot(Resources.Load<AudioClip>("FunkinHud/"+folder+"/"+sounds[step]),.6f);
             RawImage image = null;
             if (images[step] != null)
@@ -491,15 +577,22 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
                 float scale = song.vanillaPlayback.IsPixel ? 6 : 1;
                 image = Rect("Countdown",viewport,(1280-texture.width*scale)/2,(720-texture.height*scale)/2,texture.width*scale,texture.height*scale).gameObject.AddComponent<RawImage>();
                 image.texture = texture;
+                countdownImage = image;
             }
-            while (song.SongPosition-Pause.GlobalOffset < start+beat*1000)
+            while (song.CountdownPosition < start+beat*1000)
             {
-                float t = (float)((song.SongPosition-Pause.GlobalOffset-start)/(beat*1000));
+                if (Pause.instance != null && (Pause.instance.IsPaused || Pause.instance.Transitioning))
+                {
+                    yield return null;
+                    continue;
+                }
+                float t = (float)((song.CountdownPosition-start)/(beat*1000));
                 float eased = song.vanillaPlayback.IsPixel ? Mathf.Floor(t*8)/8 : t < .5f ? 4*t*t*t : 1-Mathf.Pow(-2*t+2,3)/2;
                 if (image != null) image.color = new Color(1,1,1,(1-eased)*HudAlpha);
                 yield return null;
             }
             if (image != null) Destroy(image.gameObject);
+            countdownImage = null;
         }
     }
 
@@ -538,6 +631,7 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
     private void OnDestroy()
     {
         ReleaseVideo();
+        if (retryFadeMaterial != null) Destroy(retryFadeMaterial);
         foreach (AudioClip clip in clips) if (clip != null) Destroy(clip);
     }
 }

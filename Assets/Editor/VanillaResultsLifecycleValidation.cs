@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 public static class VanillaResultsLifecycleValidation
 {
     private static int phase;
-    private static int scenario;
+    private static int scenario = Environment.GetEnvironmentVariable("UNITY_PARTY_RESULTS_BLAZIN_ONLY") == "1" ? 6 : 0;
     private static int errors;
     private static int assertions;
     private static double changed;
@@ -24,6 +24,8 @@ public static class VanillaResultsLifecycleValidation
     private static int campaignNotes;
     private static int campaignScore;
     private static string scoreKey;
+    private static readonly FieldInfo LightningTimer = typeof(VanillaCampaignStage).GetField("lightningTimer", BindingFlags.Instance | BindingFlags.NonPublic);
+    private static readonly MethodInfo StageUpdate = typeof(VanillaCampaignStage).GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
     private static string Output => Environment.GetEnvironmentVariable("UNITY_PARTY_RESULTS_TEST_PATH") ?? Path.GetFullPath("Temp/ResultsLifecycle");
 
     static VanillaResultsLifecycleValidation()
@@ -43,6 +45,8 @@ public static class VanillaResultsLifecycleValidation
         Directory.CreateDirectory(Output);
         PlayerSettings.companyName = "UnityPartyValidation";
         PlayerSettings.productName = "ResultsLifecycleValidation";
+        PlayerPrefs.SetInt("Funkin.Options.DiscordRPC", 0);
+        PlayerPrefs.SetInt("Funkin.Options.AutoPause", 0);
         EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
         SessionState.SetBool("VanillaResultsLifecycleValidation.Active", true);
         EditorApplication.EnterPlaymode();
@@ -63,7 +67,7 @@ public static class VanillaResultsLifecycleValidation
     private static void Launch()
     {
         songs = songs ?? VanillaFreeplayCatalog.Discover(Path.Combine(Application.streamingAssetsPath, "Bundles"));
-        string folder = scenario == 1 ? "01-Bopeebo-Pico" : "01-Bopeebo";
+        string folder = scenario == 6 ? "04-Blazin" : scenario == 1 ? "01-Bopeebo-Pico" : "01-Bopeebo";
         selected = songs.Single(song => Path.GetFileName(song.meta.songPath) == folder);
         PlayerPrefs.SetString("Freeplay.Character", scenario == 1 ? "pico" : "bf");
         VanillaStoryCampaign.ReturnToMenu();
@@ -118,6 +122,15 @@ public static class VanillaResultsLifecycleValidation
         Next(2);
     }
 
+    private static void CheckThunderStopped()
+    {
+        var stage = Song.instance.vanillaPlayback.CampaignStage;
+        LightningTimer.SetValue(stage, -1f);
+        StageUpdate.Invoke(stage, null);
+        Require(!stage.GetComponent<AudioSource>().isPlaying, "Stage thunder continued into results.");
+        Require((float)LightningTimer.GetValue(stage) == -1f, "Stage scheduled lightning during results.");
+    }
+
     private static void Tick()
     {
         if (!EditorApplication.isPlaying) return;
@@ -135,10 +148,19 @@ public static class VanillaResultsLifecycleValidation
             {
                 if (Song.instance == null || !Song.instance.songStarted || age < 3) return;
                 Require(VanillaResultsScreen.Active == null, "Results remained active during gameplay.");
+                if (scenario == 6)
+                {
+                    var stage = Song.instance.vanillaPlayback.CampaignStage;
+                    LightningTimer.SetValue(stage, -1f);
+                    StageUpdate.Invoke(stage, null);
+                    Require((float)LightningTimer.GetValue(stage) > 0, "Gameplay lightning control did not trigger.");
+                    Require(stage.GetComponent<AudioSource>().isPlaying, "Gameplay thunder control was silent.");
+                }
                 EndSong();
             }
             else if (phase == 2)
             {
+                if (scenario == 6 && Song.instance.EnteringResults) CheckThunderStopped();
                 if (scenario == 3)
                 {
                     Require(VanillaResultsScreen.Active == null, "Aborted song showed results.");
@@ -159,14 +181,15 @@ public static class VanillaResultsLifecycleValidation
                 var screen = VanillaResultsScreen.Active;
                 if (screen == null) return;
                 Require(!Song.instance.songStarted && !Song.instance.songSetupDone, "Gameplay remained active under results.");
-                Require(screen.Data.Character == (scenario == 1 ? "pico" : "bf"), "Results used the wrong character.");
+                Require(screen.Data.Character == (scenario == 1 || scenario == 6 ? "pico" : "bf"), "Results used the wrong character.");
                 Require(screen.Data.storyMode == (scenario == 2), "Story results flag.");
                 Require(screen.Data.score == (scenario == 2 ? campaignScore : expected.score), "Results score was lost.");
                 Require(screen.Data.totalNotes == (scenario == 2 ? campaignNotes : expected.totalNotes), "Results note totals were lost.");
                 Require(screen.Data.totalNotesHit == screen.Data.totalNotes, "Results hit tally includes missed notes.");
-                bool eligible = scenario == 0 || scenario == 2 || scenario == 5;
-                Require(screen.Data.newHighscore == eligible && screen.Data.rankImproved == (scenario == 0 || scenario == 5), "Practice or autoplay earned a record.");
+                bool eligible = scenario == 0 || scenario == 2 || scenario == 5 || scenario == 6;
+                Require(screen.Data.newHighscore == eligible && screen.Data.rankImproved == (scenario == 0 || scenario == 5 || scenario == 6), "Practice or autoplay earned a record.");
                 if (!eligible) Require(!PlayerPrefs.HasKey(scoreKey) && !PlayerPrefs.HasKey("Freeplay.Rank." + scoreKey), "Ineligible completion saved a score.");
+                if (scenario == 6 && age < 17) return;
                 screen.Accept();
                 screen.Accept();
                 Next(3);
@@ -187,7 +210,7 @@ public static class VanillaResultsLifecycleValidation
             {
                 scenario++;
                 campaignNotes = campaignScore = 0;
-                if (scenario >= 6) Finish(true);
+                if (scenario >= 7) Finish(true);
                 else Next(0);
             }
         }

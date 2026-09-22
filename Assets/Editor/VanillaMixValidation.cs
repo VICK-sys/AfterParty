@@ -180,6 +180,8 @@ public static partial class VanillaMixValidation
         if (playback.IsWeek3 && playback.Variation == "pico")
         {
             var week3 = playback.Week3Stage;
+            Require(Enumerable.Range(0, 3).All(index => week3.CharacterGraphic(index).PhillyColor == week3.Erect)
+                && week3.PropGraphic("train").PhillyColor == week3.Erect, "Week 3 Pico mix color filter changed.");
             Vector3[] corners = { new Vector3(6.6f, -3.44f), new Vector3(.655f, -3.44f), new Vector3(5.09f, -1.32f) };
             Vector3[] offsets = { new Vector3(.19f, -.01f), new Vector3(-.23f, -.01f), new Vector3(.04f, .89f) };
             for (int index = 0; index < 3; index++)
@@ -191,6 +193,40 @@ public static partial class VanillaMixValidation
             }
             var bot = Field<VanillaMixCompanion>(week3, "companion");
             Require(Vector3.Distance(bot.Body.Position, new Vector3(4.18f, -4.27f)) < .001f, "Week 3 A-Bot differs from its source position.");
+            var render = typeof(VanillaWeek3Stage).GetMethod("Render", Private);
+            var nene = week3.CharacterGraphic(2);
+            float health = song.health;
+            foreach (bool knife in new[] { false, true })
+            {
+                week3.ResetStage();
+                song.health = knife ? 25 : 100;
+                if (knife)
+                {
+                    bot.Advance(0, song.mainCamera.transform.position, 0);
+                    bot.Beat();
+                    nene.Advance(14f / 24, song.mainCamera.transform.position, 0);
+                    bot.Advance(0, song.mainCamera.transform.position, 0);
+                }
+                bot.Train(true);
+                for (int cycle = 0; cycle < 4; cycle++)
+                {
+                    render.Invoke(week3, new object[] { .4f });
+                    Require(nene.Animation == (knife ? "hairBlowKnife" : "hairBlowNormal"), "Nene train pose changed.");
+                    Require(nene.GetComponent<MeshFilter>().sharedMesh == Field<Mesh>(nene, "compositeMesh"),
+                        "Nene hair restart replaced the composited mesh after rendering.");
+                }
+                bot.Advance(0, song.mainCamera.transform.position, 0);
+                Require(nene.GetComponent<MeshFilter>().sharedMesh != Field<Mesh>(nene, "compositeMesh"),
+                    "Late hair restart negative control did not reproduce the mesh mismatch.");
+                bot.Train(false);
+                render.Invoke(week3, new object[] { 0f });
+                Require(nene.Animation == (knife ? "hairFallKnife" : "hairFallNormal")
+                    && nene.GetComponent<MeshFilter>().sharedMesh == Field<Mesh>(nene, "compositeMesh"),
+                    "Nene hair landing did not render with its composite mesh.");
+            }
+            song.health = health;
+            week3.ResetStage();
+            Debug.Log("NENE TRAIN RENDER PASSED: normal and knife hair loops, landing, and late-restart negative control.");
         }
         Require(song.FunkinHud != null && song.player1NoteSprites.All(item => item != null && item.enabled)
             && song.player2NoteSprites.All(item => item != null && item.enabled), "Mix HUD or strumline is unavailable.");

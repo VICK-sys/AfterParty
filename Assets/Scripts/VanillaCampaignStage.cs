@@ -307,6 +307,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         if (eggnogOutroActive) props["santa"].gameObject.SetActive(true);
         eggnogOutroActive = false;
         if (death != null) Destroy(death.gameObject);
+        if (deathKnife != null) Destroy(deathKnife.gameObject);
         lastBeat = -1;
         lastDanceStep = int.MinValue;
         clock = trailAge = 0;
@@ -462,8 +463,10 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         foreach (SpriteRenderer renderer in song.deadBoyfriend.GetComponentsInChildren<SpriteRenderer>(true)) renderer.enabled = false;
         song.deadBoyfriendAnimator.enabled = false;
         song.deadCamera.orthographic = true;
-        float scale = Week == 8 ? Mathf.Abs(actors[0].graphic.transform.localScale.x) : (float?)actors[0].data["scale"] ?? 1;
-        Vector2 size = Week == 8 ? actors[0].graphic.Size : death.Size;
+        float scale = Mathf.Abs(actors[0].graphic.transform.localScale.x);
+        Vector2 size = Week == 8 ? actors[0].graphic.Size : actors[0].graphic.HitboxSize;
+        if (Week != 8 && ((string)chart["variation"] == "pico" || (string)chart["variation"] == "bf" || Week == 9))
+            size = new Vector2((int)size.x, (int)size.y);
         deathTarget = death.Position + new Vector3(size.x * scale / 200, -size.y * scale / 200, -10)
             + Point(actors[0].data["death"]?["cameraOffsets"]);
         LeanTween.cancel(song.deadCamera.gameObject);
@@ -487,6 +490,11 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
     private void LateUpdate()
     {
         if (song == null) return;
+        if (song.EnteringResults)
+        {
+            sound.Stop();
+            return;
+        }
         if (eggnogOutroActive) return;
         if (song.isDead)
         {
@@ -595,7 +603,10 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
         if (outroSanta != null) return;
         outroSanta = Graphic(Path.Combine(root,"cutscene/santa_speaks_assets"),"Santa Outro",209);
         outroParents = Graphic(Path.Combine(root,"cutscene/parents_shoot_assets"),"Parents Outro",208);
-        outroSanta.Position = new Vector3(-13,-1,0);
+        var standingSanta = props["santa"];
+        float santaFloor = standingSanta.Position.y - standingSanta.FrameSize.y * standingSanta.transform.localScale.y / 100;
+        float cutsceneFloor = outroSanta.GetComponent<MeshFilter>().sharedMesh.bounds.min.y;
+        outroSanta.Position = new Vector3(-13, santaFloor - cutsceneFloor, 0);
         outroParents.Position = new Vector3(-6.02f,.035f,0);
         foreach (var graphic in new[] { outroSanta, outroParents })
         {

@@ -31,6 +31,9 @@ public sealed partial class VanillaCampaignPresentation
         for (float time = 0; time < 10; time += Time.deltaTime)
         {
             if (time >= .7f && !music.isPlaying) music.Play();
+            var nene = stage.CharacterGraphic(2);
+            if (time >= .7f && nene.Finished)
+                stage.PlayAnimation("gf", nene.Animation == "danceLeft" ? "danceRight" : "danceLeft");
             black.color = new Color(0,0,0,1-Mathf.Clamp01((time-1)/2));
             float t = Mathf.Clamp01((time-2)/2.5f);
             float ease = t < .5f ? 2*t*t : 1-Mathf.Pow(-2*t+2,2)/2;
@@ -100,7 +103,7 @@ public sealed partial class VanillaCampaignPresentation
         weekendFromSize = song.mainCamera.orthographicSize;
         weekendCamera = true;
         string id = song.vanillaPlayback.SongId;
-        yield return Week7Video(id, 8, id == "2hot" ? 6 : 0, keepCovered: true);
+        yield return Week7Video(id, 8, id == "2hot" && song.vanillaPlayback.CampaignStage != null ? 6 : 0, keepCovered: true);
         weekendCamera = false;
         OutroFinished = true;
         Busy = false;

@@ -21,6 +21,7 @@ public class Pause : MonoBehaviour
     public VanillaPauseMenu View { get; private set; }
     public bool IsVideo => Song.instance?.vanillaPlayback?.Presentation?.VideoActive == true;
     private static string sessionSong;
+    private static string pendingLoadingScreenSkip;
     private float previousTimeScale = 1;
     private bool clockPaused;
     private bool songClockRunning;
@@ -111,10 +112,38 @@ public class Pause : MonoBehaviour
     {
         if (Transitioning) return;
         Transitioning = true;
-        Song.instance.respawning = true;
+        Song song = Song.instance;
         View.StopMusic();
-        RestoreClock();
-        SceneManager.LoadScene("Game_Backup3");
+        if (song.vanillaPlayback != null)
+        {
+            pauseScreen.SetActive(false);
+            RestoreClock();
+            foreach (AudioSource source in pausedAudio)
+                if (source != null) source.Stop();
+            pausedAudio.Clear();
+            song.RestartInPlace();
+            Transitioning = false;
+            return;
+        }
+        song.respawning = true;
+        pendingLoadingScreenSkip = Song.currentSongMeta?.songPath;
+        ReloadSong();
+    }
+
+    private void ReloadSong()
+    {
+        LoadingTransition.instance.HoldStoryFrame(() =>
+        {
+            RestoreClock();
+            LoadingTransition.instance.LoadScene("Game_Backup3");
+        });
+    }
+
+    public static bool ConsumeLoadingScreenSkip(string songPath)
+    {
+        bool pending = pendingLoadingScreenSkip != null && pendingLoadingScreenSkip == songPath;
+        pendingLoadingScreenSkip = null;
+        return pending;
     }
 
     public void QuitSong()
@@ -152,6 +181,7 @@ public class Pause : MonoBehaviour
         PlayedCampaignIntro = false;
         MixOpponentExploded = false;
         sessionSong = null;
+        pendingLoadingScreenSkip = null;
     }
 
     public static void SetGlobalOffset(float value)

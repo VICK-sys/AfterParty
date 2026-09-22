@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public partial class Song
 {
@@ -28,21 +27,23 @@ public partial class Song
             }
             yield break;
         }
-        using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(new Uri(opponent).AbsoluteUri, AudioType.OGGVORBIS))
+        var result = new SongAudioLoader.Result();
+        yield return SongAudioLoader.Load(opponent, result);
+        if (result.Error != null)
         {
-            yield return request.SendWebRequest();
-            if (request.result != UnityWebRequest.Result.Success) throw new IOException(request.error);
-            if (OpponentVocals == null)
-            {
-                OpponentVocals = gameObject.AddComponent<AudioSource>();
-                OpponentVocals.playOnAwake = false;
-                OpponentVocals.outputAudioMixerGroup = vocalSource.outputAudioMixerGroup;
-                musicSources = musicSources.Concat(new[] { OpponentVocals }).ToArray();
-            }
-            else if (OpponentVocals.clip != null) Destroy(OpponentVocals.clip);
-            OpponentVocals.clip = DownloadHandlerAudioClip.GetContent(request);
-            SplitPlayerVocalsPath = player;
+            songLoadError = opponent + ": " + result.Error;
+            yield break;
         }
+        if (OpponentVocals == null)
+        {
+            OpponentVocals = gameObject.AddComponent<AudioSource>();
+            OpponentVocals.playOnAwake = false;
+            OpponentVocals.outputAudioMixerGroup = vocalSource.outputAudioMixerGroup;
+            musicSources = musicSources.Concat(new[] { OpponentVocals }).ToArray();
+        }
+        else if (OpponentVocals.clip != null) Destroy(OpponentVocals.clip);
+        OpponentVocals.clip = result.Clip;
+        SplitPlayerVocalsPath = player;
     }
 
     private void SetFunkinVocalMuted(int side, bool muted)
@@ -55,10 +56,22 @@ public partial class Song
     private readonly double[] funkinScores = new double[2];
     private double countdownEnd;
     private double? countdownPausedAt;
+    private double? restartNotesAt;
+    public float RestartNoteOffset => IsCountingDown && restartNotesAt.HasValue
+        ? NoteObject.RestartOffset((float)((SongPosition - Pause.GlobalOffset - restartNotesAt.Value) / 1000), true, OptionsV2.Downscroll) : 0;
     public bool IsCountingDown { get; private set; }
     public bool FreeplayAborted { get; set; }
-    public double SongPosition => IsCountingDown ? ((countdownPausedAt ?? Time.realtimeSinceStartupAsDouble) - countdownEnd) * 1000 + Pause.GlobalOffset :
-        stopwatch == null ? 0 : stopwatch.Elapsed.TotalMilliseconds + Pause.GlobalOffset;
+    public double CountdownPosition => ((countdownPausedAt ?? Time.realtimeSinceStartupAsDouble) - countdownEnd) * 1000;
+    public double SongPosition => (RestartDelayRemaining > 0 ? -500 - beatsPerSecond * 5000 :
+        IsCountingDown ? CountdownPosition : stopwatch == null ? 0 : stopwatch.Elapsed.TotalMilliseconds)
+        + Pause.GlobalOffset - (currentSongMeta?.freeplayInstrumentalStart ?? 0) * 1000;
+
+    private IEnumerator PlayOffsetVocals(AudioSource source)
+    {
+        yield return null;
+        while (SongPosition - Pause.GlobalOffset < 0) yield return null;
+        source.Play();
+    }
     public float ChartScrollSpeed { get; private set; } = 1;
     public float FunkinScrollSpeed => Math.Max(0.01f, ChartScrollSpeed - speedDifference * 100);
     public static float ReadChartScrollSpeed(string path)
@@ -89,12 +102,19 @@ public partial class Song
         funkinScores[0] = funkinScores[1] = 0;
         IsCountingDown = false;
         countdownPausedAt = null;
+        restartNotesAt = null;
     }
 
-    public void BeginFunkinCountdown(double seconds)
+    public void BeginFunkinCountdown(double seconds, bool retry = false)
     {
         countdownEnd = Time.realtimeSinceStartupAsDouble + seconds;
         IsCountingDown = true;
+        countdownPausedAt = null;
+        restartNotesAt = retry ? SongPosition - Pause.GlobalOffset : (double?)null;
+        if (retry)
+            foreach (var line in Player.instance.Strumlines)
+                foreach (var note in line.Notes)
+                    if (note.View is NoteObject view) view.BeginRestartIncoming();
     }
 
     public void SetCountdownPaused(bool paused)
@@ -106,6 +126,22 @@ public partial class Song
             countdownEnd += Time.realtimeSinceStartupAsDouble - countdownPausedAt.Value;
             countdownPausedAt = null;
         }
+    }
+
+    private void CancelSongPlayback()
+    {
+        StopAllCoroutines();
+        IsCountingDown = false;
+        countdownPausedAt = null;
+        restartNotesAt = null;
+        RestartDelayRemaining = 0;
+        songStarted = false;
+        ReleaseRestartNotes();
+        foreach (AudioSource source in musicSources) source.Stop();
+        vocalSource.Stop();
+        if (OpponentVocals != null) OpponentVocals.Stop();
+        soundSource.Stop();
+        vanillaPlayback?.Presentation?.CancelCountdown();
     }
 
     public void InitializeFunkinStrums()
@@ -265,6 +301,7 @@ public partial class Song
     private void PlayFunkinMissSound(int side, float min, float max)
     {
         SetFunkinVocalMuted(side, true);
+        oopsSource.volume = OptionsV2.missVolume;
         if (noteMissClip.Length > 0) oopsSource.PlayOneShot(noteMissClip[UnityEngine.Random.Range(0, noteMissClip.Length)], UnityEngine.Random.Range(min, max));
     }
 

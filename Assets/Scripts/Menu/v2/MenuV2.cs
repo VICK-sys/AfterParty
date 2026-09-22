@@ -345,7 +345,7 @@ public class MenuV2 : MonoBehaviour
         Song.modeOfPlay = PlayModes.FromIndex(songModeDropdown.value);
         Song.currentSongMeta = _currentMeta;
 
-        LoadingTransition.instance.LoadScene("Game_Backup3");
+        LoadingTransition.instance.LoadScene("Game_Backup3", fadeThroughBlack: true);
     }
 
     IEnumerator LoadSongAudio(string path)

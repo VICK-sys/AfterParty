@@ -22,6 +22,12 @@ public static class VanillaWeekend1PresentationValidation
     private static bool outroStarted;
     private static bool sawDarnellVideo;
     private static bool sawDarnellReveal;
+    private static string neneAnimation;
+    private static int neneDanceChanges;
+    private static bool sawNeneLaugh;
+    private static float neneLaughElapsed;
+    private static float neneLaughDuration;
+    private static float neneSampleTime;
     private static Song song;
     private static string Output => Environment.GetEnvironmentVariable("UNITY_PARTY_WEEKEND_VIDEO_PATH");
 
@@ -70,6 +76,27 @@ public static class VanillaWeekend1PresentationValidation
             {
                 var presentation = song.vanillaPlayback.Presentation;
                 sawDarnellVideo |= presentation.VideoActive;
+                if (sawDarnellReveal && presentation.Busy && !presentation.VideoActive && !song.IsCountingDown && !song.songStarted)
+                {
+                    var nene = song.vanillaPlayback.CampaignStage.CharacterGraphic(2);
+                    float delta = neneSampleTime == 0 ? 0 : Time.time - neneSampleTime;
+                    neneSampleTime = Time.time;
+                    if (neneAnimation == "laughCutscene") neneLaughElapsed += delta;
+                    if (nene.Animation != neneAnimation)
+                    {
+                        if (neneAnimation == "laughCutscene")
+                            Require(neneLaughElapsed >= neneLaughDuration - .1f, "Nene's cutscene laugh was interrupted.");
+                        if (nene.Animation == "laughCutscene")
+                        {
+                            sawNeneLaugh = true;
+                            neneLaughElapsed = 0;
+                            neneLaughDuration = nene.Duration;
+                        }
+                        else if (!sawNeneLaugh && (nene.Animation == "danceLeft" || nene.Animation == "danceRight"))
+                            neneDanceChanges++;
+                        neneAnimation = nene.Animation;
+                    }
+                }
                 if (sawDarnellVideo && !sawDarnellReveal && !presentation.VideoActive && !song.IsCountingDown && !song.songStarted)
                 {
                     var covers = presentation.GetComponentsInChildren<Image>().Where(image => image.enabled && image.color.r == 0 && image.color.g == 0 && image.color.b == 0).ToArray();
@@ -109,11 +136,16 @@ public static class VanillaWeekend1PresentationValidation
                     Require(!song.stopwatch.IsRunning && !song.beatStopwatch.IsRunning, "Outro left the song clock running.");
                     song.enabled = false;
                 }
+                if (index == 1 && outroStarted && presentation.Video != null && presentation.VideoTime < 6)
+                    Require(presentation.GetComponentsInChildren<Image>().Where(image => image.name == "Overlay")
+                        .All(image => !image.enabled || image.color.a == 0), "2hot covered the stage before the six-second video handoff.");
                 if (presentation == null || !presentation.VideoActive || presentation.VideoTime < (index == 1 ? 7 : 1.5f)) return;
                 if (index == 0) Require(!song.songStarted && !song.IsCountingDown, "Cutscene overlaps gameplay.");
                 Require(presentation.Video.isPlaying && presentation.Video.frame > 0, "Video is not decoding.");
                 if (index == 1)
                 {
+                    Require(presentation.GetComponentsInChildren<Image>().Any(image => image.name == "Overlay" && image.enabled && image.color.a == 1),
+                        "2hot video background control is missing after the handoff.");
                     Require(song.vanillaPlayback.CampaignStage.CharacterGraphic(1).Animation == "pissed", "2hot in-engine outro pose failed.");
                 }
                 Capture(presentation);
@@ -161,7 +193,13 @@ public static class VanillaWeekend1PresentationValidation
                 bool covered = song.vanillaPlayback.Presentation.GetComponentsInChildren<Image>()
                     .Any(image => image.name == "Overlay" && image.isActiveAndEnabled && image.color == Color.black);
                 Require(covered == (index > 0), "Video handoff must retain the outro cover and release the intro cover.");
-                if (index == 0) { Require(sawDarnellReveal, "Darnell handoff reveal was not observed."); Pause.instance.RestartSong(); Next(6); }
+                if (index == 0)
+                {
+                    Require(sawDarnellReveal, "Darnell handoff reveal was not observed.");
+                    Require(neneDanceChanges >= 3 && sawNeneLaugh, "Nene did not repeatedly dance before her cutscene laugh.");
+                    Pause.instance.RestartSong();
+                    Next(6);
+                }
                 else { VanillaStoryCampaign.ReturnToMenu(); Pause.instance.QuitSong(); Next(7); }
             }
             else if (phase == 6)

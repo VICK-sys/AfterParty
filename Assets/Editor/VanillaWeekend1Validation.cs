@@ -115,6 +115,7 @@ public static class VanillaWeekend1Validation
         if (song.vanillaPlayback.SongId == "blazin")
         {
             CheckBlazinPlacement(song);
+            CheckCombatCameraShake(song);
             var note = notes.First(item => (string)item["k"] == "weekend-1-punchlow");
             stage.Hit(0,(int)note["d"],(double)note["t"]);
             Require(stage.CharacterGraphic(0).Animation.StartsWith("punchLow") && stage.CharacterGraphic(1).Animation == "hitLow","Combat hit failed.");
@@ -138,6 +139,68 @@ public static class VanillaWeekend1Validation
         if (song.vanillaPlayback.SongId == "blazin") song.mainCamera.transform.position = song.vanillaPlayback.CameraFocusTarget;
         VanillaSongValidation.CaptureStage(song.vanillaPlayback.SongId+"-"+Song.difficulty+"-stage.png");
         if (song.vanillaPlayback.SongId == "2hot" && Environment.GetEnvironmentVariable("UNITY_PARTY_MISS_TEST") == "1") CheckIdleMisses(song, notes);
+    }
+
+    private static void CheckCombatCameraShake(Song song)
+    {
+        var stage = song.vanillaPlayback.CampaignStage;
+        var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+        var age = typeof(VanillaCampaignStage).GetField("shakeAge", flags);
+        var strength = typeof(VanillaCampaignStage).GetField("shakeStrength", flags);
+        var fight = typeof(VanillaCampaignStage).GetMethod("FightAnimation", flags);
+        var apply = typeof(VanillaCampaignStage).GetMethod("ApplyCombatCameraShake", flags);
+        stage.ClearCombatCameraShake();
+        Vector3 origin = song.mainCamera.transform.position;
+        var randomState = UnityEngine.Random.state;
+        try
+        {
+            foreach (var sample in new[] {
+                (0, "block", true, .002f, .1f),
+                (1, "hitHigh", true, .0025f, .15f),
+                (0, "uppercut", true, .005f, .25f),
+                (0, "uppercutHit", true, .005f, .25f),
+                (0, "uppercut", false, 0f, 0f),
+                (1, "uppercut", true, 0f, 0f),
+                (1, "uppercutHit", true, 0f, 0f),
+                (0, "dodge", true, 0f, 0f) })
+            {
+                age.SetValue(stage, 0f);
+                strength.SetValue(stage, 0f);
+                fight.Invoke(stage, new object[] { sample.Item1, sample.Item2, sample.Item3 });
+                Require((float)age.GetValue(stage) == sample.Item5 && (float)strength.GetValue(stage) == sample.Item4,
+                    "Combat shake trigger differs: " + sample.Item1 + "/" + sample.Item2 + "/" + sample.Item3);
+            }
+            UnityEngine.Random.InitState(1729);
+            strength.SetValue(stage, .005f);
+            bool moved = false;
+            for (int frame = 0; frame < 240; frame++)
+            {
+                age.SetValue(stage, .25f);
+                apply.Invoke(stage, new object[] { 1f / 60 });
+                Vector3 offset = song.mainCamera.transform.position - origin;
+                Require(Mathf.Abs(offset.x) <= .06401f && Mathf.Abs(offset.y) <= .03601f,
+                    "Combat shake exceeds source viewport bounds or accumulates displacement.");
+                moved |= offset.sqrMagnitude > .000001f;
+                stage.ClearCombatCameraShake();
+                Require(song.mainCamera.transform.position == origin, "Combat shake changed the follow position.");
+            }
+            Require(moved, "Disabled shake control passed.");
+            apply.Invoke(stage, new object[] { .3f });
+            Require(song.mainCamera.transform.position == origin, "Expired combat shake retained displacement.");
+            age.SetValue(stage, .25f);
+            apply.Invoke(stage, new object[] { .01f });
+            stage.ResetStage();
+            Require((float)age.GetValue(stage) == 0 && song.mainCamera.transform.position == origin,
+                "Retry retained combat shake.");
+            Debug.Log("BLAZIN CAMERA PASSED: source shake triggers, missed uppercut controls, viewport bounds, 240 frames without drift, expiry and retry.");
+        }
+        finally
+        {
+            stage.ClearCombatCameraShake();
+            age.SetValue(stage, 0f);
+            song.mainCamera.transform.position = origin;
+            UnityEngine.Random.state = randomState;
+        }
     }
 
     private static void CheckVisualizer(Song song)

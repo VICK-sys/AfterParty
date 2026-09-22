@@ -270,6 +270,7 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
 
     public void Combo(int count, bool dropped)
     {
+        if (companion == null && (TrainStarted || actors[2].graphic.Animation == "hairFall" && !actors[2].graphic.Finished)) return;
         if (dropped)
         {
             if (count >= 70) actors[2].Play("drop70", true);
@@ -398,12 +399,7 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
             if (actor.graphic.Finished && actor.graphic.Has(actor.graphic.Animation + "-hold")) actor.Play(actor.graphic.Animation + "-hold");
             actor.UpdateSinging(delta, song.stepCrochet, VanillaCharacterTiming.IsHoldingInput(index));
         }
-        VanillaCharacterTiming.Advance(song, ref lastDanceStep, step =>
-        {
-            foreach (Actor actor in actors)
-                if ((actor != actors[2] || companion?.BlocksDance != true) && actor.graphic.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
-            if (step % 4 == 0) companion?.Beat();
-        });
+        VanillaCharacterTiming.Advance(song, ref lastDanceStep, Dance);
         if (song.songStarted)
         {
             int beat = Mathf.FloorToInt(song.vanillaPlayback.BeatAt(song.SongPosition));
@@ -412,10 +408,19 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
         Render(delta);
     }
 
+    private void Dance(int step)
+    {
+        foreach (Actor actor in actors)
+            if ((actor != actors[2] || (companion != null ? !companion.BlocksDance : !TrainStarted))
+                && actor.graphic.gameObject.activeSelf && VanillaCharacterTiming.IsDanceStep(actor.data, step)) actor.Dance();
+        if (step % 4 == 0) companion?.Beat();
+    }
+
     private void Render(float delta)
     {
         Vector3 camera = song.mainCamera.transform.position;
         foreach (VanillaWeek2Graphic prop in props.Values) prop.Advance(delta, camera, clock);
+        companion?.Advance(delta, camera, clock);
         foreach (Actor actor in actors) actor.graphic.Advance(delta, camera, clock);
         foreach (var graphic in mixEffects.Where(item => item != null && item.gameObject.activeSelf))
         {
@@ -423,7 +428,6 @@ public sealed class VanillaWeek3Stage : MonoBehaviour, IVanillaCharacterStage
             if (graphic.name == "bloodPool" && (graphic.Finished || graphic.FrozenFrame >= 0))
                 graphic.transform.localScale += Vector3.one * (.02f * delta);
         }
-        companion?.Advance(delta, camera, clock);
     }
 
     private static Vector3 Point(JToken value) => value == null ? Vector3.zero

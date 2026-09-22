@@ -39,7 +39,20 @@ Offset adjustment starts at one millisecond and repeats at 30 milliseconds per s
 The offset range is -1500 through 1500 milliseconds.
 
 Resume restores the countdown, song clocks, audio, and gameplay time scale.
-Restart reloads the current song and retains practice mode and death count.
+Restart resets the current song in place and retains practice mode and death count.
+The song, stage, and audio clips stay loaded.
+The reset clears scores, health changes, held inputs, note effects, chart events, and camera transitions.
+Outgoing notes and holds move one viewport height over 0.5 seconds with exponential easing.
+Receptors stay in place.
+The five-beat countdown starts after that delay.
+Notes present at the countdown start enter from a 200-pixel offset over 0.5 seconds.
+Downscroll reverses both note animations.
+Pausing freezes the restart delay and countdown.
+Restarting during the countdown cancels its previous sounds and graphics.
+Game-over retry skips the outgoing note animation.
+Confirmation waits for the confirmation clip duration divided by seven, then fades to black over two seconds.
+Gameplay returns through a one-second fade.
+Pixel songs use the source stepped color subtraction.
 Change Difficulty lists installed charts from the current variation.
 Changing difficulty resets accumulated campaign score and retains the campaign position.
 Practice mode prevents death and excludes the run from saved scores and ranks.
@@ -52,6 +65,11 @@ Run `VanillaPauseValidation.Begin` in an isolated Unity batch editor with graphi
 Do not pass `-quit`.
 Set `UNITY_PARTY_PAUSE_TEST_PATH` to the output directory.
 The probe checks countdown pause, audio samples, camera position, death count, difficulty reload, practice persistence, resume, and menu return.
+It checks retained song, stage, and audio objects during retries and difficulty changes.
+It checks outgoing heads and holds, incoming offsets, paused restart delays, and countdown cancellation.
+Set `UNITY_PARTY_RESTART_DOWNSCROLL=1` to run the same checks with downscroll.
+Set `UNITY_PARTY_RESTART_SONG=Senpai` to check pixel-song retries.
+The pixel fade check compares GPU output against color subtraction, unchanged colors, and black.
 It checks campaign score suppression against an eligible campaign control.
 It captures standard, difficulty, practice, selected-exit, wide, and tall layouts, with a blank-render control.
 Run `python Scripts/TestPauseAssets.py` to verify imported hashes, glyph coverage, atlas bounds, and font metrics.

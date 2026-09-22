@@ -1,6 +1,3 @@
 <linker>
-    <assembly fullname="FridayNightFunkin" preserve="all">
-		<type fullname="FridayNightFunkin.Json.Song" preserve="all"/>
-		<type fullname="FridayNightFunkin.FNFSong" preserve="all"/>
-	</assembly>
+    <assembly fullname="FNFDataAPI" preserve="all" />
 </linker>

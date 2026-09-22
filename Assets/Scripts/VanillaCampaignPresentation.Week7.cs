@@ -28,6 +28,7 @@ public sealed partial class VanillaCampaignPresentation
         song.uiCamera.enabled = false;
         song.battleCanvas.enabled = false;
         var black = TakeIntroCover(Color.black);
+        black.enabled = hideFor <= 0;
         var image = Rect("Week 7 Video", viewport, 0, 0, 1280, 720).gameObject.AddComponent<RawImage>();
         image.raycastTarget = false;
         image.enabled = false;
@@ -58,28 +59,35 @@ public sealed partial class VanillaCampaignPresentation
         var text = new TextAsset(File.Exists(subtitlePath) ? File.ReadAllText(subtitlePath) : "");
         var subtitles = SRTParser.Load(text);
         Destroy(text);
-        if (useCensored)
+        string audioPath = useCensored ? censored + ".wav" : Path.Combine(Root(week), "audio", id + "Cutscene.wav");
+        using (var request = UnityEngine.Networking.UnityWebRequestMultimedia.GetAudioClip(new Uri(audioPath).AbsoluteUri, AudioType.WAV))
         {
-            using (var request = UnityEngine.Networking.UnityWebRequestMultimedia.GetAudioClip(new Uri(censored+".wav").AbsoluteUri,AudioType.WAV))
+            request.timeout = 30;
+            yield return request.SendWebRequest();
+            if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
+                videoError = request.error;
+            else
             {
-                yield return request.SendWebRequest();
-                if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success) throw new IOException(request.error);
                 sound.clip = UnityEngine.Networking.DownloadHandlerAudioClip.GetContent(request);
-                clips.Add(sound.clip);
+                if (sound.clip == null) videoError = "Cutscene audio is unavailable.";
+                else clips.Add(sound.clip);
             }
         }
-        else yield return LoadAudio(week, id + "Cutscene", clip => sound.clip = clip, UnityEngine.AudioType.WAV);
-        video.Prepare();
-        float deadline = Time.realtimeSinceStartup + 30;
-        while (!video.isPrepared && videoError == null && Time.realtimeSinceStartup < deadline) yield return null;
-        if (!video.isPrepared)
-            throw new InvalidOperationException("Cannot prepare Week 7 cutscene: " + (videoError ?? id));
-        while (Pause.instance != null && Pause.instance.IsPaused) yield return null;
-        video.Play();
-        sound.Play();
-        while (!skipVideo && (sound.isPlaying || Pause.instance != null && Pause.instance.IsPaused))
+        if (videoError == null)
         {
-            if (videoError != null) throw new InvalidOperationException(videoError);
+            video.Prepare();
+            float deadline = Time.realtimeSinceStartup + 30;
+            while (!video.isPrepared && videoError == null && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!video.isPrepared && videoError == null) videoError = "Video preparation timed out.";
+        }
+        while (videoError == null && Pause.instance != null && Pause.instance.IsPaused) yield return null;
+        if (videoError == null)
+        {
+            video.Play();
+            sound.Play();
+        }
+        while (!skipVideo && videoError == null && (sound.isPlaying || Pause.instance != null && Pause.instance.IsPaused))
+        {
             video.externalReferenceTime = sound.time;
             image.enabled = video.frame >= 0 && sound.time >= hideFor;
             black.enabled = sound.time >= hideFor;
@@ -88,6 +96,8 @@ public sealed partial class VanillaCampaignPresentation
             subtitle.text = VanillaPreferences.Subtitles ? Regex.Replace(line?.Text ?? "", "<[^>]+>", "").Trim() : "";
             yield return null;
         }
+        if (videoError != null) Debug.LogWarning("Skipping cutscene " + id + ": " + videoError);
+        while (Pause.instance != null && Pause.instance.IsPaused) yield return null;
         sound.Stop();
         video.Stop();
         Destroy(subtitle.gameObject);

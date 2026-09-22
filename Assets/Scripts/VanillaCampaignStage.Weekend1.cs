@@ -54,6 +54,9 @@ public sealed partial class VanillaCampaignStage
     private bool explosionDeath;
     private float shakeAge;
     private float shakeStrength;
+    private Vector3 shakeOrigin;
+    private Vector3 shakenPosition;
+    private bool shakeApplied;
     private VanillaWeek2Graphic deathKnife;
     private VanillaWeek2Graphic gunGhost;
     private Vector3 gunGhostOrigin;
@@ -239,6 +242,8 @@ public sealed partial class VanillaCampaignStage
 
     private void ResetWeekend1()
     {
+        ClearCombatCameraShake();
+        shakeAge = shakeStrength = 0;
         weekendAnalyzer.Reset();
         CansShot = CansMissed = CombatNotes = 0;
         casingDelay = -1;
@@ -411,13 +416,13 @@ public sealed partial class VanillaCampaignStage
         particles.Add(graphic);
     }
 
-    private void FightPair(string pico, string darnell)
+    private void FightPair(string pico, string darnell, bool uppercutHit = true)
     {
         FightAnimation(1, darnell);
-        FightAnimation(0, pico);
+        FightAnimation(0, pico, uppercutHit);
     }
 
-    private void FightAnimation(int side, string animation)
+    private void FightAnimation(int side, string animation, bool uppercutHit = true)
     {
         if (animation == null) return;
         if (animation == "punchHigh" || animation == "punchLow")
@@ -429,7 +434,8 @@ public sealed partial class VanillaCampaignStage
         actors[side].holdTimer = 0;
         int order = animation.StartsWith("punch") || animation == "uppercut" || animation == "uppercutPrep" ? 3000 : 2000;
         SortRenderer(actors[side].graphic.GetComponent<MeshRenderer>(), order);
-        if (animation.StartsWith("hit") || animation == "block" || animation == "uppercut" || animation == "uppercutHit")
+        if (animation.StartsWith("hit") || animation == "block"
+            || side == 0 && (animation == "uppercutHit" || animation == "uppercut" && uppercutHit))
         {
             shakeAge = animation.StartsWith("uppercut") ? .25f : animation == "block" ? .1f : .15f;
             shakeStrength = animation.StartsWith("uppercut") ? .005f : animation == "block" ? .002f : .0025f;
@@ -489,7 +495,7 @@ public sealed partial class VanillaCampaignStage
             pico = miss ? "hitHigh" : "block";
             if (!miss) cantUppercut[0] = false;
         }
-        FightPair(pico, darnell);
+        FightPair(pico, darnell, !miss);
     }
 
     public void WeekendBeat(int beat)
@@ -735,11 +741,27 @@ public sealed partial class VanillaCampaignStage
         foreach (var graphic in particles) graphic.Advance(delta, camera, clock);
         foreach (var casing in casings) casing.graphic.Advance(delta, camera, clock);
         if (gunGhost != null && gunGhost.gameObject.activeSelf) gunGhost.Advance(delta, camera, clock);
-        if (shakeAge > 0)
-        {
-            shakeAge -= delta;
-            song.mainCamera.transform.position += new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)) * shakeStrength * 12.8f;
-        }
+        ApplyCombatCameraShake(delta);
+    }
+
+    public void ClearCombatCameraShake()
+    {
+        if (!shakeApplied) return;
+        if (song.mainCamera.transform.position == shakenPosition) song.mainCamera.transform.position = shakeOrigin;
+        shakeApplied = false;
+    }
+
+    private void ApplyCombatCameraShake(float delta)
+    {
+        ClearCombatCameraShake();
+        if (shakeAge <= 0) return;
+        shakeAge -= delta;
+        if (shakeAge <= 0) return;
+        shakeOrigin = song.mainCamera.transform.position;
+        shakenPosition = shakeOrigin + new Vector3(UnityEngine.Random.Range(-1f, 1f) * 12.8f,
+            UnityEngine.Random.Range(-1f, 1f) * 7.2f) * shakeStrength;
+        song.mainCamera.transform.position = shakenPosition;
+        shakeApplied = true;
     }
 
     private string WeekendDeathPath()

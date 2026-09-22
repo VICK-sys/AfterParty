@@ -258,7 +258,9 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         }
         else if (Stage == null) Stage = VanillaErectStage.Create(song);
         Transform graphicRoot = CampaignStage != null ? CampaignStage.transform : Week3Stage != null ? Week3Stage.transform : Week2Stage != null ? Week2Stage.transform : Stage.transform;
+        SongLoadingDiagnostics.Record("warm stage frames");
         foreach (var graphic in graphicRoot.GetComponentsInChildren<VanillaWeek2Graphic>(true)) graphic.WarmFrames();
+        SongLoadingDiagnostics.Record("stage frames ready");
         cameraTo = CameraTargets[2];
         song.mainCamera.transform.position = cameraTo;
         song.mainCamera.orthographicSize = 3.6f / zoom;
@@ -276,6 +278,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
     public bool MoveCamera(Camera camera)
     {
         if (!UsesSourceCamera || Stage == null && CharacterStage == null) return false;
+        CampaignStage?.ClearCombatCameraShake();
         if (Presentation != null && Presentation.OwnsCamera) return true;
         if (OptionsV2.LiteMode || OptionsV2.Middlescroll)
         {
@@ -295,6 +298,7 @@ public sealed class VanillaSongPlayback : MonoBehaviour
     {
         if (song == null || !song.songStarted || !song.musicSources[0].isPlaying)
             return;
+        CampaignStage?.ClearCombatCameraShake();
         float time = song.stopwatch.ElapsedMilliseconds;
         if (IsWeek2 || IsWeek3 || IsCampaign || IsMainStage)
         {
@@ -397,6 +401,22 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         for (int index = timeChanges.Length - 1; index >= 0; index--)
             if ((double)timeChanges[index]["t"] <= time) return timeChanges[index];
         return timeChanges[0];
+    }
+
+    public void Restart()
+    {
+        Initialize(song, song.ChartScrollSpeed, sourceData);
+        FocusCharacter = 0;
+        FocusOffset = Vector2.zero;
+        FocusOnPlayer = true;
+        cameraTransition = default;
+        song.uiCamera.orthographicSize = hudSize;
+        SetupStage();
+        if (UsesSourceCamera && (Stage != null || CharacterStage != null))
+        {
+            song.defaultGameZoom = CameraSize;
+            song.mainCamera.transform.position = CameraFocusTarget;
+        }
     }
 
     public float BeatAt(double time)

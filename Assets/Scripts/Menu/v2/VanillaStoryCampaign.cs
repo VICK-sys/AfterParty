@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public static class VanillaStoryCampaign
@@ -14,6 +16,27 @@ public static class VanillaStoryCampaign
     public static bool IsLastSong => Running && SongIndex + 1 == playlist.Count;
     private static List<VanillaFreeplaySong> playlist;
     private static bool scoreEligible;
+
+    public static bool CanTransitionSeamlessly(Song owner)
+    {
+        if (!Running || IsLastSong || owner.vanillaPlayback == null
+            || owner.vanillaPlayback.Presentation?.OutroFinished == true) return false;
+        var next = playlist[SongIndex + 1];
+        string path = next.meta.AssetPath("Vanilla.json", next.Difficulty(Difficulty));
+        if (!File.Exists(path)) return false;
+        try
+        {
+            var data = JObject.Parse(File.ReadAllText(path));
+            if (string.IsNullOrEmpty((string)data["song"])) return false;
+            return !VanillaCampaignPresentation.HasIntro((string)data["song"], (string)data["variation"],
+                (string)data["noteStyle"] == "pixel", ((string)data["stage"])?.StartsWith("phillyTrain") == true,
+                !OptionsV2.DesperateMode, true);
+        }
+        catch (Exception exception) when (exception is IOException || exception is Newtonsoft.Json.JsonException)
+        {
+            return false;
+        }
+    }
 
     public static string ScoreKey(string level, string difficulty) => "Story.Score." + level + "." + difficulty.ToLowerInvariant();
     public static int HighScore(string level, string difficulty) => PlayerPrefs.GetInt(ScoreKey(level, difficulty), 0);

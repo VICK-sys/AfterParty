@@ -101,7 +101,8 @@ public static class VanillaWeek3Validation
         Require(song.defaultSceneObjects.All(item => !item.activeSelf), "Default stage overlaps Philly.");
         Require(Enumerable.Range(0, 3).Select(stage.CharacterId).SequenceEqual(new[] { "bf", "pico", "gf" }), "Philly character selection changed.");
         Require(stage.CharacterGraphic(1).FlipX && !stage.CharacterGraphic(0).FlipX, "Source character facing changed.");
-        Require(stage.CharacterGraphic(1).PhillyColor == stage.Erect && stage.PropGraphic("train").PhillyColor == stage.Erect, "Philly Erect color filter is missing.");
+        Require(Enumerable.Range(0, 3).All(index => stage.CharacterGraphic(index).PhillyColor == stage.Erect)
+            && stage.PropGraphic("train").PhillyColor == stage.Erect, "Philly color filter does not match the remix stage.");
         Require(song.OpponentVocals != null && song.OpponentVocals.isPlaying && song.SplitPlayerVocalsPath != null, "Source vocal stems did not start.");
         Require(Math.Abs(song.OpponentVocals.time - song.vocalSource.time) < 0.1, "Source vocal stems lost sync.");
         Require(stage.CameraTargets.All(point => point.z == -10) && Vector3.Distance(stage.CameraTargets[1], stage.CameraTargets[2]) > 1, "Philly camera targets overlap.");
@@ -126,6 +127,13 @@ public static class VanillaWeek3Validation
         {
             girlfriend.Advance(4f / 24, Vector3.zero, 0);
             Require(girlfriend.Finished, "Hair completion control failed.");
+            typeof(VanillaWeek3Stage).GetMethod("Dance", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(stage, new object[] { 0 });
+            Require(girlfriend.Animation == "hairBlow" && girlfriend.Finished,
+                "Dance interrupted completed hair animation between train ticks.");
+            stage.Combo(50, false);
+            stage.Combo(70, true);
+            Require(girlfriend.Animation == "hairBlow" && girlfriend.Finished,
+                "Combo reaction interrupted train hair animation.");
             stage.AdvanceTrain(4700);
             Require(girlfriend.Animation == "hairBlow" && !girlfriend.Finished && girlfriend.Frame == firstHairFrame,
                 "Train did not restart completed hair animation.");
@@ -140,11 +148,18 @@ public static class VanillaWeek3Validation
         Require(!stage.TrainMoving && stage.TrainCars == 8 && Mathf.Abs(stage.PropGraphic("train").Position.x - 14.8f) < 0.0001f
             && stage.CharacterGraphic(2).Animation == "hairFall", "Train did not finish eight cars and restore Girlfriend.");
         bool hairAlternate = false;
+        stage.Combo(50, false);
+        stage.Combo(70, true);
+        Require(girlfriend.Animation == "hairFall", "Combo reaction interrupted hair landing.");
         Require(VanillaCharacterTiming.DanceAnimation(girlfriend, false, true, ref hairAlternate) == null,
             "Dance interrupted hair landing.");
         girlfriend.Advance(12f / 24, Vector3.zero, 0);
         Require(VanillaCharacterTiming.DanceAnimation(girlfriend, false, true, ref hairAlternate) == "danceLeft",
             "Girlfriend did not resume dancing after hair landing.");
+        typeof(VanillaWeek3Stage).GetMethod("Dance", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(stage, new object[] { 0 });
+        Require(girlfriend.Animation.StartsWith("dance"), "Stage kept Girlfriend locked after hair landing.");
+        stage.Combo(50, false);
+        Require(girlfriend.Animation == "combo50", "Combo reaction remained blocked after hair landing.");
         stage.ResetStage();
         stage.StartTrain();
         stage.AdvanceTrain(4700);

@@ -168,6 +168,16 @@ public static class VanillaCampaignPresentationValidation
                     "The normal parents reappeared during the Eggnog outro.");
                 Require(!song.vanillaPlayback.CampaignStage.PropGraphic("santa").gameObject.activeSelf,
                     "The normal Santa overlaps the Eggnog outro.");
+                if (santa != null)
+                {
+                    var graphic = santa.GetComponent<VanillaWeek2Graphic>();
+                    var standing = song.vanillaPlayback.CampaignStage.PropGraphic("santa");
+                    float floor = standing.Position.y - standing.FrameSize.y / 100;
+                    Require(Mathf.Abs(graphic.Position.y - 7.57457456f - floor) < .0001f,
+                        "Santa cutscene feet do not align with the stage floor.");
+                    Require(Mathf.Abs(-1 - 7.57457456f - floor) > .4f,
+                        "Original Santa position negative control did not expose the vertical gap.");
+                }
                 Require(song.vanillaPlayback.CampaignStage.CharacterGraphic(0).gameObject.activeSelf,
                     "Eggnog outro visibility control hid Boyfriend.");
                 if (!captured && elapsed > 4)

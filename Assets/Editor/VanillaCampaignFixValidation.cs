@@ -145,7 +145,8 @@ public static class VanillaCampaignFixValidation
             else if (phase == 5)
             {
                 var restarted = Object.FindAnyObjectByType<Song>();
-                if (restarted == null || restarted == song || restarted.vanillaPlayback?.Presentation == null) return;
+                if (restarted == null || restarted.vanillaPlayback?.Presentation == null) return;
+                Require(restarted == song && restarted.RestartCount > 0, "Retry replaced the song instance.");
                 Require(!restarted.vanillaPlayback.Presentation.Busy && !restarted.vanillaPlayback.Presentation.OwnsCamera,
                     "Retry replayed the Winter intro.");
                 if (!restarted.songStarted) return;

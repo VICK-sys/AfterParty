@@ -20,7 +20,18 @@ public class NoteObject : MonoBehaviour
     public float currentStopwatch;
     public float susLength;
     public FunkinNoteState State { get; private set; }
+    public bool RestartOutgoing { get; private set; }
+    private bool restartIncoming;
     public float ScrollSpeed { get => scrollSpeed; set => scrollSpeed = value; }
+
+    public static float RestartOffset(float elapsed, bool incoming, bool downscroll)
+    {
+        float progress = Mathf.Clamp01(elapsed / .5f);
+        float pixels = incoming
+            ? progress >= 1 ? 0 : 200 * Mathf.Pow(2, -10 * progress)
+            : 720 * Mathf.Pow(2, 10 * (progress - 1));
+        return downscroll ? pixels : -pixels;
+    }
 
     public void Initialize(Song owner, double time, int direction, bool player, double length, float speed, int section)
     {
@@ -33,6 +44,7 @@ public class NoteObject : MonoBehaviour
         layer = section;
         dummyNote = susNote = lastSusNote = false;
         State = new FunkinNoteState(time, direction, length) { View = this, Scoreable = owner.vanillaPlayback?.IsScoreable(player ? 0 : 1, direction, time) ?? true };
+        RestartOutgoing = restartIncoming = false;
         sprite = GetComponentInChildren<SpriteRenderer>();
         sprite.enabled = true;
         sprite.sprite = FunkinNoteSkin.Head(direction);
@@ -58,6 +70,7 @@ public class NoteObject : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (RestartOutgoing) return;
         if (Pause.instance != null && (Pause.instance.IsPaused || Pause.instance.Transitioning)) return;
         if (!dummyNote && song != null && State != null) Render();
     }
@@ -69,9 +82,11 @@ public class NoteObject : MonoBehaviour
         var receptor = (mustHit ? song.player1NoteSprites : song.player2NoteSprites)[type];
         Vector3 center = receptor.transform.position;
         double distance = FunkinRules.NoteDistance(State.Time, position, song.FunkinScrollSpeed, OptionsV2.Downscroll);
+        if (restartIncoming) distance += song.RestartNoteOffset;
         transform.position = center + new Vector3(-2 * pixel, (float)distance * pixel, 0);
         FunkinNoteSkin.WorldScale(sprite.transform, pixel * 100 * FunkinNoteSkin.Scale);
-        sprite.enabled = receptor.enabled && State.HeadVisible;
+        bool visible = receptor.enabled && (song.IsCountingDown || song.songStarted);
+        sprite.enabled = visible && State.HeadVisible;
         if (State.Hit && State.HeadVisible)
         {
             sprite.sharedMaterial = FunkinNoteSkin.DesaturatedMaterial;
@@ -89,11 +104,15 @@ public class NoteObject : MonoBehaviour
             if (State.HoldDropped && State.Hit)
                 anchor.y += (float)((State.Length - State.Remaining) * FunkinRules.PixelsPerMillisecond * song.FunkinScrollSpeed * (OptionsV2.Downscroll ? 1 : -1)) * pixel;
             hold.Draw(type, remaining, song.FunkinScrollSpeed, OptionsV2.Downscroll, anchor, pixel,
-                receptor.enabled && !State.HoldFinished && (!State.HoldDropped || !State.Hit) && (!clipped || remaining > 10));
+                visible && !State.HoldFinished && (!State.HoldDropped || !State.Hit) && (!clipped || remaining > 10));
         }
         bool holdDone = State.Length <= 0 || State.HoldFinished ||
             (State.HoldDropped && position >= State.Time + State.Length + FunkinRules.HitWindow + song.FunkinRenderDistance / 8);
         if ((State.Hit && !State.HeadVisible || headOffscreen && (State.Hit || State.HandledMiss)) && holdDone)
             song.ReleaseFunkinNote(this);
     }
+
+    public void BeginRestartOutgoing() => RestartOutgoing = true;
+
+    public void BeginRestartIncoming() => restartIncoming = true;
 }

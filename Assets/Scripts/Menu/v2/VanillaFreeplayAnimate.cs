@@ -73,6 +73,15 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
     public void PlayAll(bool loop) => PlayFrames(0, totalFrames, loop);
     public override Texture mainTexture => replacement != null ? replacement : atlas != null ? atlas : Texture2D.whiteTexture;
 
+    public static IEnumerator ReleaseCachedAssets()
+    {
+        Assets.Clear();
+        BoundsCache.Clear();
+        yield return null;
+        yield return Resources.UnloadUnusedAssets();
+        GC.Collect();
+    }
+
     public static IEnumerator Preload(string path)
     {
         string prefix = "VanillaFreeplay/" + path.Trim('/');
@@ -364,7 +373,7 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
     private void Update()
     {
         double now = Time.realtimeSinceStartupAsDouble;
-        float delta = (float)(now - lastUpdateTime);
+        float delta = VanillaMenuTiming.Clamp((float)(now - lastUpdateTime));
         lastUpdateTime = now;
         Tick(delta);
     }
@@ -414,13 +423,20 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         if (depth == 0 && timeline == root["TL"] && root["RB"] is JObject baked)
         {
             JArray bounds = (JArray)baked["bounds"];
-            AddSpriteQuad((string)baked["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(bounds[0]), Number(bounds[1]), 0)), tint, output);
+            JToken offset = baked["offsets"]?[time];
+            AddSpriteQuad((string)baked["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(bounds[0]) + Number(offset?[0]), Number(bounds[1]) + Number(offset?[1]), 0)), tint, output);
             return;
         }
         JArray layers = timeline?["L"] as JArray;
         if (layers == null) return;
         for (int l = layers.Count - 1; l >= 0; l--)
         {
+            if (layers[l]["RB"] is JObject renderedLayer)
+            {
+                JToken offset = renderedLayer["offsets"][time];
+                AddSpriteQuad((string)renderedLayer["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(offset[0]), Number(offset[1]), 0)), tint, output);
+                continue;
+            }
             JToken key = FindFrame(layers[l]["FR"] as JArray, time);
             if (key == null || key["E"] == null) continue;
             int elapsed = time - Integer(key["I"]);

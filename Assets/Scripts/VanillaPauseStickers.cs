@@ -49,10 +49,12 @@ public sealed class VanillaPauseStickers : MonoBehaviour
         blocker.anchorMax = Vector2.one;
         blocker.offsetMin = blocker.offsetMax = Vector2.zero;
         blocker.GetComponent<Image>().color = Color.clear;
+        Canvas.ForceUpdateCanvases();
+        float width = Mathf.Clamp(((RectTransform)transform).rect.width, 1280, 1600);
         var viewport = new GameObject("Viewport", typeof(RectTransform)).GetComponent<RectTransform>();
         viewport.SetParent(transform, false);
         viewport.anchorMin = viewport.anchorMax = viewport.pivot = new Vector2(0.5f, 0.5f);
-        viewport.sizeDelta = new Vector2(1280, 720);
+        viewport.sizeDelta = new Vector2(width, 720);
         viewport.gameObject.AddComponent<Image>().raycastTarget = false;
         viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
         sound = gameObject.AddComponent<AudioSource>();
@@ -62,12 +64,12 @@ public sealed class VanillaPauseStickers : MonoBehaviour
         Texture2D[] textures = Resources.LoadAll<Texture2D>("FunkinPause/" + pack);
         float x = -100;
         float y = -100;
-        while (x <= 1280)
+        while (x <= width)
         {
             Texture2D texture = textures[UnityEngine.Random.Range(0, textures.Length)];
             Add(viewport, texture, x, y, UnityEngine.Random.Range(-60, 71));
             x += texture.width * 0.5f;
-            if (x >= 1280 && y <= 720)
+            if (x >= width && y <= 720)
             {
                 x = -100;
                 y += UnityEngine.Random.Range(70f, 120f);
@@ -81,7 +83,7 @@ public sealed class VanillaPauseStickers : MonoBehaviour
             stickers[other] = item;
         }
         Texture2D last = textures[UnityEngine.Random.Range(0, textures.Length)];
-        Add(viewport, last, (1280 - last.width) * 0.5f, (720 - last.height) * 0.5f, 0);
+        Add(viewport, last, (width - last.width) * 0.5f, (720 - last.height) * 0.5f, 0);
         for (int index = 0; index < stickers.Count; index++)
         {
             Sticker sticker = stickers[index];
@@ -115,8 +117,9 @@ public sealed class VanillaPauseStickers : MonoBehaviour
             waiting = false;
             uncovering = true;
             age = 0;
+            return;
         }
-        age += Time.unscaledDeltaTime;
+        age += VanillaMenuTiming.Delta;
         foreach (Sticker sticker in stickers)
         {
             if (age < sticker.timing) continue;

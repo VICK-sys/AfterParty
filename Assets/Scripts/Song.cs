@@ -257,6 +257,8 @@ public partial class Song : MonoBehaviour
         player2Notes.gameObject.SetActive(false);
         playerOneScoringText.enabled = false;
         playerTwoScoringText.enabled = false;
+        playerOneComboText.alpha = 0;
+        playerTwoComboText.alpha = 0;
         battleCanvas.enabled = true;
         healthBar.SetActive(false);
         songDurationObject.SetActive(false);
@@ -347,7 +349,7 @@ public partial class Song : MonoBehaviour
         selectedSongDir = string.IsNullOrWhiteSpace(directory) ? selectedSong.directory : directory;
         SongMetaV2 assetMeta = currentSongMeta != null && currentSongMeta.songPath == selectedSongDir
             ? currentSongMeta : new SongMetaV2 { songPath = selectedSongDir };
-        selectedInstrumentalPath = assetMeta.AssetPath("Inst.ogg", difficulty);
+        selectedInstrumentalPath = assetMeta.freeplayInstrumentalPath ?? assetMeta.AssetPath("Inst.ogg", difficulty);
         selectedVocalsPath = assetMeta.AssetPath("Voices.ogg", difficulty);
         selectedVanillaPath = assetMeta.AssetPath("Vanilla.json", difficulty);
         
@@ -360,7 +362,8 @@ public partial class Song : MonoBehaviour
          * so we can instantly go back to the menu
          */
         battleCanvas.enabled = true;
-        generatingSongMsg.SetActive(true);
+        bool skipLoadingScreen = Pause.ConsumeLoadingScreenSkip(selectedSongDir);
+        generatingSongMsg.SetActive(!skipLoadingScreen && !LoadingTransition.instance.HoldingStoryFrame);
 
         menuCanvas.enabled = false;
         songListScreen.SetActive(false);
@@ -399,69 +402,75 @@ public partial class Song : MonoBehaviour
 
     }
 
+    private string songLoadError;
+
     IEnumerator SetupSong()
     {
+        songLoadError = null;
+        hasVoiceLoaded = false;
+        SongLoadingDiagnostics.Begin(selectedSongDir, difficulty);
+        yield return VanillaFreeplayAnimate.ReleaseCachedAssets();
+        SongLoadingDiagnostics.Record("menu assets released");
         yield return LoadSplitVocals();
-        /*
-         * First, we have to load the instrumentals from the
-         * local file. We use the, although deprecated, WWW function for this.
-         *
-         * In case of an error, we just stop and output it.
-         * Otherwise, we set the clip as the instrumental.
-         *
-         * Then we wait until it is fully loaded, WaitForSeconds allows us to pause
-         * the coroutine for .1 seconds then check if the clip is loaded again.
-         * If not, keep waiting until it is loaded.
-         *
-         * Once the instrumentals is loaded, we repeat the exact same thing with
-         * the voices. Then, we generate the rest of the song from the chart file.
-         */
-        WWW www1 = new WWW(selectedInstrumentalPath)
+        if (songLoadError != null)
         {
-            threadPriority = ThreadPriority.High
-        };
-        yield return www1;
-        if (www1.error != null)
-        {
-            Debug.LogError(www1.error);
+            FailSongLoad(songLoadError);
+            yield break;
         }
-        else
+        var instrumental = new SongAudioLoader.Result();
+        yield return SongAudioLoader.Load(selectedInstrumentalPath, instrumental);
+        if (instrumental.Error != null)
         {
-            musicClip = www1.GetAudioClip();
-            while (musicClip.loadState != AudioDataLoadState.Loaded)
-                yield return new WaitForSeconds(0.1f);
-            if(File.Exists(selectedVocalsPath))
+            FailSongLoad(selectedInstrumentalPath + ": " + instrumental.Error);
+            yield break;
+        }
+        musicClip = instrumental.Clip;
+        string voicesPath = SplitPlayerVocalsPath ?? selectedVocalsPath;
+        if (File.Exists(voicesPath))
+        {
+            var voices = new SongAudioLoader.Result();
+            yield return SongAudioLoader.Load(voicesPath, voices);
+            if (voices.Error != null)
             {
-            
-                WWW www2 = new WWW(SplitPlayerVocalsPath ?? selectedVocalsPath);
-                yield return www2;
-                if (www2.error != null)
-                {
-                    Debug.LogError(www2.error);
-                }
-                else
-                {
-                    vocalClip = www2.GetAudioClip();
-                    while (vocalClip.loadState != AudioDataLoadState.Loaded)
-                        yield return new WaitForSeconds(0.1f);
-                    hasVoiceLoaded = true;
-                    print("Sounds loaded, generating song.");
-                    GenerateSong();
-                }
+                FailSongLoad(voicesPath + ": " + voices.Error);
+                yield break;
             }
-            else
-            {
-                hasVoiceLoaded = false;
-                print("Sounds loaded, generating song.");
-                GenerateSong();
-            }
+            vocalClip = voices.Clip;
+            hasVoiceLoaded = true;
+        }
+        try
+        {
+            SongLoadingDiagnostics.Record("generate song");
+            GenerateSong();
+            SongLoadingDiagnostics.Record("song generated");
+        }
+        catch (Exception exception)
+        {
+            FailSongLoad(exception.ToString());
         }
     }
 
-    
-    
-    
-    
+    private void FailSongLoad(string error)
+    {
+        SongLoadingDiagnostics.Record("failed: " + error);
+        songSetupDone = false;
+        songStarted = false;
+        hasVoiceLoaded = false;
+        foreach (var source in musicSources) if (source != null) source.Stop();
+        if (musicClip != null) Destroy(musicClip);
+        if (vocalClip != null) Destroy(vocalClip);
+        musicClip = vocalClip = null;
+        Debug.LogError("Song loading failed: " + selectedSongDir + ": " + error);
+        LoadingTransition.instance.ShowFailure("Could not load this song.", () =>
+        {
+            VanillaStoryCampaign.ReturnToMenu();
+            VanillaFreeplay.ReturnToFreeplay = true;
+            if (DiscordController.instance != null) DiscordController.instance.EnableGameStateLoop = false;
+            SceneManager.LoadScene("Title");
+            LoadingTransition.instance.Hide();
+        });
+    }
+
     public void GenerateSong()
     {
 
@@ -1089,15 +1098,15 @@ public partial class Song : MonoBehaviour
             BeginFunkinCountdown(delay);
             soundSource.clip = startSound;
             soundSource.Play();
-            while (SongPosition - Pause.GlobalOffset < 0) yield return null;
+            while (CountdownPosition < 0) yield return null;
         }
         
         /*
          * Wait for the countdown to finish.
          */
-        if(!OptionsV2.LiteMode && !(vanillaPlayback != null && vanillaPlayback.Presentation != null && vanillaPlayback.Presentation.OwnsCamera))
-            mainCamera.orthographicSize = vanillaPlayback != null && vanillaPlayback.CampaignStage != null
-                ? 3.6f / vanillaPlayback.CampaignStage.CameraZoom : 4;
+        if (!OptionsV2.LiteMode && (vanillaPlayback == null || !vanillaPlayback.UsesSourceCamera)
+            && !(vanillaPlayback != null && vanillaPlayback.Presentation != null && vanillaPlayback.Presentation.OwnsCamera))
+            mainCamera.orthographicSize = 4;
         
         /*
          * Start the beat stopwatch.
@@ -1105,6 +1114,12 @@ public partial class Song : MonoBehaviour
          * This is used to precisely calculate when a beat happens based
          * on the BPM or BPS.
          */
+        StartSongAudio();
+    }
+
+    private void StartSongAudio()
+    {
+        if (isDead) return;
         beatStopwatch = new Stopwatch();
         beatStopwatch.Start();
 
@@ -1124,7 +1139,9 @@ public partial class Song : MonoBehaviour
         if (OpponentVocals != null) OpponentVocals.mute = vanillaPlayback?.Week3Stage?.OpponentExploded == true;
         foreach (AudioSource source in musicSources)
         {
-            source.Play();
+            if (source != musicSources[0] && currentSongMeta?.freeplayInstrumentalStart > 0)
+                StartCoroutine(PlayOffsetVocals(source));
+            else source.Play();
         }
 
 
@@ -1133,7 +1150,10 @@ public partial class Song : MonoBehaviour
          * attached scripts that the song fully started.
          */
         if(hasVoiceLoaded)
-            vocalSource.Play();
+        {
+            if (currentSongMeta?.freeplayInstrumentalStart > 0) StartCoroutine(PlayOffsetVocals(vocalSource));
+            else vocalSource.Play();
+        }
 
         IsCountingDown = false;
         songStarted = true;
@@ -1199,12 +1219,26 @@ public partial class Song : MonoBehaviour
     }
 
     private bool enteringResults;
+    private bool enteringStorySong;
+    public bool EnteringResults => enteringResults;
 
     private void FinishSong(bool scriptedCompletion, bool afterTransition = false)
     {
-        if (enteringResults && !afterTransition) return;
+        if ((enteringResults || enteringStorySong) && !afterTransition) return;
         bool finished = !FreeplayAborted && (scriptedCompletion || musicClip != null
             && stopwatch.Elapsed.TotalMilliseconds >= musicClip.length * 1000 - 100);
+        if (!afterTransition && finished && VanillaStoryCampaign.CanTransitionSeamlessly(this))
+        {
+            enteringStorySong = true;
+            songStarted = false;
+            stopwatch?.Stop();
+            beatStopwatch?.Stop();
+            Player.instance?.ClearInput();
+            foreach (AudioSource source in musicSources) source.Stop();
+            vocalSource.Stop();
+            LoadingTransition.instance.HoldStoryFrame(() => FinishSong(scriptedCompletion, true));
+            return;
+        }
         if (!afterTransition && finished && (!VanillaStoryCampaign.Running || VanillaStoryCampaign.IsLastSong))
         {
             enteringResults = true;
@@ -1613,48 +1647,25 @@ public partial class Song : MonoBehaviour
                     {
                         if (!respawning)
                         {
-                            if (VanillaControls.Pressed("ACCEPT") || VanillaControls.Pressed("PAUSE"))
+                            if (VanillaControls.Pressed("ACCEPT"))
                             {
-                                musicSources[0].Stop();
-                                respawning = true;
-
-                                deadBoyfriendAnimator.Play("Dead Confirm");
-                                vanillaPlayback?.CharacterStage?.PlayDeath("deathConfirm");
-
-                                musicSources[0].PlayOneShot(deadConfirm);
-
-                                deathBlackout.rectTransform.LeanAlpha(1, 1.8f).setDelay(1).setOnComplete(() =>
-                                {
-                                    LoadingTransition.instance.LoadScene("Game_Backup3", () => DiscordController.instance.EnableGameStateLoop = false);
-                                });
-                            } else if (Input.GetKeyDown(KeyCode.Escape) || Player.ControllerBackPressed)
+                                ConfirmRetry();
+                            } else if (VanillaControls.Pressed("BACK"))
                             {
-                                Pause.ResetSession();
-                                musicSources[0].Stop();
-                                respawning = true;
-
-                                LoadingTransition.instance.LoadScene("Title", () => DiscordController.instance.EnableGameStateLoop = false);
+                                Pause.instance.QuitSong();
                             }
                         }
                     }
                     else
                     {
                         isDead = true;
+                        CancelSongPlayback();
                         Pause.RecordDeath();
                         
                         modInstance?.Invoke("OnDeath");
 
 
                         deathBlackout.color = Color.clear;
-
-                        foreach (AudioSource source in musicSources)
-                        {
-                            source.Stop();
-                        }
-
-                        
-                        if(hasVoiceLoaded)
-                            vocalSource.Stop();
 
                         musicSources[0].PlayOneShot(deadNoise);
 
@@ -1664,7 +1675,7 @@ public partial class Song : MonoBehaviour
                         mainCamera.enabled = false;
                         deadCamera.enabled = true;
 
-                        beatStopwatch.Reset();
+                        beatStopwatch?.Reset();
                         stopwatch.Reset();
 
                         subtitleDisplayer.StopSubtitles();
@@ -1685,9 +1696,9 @@ public partial class Song : MonoBehaviour
                         LeanTween.move(deadCamera.gameObject, newPos, .5f).setEaseOutExpo();
                         vanillaPlayback?.CharacterStage?.BeginDeath();
 
-                        LeanTween.delayedCall(vanillaPlayback?.CampaignStage != null ? vanillaPlayback.CampaignStage.DeathDuration : vanillaPlayback?.PlayerId.StartsWith("pico") == true ? 35f / 24 : 2.417f, () =>
+                        deathLoopTween = LeanTween.delayedCall(vanillaPlayback?.CampaignStage != null ? vanillaPlayback.CampaignStage.DeathDuration : vanillaPlayback?.PlayerId.StartsWith("pico") == true ? 35f / 24 : 2.417f, () =>
                         {
-                            if (!respawning)
+                            if (isDead && !respawning)
                             {
                                 musicSources[0].clip = deadTheme;
                                 musicSources[0].loop = true;
@@ -1695,7 +1706,7 @@ public partial class Song : MonoBehaviour
                                 deadBoyfriendAnimator.Play("Dead Loop");
                                 vanillaPlayback?.CharacterStage?.PlayDeath("deathLoop");
                             }
-                        });
+                        }).id;
                     }
                 }
             }

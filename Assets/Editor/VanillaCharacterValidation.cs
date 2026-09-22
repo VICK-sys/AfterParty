@@ -421,7 +421,8 @@ public static class VanillaCharacterValidation
             else if (phase == 5)
             {
                 var restarted = Object.FindAnyObjectByType<Song>();
-                if (restarted == null || restarted == song || restarted.vanillaPlayback?.CharacterStage == null || !restarted.IsCountingDown) return;
+                if (restarted == null || restarted.vanillaPlayback?.CharacterStage == null || !restarted.IsCountingDown) return;
+                Require(restarted == song && restarted.RestartCount > 0, "Retry replaced the song instance.");
                 song = restarted;
                 if (DanceStep == int.MinValue) return;
                 Require(DanceStep < 0, "Retry retained the previous dance clock.");

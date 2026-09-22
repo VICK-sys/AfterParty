@@ -97,16 +97,14 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
 
     public void Load(string directory, int order)
     {
+        SongLoadingDiagnostics.Record("graphic begin: " + directory);
         assetKey = Path.GetFullPath(directory);
         if (!Assets.TryGetValue(assetKey, out asset))
         {
             var parsed = JObject.Parse(File.ReadAllText(Path.Combine(directory, "graphic.json")));
             string[] images = parsed["frames"].SelectMany(frame => frame).Select(quad => (string)quad["image"]).Distinct().ToArray();
             if (images.Length != 1) throw new InvalidDataException("Source graphic requires one atlas: " + directory);
-            var loadedTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            loadedTexture.LoadImage(File.ReadAllBytes(Path.Combine(directory, images[0])));
-            loadedTexture.wrapMode = TextureWrapMode.Clamp;
-            loadedTexture.filterMode = (bool?)parsed["pixel"] == true ? FilterMode.Point : FilterMode.Bilinear;
+            Texture2D loadedTexture = LoadTexture(Path.Combine(directory, images[0]), (bool?)parsed["pixel"] == true);
             asset = new Asset { data = parsed, texture = loadedTexture };
             foreach (JProperty animation in ((JObject)parsed["animations"]).Properties())
             {
@@ -162,17 +160,71 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
         meshRenderer.sharedMaterial = material;
         meshRenderer.sortingOrder = order;
         Play(((JObject)data["animations"]).Properties().First().Name);
+        SongLoadingDiagnostics.Record("graphic ready: " + directory);
     }
 
     public bool Has(string name) => asset.clips.ContainsKey(name);
 
+    private static Texture2D LoadTexture(string path, bool pixel)
+    {
+        SongLoadingDiagnostics.Record("texture begin: " + path);
+        var loaded = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+        if (!loaded.LoadImage(File.ReadAllBytes(path), pixel && !Application.isEditor))
+        {
+            Release(loaded);
+            throw new InvalidDataException("Could not decode texture: " + path);
+        }
+        loaded.wrapMode = TextureWrapMode.Clamp;
+        loaded.filterMode = pixel ? FilterMode.Point : FilterMode.Bilinear;
+        if (pixel || loaded.format == TextureFormat.RGB24)
+        {
+            if (loaded.isReadable && !Application.isEditor) loaded.Apply(false, true);
+            SongLoadingDiagnostics.Record("texture ready: " + path);
+            return loaded;
+        }
+        bool argb = loaded.format == TextureFormat.ARGB32;
+        if (!argb && loaded.format != TextureFormat.RGBA32 && loaded.format != TextureFormat.BGRA32)
+        {
+            string format = loaded.format.ToString();
+            Release(loaded);
+            throw new InvalidDataException("Unsupported atlas pixel format " + format + ": " + path);
+        }
+        var pixels = loaded.GetPixelData<Color32>(0);
+        int width = loaded.width;
+        int height = loaded.height;
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+            {
+                int index = y * width + x;
+                Color32 current = pixels[index];
+                if ((argb ? current.r : current.a) != 0) continue;
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                int weight = 0;
+                for (int row = Mathf.Max(0, y - 1); row <= Mathf.Min(height - 1, y + 1); row++)
+                    for (int column = Mathf.Max(0, x - 1); column <= Mathf.Min(width - 1, x + 1); column++)
+                    {
+                        Color32 neighbor = pixels[row * width + column];
+                        int alpha = argb ? neighbor.r : neighbor.a;
+                        red += (argb ? neighbor.g : neighbor.r) * alpha;
+                        green += (argb ? neighbor.b : neighbor.g) * alpha;
+                        blue += (argb ? neighbor.a : neighbor.b) * alpha;
+                        weight += alpha;
+                    }
+                if (weight > 0) pixels[index] = argb
+                    ? new Color32(0, (byte)(red / weight), (byte)(green / weight), (byte)(blue / weight))
+                    : new Color32((byte)(red / weight), (byte)(green / weight), (byte)(blue / weight), 0);
+            }
+        loaded.Apply(false, !Application.isEditor);
+        SongLoadingDiagnostics.Record("texture ready: " + path);
+        return loaded;
+    }
+
     public void ReplaceTexture(string path)
     {
         Release(replacementTexture);
-        replacementTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-        replacementTexture.LoadImage(File.ReadAllBytes(path));
-        replacementTexture.filterMode = texture.filterMode;
-        replacementTexture.wrapMode = TextureWrapMode.Clamp;
+        replacementTexture = LoadTexture(path, texture.filterMode == FilterMode.Point);
         material.mainTexture = replacementTexture;
         compositeFrame = -1;
     }
@@ -194,7 +246,7 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
         {
             Release(rimMask);
             rimMask = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            rimMask.LoadImage(File.ReadAllBytes(path));
+            rimMask.LoadImage(File.ReadAllBytes(path), !Application.isEditor);
             rimMask.filterMode = texture.filterMode;
             rimMask.wrapMode = TextureWrapMode.Clamp;
             material.SetTexture("_RimMask", rimMask);
@@ -346,6 +398,7 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
     {
         if (composite == null)
         {
+            SongLoadingDiagnostics.Record("composite: " + assetKey + " " + compositeBounds.size);
             composite = new RenderTexture(Mathf.CeilToInt(compositeBounds.width * 100), Mathf.CeilToInt(compositeBounds.height * 100), 0, RenderTextureFormat.ARGB32);
             composite.filterMode = texture.filterMode;
             composite.Create();

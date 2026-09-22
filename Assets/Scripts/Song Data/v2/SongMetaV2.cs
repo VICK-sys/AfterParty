@@ -37,6 +37,8 @@ public class SongMetaV2
     
     //NOT SERIALIZED
     [JsonIgnore] public string songPath;
+    [JsonIgnore] public string freeplayInstrumentalPath;
+    [JsonIgnore] public float freeplayInstrumentalStart;
     [JsonIgnore] public Sprite songCover;
     [JsonIgnore] public BundleMeta bundleMeta;
 
