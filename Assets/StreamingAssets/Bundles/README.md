@@ -224,6 +224,9 @@ Spray cans, explosions, and casings reuse preloaded graphics and animation meshe
 The gun afterimage expands around the captured frame center without character animation offsets.
 Blazin' uses paired combat animations and a centered player strumline.
 Story Mode includes the Darnell intro and the 2hot and Blazin' ending videos.
+Runtime videos use H.264 with 8-bit YUV 4:2:0 for Windows and Xbox UWP playback.
+The importer preserves source files, video dimensions, frame timing, and PCM audio.
+Video validation checks decoded frame counts, duration, and SSIM of at least 0.99 against the source.
 Pico uses his source pause music and game-over animations.
 
 Add `--weekend1-only` to `Scripts/ImportVanillaSongs.py` to import Weekend 1 separately.

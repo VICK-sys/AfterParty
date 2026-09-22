@@ -7,6 +7,7 @@ from pathlib import Path
 
 from ImportVanillaSongs import SONGS
 from ImportVanillaWeek2 import bounds
+from TestVideoCompatibility import check_video
 
 
 def read(path):
@@ -100,9 +101,9 @@ def run(assets, output):
     assert {'firstDeath-explosion', 'deathLoop-explosion', 'deathConfirm-explosion'} <= read(root / 'characters/pico-playable/explosion/graphic.json')['animations'].keys()
     for sid in ['darnell', '2hot', 'blazin']:
         source = root / f'Source/videos/{sid}.mp4'
-        assert media_hash(source, '0:v:0') == media_hash(root / f'video/{sid}.mp4', '0:v:0')
+        check_video(source, root / f'video/{sid}.mp4')
         assert media_hash(source, '0:a:0') == media_hash(root / f'audio/{sid}Cutscene.wav', '0:a:0')
-    print(f'WEEKEND 1 ASSETS PASSED: {charts} charts, {heads:,} heads, {variants} audio variants, source hashes, lossless cutscene media, excluded BF and Pico mixes, swapped-side controls.')
+    print(f'WEEKEND 1 ASSETS PASSED: {charts} charts, {heads:,} heads, {variants} audio variants, source hashes, H.264 cutscenes, lossless audio, excluded BF and Pico mixes, swapped-side controls.')
 
 
 if __name__ == '__main__':

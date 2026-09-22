@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ImportVanillaWeek2 import animate, read, save_graphic, sparrow
 from ImportVanillaWeeks456 import import_assets as import_campaign, static_graphic
+from ImportVanillaVideo import import_video
 
 
 def import_blazin_placement(root):
@@ -85,8 +86,7 @@ def import_assets(assets, data, output, ffmpeg='ffmpeg'):
         source = assets / f'videos/videos/{sid}Cutscene.mp4'
         copy(source, root / f'Source/videos/{sid}.mp4')
         (root / 'video').mkdir(exist_ok=True)
-        subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-i', str(source),
-                        '-map', '0:v:0', '-c:v', 'copy', '-an', str(root / f'video/{sid}.mp4')], check=True)
+        import_video(source, root / f'video/{sid}.mp4', ffmpeg)
         subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-i', str(source),
                         '-map', '0:a:0', '-c:a', 'pcm_f32le', str(root / f'audio/{sid}Cutscene.wav')], check=True)
     resources = output.parents[1] / 'Resources'

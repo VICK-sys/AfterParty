@@ -4,12 +4,14 @@ import json
 import shutil
 from pathlib import Path
 
+from ImportVanillaVideo import import_video
+
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def run(source, release, output):
+def run(source, release, output, ffmpeg='ffmpeg'):
     assets = release / 'assets'
     files = {}
     names = ['logoBumpin.png', 'logoBumpin.xml', 'gfDanceTitle.png', 'gfDanceTitle.xml',
@@ -28,7 +30,10 @@ def run(source, release, output):
         files[f'videos/videos/{name}.mp4'] = videos / f'{name}.mp4'
     for name, destination in files.items():
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(assets / name, destination)
+        if destination.suffix == '.mp4':
+            import_video(assets / name, destination, ffmpeg, keep_audio=True)
+        else:
+            shutil.copy2(assets / name, destination)
     references = ['ui/title/TitleState.hx', 'ui/title/AttractState.hx', 'ui/AtlasText.hx',
                   'graphics/shaders/ColorSwap.hx']
     manifest = {
@@ -48,5 +53,6 @@ if __name__ == '__main__':
     parser.add_argument('source', type=Path)
     parser.add_argument('release', type=Path)
     parser.add_argument('--output', type=Path, default=Path('Assets/Resources/VanillaTitle'))
+    parser.add_argument('--ffmpeg', default='ffmpeg')
     args = parser.parse_args()
-    run(args.source, args.release, args.output)
+    run(args.source, args.release, args.output, args.ffmpeg)

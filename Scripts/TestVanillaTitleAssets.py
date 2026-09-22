@@ -6,6 +6,8 @@ from pathlib import Path
 
 from PIL import Image
 
+from TestVideoCompatibility import check_encoding
+
 
 def check_assets(root):
     assets = root / 'Assets'
@@ -14,6 +16,8 @@ def check_assets(root):
     for entry in manifest['assets'].values():
         path = assets / entry['path']
         assert hashlib.sha256(path.read_bytes()).hexdigest() == entry['sha256'], path
+        if path.suffix == '.mp4':
+            check_encoding(path)
     for name in ['logoBumpin', 'gfDanceTitle', 'fonts/bold']:
         width, height = Image.open(title / f'{name}.png').size
         frames = ET.parse(title / f'{name}.xml').getroot()

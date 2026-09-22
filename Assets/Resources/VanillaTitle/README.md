@@ -46,6 +46,10 @@ Taller displays use centered letterboxing.
 ## Import and validation
 
 Run `python Scripts/ImportVanillaTitle.py <source directory> <desktop distribution>` to import the assets.
+Install FFmpeg and FFprobe before importing videos.
+The importer converts VP9 and HEVC trailers to H.264 for Windows and Xbox UWP playback.
+Video dimensions, frame timing, and audio remain unchanged.
+Run `python Scripts/TestVideoCompatibility.py` to check runtime codecs and reject the original VP9 and HEVC control files.
 Run `python Scripts/TestVanillaTitleAssets.py` to check hashes, atlas bounds, fonts, music, splash pairs, BPM, and animation labels.
 Run `VanillaTitleValidation.Begin` in an isolated Unity batch editor with graphics enabled.
 Do not pass `-quit`.
