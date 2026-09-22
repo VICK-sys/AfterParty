@@ -98,6 +98,7 @@ public static class VanillaControls
         return PadRead(binding, mode);
     }
     public static bool PadPressed(string id) => PadRead(Find(id), 1);
+    public static bool PadHeld(string id) => PadRead(Find(id), 0);
     private static bool PadRead(Binding binding, int mode)
     {
         foreach (Gamepad pad in Gamepad.all)

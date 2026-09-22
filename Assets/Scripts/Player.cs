@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
     {
         return owner != null && owner.songSetupDone && (owner.songStarted || owner.IsCountingDown) && !owner.isDead &&
             owner.stopwatch != null && (owner.stopwatch.IsRunning || owner.IsCountingDown) &&
-            (Pause.instance == null || !Pause.instance.pauseScreen.activeSelf);
+            (Pause.instance == null || !Pause.instance.pauseScreen.activeSelf && !Pause.instance.Transitioning);
     }
 
     private void OnInput(InputEventPtr input, InputDevice device)
@@ -184,6 +184,7 @@ public class Player : MonoBehaviour
             if (!control.ReadValueFromEvent(input, out float value)) continue;
             int identity = device.deviceId * 1024 + (int)binding.Key;
             bool down = value >= 0.5f;
+            if (down && control.ReadValue() >= 0.5f) continue;
             if (down ? !pressedKeys.Add(identity) : !pressedKeys.Remove(identity)) continue;
             foreach (var target in binding.Value)
             {
@@ -199,6 +200,7 @@ public class Player : MonoBehaviour
         if (!control.ReadValueFromEvent(input, out float value)) return;
         int identity = control.device.deviceId * 1024 + key;
         bool down = value >= 0.5f;
+        if (down && control.ReadValue() >= 0.5f) return;
         if (down ? !pressedKeys.Add(identity) : !pressedKeys.Remove(identity)) return;
         var entry = new FunkinInputEvent(direction, identity, input.time * 1000);
         if (down) Strumlines[side].Presses.Add(entry);
