@@ -12,6 +12,9 @@ def pixels(path):
 
 def run(root):
     errors, mouths, overlaps = [], [], []
+    kick = Image.open(root / 'characters-sserafim-yunjin-base/mask-35.png').convert('RGBA')
+    assert kick.getpixel((530, 340))[3] == 255 and kick.getpixel((525, 410))[3] == 255, 'Kick mask erased the overlapping boot.'
+    assert kick.getpixel((620, 300))[3] == 0, 'Kick mask exposed the boot outside the truck.'
     samples = json.loads((root / 'metrics.json').read_text())
     for sample in samples:
         frame = '' if sample.get('poseFrame') is None else '-frame' + str(sample['poseFrame'])
@@ -20,7 +23,9 @@ def run(root):
         actual = pixels(path)
         error = np.abs(actual - reference).mean()
         assert error < .15, (path.name, error)
-        assert np.abs(np.roll(actual, 8, axis=1) - reference).mean() > .5, path
+        foreground = np.abs(reference - reference[0, 0]).max(axis=2) > 8
+        assert foreground.any(), path
+        assert np.abs(np.roll(actual, 8, axis=1) - reference)[foreground].mean() > 5, path
         errors.append(error)
         if path.name.endswith('-650.png'):
             silent = pixels(root / path.name.replace('-650.png', '-0.png'))
@@ -38,11 +43,11 @@ def run(root):
                 wrong_error = np.abs(wrong - reference)[overlap].mean()
                 assert correct_error < wrong_error, (path.name, correct_error, wrong_error)
                 overlaps.append(wrong_error - correct_error)
-    assert len(errors) == 90 and len(mouths) == 35
+    assert len(errors) == 161 and len(mouths) == 35
     assert overlaps and max(overlaps) > 10, overlaps
     print(f'SPAGHETTI RENDERER PASSED: {len(errors)} Flixel poses, mean error {np.mean(errors):.4f}/255, '
           f'mouth error {np.mean(mouths):.4f}/255, {len(overlaps)} foreground overlaps checked, '
-          'mouth-on-top, shifted-character, and frozen-mouth controls rejected.')
+          '71 door and kick poses checked, mouth-on-top, shifted-character, and frozen-mouth controls rejected.')
 
 
 if __name__ == '__main__':

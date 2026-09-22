@@ -9,6 +9,10 @@ foreach ($name in @('FlxAnimateFrames.hx', 'FlxAnimateJson.hx', 'internal/Filter
     $source = $source.Replace('Vector<SymbolJson>', 'Array<SymbolJson>')
     $source = $source.Replace('override function destroy() {}', 'public function putWeak() {} override function destroy() {}')
     $source = $source.Replace('public var frameCount:Int;', 'public var frameCount:Int = 0;')
+    if ($name -eq 'internal/FilterRenderer.hx')
+    {
+        $source = $source.Replace('Context3DGraphics.render(gfx, renderer);', 'context.setBlendFactors(ONE, ONE_MINUS_SOURCE_ALPHA); Context3DGraphics.render(gfx, renderer);')
+    }
     Set-Content -LiteralPath (Join-Path $referenceRoot $name) -Value $source
 }
 $env:PROCESSOR_ARCHITECTURE = 'AMD64'

@@ -33,6 +33,12 @@ class ReferenceState extends FlxState
         FlxG.mouse.visible = false;
         FlxSprite.defaultAntialiasing = true;
         FlxG.camera.bgColor = 0xFF888888;
+        if (Sys.getEnv("UNITY_PARTY_SPAGHETTI_KICK_ONLY") == "1")
+        {
+            exportMasks("characters/sserafim-yunjin");
+            exportMasks("characters/sserafim-yunjin", "base");
+            Sys.exit(0);
+        }
         exportMasks("characters/sserafim-gf");
         exportMasks("characters/sserafim-yunjin");
         exportMasks("characters/sserafim-yunjin", "base");
@@ -46,6 +52,11 @@ class ReferenceState extends FlxState
             for (poseFrame in [0, 4, 8, 12])
                 for (mouth in [0, 650, 1200])
                     cases.push({name:"yunjin", animation:animation, mouth:mouth, poseFrame:poseFrame});
+        cases.push({name:"yunjin", animation:"doorclosed", mouth:0, poseFrame:0});
+        for (poseFrame in 0...10)
+            cases.push({name:"yunjin", animation:"kick1", mouth:0, poseFrame:poseFrame});
+        for (poseFrame in 0...60)
+            cases.push({name:"yunjin", animation:"kick2", mouth:0, poseFrame:poseFrame});
         prepare();
         FlxG.signals.postDraw.add(function()
         {

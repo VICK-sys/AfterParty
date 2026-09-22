@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -109,6 +110,7 @@ public static class SpaghettiValidation
         Require(stage != null && stage.Week == 9 && stage.StageId == "sserafim", "Diner stage did not load.");
         Require(song.defaultSceneObjects.All(item => !item.activeSelf), "Original stage overlaps diner.");
         Require(song.player2NoteSprites.All(item => !item.enabled), "Opponent receptors are visible.");
+        CheckOpening(song);
         float introTime = song.vanillaPlayback.Presentation.SpaghettiIntroTime;
         Require(introCoverChecked, "Spaghetti intro loading coverage was not observed.");
         Require(Song.difficulty == "Normal" ? skipRequested && introTime < 5 : introTime > 30,
@@ -178,6 +180,38 @@ public static class SpaghettiValidation
             }
             else Debug.Log("SPAGHETTI ENDING PASSED: both cards rendered, HUD hidden, early completion blocked.");
         }
+    }
+
+    private static void CheckOpening(Song song)
+    {
+        var stage = song.vanillaPlayback.CampaignStage;
+        var render = typeof(VanillaCampaignStage).GetMethod("Render", BindingFlags.Instance | BindingFlags.NonPublic);
+        var girlfriend = stage.GetComponentsInChildren<VanillaWeek2Graphic>(true).Single(item => item.name == "cutscene/gfGetUp");
+        foreach (float delta in new[] { 1f / 30, 1f / 60, 1f / 120, .1f })
+        {
+            stage.ResetStage();
+            Require(girlfriend.gameObject.activeSelf && girlfriend.Alpha == 1, "Opening Girlfriend is translucent or missing.");
+            stage.SpaghettiEvent("sserafimKick", new JObject { ["final"] = false }, 0);
+            render.Invoke(stage, new object[] { 1f });
+            Require(!stage.PropGraphic("truckDoor").gameObject.activeSelf, "First kick revealed the static door.");
+            stage.SpaghettiEvent("sserafimKick", new JObject { ["final"] = true }, 0);
+            Require(!girlfriend.gameObject.activeSelf && stage.SpaghettiCharacter(5).gameObject.activeSelf,
+                "Final kick did not replace opening Girlfriend.");
+            var yunjin = stage.SpaghettiCharacter(0);
+            yunjin.SeekAnimationFrame(22);
+            render.Invoke(stage, new object[] { 0f });
+            Require(!stage.PropGraphic("truckDoor").gameObject.activeSelf, "Static door appeared before the handoff.");
+            while (yunjin.AnimationFrame < 23)
+            {
+                stage.AdvanceSpaghetti(delta);
+                render.Invoke(stage, new object[] { delta });
+                Require(stage.PropGraphic("truckDoor").gameObject.activeSelf == (yunjin.AnimationFrame >= 23),
+                    "Door disappeared during the animation handoff at " + delta + " seconds per frame.");
+            }
+        }
+        stage.ResetStage();
+        stage.StopSpaghettiSound();
+        Debug.Log("SPAGHETTI OPENING PASSED: opaque Girlfriend, final-kick replacement, continuous door at 30, 60, 120 FPS and a 100 ms frame.");
     }
 
     public static void CheckRegression()

@@ -97,8 +97,6 @@ public sealed partial class VanillaCampaignStage
         spaghettiCutscene = SpaghettiEffect("cutscene/cutsceneMain", new Vector2(-395, 10), .94f, 25);
         spaghettiBf = SpaghettiEffect("cutscene/bfGetUp", new Vector2(1220, 531), .99f, 305);
         spaghettiGf = SpaghettiEffect("cutscene/gfGetUp", new Vector2(655, -104), .95f, 25);
-        spaghettiGf.Alpha = .5f;
-        spaghettiGf.CompositeAlpha = true;
         string[] dustColors = { "#98847d", "#8b6c63", "#6e645c", "#886a60" };
         float[] scales = { 1.5f, 1.5f, 2, 3.5f };
         for (int layer = 0; layer < 4; layer++)
@@ -315,11 +313,6 @@ public sealed partial class VanillaCampaignStage
         float t = Mathf.Clamp01((clock - spaghettiDarkAt) / Mathf.Max(.001f, spaghettiDarkDuration));
         SpaghettiDarkness = Mathf.Lerp(spaghettiDarkFrom, spaghettiDarkTo, (1 - Mathf.Cos(Mathf.PI * t)) / 2);
         if (spaghettiClearAt >= 0) SpaghettiAdjustment = new Vector4(6, -74, -24, -26) * (1 - SineOut((clock - spaghettiClearAt) / 24));
-        if (!spaghettiDoorReleased && spaghettiActors[0].current.Animation == "kick2" && spaghettiActors[0].current.AnimationFrame >= 23)
-        {
-            spaghettiDoorReleased = true;
-            props["truckDoor"].gameObject.SetActive(true);
-        }
         for (int i = 0; i < 6; i++)
         {
             if (i == 0 && spaghettiClearAt < 0) continue;
@@ -379,6 +372,11 @@ public sealed partial class VanillaCampaignStage
             actor.current.ColorAdjustment = SpaghettiAdjustment;
             actor.current.Lighting = actorColor;
             actor.current.Advance(actor == actors[0] || actor == actors[1] || actor == actors[2] ? 0 : delta, camera, clock);
+        }
+        if (!spaghettiDoorReleased && spaghettiActors[0].current.Animation == "kick2" && spaghettiActors[0].current.AnimationFrame >= 23)
+        {
+            spaghettiDoorReleased = true;
+            props["truckDoor"].gameObject.SetActive(true);
         }
         foreach (var graphic in spaghettiEffects)
         {

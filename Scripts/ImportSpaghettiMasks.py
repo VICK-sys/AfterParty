@@ -6,11 +6,13 @@ from pathlib import Path
 from PIL import Image
 
 
-def run(reference, root):
+def run(reference, root, only=None):
     for source, destination in [('characters-sserafim-gf', 'characters/sserafim-gf'),
                                 ('characters-sserafim-yunjin-base', 'characters/sserafim-yunjin'),
                                 ('characters-sserafim-yunjin-foreground', 'characters/sserafim-yunjin/foreground'),
                                 ('gfGetUp', 'effects/cutscene/gfGetUp')]:
+        if only is not None and destination != only:
+            continue
         folder = root / destination
         folder.mkdir(parents=True, exist_ok=True)
         capture = reference / source
@@ -72,5 +74,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--reference', type=Path, default=project / 'Builds/SpaghettiReference')
     parser.add_argument('--output', type=Path, default=project / 'Assets/StreamingAssets/Bundles/SpaghettiAssets')
+    parser.add_argument('--only', choices=['characters/sserafim-gf', 'characters/sserafim-yunjin',
+                                         'characters/sserafim-yunjin/foreground', 'effects/cutscene/gfGetUp'])
     args = parser.parse_args()
-    run(args.reference, args.output)
+    run(args.reference, args.output, args.only)
