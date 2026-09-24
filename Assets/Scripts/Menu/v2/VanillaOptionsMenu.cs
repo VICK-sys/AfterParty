@@ -157,7 +157,8 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         CameraScroll = 0;
         SelectedIndex = page == Page.Options ? rememberedIndex : 0;
         SelectedColumn = 0;
-        deviceSelected = page == Page.Controls && Gamepad.all.Count > 0;
+        deviceSelected = page == Page.Controls && VanillaPreferences.DesktopOptionsAvailable && Gamepad.all.Count > 0;
+        if (!VanillaPreferences.DesktopOptionsAvailable) gamepadDevice = true;
         controlSelectionChanged = false;
         openedFrame = Time.frameCount;
         lastVertical = VanillaControls.Axis(false);
@@ -191,6 +192,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
     {
         foreach (var preference in VanillaPreferences.Items)
         {
+            if (!preference.Available) continue;
             float y = rows.Count*120+30;
             var row = new Row { text=Atlas(preference.label,content,120,y), y=y, preference=preference };
             if (preference.checkbox)
@@ -219,7 +221,8 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
     private void BuildControls()
     {
         string header = null;
-        float y = Gamepad.all.Count > 0 ? 120 : 30;
+        bool showDeviceTabs = VanillaPreferences.DesktopOptionsAvailable && Gamepad.all.Count > 0;
+        float y = showDeviceTabs ? 120 : 30;
         for (int i=0;i<VanillaControls.Bindings.Count;i++)
         {
             var binding = VanillaControls.Bindings[i];
@@ -238,7 +241,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
             });
             y += 70;
         }
-        if (Gamepad.all.Count > 0)
+        if (showDeviceTabs)
         {
             var background = Rect("Device Background",content,0,0,1280,100).gameObject.AddComponent<Image>();
             background.color = new Color32(250,253,109,255);
@@ -482,7 +485,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         }
         if (rebinding)
         {
-            foreach (KeyCode key in allKeys)
+            foreach (KeyCode key in VanillaPreferences.DesktopOptionsAvailable ? allKeys : Array.Empty<KeyCode>())
             {
                 if (!Input.GetKeyUp(key)) continue;
                 if (key == enteringKey) { enteringKey=KeyCode.None; continue; }
@@ -540,7 +543,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         if (!accepted)
         {
             forbidden = true;
-            CreatePrompt("\nYou cannot unbind\nthat key!\n\n\nEscape to exit");
+            CreatePrompt(gamepadDevice ? "\nYou cannot unbind\nthat button!\n\n\nBack to exit" : "\nYou cannot unbind\nthat key!\n\n\nEscape to exit");
         }
         return accepted;
     }

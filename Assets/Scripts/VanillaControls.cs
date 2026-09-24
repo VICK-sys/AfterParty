@@ -44,8 +44,10 @@ public static class VanillaControls
         Add("FREEPLAY_CHAR_SELECT", "FREEPLAY", "CHAR SELECT", 3, new[]{KeyCode.Tab}, 2);
         Add("FREEPLAY_JUMP_TO_TOP", "FREEPLAY", "JUMP TO TOP", -1, new[]{KeyCode.Home}, 22);
         Add("FREEPLAY_JUMP_TO_BOTTOM", "FREEPLAY", "JUMP TO BOTTOM", -1, new[]{KeyCode.End}, 21);
+#if !UNITY_WSA && !UNITY_XBOXONE && !UNITY_GAMECORE
         Add("WINDOW_SCREENSHOT", "WINDOW", "SCREENSHOT", 4, new[]{KeyCode.F3});
         Add("WINDOW_FULLSCREEN", "WINDOW", "FULLSCREEN", 4, new[]{KeyCode.F11});
+#endif
         Add("VOLUME_UP", "VOLUME", "UP", 5, new[]{KeyCode.Equals,KeyCode.KeypadPlus});
         Add("VOLUME_DOWN", "VOLUME", "DOWN", 5, new[]{KeyCode.Minus,KeyCode.KeypadMinus});
         Add("VOLUME_MUTE", "VOLUME", "MUTE", 5, new[]{KeyCode.Alpha0,KeyCode.Keypad0});
@@ -101,6 +103,7 @@ public static class VanillaControls
     public static bool PadHeld(string id) => PadRead(Find(id), 0);
     private static bool PadRead(Binding binding, int mode)
     {
+        if (binding == null) return false;
         foreach (Gamepad pad in Gamepad.all)
             foreach (int code in binding.buttons)
             {

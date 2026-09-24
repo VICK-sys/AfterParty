@@ -4,12 +4,30 @@ using UnityEngine;
 
 public static class VanillaPreferences
 {
+    private static int DefaultVSync => DesktopOptionsAvailable ? 0 : 1;
+
+    public static bool DesktopOptionsAvailable
+    {
+        get
+        {
+#if UNITY_WSA || UNITY_XBOXONE || UNITY_GAMECORE
+            return false;
+#else
+            return true;
+#endif
+        }
+    }
+
     public sealed class Preference
     {
         public string id, label, description;
         public int initial, min, max, step;
         public string[] choices;
         public bool checkbox, percentage;
+        public bool Available => DesktopOptionsAvailable || id == "Naughtyness" || id == "Downscroll" ||
+            id == "StrumlineBackground" || id == "FlashingLights" || id == "CameraZooms" ||
+            id == "Subtitles" || id == "DebugDisplay" || id == "DebugDisplayBG" ||
+            id == "FPS" || id == "UnlockedFramerate";
         public int Value => Get(id, initial);
         public string Display => choices != null ? choices[Mathf.Clamp(Value, 0, choices.Length-1)] : Value + (percentage ? "%" : "");
     }
@@ -26,7 +44,7 @@ public static class VanillaPreferences
         Number("DebugDisplayBG", "Debug Display BG", "Adjust the debug display's background opacity.", 50, 0, 100, 10, true),
         Toggle("AutoPause", "Pause on Unfocus", "When enabled, the game automatically pauses when losing focus.", true),
         Toggle("AutoFullscreen", "Launch in Fullscreen", "When enabled, the game automatically starts up in fullscreen mode.", false),
-        Choice("VSync", "VSync", "When enabled, the game attempts to match the framerate with your monitor's refresh rate.", 0, "Off", "On", "Adaptive"),
+        Choice("VSync", "VSync", "When enabled, the game attempts to match the framerate with your monitor's refresh rate.", DefaultVSync, "Off", "On", "Adaptive"),
         Toggle("UnlockedFramerate", "Unlocked Framerate", "When enabled, the framerate is unlocked.\nThis setting is mutually exclusive with FPS.", false),
         Number("FPS", "FPS", "The maximum framerate that the game targets.\nThis setting is mutually exclusive with Unlocked Framerate.", 60, 30, 500, 5),
         Toggle("HideMouse", "Hide Mouse", "When enabled, the mouse is hidden while taking a screenshot.", true),
@@ -68,13 +86,13 @@ public static class VanillaPreferences
 
     public static void Apply()
     {
-        QualitySettings.vSyncCount = Get("VSync") == 0 ? 0 : 1;
+        QualitySettings.vSyncCount = Get("VSync", DefaultVSync) != 0 ? 1 : 0;
         Application.targetFrameRate = Get("UnlockedFramerate") != 0 ? -1 : Mathf.Clamp(Get("FPS", 60), 30, 500);
         Application.runInBackground = true;
         if (PlayerPrefs.HasKey("Funkin.Options.Downscroll")) OptionsV2.Downscroll = Get("Downscroll") != 0;
         if (DiscordManager.current != null)
         {
-            bool enabled = Get("DiscordRPC", 1) != 0;
+            bool enabled = DesktopOptionsAvailable && Get("DiscordRPC", 1) != 0;
             if (!enabled) DiscordManager.current.client?.ClearPresence();
             DiscordManager.current.enabled = enabled;
         }
