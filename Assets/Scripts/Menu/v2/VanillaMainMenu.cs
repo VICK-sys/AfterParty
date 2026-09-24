@@ -104,6 +104,22 @@ public sealed class VanillaMainMenu : MonoBehaviour
         previousAxis = axis;
     }
 
+    private void LateUpdate()
+    {
+        ApplyLayout(((RectTransform)transform).rect.width);
+    }
+
+    public void ApplyLayout(float availableWidth)
+    {
+        var viewport = (RectTransform)background.parent;
+        float width = Mathf.Clamp(Mathf.Round(availableWidth), 1280, 1600);
+        viewport.sizeDelta = new Vector2(width, 720);
+        Texture texture = background.GetComponent<RawImage>().texture;
+        float backgroundWidth = Mathf.Max(1536, width * 1.2f);
+        background.sizeDelta = new Vector2(backgroundWidth, backgroundWidth * texture.height / texture.width);
+        magenta.rectTransform.sizeDelta = background.sizeDelta;
+    }
+
     private void Draw(float delta)
     {
         background.anchoredPosition = new Vector2(0, CameraScroll * 0.17f);

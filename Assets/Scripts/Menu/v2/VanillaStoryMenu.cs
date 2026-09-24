@@ -18,6 +18,7 @@ public sealed class VanillaStoryMenu : MonoBehaviour
     private List<VanillaStoryLevel> levels;
     private MenuV2 menu;
     private RectTransform viewport;
+    private RectTransform content;
     private Image background;
     private VanillaStoryText scoreText;
     private VanillaStoryText levelText;
@@ -102,29 +103,32 @@ public sealed class VanillaStoryMenu : MonoBehaviour
         viewport.anchorMin = viewport.anchorMax = viewport.pivot = new Vector2(0.5f, 0.5f);
         viewport.gameObject.AddComponent<Image>().raycastTarget = false;
         viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
+        content = Rect("Content", viewport, 0, 0, 1280, 720);
+        content.anchorMin = content.anchorMax = new Vector2(0.5f, 1);
+        content.anchoredPosition = new Vector2(-640, 0);
         targetY = new float[levels.Count];
         foreach (VanillaStoryLevel level in levels)
         {
-            VanillaStorySprite title = Sprite(level.id, viewport, level.titleAsset, 0, 466);
+            VanillaStorySprite title = Sprite(level.id, content, level.titleAsset, 0, 466);
             title.rectTransform.anchoredPosition = new Vector2((1280 - title.FrameSize.x) / 2, -466);
             titles.Add(title);
         }
-        Solid("Header", viewport, 0, 0, 1280, 456, Color.black);
-        background = Solid("Level Background", viewport, 0, 56, 1280, 400, Hex(SelectedLevel.background));
+        Solid("Header", content, 0, 0, 1280, 456, Color.black);
+        background = Solid("Level Background", content, 0, 56, 1280, 400, Hex(SelectedLevel.background));
         backgroundFrom = backgroundTo = background.color;
         backgroundAge = 1;
         trackText = BitmapLabel("Tracks", "TRACKS", 0, 500);
         trackText.centered = true;
         trackText.color = Hex("#E55777");
-        left = Sprite("Previous Difficulty", viewport, "storymenu/ui/arrows", 870, 480, "leftIdle0");
+        left = Sprite("Previous Difficulty", content, "storymenu/ui/arrows", 870, 480, "leftIdle0");
         left.loop = true;
-        right = Sprite("Next Difficulty", viewport, "storymenu/ui/arrows", 1245, 480, "rightIdle0");
+        right = Sprite("Next Difficulty", content, "storymenu/ui/arrows", 1245, 480, "rightIdle0");
         right.loop = true;
         DifficultyGraphic("normal");
         int maxProps = levels.Max(level => level.props.Length);
         for (int i = 0; i < maxProps; i++)
         {
-            var graphic = Rect("Character " + i, viewport, 0, 0, 0, 0).gameObject.AddComponent<VanillaStorySprite>();
+            var graphic = Rect("Character " + i, content, 0, 0, 0, 0).gameObject.AddComponent<VanillaStorySprite>();
             props.Add(new VanillaStoryProp(graphic));
         }
         scoreText = BitmapLabel("Level Score", "HIGH SCORE: 42069420", 10, 10);
@@ -139,7 +143,7 @@ public sealed class VanillaStoryMenu : MonoBehaviour
     private VanillaStorySprite DifficultyGraphic(string difficulty)
     {
         if (difficultySprites.TryGetValue(difficulty, out VanillaStorySprite graphic)) return graphic;
-        graphic = Sprite(difficulty, viewport, "storymenu/difficulties/" + difficulty, 928, 465);
+        graphic = Sprite(difficulty, content, "storymenu/difficulties/" + difficulty, 928, 465);
         graphic.rectTransform.SetSiblingIndex(right.transform.GetSiblingIndex() + 1);
         difficultySprites[difficulty] = graphic;
         graphic.gameObject.SetActive(false);
@@ -201,6 +205,22 @@ public sealed class VanillaStoryMenu : MonoBehaviour
         Position(trackText.rectTransform, 640 - trackText.rectTransform.sizeDelta.x / 2 - 1280 * 0.33f, 500);
         levelText.Text = SelectedLevel.name;
         Position(levelText.rectTransform, 1280 - levelText.rectTransform.sizeDelta.x - 10, 10);
+    }
+
+    private void LateUpdate()
+    {
+        ApplyLayout(((RectTransform)transform).rect.width);
+    }
+
+    public void ApplyLayout(float availableWidth)
+    {
+        float width = Mathf.Clamp(Mathf.Round(availableWidth), 1280, 1600);
+        viewport.sizeDelta = new Vector2(width, 720);
+        var header = (RectTransform)content.Find("Header");
+        header.sizeDelta = new Vector2(width, 456);
+        header.anchoredPosition = new Vector2((1280 - width) / 2, 0);
+        background.rectTransform.sizeDelta = new Vector2(width, 400);
+        background.rectTransform.anchoredPosition = new Vector2((1280 - width) / 2, -56);
     }
 
     private void Update()
@@ -331,7 +351,7 @@ public sealed class VanillaStoryMenu : MonoBehaviour
 
     private Text Label(string name, string value, float x, float y, int size)
     {
-        Text text = Rect(name, viewport, x, y, 1280, 50).gameObject.AddComponent<Text>();
+        Text text = Rect(name, content, x, y, 1280, 50).gameObject.AddComponent<Text>();
         text.font = Resources.Load<Font>("VanillaFreeplay/vcr");
         text.fontSize = size;
         text.text = value;
@@ -346,7 +366,7 @@ public sealed class VanillaStoryMenu : MonoBehaviour
 
     private VanillaStoryText BitmapLabel(string name, string value, float x, float y)
     {
-        var text = Rect(name, viewport, x, y, 0, 0).gameObject.AddComponent<VanillaStoryText>();
+        var text = Rect(name, content, x, y, 0, 0).gameObject.AddComponent<VanillaStoryText>();
         text.Text = value;
         return text;
     }

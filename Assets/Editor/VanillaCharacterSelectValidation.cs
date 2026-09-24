@@ -268,8 +268,8 @@ public static class VanillaCharacterSelectValidation
 
     private static void CheckGrid()
     {
-        var root = screen.transform.Find("Viewport/Icons");
-        var cursors = screen.transform.Find("Viewport/Cursors").GetComponentsInChildren<VanillaFreeplaySprite>();
+        var root = screen.transform.Find("Viewport/Content/Icons");
+        var cursors = screen.transform.Find("Viewport/Content/Cursors").GetComponentsInChildren<VanillaFreeplaySprite>();
         var cursor = cursors.Where(item => item.name == "charSelector").Last();
         Vector2 cursorCenter = cursor.rectTransform.anchoredPosition + new Vector2(cursor.FrameSize.x / 2, -cursor.FrameSize.y / 2);
         Vector2 expected = new Vector2(screen.SelectedSlot % 3 * 110 + 64, -(screen.SelectedSlot / 3 * 110 + 64));

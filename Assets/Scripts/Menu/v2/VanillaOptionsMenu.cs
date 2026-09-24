@@ -34,6 +34,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
     public RectTransform Viewport { get; private set; }
     private MenuV2 menu;
     private RectTransform content, prompt;
+    private RawImage background;
     private readonly List<Row> rows = new List<Row>();
     private readonly List<(VanillaOptionsText text, float y)> headers = new List<(VanillaOptionsText, float)>();
     private VanillaStoryText description;
@@ -94,7 +95,7 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         Viewport.anchorMin = Viewport.anchorMax = Viewport.pivot = new Vector2(.5f,.5f);
         Viewport.gameObject.AddComponent<Image>().raycastTarget = false;
         Viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
-        var background = Rect("Background", Viewport, -64,-36,1408,792).gameObject.AddComponent<RawImage>();
+        background = Rect("Background", Viewport, -64,-36,1408,792).gameObject.AddComponent<RawImage>();
         background.texture = Resources.Load<Texture2D>("VanillaOptions/menuBG");
         float height = 1408f * background.texture.height / background.texture.width;
         background.rectTransform.sizeDelta = new Vector2(1408,height);
@@ -102,6 +103,8 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         backgroundMaterial = new Material(Resources.Load<Shader>("VanillaOptions/Background"));
         background.material = backgroundMaterial;
         content = Rect("Page", Viewport,0,0,1280,720);
+        content.anchorMin = content.anchorMax = new Vector2(.5f, 1);
+        content.anchoredPosition = new Vector2(-640, 0);
         effects = gameObject.AddComponent<AudioSource>();
         effects.playOnAwake = false;
         drums = gameObject.AddComponent<AudioSource>();
@@ -112,6 +115,27 @@ public sealed partial class VanillaOptionsMenu : MonoBehaviour
         scrollSound = Resources.Load<AudioClip>("VanillaOptions/scrollMenu");
         confirmSound = Resources.Load<AudioClip>("VanillaOptions/confirmMenu");
         cancelSound = Resources.Load<AudioClip>("VanillaOptions/cancelMenu");
+    }
+
+    private void LateUpdate()
+    {
+        ApplyLayout(((RectTransform)transform).rect.width);
+    }
+
+    public void ApplyLayout(float availableWidth)
+    {
+        float width = Mathf.Clamp(Mathf.Round(availableWidth), 1280, 1600);
+        Viewport.sizeDelta = new Vector2(width, 720);
+        float backgroundWidth = width * 1.1f;
+        float height = backgroundWidth * background.texture.height / background.texture.width;
+        background.rectTransform.sizeDelta = new Vector2(backgroundWidth, height);
+        background.rectTransform.anchoredPosition = new Vector2((width - backgroundWidth) / 2, (height - 720) / 2);
+        if (prompt != null) prompt.anchoredPosition = new Vector2((width - 1080) / 2, -100);
+        if (offsetShade != null)
+        {
+            offsetShade.rectTransform.sizeDelta = new Vector2(width + 50, 770);
+            offsetShade.rectTransform.anchoredPosition = new Vector2((1280 - width) / 2 - 25, 25);
+        }
     }
 
     public static RectTransform Rect(string name, Transform parent, float x, float y, float width, float height)

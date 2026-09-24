@@ -17,6 +17,8 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
     public bool Busy => age < 1.5f || !charactersReady || introPlaying || leaving;
     public bool Confirming => confirmAge >= 0;
     private RectTransform viewport;
+    private RectTransform content;
+    private float layoutWidth = 1280;
     private RectTransform icons;
     private RectTransform cursorRoot;
     private VanillaFreeplayAnimate player;
@@ -164,42 +166,45 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         viewport = Rect("Viewport", transform, 0, 0);
         viewport.anchorMin = viewport.anchorMax = viewport.pivot = new Vector2(.5f, .5f);
         viewport.gameObject.AddComponent<RectMask2D>();
-        Layer(Sprite("charSelectBG", viewport, -153, -140).rectTransform, .1f);
-        Layer(Animate("crowd", viewport, 0, 0).rectTransform, .3f);
-        Layer(Animate("charSelectStage", viewport, -2, 1).rectTransform, 1);
-        Layer(Sprite("curtains", viewport, -212, -99).rectTransform, 1.4f);
-        var bar = Animate("barThing", viewport, 0, 0);
+        content = Rect("Content", viewport, 0, 0);
+        content.anchorMin = content.anchorMax = new Vector2(.5f, 1);
+        content.anchoredPosition = new Vector2(-640, 0);
+        Layer(Sprite("charSelectBG", content, -153, -140).rectTransform, .1f);
+        Layer(Animate("crowd", content, 0, 0).rectTransform, .3f);
+        Layer(Animate("charSelectStage", content, -2, 1).rectTransform, 1);
+        Layer(Sprite("curtains", content, -212, -99).rectTransform, 1.4f);
+        var bar = Animate("barThing", content, 0, 0);
         bar.material = multiply;
         bar.transform.localScale = new Vector3(2.5f, 1, 1);
         Enter(bar.rectTransform, 80, 1.3f);
-        Layer(Sprite("charLight", viewport, 800, 250).rectTransform, 1);
-        Layer(Sprite("charLight", viewport, 180, 240).rectTransform, 1);
-        girlfriend = Animate(original == "pico" ? "neneChill" : "gfChill", viewport, 0, 0);
-        outgoing = Animate(original + "Chill", viewport, 0, 0);
+        Layer(Sprite("charLight", content, 800, 250).rectTransform, 1);
+        Layer(Sprite("charLight", content, 180, 240).rectTransform, 1);
+        girlfriend = Animate(original == "pico" ? "neneChill" : "gfChill", content, 0, 0);
+        outgoing = Animate(original + "Chill", content, 0, 0);
         outgoing.gameObject.SetActive(false);
-        player = Animate(original + "Chill", viewport, 0, 0);
+        player = Animate(original + "Chill", content, 0, 0);
         Layer(girlfriend.rectTransform, 1);
         Layer(outgoing.rectTransform, 1);
         Layer(player.rectTransform, 1);
-        var speakers = Animate("charSelectSpeakers", viewport, -10, 0);
+        var speakers = Animate("charSelectSpeakers", content, -10, 0);
         speakers.transform.localScale = Vector3.one * 1.05f;
         Layer(speakers.rectTransform, 1.8f);
-        var foreground = Sprite("foregroundBlur", viewport, -125, 170);
+        var foreground = Sprite("foregroundBlur", content, -125, 170);
         foreground.material = multiply;
         Layer(foreground.rectTransform, 1);
-        var header = Sprite("dipshitBlur", viewport, 419, -65, "CHOOSE vertical offset instance 1");
+        var header = Sprite("dipshitBlur", content, 419, -65, "CHOOSE vertical offset instance 1");
         header.material = additive;
         Enter(header.rectTransform, 220, 1.2f);
-        var headerBacking = Sprite("dipshitBacking", viewport, 423, -17, "CHOOSE horizontal offset instance 1");
+        var headerBacking = Sprite("dipshitBacking", content, 423, -17, "CHOOSE horizontal offset instance 1");
         headerBacking.material = additive;
         Enter(headerBacking.rectTransform, 210, 1.1f);
-        Enter(Sprite("chooseDipshit", viewport, 426, -13).rectTransform, 200, 1);
-        nametag = Sprite(original == "bf" ? "boyfriendNametag" : "picoNametag", viewport, 1008, 100);
+        Enter(Sprite("chooseDipshit", content, 426, -13).rectTransform, 200, 1);
+        nametag = Sprite(original == "bf" ? "boyfriendNametag" : "picoNametag", content, 1008, 100);
         nametag.drawScale = .77f;
         nametagMaterial = Blend(UnityEngine.Rendering.BlendMode.SrcAlpha, UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha, false);
         nametag.material = nametagMaterial;
         CenterNametag();
-        icons = Rect("Icons", viewport, 450, 120);
+        icons = Rect("Icons", content, 450, 120);
         Enter(icons, 300, 1);
         for (int i = 0; i < 9; i++)
         {
@@ -227,7 +232,7 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
             int slot = i;
             hit.gameObject.AddComponent<Button>().onClick.AddListener(() => { if (SelectedSlot == slot) Confirm(); else SelectSlot(slot); });
         }
-        cursorRoot = Rect("Cursors", viewport, 450, 138);
+        cursorRoot = Rect("Cursors", content, 450, 138);
         cursorRoot.SetSiblingIndex(icons.GetSiblingIndex());
         cursorAlpha = cursorRoot.gameObject.AddComponent<CanvasGroup>();
         Color[] colors = { new Color32(60,116,247,255), new Color32(62,187,255,255), Color.yellow };
@@ -251,6 +256,36 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
         staticSound.loop = true;
         foreach (var cursor in cursors) cursor.rectTransform.anchoredPosition = CursorPosition();
 
+    }
+
+    private void LateUpdate()
+    {
+        if (transition == null) ApplyLayout(((RectTransform)transform).rect.width);
+    }
+
+    public void ApplyLayout(float availableWidth)
+    {
+        layoutWidth = Mathf.Clamp(Mathf.Round(availableWidth), 1280, 1600);
+        viewport.sizeDelta = new Vector2(layoutWidth, 720);
+        foreach (var layer in layers)
+        {
+            if (!WideScenery(layer.rect)) continue;
+            layer.rect.localScale = new Vector3(layoutWidth / 1280, 1, 1);
+            layer.rect.anchoredPosition = LayerPosition(layer.position, layer.scroll, true);
+        }
+    }
+
+    private static bool WideScenery(RectTransform rect)
+    {
+        return rect.name == "charSelectBG" || rect.name == "crowd" || rect.name == "charSelectStage"
+            || rect.name == "curtains" || rect.name == "foregroundBlur";
+    }
+
+    private Vector2 LayerPosition(Vector2 position, float scroll, bool wide)
+    {
+        position += new Vector2(-cameraOffset.x, cameraOffset.y) * scroll;
+        if (wide) position.x = (position.x - 640) * layoutWidth / 1280 + 640;
+        return position;
     }
 
     private void CreateIcon(int slot)
@@ -383,6 +418,8 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
 
     private void BeginEntrance(bool lightsFlash = false)
     {
+        Canvas.ForceUpdateCanvases();
+        ApplyLayout(((RectTransform)transform).rect.width);
         transition = VanillaFreeplayTransition.Create(GetComponent<Canvas>(), true);
         transition.DrawEntrance(0);
         if (lightsFlash) transition.Flash();
@@ -507,7 +544,7 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
             : new Vector2((SelectedSlot % 3 - 1) * 10, (SelectedSlot / 3 - 1) * 10);
         cameraOffset = leaving ? exitCamera + new Vector2(0, -150 * BackIn(exitAge / .8f))
             : Vector2.Lerp(cameraOffset, target, age < 1.5f ? 1 : Mathf.Clamp01(.01f * delta * 60));
-        foreach (var layer in layers) layer.rect.anchoredPosition = layer.position + new Vector2(-cameraOffset.x, cameraOffset.y) * layer.scroll;
+        foreach (var layer in layers) layer.rect.anchoredPosition = LayerPosition(layer.position, layer.scroll, WideScenery(layer.rect));
         foreach (var item in entrance)
         {
             float offset = item.offset * (1 - ExpoOut(age / item.duration));
@@ -568,6 +605,9 @@ public sealed class VanillaCharacterSelect : MonoBehaviour
     {
         introPlaying = true;
         var image = Rect("Lights Intro", viewport, 0, 0).gameObject.AddComponent<RawImage>();
+        image.rectTransform.anchorMin = Vector2.zero;
+        image.rectTransform.anchorMax = Vector2.one;
+        image.rectTransform.offsetMin = image.rectTransform.offsetMax = Vector2.zero;
         image.color = Color.black;
         video = gameObject.AddComponent<VideoPlayer>();
         video.playOnAwake = false;
