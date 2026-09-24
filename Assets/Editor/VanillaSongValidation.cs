@@ -357,6 +357,7 @@ public static class VanillaSongValidation
                 if (Weeks456Only) VanillaWeeks456Validation.CheckStage(activeSong);
                 if (MixOnly) VanillaMixValidation.CheckStage(activeSong);
                 else CheckGirlfriendReactions(activeSong);
+                VanillaPhillyBackgroundValidation.CheckStage(activeSong);
                 if (Ids[songIndex] == "tutorial")
                     Require(!activeSong.girlfriendObject.activeSelf, "Tutorial displays a duplicate Girlfriend.");
                 var chart = (FNFSong)typeof(Song).GetField("_song", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(activeSong);
@@ -512,8 +513,6 @@ public static class VanillaSongValidation
         camera.transform.SetPositionAndRotation(song.mainCamera.transform.position, song.mainCamera.transform.rotation);
         camera.GetUniversalAdditionalCameraData().renderType = CameraRenderType.Base;
         camera.GetUniversalAdditionalCameraData().SetRenderer(0);
-        camera.clearFlags = CameraClearFlags.SolidColor;
-        camera.backgroundColor = Color.black;
         var target = new RenderTexture(1280, 720, 24);
         var previous = RenderTexture.active;
         camera.targetTexture = target;

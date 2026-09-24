@@ -159,6 +159,8 @@ public sealed class VanillaSongPlayback : MonoBehaviour
             hudSize = owner.uiCamera.orthographicSize;
         }
         song = owner;
+        song.mainCamera.clearFlags = CameraClearFlags.SolidColor;
+        song.mainCamera.backgroundColor = Color.black;
         enabled = true;
         SongId = (string)data["song"];
         Variation = (string)data["variation"] ?? "";

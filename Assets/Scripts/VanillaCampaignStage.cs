@@ -708,6 +708,7 @@ public sealed partial class VanillaCampaignStage : MonoBehaviour, IVanillaCharac
 
     private void OnDestroy()
     {
+        if (weekendSkyMesh != null) Destroy(weekendSkyMesh);
         foreach (var clip in spaghettiSounds.Values) if (clip != null) Destroy(clip);
         foreach (AudioClip clip in carClips) if (clip != null) Destroy(clip);
         if (deathQuote != null) Destroy(deathQuote);

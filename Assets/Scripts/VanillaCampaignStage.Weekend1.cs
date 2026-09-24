@@ -25,7 +25,10 @@ public sealed partial class VanillaCampaignStage
     private readonly List<VanillaWeek2Graphic> particles = new List<VanillaWeek2Graphic>();
     private readonly Dictionary<string, List<VanillaWeek2Graphic>> effectPools = new Dictionary<string, List<VanillaWeek2Graphic>>();
     private readonly Dictionary<string, AudioClip> weekendSounds = new Dictionary<string, AudioClip>();
-    private readonly VanillaWeek2Graphic[] skyTiles = new VanillaWeek2Graphic[4];
+    private VanillaWeek2Graphic weekendSky;
+    private Mesh weekendSkyMesh;
+    private MeshFilter weekendSkyFilter;
+    private readonly Vector2[] weekendSkyUV = new Vector2[4];
     private readonly VanillaWeek2Graphic[] vizBars = new VanillaWeek2Graphic[7];
     private readonly TrafficCar[] trafficCars = { new TrafficCar(), new TrafficCar() };
     private readonly bool[] punchAlternate = new bool[2];
@@ -128,12 +131,22 @@ public sealed partial class VanillaCampaignStage
             vizBars[i].Alpha = 0;
             }
         }
-        for (int i = 0; i < skyTiles.Length; i++)
-        {
-            skyTiles[i] = WeekendGraphic(blazin ? "skyBlazin" : StageId == "phillyStreetsErect" ? "phillySkybox" : "sky", 10);
-            skyTiles[i].Scroll = Vector2.one * (blazin ? 0 : .1f);
-            skyTiles[i].transform.localScale = Vector3.one * (blazin ? 1 : .65f);
-        }
+        weekendSky = WeekendGraphic(blazin ? "skyBlazin" : StageId == "phillyStreetsErect" ? "phillySkybox" : "sky", 10);
+        weekendSky.Scroll = Vector2.one * (blazin ? 0 : .1f);
+        weekendSky.Position = blazin ? new Vector3(-7, 1.2f) : new Vector3(-6.5f, 3.75f);
+        weekendSkyFilter = weekendSky.GetComponent<MeshFilter>();
+        var skyTexture = weekendSky.GetComponent<MeshRenderer>().sharedMaterial.mainTexture;
+        skyTexture.wrapModeU = TextureWrapMode.Repeat;
+        float skyWidth = blazin ? 40 : 29.22f;
+        float skyHeight = Mathf.Min(blazin ? 495 : 718, weekendSky.Size.y) / 100;
+        weekendSkyMesh = new Mesh { name = "Weekend tiled sky" };
+        weekendSkyMesh.vertices = new[] { Vector3.zero, new Vector3(skyWidth, 0), new Vector3(skyWidth, -skyHeight), new Vector3(0, -skyHeight) };
+        weekendSkyMesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };
+        weekendSkyMesh.SetUVs(1, new Vector4[4]);
+        weekendSkyMesh.SetUVs(2, new Vector4[4]);
+        weekendSkyMesh.SetUVs(3, new Vector2[4]);
+        weekendSkyMesh.triangles = new[] { 0, 1, 2, 2, 3, 0 };
+        weekendSkyMesh.MarkDynamic();
         if (blazin)
         {
             props["skyAdditive"].Additive = true;
@@ -153,6 +166,8 @@ public sealed partial class VanillaCampaignStage
         }
         if (StageId == "phillyStreetsErect")
         {
+            props["grey1"].Additive = true;
+            props["grey2"].Multiply = true;
             foreach (var graphic in new[] { abot, stereo }.Concat(vizBars).Where(item => item != null)) graphic.ColorAdjustment = new Vector4(-5, -40, -20, -25);
             foreach (var actor in actors)
                 foreach (var graphic in new[] { actor.graphic, actor.censor }.Concat(actor.alternates).Where(item => item != null))
@@ -720,14 +735,11 @@ public sealed partial class VanillaCampaignStage
         bool blazin = StageId == "phillyBlazin";
         foreach (var item in weekendMist)
         {
-            float width = item.graphic.Size.x * item.graphic.transform.localScale.x;
-            item.graphic.Position = new Vector3((-650 + item.tile * width + clock * WeekendMistSpeed[item.layer] % width) / 100,
-                -(WeekendMistY[item.layer] + Mathf.Sin(clock * WeekendMistFrequency[item.layer]) * WeekendMistAmplitude[item.layer]) / 100);
-        }
-        for (int i = 0; i < skyTiles.Length; i++)
-        {
-            float width = skyTiles[i].Size.x * Mathf.Abs(skyTiles[i].transform.localScale.x);
-            skyTiles[i].Position = new Vector3(((blazin ? -700 : -650) + i * width - clock * (blazin ? 35 : 22) % width) / 100, blazin ? 1.2f : 3.75f);
+            float scale = item.graphic.transform.localScale.x;
+            float width = item.graphic.Size.x * scale;
+            Vector2 originOffset = item.graphic.Size * ((1 - scale) / 2);
+            item.graphic.Position = new Vector3((-650 + originOffset.x + item.tile * width + clock * WeekendMistSpeed[item.layer] % width) / 100,
+                -(WeekendMistY[item.layer] + originOffset.y + Mathf.Sin(clock * WeekendMistFrequency[item.layer]) * WeekendMistAmplitude[item.layer]) / 100);
         }
         bool audible = song.songStarted && song.musicSources[0].isPlaying && !song.musicSources[0].mute && song.musicSources[0].volume > 0 && AudioListener.volume > 0;
         bool available = audible && weekendAnalyzer.Read(song.musicSources[0]);
@@ -737,6 +749,15 @@ public sealed partial class VanillaCampaignStage
         }
         SetWeekendVisualizerLevels(visualizerLevels);
         foreach (var graphic in weekendGraphics) graphic.Advance(delta, camera, clock);
+        float skyLeft = clock * (blazin ? 35 : 22) / weekendSky.Size.x;
+        float skyRight = skyLeft + (blazin ? 4000 : 2922) / weekendSky.Size.x;
+        float skyBottom = 1 - Mathf.Min(blazin ? 495 : 718, weekendSky.Size.y) / weekendSky.Size.y;
+        weekendSkyUV[0] = new Vector2(skyLeft, 1);
+        weekendSkyUV[1] = new Vector2(skyRight, 1);
+        weekendSkyUV[2] = new Vector2(skyRight, skyBottom);
+        weekendSkyUV[3] = new Vector2(skyLeft, skyBottom);
+        weekendSkyMesh.uv = weekendSkyUV;
+        weekendSkyFilter.sharedMesh = weekendSkyMesh;
         foreach (var graphic in cans) graphic.Advance(delta, camera, clock);
         foreach (var graphic in particles) graphic.Advance(delta, camera, clock);
         foreach (var casing in casings) casing.graphic.Advance(delta, camera, clock);
