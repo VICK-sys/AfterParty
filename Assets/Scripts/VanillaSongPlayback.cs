@@ -261,10 +261,15 @@ public sealed class VanillaSongPlayback : MonoBehaviour
         SongLoadingDiagnostics.Record("warm stage frames");
         foreach (var graphic in graphicRoot.GetComponentsInChildren<VanillaWeek2Graphic>(true)) graphic.WarmFrames();
         SongLoadingDiagnostics.Record("stage frames ready");
-        cameraTo = CameraTargets[2];
+        FocusCharacter = 1;
+        FocusOnPlayer = false;
+        FocusOffset = Vector2.zero;
+        cameraTo = CameraTargets[1];
         song.mainCamera.transform.position = cameraTo;
         song.mainCamera.orthographicSize = 3.6f / zoom;
         ApplyUntil(0);
+        song.mainCamera.transform.position = CameraFocusTarget;
+        cameraFrom = cameraTo;
         if (IsSpaghetti)
         {
             cameraTo = new Vector3(10.7f, -4.7f, -10);

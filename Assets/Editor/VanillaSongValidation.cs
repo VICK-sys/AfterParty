@@ -248,6 +248,7 @@ public static class VanillaSongValidation
         {
             Require(EditorApplication.timeSinceStartup - started < Math.Max(1800, Ids.Length * 210), "Song validation timed out.");
             CheckCountdownClock();
+            if (VanillaInitialCameraValidation.Tick()) return;
             Require(errors == 0, "Runtime reported errors during song validation.");
             if (phase == 0)
             {
