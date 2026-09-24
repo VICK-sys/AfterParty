@@ -1,0 +1,9 @@
+<project>
+    <meta title="Debug Display Reference" package="local.debug.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="DebugDisplayReference" path="../../Builds/DebugDisplayReference/compiled" />
+    <window width="1280" height="720" hidden="true" background="#506478" />
+    <source path="." />
+    <source path="../../Temp/DebugDisplayReferenceSource" />
+    <haxelib name="flixel" version="6.2.0" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

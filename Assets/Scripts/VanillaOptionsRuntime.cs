@@ -10,11 +10,10 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
     private static VanillaOptionsRuntime instance;
     private Canvas canvas;
     private Canvas volumeCanvas;
-    private Text debugText;
-    private Image debugBackground;
+    private VanillaDebugDisplay debugDisplay;
     private RawImage preview;
     private Texture2D screenshot;
-    private float frameTime, nextDisplay, previewAge;
+    private float previewAge;
     private RectTransform volumeTray;
     private CanvasGroup volumeTrayAlpha;
     private readonly RawImage[] volumeBars = new RawImage[10];
@@ -25,6 +24,8 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
     private float volumeTrayTimer;
     private float volumeTrayHeight;
     private bool takingScreenshot;
+    private int windowWidth = 1280;
+    private int windowHeight = 720;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Initialize()
@@ -34,8 +35,29 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
         DontDestroyOnLoad(instance.gameObject);
         VanillaPreferences.Migrate();
         VanillaControls.Reload();
-        if (!Application.isEditor) Screen.fullScreen = VanillaPreferences.Get("AutoFullscreen") != 0;
+        if (VanillaPreferences.DesktopOptionsAvailable && !Application.isEditor) instance.SetFullscreen(VanillaPreferences.Get("AutoFullscreen") != 0);
         instance.Build();
+    }
+
+    public void SetFullscreen(bool fullscreen)
+    {
+        if (!VanillaPreferences.DesktopOptionsAvailable || Application.isEditor) return;
+        if (fullscreen)
+        {
+            if (!Screen.fullScreen)
+            {
+                windowWidth = Screen.width;
+                windowHeight = Screen.height;
+            }
+            var display = Screen.mainWindowDisplayInfo;
+            int width = display.width > 0 ? display.width : Display.main.systemWidth;
+            int height = display.height > 0 ? display.height : Display.main.systemHeight;
+            Screen.SetResolution(width, height, FullScreenMode.FullScreenWindow);
+        }
+        else if (Screen.fullScreen)
+        {
+            Screen.SetResolution(windowWidth, windowHeight, FullScreenMode.Windowed);
+        }
     }
 
     private void Build()
@@ -44,12 +66,7 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
         DontDestroyOnLoad(canvas.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
-        debugBackground = VanillaOptionsMenu.Rect("Debug Background",canvas.transform,0,0,210,68).gameObject.AddComponent<Image>();
-        debugText = VanillaOptionsMenu.Rect("Debug Display",canvas.transform,10,3,210,100).gameObject.AddComponent<Text>();
-        debugText.font = Resources.Load<Font>("FunkinHud/Countdown/vcr");
-        debugText.fontSize = 16;
-        debugText.color = Color.white;
-        debugText.raycastTarget = false;
+        debugDisplay = VanillaOptionsMenu.Rect("Debug Display",canvas.transform,10,10,240,207).gameObject.AddComponent<VanillaDebugDisplay>();
         preview = VanillaOptionsMenu.Rect("Screenshot Preview",canvas.transform,0,0,320,180).gameObject.AddComponent<RawImage>();
         preview.rectTransform.anchorMin = preview.rectTransform.anchorMax = new Vector2(1,1);
         preview.rectTransform.pivot = new Vector2(1,1);
@@ -152,17 +169,8 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
     private void Update()
     {
         UpdateVolumeTray(Time.unscaledDeltaTime);
-        frameTime = Mathf.Lerp(frameTime,Time.unscaledDeltaTime,.1f);
         int mode = VanillaPreferences.Get("DebugDisplay",2);
-        debugText.enabled = debugBackground.enabled = mode != 2;
-        debugBackground.color = new Color(0,0,0,VanillaPreferences.Get("DebugDisplayBG",50)/100f);
-        debugBackground.rectTransform.sizeDelta = new Vector2(210,mode==0?65:24);
-        if (mode != 2 && Time.unscaledTime >= nextDisplay)
-        {
-            nextDisplay = Time.unscaledTime+.1f;
-            debugText.text = "FPS: "+Mathf.RoundToInt(1/Mathf.Max(.0001f,frameTime));
-            if (mode == 0) debugText.text += "\nMemory: "+(GC.GetTotalMemory(false)/1048576)+" MB\n"+Application.unityVersion;
-        }
+        debugDisplay.Tick(mode,VanillaPreferences.Get("DebugDisplayBG",50)/100f,Time.realtimeSinceStartupAsDouble,Time.unscaledDeltaTime);
         if (preview.gameObject.activeSelf)
         {
             previewAge += Time.unscaledDeltaTime;
@@ -170,11 +178,11 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
             if (previewAge>=3) preview.gameObject.SetActive(false);
         }
         if (VanillaControls.Capturing || VanillaOptionsMenu.Active?.PromptOpen == true) return;
-        if (VanillaControls.Pressed("WINDOW_FULLSCREEN")) Screen.fullScreen = !Screen.fullScreen;
+        if (VanillaControls.Pressed("WINDOW_FULLSCREEN")) SetFullscreen(!Screen.fullScreen);
         if (VanillaControls.Pressed("DEBUG_DISPLAY"))
         {
             var preference = Array.Find(VanillaPreferences.Items,p => p.id == "DebugDisplay");
-            VanillaPreferences.Set(preference,(mode+1)%3);
+            VanillaPreferences.Set(preference,(mode+2)%3);
         }
         if (VanillaControls.Pressed("VOLUME_MUTE")) ChangeMasterVolume(0);
         else if (VanillaControls.Pressed("VOLUME_UP")) ChangeMasterVolume(1);
