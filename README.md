@@ -45,8 +45,17 @@ The build also accepts `UNITY_PARTY_BUILD_PATH` for existing automation.
 `FRIDAY_FIGHT_FUNKIN_BUILD_PATH` takes precedence when both variables have values.
 
 The GitHub Actions workflow builds Windows 64-bit and uploads the `FridayFightFunkin-Windows64` artifact.
+
 Configure `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL` repository secrets before running it.
 The workflow requires a valid Unity license and a matching GameCI editor image.
+
+Export Xbox UWP with `BuildAutomation.BuildXboxUwp`.
+Build the exported solution with `Scripts/BuildXboxNative.ps1 -ExportPath Builds/XboxUWP`.
+This script uses the Master configuration for the application and Unity player.
+The UWP Release configuration includes the Development Build watermark.
+Package with `Scripts/PackageXbox.py --export Builds/XboxUWP --version 1.0.0.14 --output Builds/XboxPackage --dependency <VCLibs-appx>`.
+The packager rejects development runtime paths and verifies packaged binaries against the Master output.
+Sign the package with the existing development certificate before installation.
 
 Unity 2021 is not supported.
 Keep the package lock file when cloning or updating the project.
