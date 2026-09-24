@@ -1,7 +1,7 @@
-# AfterParty Engine
+# Friday Fight Funkin'
 
-**Friday Night Funkin’: AfterParty** is a Unity-based Friday Night Funkin' engine.
-AfterParty forks [Unity Party](https://github.com/Team-Determination/Unity-Party), created by Team Determination.
+**Friday Fight Funkin'** is a Unity-based Friday Night Funkin' engine.
+Friday Fight Funkin' forks [Unity Party](https://github.com/Team-Determination/Unity-Party), created by Team Determination.
 
 ## Features
 
@@ -38,13 +38,13 @@ TextMesh Pro is included through the Unity UI package.
 Open the project in Unity and wait for package resolution and asset import.
 Open `Assets/Scenes/Title.unity` to start the game in the editor.
 
-Select **Build > Windows 64-bit** to create `Builds/Windows/AfterParty.exe`.
+Select **Build > Windows 64-bit** to create `Builds/Windows/Funkin.exe`.
 For command-line builds, use Unity batch mode with `-executeMethod BuildAutomation.BuildWindows`.
-Set `AFTERPARTY_BUILD_PATH` to select another output executable path.
+Set `FRIDAY_FIGHT_FUNKIN_BUILD_PATH` to select another output executable path.
 The build also accepts `UNITY_PARTY_BUILD_PATH` for existing automation.
-`AFTERPARTY_BUILD_PATH` takes precedence when both variables have values.
+`FRIDAY_FIGHT_FUNKIN_BUILD_PATH` takes precedence when both variables have values.
 
-The GitHub Actions workflow builds Windows 64-bit and uploads the `AfterParty-Windows64` artifact.
+The GitHub Actions workflow builds Windows 64-bit and uploads the `FridayFightFunkin-Windows64` artifact.
 Configure `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_SERIAL` repository secrets before running it.
 The workflow requires a valid Unity license and a matching GameCI editor image.
 
@@ -80,12 +80,12 @@ Frame timings include editor overhead and other running applications.
 
 ## Save compatibility
 
-AfterParty retains the Unity company and product identifiers `Rei` and `FridayNight`.
+Friday Fight Funkin' retains the Unity company and product identifiers `Rei` and `FridayNight`.
 These identifiers preserve existing settings, scores, songs, bundles, characters, scenes, and replays.
 Windows data remains in `%USERPROFILE%\AppData\LocalLow\Rei\FridayNight`.
 Player preferences retain the registry key `HKEY_CURRENT_USER\Software\Rei\FridayNight`.
-The Windows caption displays **Friday Night Funkin’: AfterParty**.
-Internal shader identifiers and validation variables also retain their existing names.
+The Windows caption displays **Friday Fight Funkin'**.
+Validation variables retain their existing names.
 
 ## Credits and licenses
 

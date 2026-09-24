@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public sealed class AfterPartyWindowTitle : MonoBehaviour
+public sealed class FridayFightFunkinWindowTitle : MonoBehaviour
 {
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
     private delegate bool WindowCallback(System.IntPtr window, System.IntPtr data);
@@ -21,9 +21,9 @@ public sealed class AfterPartyWindowTitle : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Initialize()
     {
-        var host = new GameObject("AfterParty Window Title");
+        var host = new GameObject("Friday Fight Funkin' Window Title");
         DontDestroyOnLoad(host);
-        host.AddComponent<AfterPartyWindowTitle>();
+        host.AddComponent<FridayFightFunkinWindowTitle>();
     }
 
     private IEnumerator Start()
@@ -34,7 +34,7 @@ public sealed class AfterPartyWindowTitle : MonoBehaviour
         while (true)
         {
             System.IntPtr window = FindWindow(processId);
-            if (window != System.IntPtr.Zero && SetWindowText(window, "Friday Night Funkin’: AfterParty"))
+            if (window != System.IntPtr.Zero && SetWindowText(window, "Friday Fight Funkin'"))
                 break;
             yield return null;
         }

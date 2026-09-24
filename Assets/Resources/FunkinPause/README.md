@@ -1,6 +1,6 @@
-# AfterParty pause menu
+# Friday Fight Funkin' pause menu
 
-The AfterParty pause menu adapts the desktop menu from Friday Night Funkin' 0.8.6.
+The Friday Fight Funkin' pause menu adapts the desktop menu from Friday Night Funkin' 0.8.6.
 The source references are `PauseSubState.hx`, `AtlasText.hx`, and `StickerSubState.hx`.
 The artwork and audio come from the local Funkin Windows distribution.
 The import manifest records source and asset hashes.

@@ -8,7 +8,7 @@ public static class VanillaSongAssets
 {
     private const string Root = "Assets/Resources/VanillaSongs";
 
-    [MenuItem("Tools/AfterParty/Build Tutorial Character")]
+    [MenuItem("Tools/Friday Fight Funkin'/Build Tutorial Character")]
     public static void Build()
     {
         Directory.CreateDirectory(Root);

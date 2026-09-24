@@ -1,4 +1,4 @@
-Shader "AfterParty/Freeplay Blue Fade"
+Shader "Friday Fight Funkin'/Freeplay Blue Fade"
 {
     Properties
     {

@@ -17,7 +17,7 @@ public static class SongAudioLoadingValidation
     public static void Run()
     {
         if (!Application.isBatchMode) throw new InvalidOperationException("Run audio validation in a batch editor.");
-        directory = Path.Combine(Path.GetTempPath(), "AfterPartyAudio-" + Guid.NewGuid().ToString("N"));
+        directory = Path.Combine(Path.GetTempPath(), "FridayFightFunkinAudio-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         validPath = Path.Combine(directory, "Audio # 100% escaped.ogg");
         string source = Directory.GetFiles(Path.Combine(Application.streamingAssetsPath, "Bundles"), "Inst.ogg", SearchOption.AllDirectories)[0];

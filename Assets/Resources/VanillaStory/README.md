@@ -1,6 +1,6 @@
-# AfterParty Story Mode
+# Friday Fight Funkin' Story Mode
 
-AfterParty Story Mode uses the desktop level menu from Friday Night Funkin' 0.8.6.
+Friday Fight Funkin' Story Mode uses the desktop level menu from Friday Night Funkin' 0.8.6.
 The reference source is the local `Funkin-0.8.6` checkout.
 The artwork and level data come from the local Funkin Windows release.
 
@@ -58,7 +58,7 @@ Run validation in a separate project copy with graphics enabled.
 Set `UNITY_PARTY_STORY_TEST_PATH` to the output directory.
 Use Unity batch mode with `-executeMethod VanillaStoryValidation.Begin`.
 Do not add `-quit`. The probe exits after its checks.
-Set `AFTERPARTY_BUILD_PATH` to build a Windows player after successful checks.
+Set `FRIDAY_FIGHT_FUNKIN_BUILD_PATH` to build a Windows player after successful checks.
 
 The probe checks playlists, missing content, atlas rotation, animation frames, navigation, confirmation locks, gameplay launch, return state, and scores.
 Abort, autoplay, wrong-song, missing-difficulty, and blank-render controls detect false passes.

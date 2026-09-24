@@ -1,4 +1,4 @@
-Shader "AfterParty/Results White"
+Shader "Friday Fight Funkin'/Results White"
 {
     Properties
     {

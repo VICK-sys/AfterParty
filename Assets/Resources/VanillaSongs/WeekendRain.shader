@@ -1,4 +1,4 @@
-Shader "AfterParty/Weekend Rain"
+Shader "Friday Fight Funkin'/Weekend Rain"
 {
     Properties { _MainTex ("Texture", 2D) = "white" {} }
     SubShader

@@ -60,7 +60,7 @@ public class DiscordController : MonoBehaviour
             {
                 new DiscordButton
                 {
-                    label = "AfterParty repository",
+                    label = "Friday Fight Funkin' repository",
                     url = "https://github.com/VICK-sys/AfterParty"
                 }
             }
@@ -91,7 +91,7 @@ public class DiscordController : MonoBehaviour
         {
             new DiscordButton
             {
-                label = "AfterParty repository",
+                label = "Friday Fight Funkin' repository",
                 url = "https://github.com/VICK-sys/AfterParty"
             }
         };

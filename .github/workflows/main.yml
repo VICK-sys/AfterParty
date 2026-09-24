@@ -1,4 +1,4 @@
-name: Build AfterParty
+name: Build Friday Fight Funkin'
 
 on:
   schedule:
@@ -29,9 +29,9 @@ jobs:
         with:
           targetPlatform: StandaloneWindows64
           versioning: Semantic
-          buildName: AfterParty
+          buildName: Funkin
       - uses: actions/upload-artifact@v7.0.1
         with:
-          name: AfterParty-Windows64
+          name: FridayFightFunkin-Windows64
           path: build/StandaloneWindows64
           if-no-files-found: error

@@ -12,7 +12,8 @@ public static class BuildAutomation
     {
         get
         {
-            string output = Environment.GetEnvironmentVariable("AFTERPARTY_BUILD_PATH");
+            string output = Environment.GetEnvironmentVariable("FRIDAY_FIGHT_FUNKIN_BUILD_PATH");
+            if (string.IsNullOrWhiteSpace(output)) output = Environment.GetEnvironmentVariable("AFTERPARTY_BUILD_PATH");
             return string.IsNullOrWhiteSpace(output) ? Environment.GetEnvironmentVariable("UNITY_PARTY_BUILD_PATH") : output;
         }
     }
@@ -22,7 +23,7 @@ public static class BuildAutomation
     {
         string output = OutputOverride;
         if (string.IsNullOrWhiteSpace(output))
-            output = "Builds/Windows/AfterParty.exe";
+            output = "Builds/Windows/Funkin.exe";
 
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(output)));
         BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions

@@ -10218,7 +10218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'This bundle either does not meet the requirements for AfterParty or there
+  m_text: 'This bundle either does not meet the requirements for Friday Fight Funkin'' or there
     has been an issue during extraction.
 
 
@@ -17054,7 +17054,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <color=yellow>AfterParty Engine</color> is a Unity-based Friday Night
+  m_text: <color=yellow>Friday Fight Funkin'</color> is a Unity-based Friday Night
     Funkin' engine. It forks Unity Party, created by Team Determination.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e452243aafef5e47be6fa4e393ab840, type: 2}
@@ -23061,7 +23061,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "This AfterParty build is in development.\n\nProject repository: https://github.com/VICK-sys/AfterParty"
+  m_text: "This Friday Fight Funkin' build is in development.\n\nProject repository: https://github.com/VICK-sys/AfterParty"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e452243aafef5e47be6fa4e393ab840, type: 2}
   m_sharedMaterial: {fileID: -8575267411286935687, guid: 5e452243aafef5e47be6fa4e393ab840,

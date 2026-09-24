@@ -1,4 +1,4 @@
-# AfterParty Freeplay
+# Friday Fight Funkin' Freeplay
 
 The main menu opens a Unity adaptation of the Freeplay screen from Friday Night Funkin' 0.8.6.
 It uses the original artwork, fonts, capsule animations, album animations, letter filters, and BF and Pico DJ timelines.
@@ -16,7 +16,7 @@ Only songs with a chart and instrumental for the selected difficulty appear.
 - Press Enter, Space, or Z to play the selected song.
 - Press Escape, Backspace, or X to return to the main menu.
 - Press Tab to open character select.
-- Press M to select an AfterParty play mode.
+- Press M to select a Friday Fight Funkin' play mode.
 - Use the mouse wheel to select a song.
 - Click a capsule to select it. Click the selected capsule to play it.
 
@@ -46,7 +46,7 @@ Song confirmation and menu exit fade cartoon audio over 0.25 seconds.
 
 ## Scores
 
-AfterParty reads existing Unity Party high scores.
+Friday Fight Funkin' reads existing Unity Party high scores.
 Completed Boyfriend runs also save clear percentage and rank.
 Clear percentage uses `(Sick + Good - Miss) / chart note count`, clamped between zero and one.
 Skipped chart notes count as misses for this display.
@@ -66,7 +66,7 @@ The importer extracts four embedded fonts and normalizes the letter animation JS
 `import-manifest.json` records the release executable hash and imported file hashes.
 `VanillaFreeplayAssets.cs` sets texture and audio import properties.
 
-The screen supports the songs and variations installed in AfterParty.
+The screen supports the songs and variations installed in Friday Fight Funkin'.
 Song previews stream audio to avoid decoding complete instrumentals during selection.
 Difficulty changes reuse song rows and update their titles, icons, BPM, ratings, ranks, and favorites.
 The screen retains unchanged filters and does not replay the list entrance when the difficulty changes.
@@ -77,7 +77,7 @@ Pico also includes 15 Pico mixes.
 BF includes Darnell and Lit Up BF mixes.
 Each mix has separate scores and favorites.
 Character selection filters songs by their player metadata.
-The results screen retains the existing AfterParty behavior.
+The results screen retains the existing Friday Fight Funkin' behavior.
 Character select preserves the BF and Pico animations, selection grid, introduction video, and selection music.
 Escape cancels confirmation before the exit transition.
 Character selection persists between sessions.
@@ -107,7 +107,7 @@ Run validation in a separate project copy with graphics enabled.
 Set `UNITY_PARTY_FREEPLAY_TEST_PATH` to the output directory.
 Use Unity batch mode with `-executeMethod VanillaFreeplayValidation.Begin`.
 Do not add `-quit`. The asynchronous probe exits after its checks.
-Set `AFTERPARTY_BUILD_PATH` to build a Windows player after successful checks.
+Set `FRIDAY_FIGHT_FUNKIN_BUILD_PATH` to build a Windows player after successful checks.
 
 The probe checks catalog controls, score formulas, rank assets, menu entry, preview cancellation, difficulty filtering, favorites, gameplay return, and the bundle picker.
 The probe also checks entry and exit motion, transition input locks, and all 13 imported icon confirmation sequences.

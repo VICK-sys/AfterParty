@@ -12,7 +12,7 @@ public static class VanillaMenuBuilder
 {
     private const string Root = "Assets/VanillaMenu/";
 
-    [MenuItem("Tools/AfterParty/Rebuild Vanilla Main Menu")]
+    [MenuItem("Tools/Friday Fight Funkin'/Rebuild Vanilla Main Menu")]
     public static void Build()
     {
         if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -79,9 +79,6 @@ public static class VanillaMenuBuilder
         background.rectTransform.anchoredPosition = new Vector2(0, -319.5f * 0.17f);
         magenta.rectTransform.anchoredPosition = background.rectTransform.anchoredPosition;
         Font font = AssetDatabase.LoadAssetAtPath<Font>(Root + "vcr.ttf");
-        Text version = Text("Version", viewport, font, "v0.8.6", 16, new Vector2(1280, 22), new Vector2(0, -353));
-        version.alignment = TextAnchor.UpperLeft;
-        version.gameObject.AddComponent<Outline>().effectDistance = new Vector2(1, -1);
         GameObject audio = new GameObject("Main Menu Sounds", typeof(AudioSource));
         audio.transform.SetParent(menu.transform, false);
         main.effects = audio.GetComponent<AudioSource>();

@@ -1,6 +1,6 @@
-# AfterParty main menu
+# Friday Fight Funkin' main menu
 
-The AfterParty Title scene uses the desktop main menu artwork and layout from Friday Night Funkin' 0.8.6.
+The Friday Fight Funkin' Title scene uses the desktop main menu artwork and layout from Friday Night Funkin' 0.8.6.
 The source reference is `FunkinCrew/Funkin`, tag `v0.8.6`.
 The asset reference is `FunkinCrew/funkin.assets`, commit `9300719cb261d23f72344807055be6d109c9949c`.
 
@@ -8,7 +8,7 @@ The asset reference is `FunkinCrew/funkin.assets`, commit `9300719cb261d23f72344
 `VanillaMenuBuilder.cs` converts Sparrow atlas coordinates and creates scene objects.
 The implementation uses 24 FPS animation, 160-pixel spacing, and the original camera follow and flicker timing.
 
-Select `Tools > AfterParty > Rebuild Vanilla Main Menu` to regenerate the main menu in the Title scene.
+Select `Tools > Friday Fight Funkin' > Rebuild Vanilla Main Menu` to regenerate the main menu in the Title scene.
 This action replaces the main menu scene objects.
 The scene contains editable backgrounds, animated entries, and a version label.
 The version label identifies the visual reference.
