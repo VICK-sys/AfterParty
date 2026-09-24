@@ -52,14 +52,13 @@ public sealed class VanillaPauseMenu : MonoBehaviour
         screen.anchorMin = Vector2.zero;
         screen.anchorMax = Vector2.one;
         screen.offsetMin = screen.offsetMax = Vector2.zero;
-        screen.gameObject.AddComponent<Image>().color = Color.clear;
+        background = screen.gameObject.AddComponent<Image>();
+        background.color = Color.clear;
         viewport = Rect("Viewport", transform, 0, 0, 1280, 720);
         viewport.anchorMin = viewport.anchorMax = new Vector2(0.5f, 0.5f);
         viewport.pivot = new Vector2(0.5f, 0.5f);
         viewport.gameObject.AddComponent<Image>().raycastTarget = false;
         viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
-        background = Rect("Background", viewport, 0, 0, 1280, 720).gameObject.AddComponent<Image>();
-        background.raycastTarget = false;
         for (int index = 0; index < metadataY.Length; index++)
         {
             var text = Text("Metadata " + index, viewport, false, index < 5 ? 32 : 16);
