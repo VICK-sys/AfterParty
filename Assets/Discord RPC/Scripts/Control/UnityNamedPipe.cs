@@ -18,6 +18,14 @@ namespace DiscordRPC.Unity
 
         private NamedPipeClientStream _stream;
         private byte[] _buffer = new byte[PipeFrame.MAX_SIZE];
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        private readonly byte[] _header = new byte[8];
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool PeekNamedPipe(Microsoft.Win32.SafeHandles.SafePipeHandle pipe, byte[] buffer,
+            uint bufferSize, out uint bytesRead, out uint bytesAvailable, IntPtr bytesLeft);
+#endif
 
         public ILogger Logger { get; set; }
         public bool IsConnected {  get { return _stream != null && _stream.IsConnected; } }
@@ -130,8 +138,38 @@ namespace DiscordRPC.Unity
                 return false;
             }
 
-            //Try and read a frame
-            int length = _stream.Read(_buffer, 0, _buffer.Length);
+            int length;
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            frame = default(PipeFrame);
+            if (!PeekNamedPipe(_stream.SafePipeHandle, _header, (uint)_header.Length,
+                out uint headerLength, out uint available, IntPtr.Zero))
+            {
+                Close();
+                return false;
+            }
+            if (headerLength < _header.Length) return false;
+            uint payloadLength = BitConverter.ToUInt32(_header, 4);
+            if (payloadLength > _buffer.Length - _header.Length)
+            {
+                Close();
+                return false;
+            }
+            int frameLength = _header.Length + (int)payloadLength;
+            if (available < frameLength) return false;
+            length = 0;
+            while (length < frameLength)
+            {
+                int read = _stream.Read(_buffer, length, frameLength - length);
+                if (read == 0)
+                {
+                    Close();
+                    return false;
+                }
+                length += read;
+            }
+#else
+            length = _stream.Read(_buffer, 0, _buffer.Length);
+#endif
             Logger.Trace("Read {0} bytes", length);
 
             if (length == 0)

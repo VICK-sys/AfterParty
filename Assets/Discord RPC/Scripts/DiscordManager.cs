@@ -23,7 +23,7 @@ public class DiscordManager : MonoBehaviour
 	#region Properties and Configurations
 	[Header("Properties")]
 	[Tooltip("The ID of the Discord Application. Visit the Discord API to create a new application if nessary.")]
-	public string applicationID = EXAMPLE_APPLICATION;
+	public string applicationID = "";
 
 	[Tooltip("The Steam App ID. This is a optional field used to launch your game through steam instead of the executable.")]
 	public string steamID = "";
@@ -163,6 +163,7 @@ public class DiscordManager : MonoBehaviour
 	{
 #if (UNITY_WSA || UNITY_WSA_10_0 || UNITY_STANDALONE) && !DISABLE_DISCORD
 
+        if (!ulong.TryParse(applicationID, out ulong application) || application == 0) return;
         if (!active) return;                //Are we allowed to be active?
         if (!Application.isPlaying) return; //We are not allowed to initialize while in the editor.
 
