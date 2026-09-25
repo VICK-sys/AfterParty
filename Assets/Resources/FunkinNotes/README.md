@@ -50,6 +50,8 @@ Optional ghost tapping permits empty presses only outside active notes, holds, a
 ## Holds and rendering
 
 Each hold uses its exact chart duration and one continuous mesh.
+The note scheduler sorts the chart once and advances through notes inside the current spawn window.
+Retries rebuild the schedule and reset its cursor.
 Holding grants 250 points and 12 health per second.
 A dropped hold cannot recover.
 A remaining tail longer than 160 ms costs 125 points per remaining second and breaks the combo.
@@ -78,12 +80,17 @@ Hardware latency and cross-engine pixel parity require comparison with a running
 ## Validation
 
 Run `Scripts/TestFunkinRules.ps1` with .NET 10 to check deterministic rules and negative controls.
+Run `Scripts/TestNoteSchedule.ps1` to check chart spawning, timing boundaries, offsets, retries, and a large future-note control.
+The scheduler tests cover all 166 bundled charts and 90,437 note heads.
+Run `NoteSchedulingValidation.Run` in an isolated batch editor to compare cursor cost against a full-scan control.
+Set `UNITY_PARTY_NOTE_SCHEDULE_PATH` to the output directory.
+This measurement isolates scheduling cost and does not measure whole-game FPS.
 Run Unity with `-batchmode -executeMethod FunkinGameplayValidation.Begin` in an isolated project copy.
 Do not pass `-quit` to the gameplay validation command.
 The harness exits after checking the gameplay scene and saving two renders under `Validation`.
 The harness changes play mode and temporary runtime options.
 
-Rule checks cover input and HUD behavior, plus 87 bundled charts with 41,590 note heads at 30, 60, and 144 frames per second.
+Rule checks cover input and HUD behavior, plus 166 bundled charts with 90,437 note heads at 30, 60, and 144 frames per second.
 Runtime checks cover countdown input, event latency, keyboard and controller bindings, hold release, pooling, bot play, and both scroll directions.
 Negative controls check incorrect event timestamps, blank renders, and separate strumline splash pools.
 

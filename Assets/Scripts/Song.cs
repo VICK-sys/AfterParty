@@ -125,6 +125,7 @@ public partial class Song : MonoBehaviour
     public Transform player2Up;
     public Transform player2Right;
     private List<NoteBehaviour> _noteBehaviours = new List<NoteBehaviour>();
+    private readonly NoteSchedule _noteSchedule = new NoteSchedule();
     
     [Header("Prefabs")] public GameObject leftArrow;
     public GameObject downArrow;
@@ -668,6 +669,7 @@ public partial class Song : MonoBehaviour
                 _noteBehaviours.Add( new NoteBehaviour( section, noteData ) );
             }
         }
+        _noteSchedule.Reset(_noteBehaviours);
         /*
          * Charts tend to not have organized notes, so we have to sort notes
          * for the game so inputs do not get screwed up.
@@ -1565,10 +1567,7 @@ public partial class Song : MonoBehaviour
         {
             modInstance?.Invoke("Update");
             
-            if ( _noteBehaviours.Count > 0)
-                foreach (NoteBehaviour nBeh in _noteBehaviours)
-                    if (nBeh.count < 1)
-                        nBeh.GenerateNote();
+            _noteSchedule.Advance(this);
             
             if (songStarted & musicSources[0].isPlaying)
             {

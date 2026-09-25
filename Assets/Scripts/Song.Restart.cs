@@ -56,6 +56,7 @@ public partial class Song
         foreach (var section in _song.Sections)
             foreach (var data in section.Notes)
                 _noteBehaviours.Add(new NoteBehaviour(section, data));
+        _noteSchedule.Reset(_noteBehaviours);
         musicSources[0].clip = musicClip;
         musicSources[0].loop = false;
         musicSources[0].volume = OptionsV2.instVolume;
