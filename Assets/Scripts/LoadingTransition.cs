@@ -180,12 +180,13 @@ public class LoadingTransition : MonoBehaviour
         action?.Invoke();
     }
 
-    public void LoadScene(string scene, Action beforeLoad = null, bool fadeThroughBlack = false)
+    public void LoadScene(string scene, Action beforeLoad = null, bool fadeThroughBlack = false, float blackFadeDuration = FadeDuration,
+        bool linearBlackFade = false)
     {
-        if (Begin()) StartCoroutine(LoadSceneRoutine(scene, beforeLoad, fadeThroughBlack));
+        if (Begin()) StartCoroutine(LoadSceneRoutine(scene, beforeLoad, fadeThroughBlack, blackFadeDuration, linearBlackFade));
     }
 
-    private IEnumerator LoadSceneRoutine(string scene, Action beforeLoad, bool fadeThroughBlack)
+    private IEnumerator LoadSceneRoutine(string scene, Action beforeLoad, bool fadeThroughBlack, float blackFadeDuration, bool linearBlackFade)
     {
         if (fadeThroughBlack && !HoldingStoryFrame)
         {
@@ -194,10 +195,10 @@ public class LoadingTransition : MonoBehaviour
             background.color = Color.black;
             artwork.gameObject.SetActive(false);
             loadBar.gameObject.SetActive(false);
-            while (Time.realtimeSinceStartup - shownAt < FadeDuration)
+            while (Time.realtimeSinceStartup - shownAt < blackFadeDuration)
             {
-                float fade = Mathf.Clamp01((Time.realtimeSinceStartup - shownAt) / FadeDuration);
-                visibility.alpha = fade * fade * (3 - 2 * fade);
+                float fade = Mathf.Clamp01((Time.realtimeSinceStartup - shownAt) / blackFadeDuration);
+                visibility.alpha = linearBlackFade ? fade : fade * fade * (3 - 2 * fade);
                 yield return null;
             }
             visibility.alpha = 1;

@@ -31,8 +31,15 @@ public sealed partial class VanillaCampaignPresentation
         stage.PlayAnimation("dad", "stressPicoEnding");
         sound.Play();
         bool laughed = false;
+        int lastCompanionBeat = -1;
         for (float time = 0; time < 320f / 24; time += Time.deltaTime)
         {
+            int companionBeat = Mathf.FloorToInt(time / (song.stepCrochet * .004f));
+            if (companionBeat != lastCompanionBeat)
+            {
+                stage.StressPicoOutroBeat(lastCompanionBeat < 0);
+                lastCompanionBeat = companionBeat;
+            }
             float t = Mathf.Clamp01(time / 2.8f);
             float ease = t >= 1 ? 1 : 1 - Mathf.Pow(2, -10 * t);
             song.mainCamera.transform.position = Vector3.Lerp(from, target, ease);

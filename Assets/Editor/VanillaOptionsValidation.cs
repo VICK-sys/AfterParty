@@ -133,6 +133,7 @@ public static class VanillaOptionsValidation
             {
                 case 0:
                     if (wait<2 || VanillaTitleScreen.Active==null) return;
+                    Require(!Cursor.visible,"Title screen left the mouse cursor visible.");
                     Backup();
                     CheckVolumeTray();
                     menu=MenuV2.Instance;
@@ -143,13 +144,16 @@ public static class VanillaOptionsValidation
                     break;
                 case 1:
                     if (VanillaTitleScreen.Active!=null || VanillaTitleTransition.BlocksInput) return;
+                    Require(!Cursor.visible,"Main menu left the mouse cursor visible.");
                     menu.vanillaMenu.MoveSelection(3-menu.vanillaMenu.SelectedIndex);
                     menu.vanillaMenu.ConfirmSelection();
+                    if (!menu.vanillaMenu.Busy) return;
                     Next();
                     break;
                 case 2:
                     options=VanillaOptionsMenu.Active;
                     if (options==null || wait<2) return;
+                    Require(!Cursor.visible,"Options left the mouse cursor visible.");
                     Require(!menu.mainScreen.gameObject.activeSelf && !menu.optionsScreen.gameObject.activeSelf,"Options left a legacy menu visible.");
                     Require(options.Labels.SequenceEqual(new[]{"PREFERENCES","CONTROLS","LAG ADJUSTMENT","CLEAR SAVE DATA","EXIT"}),"Root page order differs.");
                     Require(options.GetComponentsInChildren<VanillaOptionsText>().All(text=>text.GetComponent<CanvasRenderer>()!=null),"An options label lacks a canvas renderer.");
@@ -291,6 +295,25 @@ public static class VanillaOptionsValidation
                     options.Close();
                     Require(menu.mainScreen.gameObject.activeSelf && VanillaOptionsMenu.Active==null,"Options did not return to the main menu.");
                     Require(errors==0,"Runtime errors were logged.");
+                    Next();
+                    break;
+                case 16:
+                    if (wait<.2) return;
+                    Require(!Cursor.visible,"Closing options restored a visible cursor over the main menu.");
+                    menu.mainScreen.gameObject.SetActive(false);
+                    menu.playScreen.gameObject.SetActive(true);
+                    Next();
+                    break;
+                case 17:
+                    if (wait<.2) return;
+                    Require(Cursor.visible,"The bundle picker lost its mouse cursor.");
+                    menu.playScreen.gameObject.SetActive(false);
+                    menu.mainScreen.gameObject.SetActive(true);
+                    Next();
+                    break;
+                case 18:
+                    if (wait<.2) return;
+                    Require(!Cursor.visible,"Returning from the bundle picker left the cursor visible.");
                     Finish(true);
                     break;
             }

@@ -424,7 +424,9 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
         {
             JArray bounds = (JArray)baked["bounds"];
             JToken offset = baked["offsets"]?[time];
-            AddSpriteQuad((string)baked["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(bounds[0]) + Number(offset?[0]), Number(bounds[1]) + Number(offset?[1]), 0)), tint, output);
+            float scale = 1 / Number(baked["renderScale"], 1);
+            AddSpriteQuad((string)baked["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(bounds[0]) + Number(offset?[0]), Number(bounds[1]) + Number(offset?[1]), 0))
+                * Matrix4x4.Scale(new Vector3(scale, scale, 1)), tint, output);
             return;
         }
         JArray layers = timeline?["L"] as JArray;
@@ -434,7 +436,9 @@ public sealed class VanillaFreeplayAnimate : MaskableGraphic
             if (layers[l]["RB"] is JObject renderedLayer)
             {
                 JToken offset = renderedLayer["offsets"][time];
-                AddSpriteQuad((string)renderedLayer["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(offset[0]), Number(offset[1]), 0)), tint, output);
+                float scale = 1 / Number(renderedLayer["renderScale"], 1);
+                AddSpriteQuad((string)renderedLayer["frames"][time], transform * Matrix4x4.Translate(new Vector3(Number(offset[0]), Number(offset[1]), 0))
+                    * Matrix4x4.Scale(new Vector3(scale, scale, 1)), tint, output);
                 continue;
             }
             JToken key = FindFrame(layers[l]["FR"] as JArray, time);

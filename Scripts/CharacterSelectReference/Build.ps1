@@ -21,15 +21,18 @@ New-Item -ItemType Directory -Path $env:UNITY_PARTY_CHARACTER_REFERENCE_PATH -Fo
 Push-Location $PSScriptRoot
 try
 {
-    haxelib run lime build project.xml neko -64
-    if ($LASTEXITCODE -ne 0) { throw 'Character select reference build failed.' }
-    $assets = Join-Path $projectRoot 'Builds/CharacterSelectReference/compiled/neko/bin/assets'
-    foreach ($file in Get-ChildItem -LiteralPath $assets -Filter '*.json' -Recurse -File)
+    foreach ($mode in @('legacy_resolution', 'high_resolution'))
     {
-        $json = [IO.File]::ReadAllText($file.FullName)
-        [IO.File]::WriteAllText($file.FullName, $json, [Text.UTF8Encoding]::new($false))
+        haxelib run lime build project.xml neko -64 "-D$mode"
+        if ($LASTEXITCODE -ne 0) { throw 'Character select reference build failed.' }
+        $assets = Join-Path $projectRoot 'Builds/CharacterSelectReference/compiled/neko/bin/assets'
+        foreach ($file in Get-ChildItem -LiteralPath $assets -Filter '*.json' -Recurse -File)
+        {
+            $json = [IO.File]::ReadAllText($file.FullName)
+            [IO.File]::WriteAllText($file.FullName, $json, [Text.UTF8Encoding]::new($false))
+        }
+        & (Join-Path $projectRoot 'Builds/CharacterSelectReference/compiled/neko/bin/CharacterSelectReference.exe')
+        if ($LASTEXITCODE -ne 0) { throw 'Character select reference capture failed.' }
     }
-    & (Join-Path $projectRoot 'Builds/CharacterSelectReference/compiled/neko/bin/CharacterSelectReference.exe')
-    if ($LASTEXITCODE -ne 0) { throw 'Character select reference capture failed.' }
 }
 finally { Pop-Location }

@@ -21,6 +21,8 @@ public sealed class VanillaFreeplaySong
     public int Rating(string difficulty) => (int?)Details(difficulty)?["playData"]?["ratings"]?[difficulty.ToLowerInvariant()] ?? 0;
     public string Icon(string difficulty) => (string)Details(difficulty)?["playData"]?["characters"]?["opponent"] ?? "bf";
     public string Album(string difficulty) => (string)Details(difficulty)?["playData"]?["album"];
+    public bool IsNew => details.Values.Any(data => (string)data["playData"]?["album"] == "spaghetti")
+        && !new[] { "Easy", "Normal", "Hard" }.Any(difficulty => PlayerPrefs.HasKey("Freeplay.Rank." + ScoreKey(difficulty, PlayModes.Boyfriend)));
     public string[] Instrumentals(string difficulty)
     {
         JToken characters = Details(difficulty)?["playData"]?["characters"];
@@ -108,6 +110,7 @@ public static class VanillaFreeplayCatalog
                         if (Path.GetFileName(bundlePath) == "06-Week6") song.week = "Week 6";
                         if (Path.GetFileName(bundlePath) == "07-Week7") song.week = "Week 7";
                         if (Path.GetFileName(bundlePath) == "08-Weekend1") song.week = "Weekend 1";
+                        if (Path.GetFileName(bundlePath) == "09-Sserafim") song.week = "SP. COLLAB 1";
                         songs.Add(song);
                     }
                     catch (Exception e) { Debug.LogWarning("Cannot read Freeplay song " + path + ": " + e.Message); }

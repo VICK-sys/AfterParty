@@ -33,7 +33,7 @@ public sealed class VanillaMixCompanion
     private string lastAnimation;
     private int lastAnimationFrame;
 
-    public bool BlocksDance => otis || state != State.Default;
+    public bool BlocksDance => state != State.Default;
     public IEnumerable<VanillaWeek2Graphic> Graphics => graphics;
     public VanillaWeek2Graphic Body => body;
 

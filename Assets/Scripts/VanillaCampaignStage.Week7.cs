@@ -37,6 +37,9 @@ public sealed partial class VanillaCampaignStage
         public float speed;
         public float shotAge;
         public int shot;
+        public Vector2 origin;
+        public Vector2 initialOffset;
+        public bool fresh;
     }
 
     private void LoadWeek7()
@@ -64,25 +67,33 @@ public sealed partial class VanillaCampaignStage
             }
         }
         if ((string)chart["song"] == "stress")
+        {
             speakerNotes = JArray.Parse(File.ReadAllText(Path.Combine(root, (string)chart["variation"] == "pico" ? "speaker-chart-pico.json" : "speaker-chart.json"))).OrderBy(note => (double)note["t"]).ToArray();
+            PrepareRunners();
+        }
+        if (actors[1].id == "tankman-bloody")
+        {
+            foreach (var graphic in new[] { actors[1].censor }.Concat(actors[1].alternates).Where(item => item != null && item.Has("idle-bloody")))
+            {
+                graphic.PrepareRimMask(Path.Combine(root, "effects/tankmanCaptainBloody_mask.png"));
+                graphic.WarmFrames();
+                graphic.Advance(0, song.mainCamera.transform.position, clock);
+            }
+            FunkinHudAssets.Icon("tankman-bloody");
+        }
     }
 
     private void PlaceBackgroundTankman(string name, Vector2 stageTranslation)
     {
         var graphic = props[name];
-        Bounds bounds = graphic.GetComponent<MeshFilter>().sharedMesh.bounds;
-        float sourceScale = graphic.transform.localScale.x;
-        const float scale = 1.5f;
-        Vector3 anchor = new Vector3(bounds.center.x, bounds.min.y, 0);
-        graphic.GlobalOffset = anchor * (sourceScale / scale - 1)
-            + new Vector3(stageTranslation.x, -stageTranslation.y, 0) * ((1 - sourceScale) / (100 * scale));
-        graphic.transform.localScale = new Vector3(scale, scale, 1);
+        float scale = graphic.transform.localScale.x;
+        graphic.GlobalOffset = new Vector3(stageTranslation.x, -stageTranslation.y, 0) * ((1 - scale) / (100 * scale));
     }
 
     private void ResetWeek7()
     {
         if (actors[1].id == "tankman-bloody") actors[1].censor?.ClearRimMask();
-        SpeakerShots = RunnerSpawns = SpecialNoteHits = nextRunner = 0;
+        SpeakerShots = RunnerSpawns = SpecialNoteHits = 0;
         runnerNotes.Clear();
         foreach (JToken note in speakerNotes)
             if (UnityEngine.Random.value < 1f / 16) runnerNotes.Enqueue(note);
@@ -151,31 +162,53 @@ public sealed partial class VanillaCampaignStage
         }
     }
 
-    public void SpawnRunner(double time, bool right)
+    public void StressPicoOutroBeat(bool begin)
     {
-        Runner runner = runners.FirstOrDefault(item => !item.graphic.gameObject.activeSelf);
-        if (runner == null && runners.Count < 4)
+        if (actors[2].id != "otis-speaker") return;
+        actors[2].Dance(begin);
+        companion?.Beat();
+    }
+
+    private void PrepareRunners()
+    {
+        for (int index = runners.Count; index < 4; index++)
         {
-            runner = new Runner { graphic = Graphic(Path.Combine(root, "effects/runner"), "Running Tankman " + runners.Count, 30),
-                shot = UnityEngine.Random.Range(1, 3) };
+            var runner = new Runner { graphic = Graphic(Path.Combine(root, "effects/runner"), "Running Tankman " + index, 30) };
+            runner.graphic.Play("run");
+            runner.origin = runner.graphic.FrameSize * .5f;
+            float initialScale = Mathf.Floor(runner.graphic.Size.x * .4f) / runner.graphic.FrameSize.x;
+            runner.initialOffset = runner.origin * (1 - initialScale);
+            runner.graphic.ApplyAnimationOffsets = false;
             runners.Add(runner);
             if ((string)chart["variation"] == "pico")
             {
-                runner.graphic.transform.localScale = Vector3.one * 1.1f;
                 runner.graphic.SetRim(null, 15, .1f, new Vector4(-38, -20, -46, -25), new Color32(223, 239, 60, 255), 135, .4f, true);
             }
+            runner.graphic.WarmFrames();
+            runner.graphic.Advance(0, song.mainCamera.transform.position, clock);
+            runner.graphic.gameObject.SetActive(false);
         }
-        if (runner == null) runner = runners[nextRunner++ % runners.Count];
+    }
+
+    public void SpawnRunner(double time, bool right)
+    {
+        bool fresh = RunnerSpawns < 4;
+        int index = fresh ? RunnerSpawns : nextRunner;
+        if (!fresh) nextRunner = (nextRunner + 1) % 4;
+        Runner runner = runners[index];
+        runner.fresh = fresh;
+        if (fresh) runner.shot = UnityEngine.Random.Range(1, 3);
         runner.time = time;
         runner.right = right;
         runner.endingOffset = UnityEngine.Random.Range(50f, 200f);
         runner.speed = UnityEngine.Random.Range(.6f, 1f);
         runner.shotAge = 0;
+        runner.graphic.transform.localScale = Vector3.one * ((string)chart["variation"] == "pico" ? 1.1f : 1);
         runner.graphic.Position = new Vector3(99.99f, -((string)chart["variation"] == "pico" ? 350 : 200 + UnityEngine.Random.Range(50, 101)) / 100f, 0);
         runner.graphic.FlipX = !right;
         runner.graphic.Alpha = 1;
         runner.graphic.Play("run");
-        runner.graphic.Advance(UnityEngine.Random.Range(0f, runner.graphic.Duration), song.mainCamera.transform.position, clock);
+        RenderRunner(runner, UnityEngine.Random.Range(0f, runner.graphic.Duration), song.mainCamera.transform.position);
         runner.graphic.gameObject.SetActive(true);
         RunnerSpawns++;
     }
@@ -184,7 +217,17 @@ public sealed partial class VanillaCampaignStage
     {
         if (clouds != null) clouds.Advance(delta, camera, clock);
         foreach (Runner runner in runners)
-            if (runner.graphic.gameObject.activeSelf) runner.graphic.Advance(delta, camera, clock);
+            if (runner.graphic.gameObject.activeSelf) RenderRunner(runner, delta, camera);
+    }
+
+    private void RenderRunner(Runner runner, float delta, Vector3 camera)
+    {
+        var graphic = runner.graphic;
+        float scale = Mathf.Abs(graphic.transform.localScale.x);
+        Vector2 animationOffset = graphic.Animation == "run" ? (runner.fresh ? runner.initialOffset : Vector2.zero) : new Vector2(300, 200);
+        Vector2 offset = runner.origin * (1 - scale) - animationOffset;
+        graphic.GlobalOffset = new Vector3(offset.x, -offset.y, 0) / (100 * scale);
+        graphic.Advance(delta, camera, clock);
     }
 
     private IEnumerator LoadDeathQuote()

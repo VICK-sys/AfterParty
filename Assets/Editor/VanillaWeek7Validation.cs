@@ -203,6 +203,7 @@ public static class VanillaWeek7Validation
         }
         if (song.vanillaPlayback.SongId == "stress")
         {
+            VanillaMixValidation.CheckRunnerLoading(song);
             stage.ResetStage();
             var notes = JArray.Parse(File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "Bundles/Week7Assets/speaker-chart.json")));
             double first = (double)notes[0]["t"];

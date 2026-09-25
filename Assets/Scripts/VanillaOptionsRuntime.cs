@@ -67,6 +67,10 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
         debugDisplay = VanillaOptionsMenu.Rect("Debug Display",canvas.transform,10,10,240,207).gameObject.AddComponent<VanillaDebugDisplay>();
+        var debugCanvas = debugDisplay.gameObject.AddComponent<Canvas>();
+        debugCanvas.overrideSorting = true;
+        debugCanvas.sortingLayerName = "UI";
+        debugCanvas.sortingOrder = short.MaxValue;
         preview = VanillaOptionsMenu.Rect("Screenshot Preview",canvas.transform,0,0,320,180).gameObject.AddComponent<RawImage>();
         preview.rectTransform.anchorMin = preview.rectTransform.anchorMax = new Vector2(1,1);
         preview.rectTransform.pivot = new Vector2(1,1);
@@ -188,6 +192,16 @@ public sealed class VanillaOptionsRuntime : MonoBehaviour
         else if (VanillaControls.Pressed("VOLUME_UP")) ChangeMasterVolume(1);
         else if (VanillaControls.Pressed("VOLUME_DOWN")) ChangeMasterVolume(-1);
         if (VanillaControls.Pressed("WINDOW_SCREENSHOT") && !takingScreenshot) StartCoroutine(Capture());
+    }
+
+    private void LateUpdate()
+    {
+        bool keyboardScreen = Song.instance != null || VanillaTitleScreen.Active != null || VanillaStoryMenu.Active != null
+            || VanillaFreeplay.Active != null || VanillaCharacterSelect.Active != null || VanillaOptionsMenu.Active != null
+            || VanillaCreditsScreen.Active != null || VanillaCreditsTransition.IsRunning || VanillaTitleTransition.IsRunning
+            || MenuV2.Instance != null && MenuV2.Instance.vanillaMenu != null && MenuV2.Instance.vanillaMenu.isActiveAndEnabled;
+        bool visible = !keyboardScreen && !(takingScreenshot && VanillaPreferences.Get("HideMouse", 1) != 0);
+        if (Cursor.visible != visible) Cursor.visible = visible;
     }
 
     private IEnumerator Capture()

@@ -83,6 +83,8 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
     private Material material;
     private Texture2D texture;
     private Texture2D rimMask;
+    private Texture2D preparedRimMask;
+    private string preparedRimMaskPath;
     private Texture2D replacementTexture;
     private Vector2 origin;
     private Rect compositeBounds;
@@ -244,11 +246,8 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
     {
         if (path != null)
         {
-            Release(rimMask);
-            rimMask = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            rimMask.LoadImage(File.ReadAllBytes(path), !Application.isEditor);
-            rimMask.filterMode = texture.filterMode;
-            rimMask.wrapMode = TextureWrapMode.Clamp;
+            PrepareRimMask(path);
+            rimMask = preparedRimMask;
             material.SetTexture("_RimMask", rimMask);
         }
         HasRim = true;
@@ -265,9 +264,20 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
 
     public void ClearRimMask()
     {
-        Release(rimMask);
         rimMask = null;
         material.SetTexture("_RimMask", Texture2D.blackTexture);
+    }
+
+    public void PrepareRimMask(string path)
+    {
+        if (preparedRimMask != null && preparedRimMaskPath == path) return;
+        Release(preparedRimMask);
+        preparedRimMask = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+        if (!preparedRimMask.LoadImage(File.ReadAllBytes(path), !Application.isEditor))
+            throw new InvalidDataException("Could not decode rim mask: " + path);
+        preparedRimMask.filterMode = texture.filterMode;
+        preparedRimMask.wrapMode = TextureWrapMode.Clamp;
+        preparedRimMaskPath = path;
     }
 
     private void UpdateRimAngle()
@@ -449,7 +459,7 @@ public sealed class VanillaWeek2Graphic : MonoBehaviour
             foreach (Mesh mesh in asset.meshes.Values) Release(mesh);
             Release(asset.texture);
         }
-        Release(rimMask);
+        Release(preparedRimMask);
         Release(replacementTexture);
         Release(material);
         Release(composite);

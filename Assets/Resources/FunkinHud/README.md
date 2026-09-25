@@ -13,6 +13,7 @@ The opponent fill is `#FF0000`.
 The player fill is `#66FF33` and grows from right to left.
 The fill uses Flixel's 100 divisions and pixel rounding.
 Each update interpolates displayed health toward actual health by 0.15.
+Displayed health settles to its target within 0.001 units, so full health fills the complete bar.
 Bot play displays full health without changing actual health.
 
 Icons follow interpolated health but select their faces from actual health.

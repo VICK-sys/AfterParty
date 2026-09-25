@@ -40,7 +40,11 @@ public static class VanillaFreeplayDifficultyValidation
         void Difficulty(string name)
         {
             int moves = 0;
-            while (freeplay.Difficulty != name && moves++ < 6) freeplay.ChangeDifficulty(1);
+            while (freeplay.Difficulty != name && moves++ < 6)
+            {
+                freeplay.ChangeDifficulty(1);
+                Settle(freeplay);
+            }
             Require(freeplay.Difficulty == name, "Difficulty selection did not reach " + name);
         }
         void Select(string name)
@@ -72,8 +76,10 @@ public static class VanillaFreeplayDifficultyValidation
                     "Difficulty change rebuilt unchanged filters.");
             }
             freeplay.ToggleFavorite();
+            Settle(freeplay);
             CheckRows(freeplay);
             freeplay.ToggleFavorite();
+            Settle(freeplay);
             freeplay.SetMode(PlayModes.Opponent);
             CheckRows(freeplay);
             freeplay.SetMode(PlayModes.Boyfriend);
@@ -121,6 +127,11 @@ public static class VanillaFreeplayDifficultyValidation
         Require(list.childCount == rows.Count, "Difficulty changes increased the row count.");
         foreach (Transform row in list)
             Require(rows.TryGetValue(row.name, out Transform original) && row == original, "Difficulty change replaced row " + row.name);
+    }
+
+    private static void Settle(VanillaFreeplay freeplay)
+    {
+        typeof(VanillaFreeplay).GetMethod("Draw", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(freeplay, new object[] { .21f });
     }
 
     private static void CheckRows(VanillaFreeplay freeplay)

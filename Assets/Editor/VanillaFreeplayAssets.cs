@@ -16,6 +16,18 @@ public sealed class VanillaFreeplayAssets : AssetPostprocessor
         importer.alphaIsTransparency = true;
         importer.filterMode = assetPath.Contains("/icons/") || assetPath.Contains("/fonts/") ? FilterMode.Point : FilterMode.Bilinear;
         importer.wrapMode = TextureWrapMode.Clamp;
+        if (assetPath == "Assets/Resources/VanillaFreeplay/fonts/header/5by7-32.png") importer.isReadable = true;
+        foreach (string character in new[] { "bfChill", "gfChill", "picoChill", "neneChill" })
+            if (assetPath == "Assets/Resources/VanillaFreeplay/charSelect/" + character + "/spritemap1.png")
+                foreach (string platform in new[] { "Standalone", "WindowsStoreApps" })
+                {
+                    var settings = importer.GetPlatformTextureSettings(platform);
+                    settings.overridden = true;
+                    settings.maxTextureSize = importer.maxTextureSize;
+                    settings.format = TextureImporterFormat.BC7;
+                    settings.compressionQuality = 100;
+                    importer.SetPlatformTextureSettings(settings);
+                }
     }
 
     private void OnPreprocessAudio()

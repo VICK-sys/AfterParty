@@ -36,7 +36,7 @@ public static class VanillaFreeplayRankValidation
     {
         if (!Application.isBatchMode) throw new InvalidOperationException("Run rank validation in an isolated batch editor.");
         PlayerSettings.companyName = "UnityPartyValidation";
-        PlayerSettings.productName = "SongValidation";
+        PlayerSettings.productName = "FreeplayRankValidation";
         Directory.CreateDirectory(Output);
         EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
         SessionState.SetBool("VanillaFreeplayRankValidation.Active", true);
@@ -168,7 +168,7 @@ public static class VanillaFreeplayRankValidation
         }
         foreach (string difficulty in new[] { "Erect", "Nightmare" })
         {
-            while (freeplay.Difficulty != difficulty) freeplay.ChangeDifficulty(1);
+            SetDifficulty(difficulty);
             for (int i = 0; freeplay.SelectedSong?.meta.songName != "South" && i <= freeplay.VisibleSongCount; i++) freeplay.MoveSelection(1);
             var south = freeplay.SelectedSong;
             Require(south.meta.songName == "South", "South remix is missing from Freeplay.");
@@ -184,9 +184,19 @@ public static class VanillaFreeplayRankValidation
             Require(PlayerPrefs.GetInt(normalKey, -1) == normalRank, "Remix celebration overwrote the Normal rank.");
             Reopen(null, false);
         }
-        while (freeplay.Difficulty != "Normal") freeplay.ChangeDifficulty(1);
+        SetDifficulty("Normal");
         for (int i = 0; freeplay.SelectedSong?.meta.songName != "Tutorial" && i <= freeplay.VisibleSongCount; i++) freeplay.MoveSelection(1);
         Debug.Log("FREEPLAY RANK CHECKS PASSED: six ranks, first clear, upgrades, exact timeline, input locks, preview mute, eight negative controls, consumed return.");
+    }
+
+    private static void SetDifficulty(string difficulty)
+    {
+        for (int i = 0; freeplay.Difficulty != difficulty && i < 6; i++)
+        {
+            freeplay.ChangeDifficulty(1);
+            typeof(VanillaFreeplay).GetMethod("Draw", Instance).Invoke(freeplay, new object[] { .21f });
+        }
+        Require(freeplay.Difficulty == difficulty, "Rank fixture difficulty did not settle.");
     }
 
     private static void Tick()
@@ -203,6 +213,8 @@ public static class VanillaFreeplayRankValidation
                     if (wait < 4) return;
                     menu = Object.FindFirstObjectByType<MenuV2>();
                     Require(menu?.vanillaMenu != null, "Main menu missing.");
+                    PlayerPrefs.SetString("Freeplay.Character", "bf");
+                    VanillaFreeplay.RememberDifficulty("Normal");
                     freeplay = VanillaFreeplay.Open(menu, true, Path.Combine(Output, "EmptyBundles"));
                     CheckRanks();
                     freeplay.enabled = true;

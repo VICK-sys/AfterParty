@@ -70,6 +70,31 @@ public static partial class VanillaMixValidation
         JToken knife = source["events"].Single(entry => (string)entry["e"] == "PlayAnimation" && (string)entry["v"]["anim"] == "knifeToss");
         JToken icon = source["events"].Single(entry => (string)entry["e"] == "SetHealthIcon");
         var bloody = stage.GetComponentsInChildren<VanillaWeek2Graphic>(true).Single(graphic => graphic.Has("idle-bloody"));
+        var preparedMask = Field<Texture2D>(bloody, "preparedRimMask");
+        Require(preparedMask != null, "Stress did not prepare its blood mask before playback.");
+        var meshes = Field<Dictionary<int, Mesh>>(bloody, "meshes");
+        int preparedMeshes = meshes.Count;
+        Require(preparedMeshes > 1, "Stress did not prepare its bloody animation frames.");
+        foreach (string prop in new[] { "sniper", "guy" })
+            Require(Mathf.Abs(stage.PropGraphic(prop).transform.localScale.x - 1.15f) < .0001f, "Stress background tankman scale differs from stage data.");
+        Require(!Cursor.visible, "Gameplay left the mouse cursor visible.");
+        bool autoplay = Player.demoMode;
+        try
+        {
+            Player.demoMode = false;
+            song.health = 200;
+            for (int frame = 0; frame < 120; frame++) song.FunkinHud.Advance(1d / 60, song.SongPosition);
+            song.FunkinHud.Render();
+            var green = Field<SpriteRenderer>(song.FunkinHud, "green");
+            var red = Field<SpriteRenderer>(song.FunkinHud, "red");
+            Require(song.FunkinHud.DisplayHealth == 200 && Vector3.Distance(green.bounds.min, red.bounds.min) < .0001f
+                && Vector3.Distance(green.bounds.max, red.bounds.max) < .0001f, "Full health leaves opponent fill visible.");
+            song.health = 199.9f;
+            for (int frame = 0; frame < 120; frame++) song.FunkinHud.Advance(1d / 60, song.SongPosition);
+            song.FunkinHud.Render();
+            Require(green.bounds.size.x < red.bounds.size.x, "Below-maximum health passed the full-fill control.");
+        }
+        finally { Player.demoMode = autoplay; }
         stage.ResetStage();
         song.FunkinHud.Initialize(song, playback.OpponentId);
         Require(Field<Texture2D>(bloody, "rimMask") == null, "Stress starts with the blood mask enabled.");
@@ -81,9 +106,14 @@ public static partial class VanillaMixValidation
         ProbeUntil(playback, (float)redheads["t"]);
         Require(stage.CharacterGraphic(1) == bloody && bloody.Animation == "redheadsAnim", "Stress source redheads event selected the wrong atlas.");
         Require(Field<Texture2D>(bloody, "rimMask") == null, "Redheads event enabled the mask before its separate source event.");
+        for (int frame = 0; frame < Mathf.CeilToInt(bloody.Duration * 60); frame++)
+            bloody.Advance(1f / 60, song.mainCamera.transform.position, stage.Clock);
+        Require(meshes.Count == preparedMeshes, "Redheads created animation meshes during playback.");
+        var maskTimer = System.Diagnostics.Stopwatch.StartNew();
         ProbeUntil(playback, (float)mask["t"]);
+        maskTimer.Stop();
         Texture2D texture = Field<Texture2D>(bloody, "rimMask");
-        Require(texture != null && Field<Material>(bloody, "material").GetTexture("_RimMask") == texture, "Stress mask event did not bind the bloody mask.");
+        Require(texture == preparedMask && Field<Material>(bloody, "material").GetTexture("_RimMask") == texture, "Stress mask event did not reuse the prepared bloody mask.");
         stage.Sing(1, 0, false);
         Require(stage.CharacterGraphic(1) == bloody && bloody.Animation == "singLEFT-bloody", "Stress singing did not stay bloody after redheads.");
         ProbeUntil(playback, (float)knife["t"]);
@@ -101,6 +131,30 @@ public static partial class VanillaMixValidation
         Require(stage.CharacterGraphic(1).Animation == "singLEFT" && Field<Texture2D>(bloody, "rimMask") == null,
             "Stress reset retained bloody singing or the blood mask.");
         Require(Field<Sprite[][]>(song.FunkinHud, "iconFrames")[1][0] == FunkinHudAssets.Icon("tankman")[0], "Stress HUD reset retained the bloody icon.");
+        Require(Field<Texture2D>(bloody, "preparedRimMask") == preparedMask, "Stress reset discarded its prepared mask.");
+        stage.EnableTankmanMask();
+        Require(Field<Texture2D>(bloody, "rimMask") == preparedMask, "Stress retry loaded another mask texture.");
+        stage.ResetStage();
+        Debug.Log("STRESS PREPARATION PASSED: " + preparedMeshes + " cached frames, mask activation " + maskTimer.Elapsed.TotalMilliseconds + " ms, texture reused after reset.");
+        stage.PlayAnimation("gf", "shoot1");
+        stage.PlayAnimation("dad", "stressPicoEnding");
+        stage.PlayAnimation("bf", "laughEnd");
+        var otis = stage.CharacterGraphic(2);
+        var companion = Field<VanillaMixCompanion>(stage, "companion");
+        stage.StressPicoOutroBeat(true);
+        Require(otis.Animation == "idle", "Stress outro retained Otis's final shooting pose.");
+        int firstFrame = otis.AnimationFrame;
+        for (int frame = 0; frame < 8; frame++) otis.Advance(1f / 24, song.mainCamera.transform.position, stage.Clock);
+        Require(otis.AnimationFrame != firstFrame, "Otis did not animate during the outro.");
+        otis.Advance(otis.Duration + 1, song.mainCamera.transform.position, stage.Clock);
+        companion.Body.Advance(companion.Body.Duration + 1, song.mainCamera.transform.position, stage.Clock);
+        Require(otis.Finished && companion.Body.Finished, "Outro stopped-clock control did not reach the frozen final frames.");
+        stage.StressPicoOutroBeat(false);
+        Require(!otis.Finished && !companion.Body.Finished, "Outro beat did not restart Otis and A-Bot.");
+        Require(stage.CharacterGraphic(1).Animation == "stressPicoEnding" && stage.CharacterGraphic(0).Animation == "laughEnd",
+            "Companion outro beat interrupted Tankman or Pico.");
+        stage.ResetStage();
+        Debug.Log("STRESS OUTRO COMPANION PASSED: idle frames advance, Otis and A-Bot restart, stopped-clock control freezes, ending actors remain unchanged.");
         Debug.Log("STRESS PICO EVENTS PASSED: timed redheads, separate mask, bloody singing, knife, icon side and retry controls.");
     }
 

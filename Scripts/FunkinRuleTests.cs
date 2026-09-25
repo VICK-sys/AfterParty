@@ -54,6 +54,18 @@ public static class FunkinRuleTests
         Require(FunkinHudRules.FillPixels(101.9) == 297, "Fill quantizes to 100 divisions");
         Require(FunkinHudRules.FillPixels(102) == 302, "Next fill division");
         Require(FunkinHudRules.FillPixels(0) == 0 && FunkinHudRules.FillPixels(200) == 593, "Fill endpoints");
+        double full = 100;
+        double empty = 100;
+        double partial = 100;
+        for (int frame = 0; frame < 120; frame++)
+        {
+            full = FunkinHudRules.SmoothHealth(full, 200, false);
+            empty = FunkinHudRules.SmoothHealth(empty, 0, false);
+            partial = FunkinHudRules.SmoothHealth(partial, 199.9, false);
+        }
+        Require(full == 200 && FunkinHudRules.FillPixels(full) == 593, "Smoothed health reaches full fill");
+        Require(empty == 0 && FunkinHudRules.FillPixels(empty) == 0, "Smoothed health reaches empty fill");
+        Require(partial < 200 && FunkinHudRules.FillPixels(partial) < 593, "Below-maximum health does not display full fill");
         Near(FunkinHudRules.Boundary(100), 640, "Icon boundary at half health");
         Near(FunkinHudRules.BarY(false), 648, "Upscroll health position");
         Near(FunkinHudRules.BarY(true), 72, "Downscroll health position");

@@ -312,10 +312,26 @@ public static class VanillaCharacterSelectValidation
         foreach (string name in new[] { "lockedChill", "bfChill", "gfChill", "picoChill", "neneChill" })
         {
             graphic.Initialize("charSelect/" + name, true);
+            if (name != "lockedChill")
+            {
+                var atlas = (Texture2D)graphic.mainTexture;
+                var importer = (TextureImporter)AssetImporter.GetAtPath("Assets/Resources/VanillaFreeplay/charSelect/" + name + "/spritemap1.png");
+                importer.GetSourceTextureWidthAndHeight(out int width, out int height);
+                Require(atlas.width == width && atlas.height == height, "Character selection atlas was resized during import.");
+                Require(atlas.format == TextureFormat.BC7, "Character selection atlas lost its compressed format.");
+                foreach (string platform in new[] { "Standalone", "WindowsStoreApps" })
+                {
+                    var settings = importer.GetPlatformTextureSettings(platform);
+                    Require(settings.overridden && settings.format == TextureImporterFormat.BC7 && settings.maxTextureSize >= Mathf.Max(width, height),
+                        "Character selection platform settings lost detail or compression.");
+                }
+                Debug.Log("CHARACTER ATLAS: " + name + " " + width + "x" + height + " " + atlas.format + " bytes=" + UnityEngine.Profiling.Profiler.GetRuntimeMemorySizeLong(atlas));
+            }
             foreach (int frame in name == "lockedChill" ? new[] { 0,10,27,29,34,109 } : name == "gfChill" ? new[] { 0,15,30,54,55,56,60,80,105 } : name == "neneChill" ? new[] { 0,7,15,29,30,38,46,47,51 } : new[] { 0,15,17,22,28,30,35 })
             {
                 graphic.SetFrame(frame);
                 Capture(canvas, name + "-" + frame + ".png");
+                Capture(canvas, name + "-" + frame + "-1080.png", 1920, 1080);
             }
         }
         graphic.SetFrame(38);
@@ -536,7 +552,7 @@ public static class VanillaCharacterSelectValidation
         Debug.Log("PICO GUN ATLAS PASSED: " + checkedFrames + " frames, original texture dimensions and downscale negative control.");
     }
 
-    public static void Capture(Canvas canvas, string filename)
+    public static void Capture(Canvas canvas, string filename, int width = 1280, int height = 720)
     {
         var transforms = canvas.GetComponentsInChildren<Transform>(true);
         var layers = transforms.Select(item => item.gameObject.layer).ToArray();
@@ -550,7 +566,7 @@ public static class VanillaCharacterSelectValidation
         camera.transform.position = new Vector3(0,0,-1000);
         camera.farClipPlane = 2000;
         camera.GetUniversalAdditionalCameraData().SetRenderer(0);
-        var target = new RenderTexture(1280,720,24);
+        var target = new RenderTexture(width,height,24);
         var features = AssetDatabase.FindAssets("t:UniversalRendererData").Select(id => AssetDatabase.LoadAssetAtPath<UniversalRendererData>(AssetDatabase.GUIDToAssetPath(id))).SelectMany(data => data.rendererFeatures).Where(item => item != null && item.isActive).Distinct().ToArray();
         var previous = RenderTexture.active;
         try
@@ -562,15 +578,15 @@ public static class VanillaCharacterSelectValidation
             canvas.worldCamera = camera;
             canvas.planeDistance = 1000;
             canvas.GetComponent<CanvasScaler>().enabled = false;
-            canvas.scaleFactor = 1;
+            canvas.scaleFactor = width / 1280f;
             Canvas.ForceUpdateCanvases();
             for (int pass = 0; pass < 2; pass++)
             {
                 if (pass == 1) camera.cullingMask = 0;
                 RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = target });
                 RenderTexture.active = target;
-                var image = new Texture2D(1280,720,TextureFormat.RGBA32,false);
-                image.ReadPixels(new Rect(0,0,1280,720),0,0);
+                var image = new Texture2D(width,height,TextureFormat.RGBA32,false);
+                image.ReadPixels(new Rect(0,0,width,height),0,0);
                 image.Apply();
                 float light = image.GetPixels().Average(pixel => pixel.r+pixel.g+pixel.b);
                 Require(pass == 0 ? light > .1f : light < .01f, "Menu capture or blank control failed.");

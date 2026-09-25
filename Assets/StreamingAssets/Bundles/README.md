@@ -116,6 +116,9 @@ Stress uses Boyfriend holding Girlfriend and Pico on the speakers.
 Its 546 internal `picospeaker` cues control shooting and randomly selected running tankmen.
 This internal animation chart remains separate from selectable difficulties and Pico mixes.
 Runners use the source movement, four-sprite pool, shot animations, and flicker timing.
+Runner rendering preserves the source origin, constructor offsets, and unscaled shot offsets.
+The pool fills four slots before reusing them in order.
+Retries retain the next reuse slot and restore constructor offsets for the first four spawns.
 Story Mode plays the three original video cutscenes with their English subtitles before the countdown.
 Video streams remain unchanged, and PCM audio preserves the source decoding without another lossy encode.
 The cutscene pause menu supports resume, skip, restart, and exit.
@@ -202,6 +205,9 @@ Presentation controls reject missing canvas meshes and backdrop-only renders.
 Run `python Scripts/TestWeek7Assets.py --assets "path/to/assets"` to verify Week 7 charts, source hashes, shooting cues, and cutscenes.
 Controls reject swapped note sides, Pico mixes, unavailable remixes, missing animations, and changed media.
 Run `VanillaWeek7Validation.CheckAssets` for playlists, meshes, runner frame sizes, and rendered rim lighting.
+Build the runner reference with `Scripts/RunnerReference/Build.ps1 -Assets <source-assets>`.
+Set `UNITY_PARTY_RUNNER_REFERENCE_PATH` to `Builds/RunnerReference/reference.json` for the Stress Pico mix probe.
+The probe compares every frame in both directions before and after reuse, including the original Stress scale.
 The rim probe rejects light on internal atlas seams and requires light on the outer silhouette.
 Set `UNITY_PARTY_WEEK7_VIDEO_PATH` and run `VanillaWeek7VideoValidation.Begin` in an isolated batch editor.
 The video probe checks decoding, subtitles, pause, resume, restart, skip, completion, and retry suppression.

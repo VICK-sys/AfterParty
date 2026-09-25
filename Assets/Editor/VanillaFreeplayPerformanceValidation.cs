@@ -46,7 +46,7 @@ public static class VanillaFreeplayPerformanceValidation
         if (!Application.isBatchMode) throw new InvalidOperationException("Run performance validation in an isolated batch editor.");
         Directory.CreateDirectory(Output);
         PlayerSettings.companyName = "UnityPartyValidation";
-        PlayerSettings.productName = "SongValidation";
+        PlayerSettings.productName = "FreeplayPerformanceValidation";
         EditorSceneManager.OpenScene("Assets/Scenes/Title.unity");
         SessionState.SetBool("VanillaFreeplayPerformanceValidation.Active", true);
         EditorApplication.EnterPlaymode();
@@ -67,6 +67,8 @@ public static class VanillaFreeplayPerformanceValidation
             {
                 var menu = Object.FindAnyObjectByType<MenuV2>();
                 if (menu?.vanillaMenu == null || now - changed < 3) return;
+                PlayerPrefs.SetString("Freeplay.Character", "bf");
+                VanillaFreeplay.RememberDifficulty("Normal");
                 freeplay = VanillaFreeplay.Open(menu, true, Path.Combine(Output, "EmptyBundles"));
                 if (DifficultyChanges) freeplay.MoveSelection(2 - freeplay.SelectedIndex);
                 if (DifficultyChanges) VanillaFreeplayDifficultyValidation.Capture(freeplay);

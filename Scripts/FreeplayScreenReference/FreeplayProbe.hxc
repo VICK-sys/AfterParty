@@ -1,0 +1,129 @@
+import funkin.modding.module.Module;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.util.FileUtil;
+import funkin.util.FileUtil.FileWriteMode;
+import openfl.display.BitmapData;
+import openfl.display.PNGEncoderOptions;
+import haxe.Json;
+
+class FreeplayProbe extends Module
+{
+  var elapsed:Float = 0;
+  var phase:Int = 0;
+  var pending:String = "";
+  var fp:Dynamic;
+  var sample:Int = 0;
+  var times = [0.1, 0.35, 0.6, 0.9, 1.2];
+
+  public function new()
+  {
+    super("FreeplayProbe");
+  }
+
+  override public function onCreate(event)
+  {
+    FlxG.autoPause = false;
+    FlxG.stage.window.resize(1280, 720);
+    FileUtil.createDirIfNotExists("captures");
+    FlxG.signals.postDraw.add(capture);
+    trace("FREEPLAY_PROBE_READY");
+  }
+
+  function capture()
+  {
+    if (pending == "") return;
+    var name = pending;
+    pending = "";
+    var bitmap = BitmapData.fromImage(FlxG.stage.window.readPixels());
+    var png = bitmap.encode(bitmap.rect, new PNGEncoderOptions());
+    FileUtil.writeBytesToPath("captures/" + name + ".png", png, FileWriteMode.Force);
+    var rows = [];
+    for (row in fp.grpCapsules.members)
+    {
+      if (row != null && row.exists) rows.push({x:row.x, y:row.y, selected:row.selected, song:row.freeplayData == null ? null : row.freeplayData.data.id});
+    }
+    FileUtil.writeStringToPath("captures/" + name + ".json", Json.stringify({character:fp.currentCharacterId, difficulty:fp.currentDifficulty, selected:fp.curSelected, elapsed:elapsed, rows:rows, backdropTint:fp.backingImage.color, backdropExtraTint:fp.angleMaskShader.extraTint.value, confirmFrame:fp.currentCharacterId == "pico" ? fp.backingCard.confirmAtlas.animation.frameIndex : -1}), FileWriteMode.Force);
+    trace("FREEPLAY_CAPTURE " + name);
+  }
+
+  override public function onUpdate(event)
+  {
+    elapsed += event.elapsed;
+    if (phase == 0 && elapsed > 1)
+    {
+      FreeplayState.rememberedSongId = "bopeebo";
+      FreeplayState.rememberedDifficulty = "hard";
+      FreeplayState.rememberedVariation = "default";
+      FlxG.switchState(function() { return FreeplayState.build({character:"bf"}); });
+      phase = 1;
+      elapsed = 0;
+    }
+    if (phase == 1 && elapsed > 2 && FlxG.state.subState == null)
+    {
+      FlxG.state.openSubState(new FreeplayState({character:"bf"}));
+      elapsed = 0;
+    }
+    if (phase == 1 && elapsed > 5 && FlxG.state.subState != null)
+    {
+      fp = FlxG.state.subState;
+      pending = "bf-bopeebo-hard";
+      phase = 20;
+      elapsed = 0;
+    }
+    if (phase == 20 && elapsed > 1)
+    {
+      fp.capsuleOnConfirmDefault(fp.currentCapsule);
+      phase = 21;
+      elapsed = 0;
+      sample = 0;
+    }
+    if (phase == 21 && sample < 4 && elapsed >= times[sample])
+    {
+      pending = "bf-confirm-" + Math.round(times[sample] * 1000);
+      sample++;
+    }
+    if (phase == 21 && elapsed > 0.94)
+    {
+      phase = 2;
+      elapsed = 3;
+    }
+    if (phase == 2 && elapsed > 2)
+    {
+      FreeplayState.rememberedSongId = "bopeebo";
+      FreeplayState.rememberedDifficulty = "hard";
+      FreeplayState.rememberedVariation = "pico";
+      FlxG.switchState(function() { return FreeplayState.build({character:"pico"}); });
+      phase = 3;
+      elapsed = 0;
+    }
+    if (phase == 4 && elapsed > 1)
+    {
+      fp.capsuleOnConfirmDefault(fp.currentCapsule);
+      phase = 5;
+      elapsed = 0;
+      sample = 0;
+    }
+    if (phase == 5 && sample < 5 && elapsed >= times[sample])
+    {
+      pending = "pico-confirm-" + Math.round(times[sample] * 1000);
+      sample++;
+    }
+    if (phase == 5 && elapsed > 1.25)
+    {
+      phase = 6;
+      FlxG.stage.window.close();
+    }
+    if (phase == 3 && elapsed > 2 && FlxG.state.subState == null)
+    {
+      FlxG.state.openSubState(new FreeplayState({character:"pico"}));
+      elapsed = 0;
+    }
+    if (phase == 3 && elapsed > 5 && FlxG.state.subState != null)
+    {
+      fp = FlxG.state.subState;
+      pending = "pico-bopeebo-hard";
+      phase = 4;
+      elapsed = 0;
+    }
+  }
+}

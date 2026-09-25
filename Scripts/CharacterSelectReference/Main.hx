@@ -21,10 +21,12 @@ class ReferenceState extends FlxState
     var index:Int = 0;
     var ticks:Int = 0;
     var sample:FlxAnimate;
+    var sampleKey:String;
 
     override public function create():Void
     {
         super.create();
+        #if legacy_resolution
         for (name in (Sys.getEnv("FACE_OVERLAY_ONLY") == "1" || Sys.getEnv("NENE_REFERENCE_ONLY") == "1" ? [] : ["lockedChill", "lock"]))
         {
             var sprite = new FlxAnimate();
@@ -54,6 +56,7 @@ class ReferenceState extends FlxState
             File.saveContent(output + "/frames.json", haxe.Json.stringify({frames:entries, bounds:[bounds.x, bounds.y, bounds.width, bounds.height]}));
             sprite.destroy();
         }
+        #end
         flixel.FlxG.camera.bgColor = 0xFF808080;
         flixel.FlxG.mouse.visible = false;
         if (Sys.getEnv("FACE_OVERLAY_ONLY") != "1") for (name in (Sys.getEnv("NENE_REFERENCE_ONLY") == "1" ? ["neneChill"] : ["lockedChill", "bfChill", "picoChill", "neneChill"]))
@@ -82,6 +85,12 @@ class ReferenceState extends FlxState
         if (Sys.getEnv("FACE_SCENE_ONLY") == "1") cases = cases.filter(item -> item.pass == "scene");
         sys.FileSystem.createDirectory(Sys.getEnv("UNITY_PARTY_CHARACTER_REFERENCE_PATH") + "/neneChill");
         if (Sys.getEnv("FACE_FRONT_ONLY") == "1") cases = cases.filter(item -> item.pass == "front");
+        #if legacy_resolution
+        cases = cases.filter(item -> item.name == "lockedChill");
+        #else
+        cases = cases.filter(item -> item.name != "lockedChill");
+        #end
+        if (cases.length == 0) Sys.exit(0);
         flixel.FlxG.signals.preDraw.add(function() { animate.internal.elements.AtlasInstance.overlaySeen = false; });
         prepare();
         flixel.FlxG.signals.postDraw.add(function()
@@ -97,20 +106,25 @@ class ReferenceState extends FlxState
     }
     function prepare():Void
     {
-        if (sample != null) { remove(sample); sample.destroy(); }
         var item = cases[index];
         flixel.FlxG.camera.bgColor = item.backdrop == "black" ? 0xFF000000 : item.backdrop == "white" ? 0xFFFFFFFF : 0xFF808080;
         animate.internal.elements.AtlasInstance.overlayPass = (item.pass == "base" || item.pass == "scene") ? 1 : item.pass == "overlay" ? 2 : item.pass == "front" ? 3 : 0;
-        sample = new FlxAnimate();
-        sample.applyStageMatrix = true;
-        sample.frames = FlxAnimateFrames.fromAnimate("assets/" + item.name, {swfMode:true});
-        if (item.name == "neneChill" && item.backdrop != null && item.pass != "scene")
-            for (layer in sample.library.timeline.layers) layer.visible = layer.name == "Nene";
-        sample.anim.addByTimeline("", sample.library.timeline, 24, false);
-        sample.animation.play("");
+        var key = item.name + ":" + item.pass + ":" + (item.backdrop != null);
+        if (sample == null || sampleKey != key)
+        {
+            if (sample != null) { remove(sample); sample.destroy(); }
+            sampleKey = key;
+            sample = new FlxAnimate();
+            sample.applyStageMatrix = true;
+            sample.frames = FlxAnimateFrames.fromAnimate("assets/" + item.name, {swfMode:true});
+            if (item.name == "neneChill" && item.backdrop != null && item.pass != "scene")
+                for (layer in sample.library.timeline.layers) layer.visible = layer.name == "Nene";
+            sample.anim.addByTimeline("", sample.library.timeline, 24, false);
+            sample.animation.play("");
+            sample.antialiasing = true;
+            add(sample);
+        }
         sample.animation.curAnim.curFrame = item.frame;
         sample.animation.paused = true;
-        sample.antialiasing = true;
-        add(sample);
     }
 }

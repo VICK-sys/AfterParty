@@ -10,7 +10,9 @@ public static class FunkinHudRules
 
     public static double SmoothHealth(double shown, double health, bool bot)
     {
-        return bot ? 200 : shown + 0.15 * (Math.Max(0, Math.Min(200, health)) - shown);
+        double target = Math.Max(0, Math.Min(200, health));
+        double next = shown + 0.15 * (target - shown);
+        return bot ? 200 : Math.Abs(target - next) < .001 ? target : next;
     }
 
     public static int FillPixels(double health)

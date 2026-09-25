@@ -58,7 +58,9 @@ public sealed partial class VanillaFreeplay
         AddCharacterMover(backing.rectTransform, 100);
         AddCharacterMover(card.rectTransform, 100);
         AddCharacterMover((RectTransform)cardRoot.Find("Band"), 40);
+        AddCharacterMover((RectTransform)cardRoot.Find("Band Edge"), 40);
         AddCharacterMover(difficultyRoot, 270);
+        AddCharacterMover(difficultyLabelRoot, 270);
         AddCharacterMover(filters, 270);
         AddCharacterMover(scoreRoot, 270);
         AddCharacterMover(topBar, 300);
@@ -113,6 +115,7 @@ public sealed partial class VanillaFreeplay
         picoGlow = Sprite("Pico Glow", cardRoot, "freeplay/backingCards/pico/glow", -300, 330);
         picoGlow.material = picoAdditive;
         picoConfirm = Animate("Pico Confirm", cardRoot, "freeplay/backingCards/pico/pico-confirm", -120, 55, true);
+        picoConfirm.UseTimelineBounds();
         foreach (string symbol in new[] { "backplate flat blue", "pink back", "black flash", "white flash", "blue flash", "blue flash 2", "pink flash" })
             picoConfirm.ScaleSymbolElement(symbol, 2, 100);
         picoConfirm.gameObject.SetActive(false);

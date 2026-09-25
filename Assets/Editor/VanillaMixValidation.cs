@@ -149,6 +149,7 @@ public static partial class VanillaMixValidation
         if (mix) CheckPositions(song, component, sidecar);
         if (playback.SongId == "stress" && playback.Variation == "pico")
         {
+            CheckRunnerLoading(song);
             var campaign = playback.CampaignStage;
             JObject runnerChart = Field<JObject>(campaign, "chart");
             JToken variation = runnerChart["variation"].DeepClone();
@@ -176,6 +177,7 @@ public static partial class VanillaMixValidation
                 campaign.ResetStage();
             }
             Debug.Log("STRESS RUNNER POSITIONS PASSED: both directions at Pico Y=350 and original Y=250..300.");
+            CheckRunnerRendering(song);
         }
         if (playback.IsWeek3 && playback.Variation == "pico")
         {

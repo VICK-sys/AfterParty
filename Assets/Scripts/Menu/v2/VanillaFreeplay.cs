@@ -19,7 +19,11 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         public VanillaFreeplaySprite icon;
         public Text title;
         public RectTransform titleMask;
-        public Outline glow;
+        public VanillaFreeplaySprite favoriteGlow;
+        public VanillaFreeplaySprite newMarker;
+        public float favoriteAge = -1;
+        public float favoriteStartY;
+        public bool removingFavorite;
         public VanillaFreeplaySong song;
         public CanvasGroup detail;
         public VanillaFreeplaySprite rank;
@@ -66,6 +70,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private RectTransform filters;
     private RectTransform albumRoot;
     private RectTransform difficultyRoot;
+    private RectTransform difficultyLabelRoot;
+    private CanvasGroup difficultyLabelVisibility;
     private RectTransform topBar;
     private RectTransform headerRoot;
     private VanillaFreeplayHeaderText characterHint;
@@ -131,7 +137,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public int SelectedIndex { get; private set; }
     public string Difficulty { get; private set; }
     public int Mode { get; private set; }
-    public bool Busy => !ready || closing || RankAnimationPlaying || instrumentalRoot != null;
+    public bool Busy => !ready || closing || RankAnimationPlaying || instrumentalRoot != null || difficultyAge < .2f
+        || capsules.Count > SelectedIndex && capsules[SelectedIndex].favoriteAge >= 0;
     public int SongCount => songs?.Count ?? 0;
     public int VisibleSongCount => filtered?.Count ?? 0;
     public VanillaFreeplaySong SelectedSong => SelectedIndex > 0 && SelectedIndex <= filtered.Count ? filtered[SelectedIndex - 1] : null;
@@ -203,6 +210,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         card = Sprite("Backing Card", cardRoot, "freeplay/pinkBack", 0, 0);
         card.color = Hex("FFD863");
         Solid("Band", cardRoot, 0, 440, 524, 75, Hex("FEDA00"));
+        Solid("Band Edge", cardRoot, 0, 440, 100, 75, Hex("FFD400"));
         string[] lines = { "HOT BLOODED IN MORE WAYS THAN ONE", "BOYFRIEND", "PROTECT YO NUTS", "BOYFRIEND", "HOT BLOODED IN MORE WAYS THAN ONE", "BOYFRIEND" };
         float[] ys = { 160, 220, 285, 335, 397, 450 };
         for (int i = 0; i < lines.Length; i++)
@@ -217,9 +225,12 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         confirmGlow.gameObject.SetActive(false);
         confirmText = Sprite("Confirm Text", content, "freeplay/glowingText", -8, 115);
         confirmText.gameObject.SetActive(false);
+        BuildBackingEffects();
         dj = Animate("Boyfriend DJ", content, IsPico ? "freeplay/freeplay-pico" : "freeplay/freeplay-boyfriend", 0, 0, true);
         InitializeDJ();
         if (IsPico) BuildPicoCard();
+        difficultyLabelRoot = Rect("Difficulty Labels", content, 0, 0, 400, 180);
+        difficultyLabelVisibility = difficultyLabelRoot.gameObject.AddComponent<CanvasGroup>();
         backing = Sprite("Dad Backdrop", content, "freeplay/freeplayBGweek1-" + (IsPico ? "pico" : "bf"), 387.76f, 0);
         backing.centerScale = false;
         backing.drawScale = 721f / backing.FrameSize.y;
@@ -338,7 +349,9 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     {
         if (characterTransition == null && exitAge < 0) ApplyLayout(((RectTransform)transform).rect.width);
         double now = Time.realtimeSinceStartupAsDouble;
-        float delta = VanillaMenuTiming.Clamp((float)(now - lastUpdateTime));
+        float elapsed = Mathf.Max(0, (float)(now - lastUpdateTime));
+        float delta = VanillaMenuTiming.Clamp(elapsed);
+        difficultyAge += elapsed - delta;
         lastUpdateTime = now;
         age += delta;
         capsuleAge += delta;
@@ -412,10 +425,16 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         DJPlayerAction();
         string selected = SelectedSong?.id;
         int index = difficulties.IndexOf(Difficulty);
+        string previousDifficulty = Difficulty;
         Difficulty = rememberedDifficulty = difficulties[(index + change % difficulties.Count + difficulties.Count) % difficulties.Count];
+        if (SelectedSong != null && SelectedSong.Difficulty(Difficulty) == null)
+            selected = filtered.Select((song, position) => new { song, position })
+                .Where(item => item.song.Difficulty(Difficulty) != null)
+                .OrderBy(item => Mathf.Abs(item.position + 1 - SelectedIndex)).Select(item => item.song.id).FirstOrDefault();
         rememberedSong = selected;
         Sound("scrollMenu", 0.4f);
         RebuildList(false);
+        BeginDifficultyChange(previousDifficulty, change);
     }
 
     public void ChangeFilter(int change)
@@ -426,6 +445,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         rememberedSong = SelectedSong?.id;
         Sound("scrollMenu", 0.4f);
         RebuildList(false);
+        filterMoveAge = 0;
+        filterMoveDirection = change > 0 ? 1 : -1;
     }
 
     public void ToggleFavorite()
@@ -435,7 +456,20 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         SelectedSong.ToggleFavorite();
         Sound(SelectedSong.Favorite ? "fav" : "unfav", 1);
         rememberedSong = SelectedSong.id;
-        RebuildList(false);
+        Capsule capsule = capsules[SelectedIndex];
+        capsule.removingFavorite = !SelectedSong.Favorite;
+        capsule.favoriteAge = 0;
+        capsule.favoriteStartY = capsule.root.anchoredPosition.y;
+        selectionAge = 0;
+        capsule.title.rectTransform.anchoredPosition = Vector2.zero;
+        UpdateCapsule(capsule);
+        PresentCapsule(capsule, true);
+        foreach (var heart in new[] { capsule.favorite, capsule.favoriteGlow })
+            if (heart != null)
+            {
+                if (capsule.removingFavorite) heart.PlayReverse("favorite heart", null, 9);
+                else heart.TryPlay("favorite heart", false);
+            }
     }
 
     private void RebuildList(bool initial)
@@ -443,6 +477,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         bool animateList = initial || displayedFilter != filterIndex;
         if (animateList) capsuleAge = initial && ready ? 2 : 0;
         filtered = songs.Where(s => s.Difficulty(Difficulty) != null && VanillaFreeplayCatalog.Matches(s, Filters[filterIndex])).ToList();
+        if (filterIndex != 1 && filterIndex != 2) filtered = filtered.OrderBy(s => s.meta.songName, StringComparer.OrdinalIgnoreCase).ToList();
         SelectedIndex = rememberedSong == null ? 0 : filtered.FindIndex(s => s.id == rememberedSong) + 1;
         if (SelectedIndex == 0 && rememberedSong != null && filtered.Count > 0) SelectedIndex = 1;
         foreach (Capsule capsule in capsules)
@@ -459,6 +494,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
                 capsule.root.anchoredPosition = ToUI(Target(i));
             }
             capsule.index = i;
+            if (capsule.newMarker != null) capsule.newMarker.FreezeFrame((45 - i * 4 % 45) % capsule.newMarker.FrameCount);
             capsule.root.SetSiblingIndex(i);
             capsule.root.gameObject.SetActive(true);
             UpdateCapsule(capsule);
@@ -475,23 +511,30 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         RefreshSelection();
         if (animateList)
             foreach (Capsule capsule in capsules)
-                capsule.root.anchoredPosition = initial && ready ? ToUI(Target(capsule.index)) : new Vector2(viewportWidth, -130 - 115.6f * capsule.index);
+                capsule.root.anchoredPosition = initial && ready ? ToUI(Target(capsule.index)) : new Vector2(viewportWidth, -130 - capsuleSpacing * capsule.index);
     }
 
     private Capsule BuildCapsule(VanillaFreeplaySong song)
     {
         RectTransform root = Rect(song?.meta.songName ?? "Random", list, 0, 0, 612, 132);
         var capsule = new Capsule { root = root, song = song };
-        capsule.body = Sprite("Capsule", root, "freeplay/freeplayCapsule/capsule/freeplayCapsule" + StyleSuffix, 0, 0, "mp3 capsule w backing NOT SELECTED");
+        capsule.body = Sprite("Capsule", root, "freeplay/freeplayCapsule/capsule/freeplayCapsule" + StyleSuffix, 0, 0, "mp3 capsule w backing0");
         capsule.body.drawScale = 0.8f;
+        capsuleSpacing = capsule.body.FrameSize.y * capsule.body.drawScale + 10;
         RectTransform detail = Rect("Details", root, 0, 0, 612, 132);
         capsule.detail = detail.gameObject.AddComponent<CanvasGroup>();
-        RectTransform titleMask = capsule.titleMask = Rect("Title Clip", detail, 159.12f, 43, 290, 42);
+        RectTransform titleMask = capsule.titleMask = Rect("Title Clip", detail, 159.12f, 45, 290, 42);
         titleMask.gameObject.AddComponent<RectMask2D>();
-        capsule.title = Label("Title", titleMask, song?.Title(Difficulty) ?? "Random", 0, 0, 1000, 42, 32, pixelFont);
-        capsule.glow = capsule.title.gameObject.AddComponent<Outline>();
-        capsule.glow.effectColor = Hex(IsPico ? "CC6600" : "00CCFF");
-        capsule.glow.effectDistance = new Vector2(1, -1);
+        capsule.title = Rect("Title", titleMask, 0, 0, 1000, 42).gameObject.AddComponent<VanillaFreeplayCapsuleText>();
+        capsule.title.font = pixelFont;
+        capsule.title.fontSize = 32;
+        capsule.title.horizontalOverflow = HorizontalWrapMode.Overflow;
+        capsule.title.verticalOverflow = VerticalWrapMode.Overflow;
+        capsule.title.supportRichText = false;
+        capsule.title.raycastTarget = false;
+        if (song != null)
+            foreach (string title in song.meta.difficulties.Keys.Select(song.Title).Distinct()) capsule.title.text = title;
+        capsule.title.text = song?.Title(Difficulty) ?? "Random";
         if (song != null)
         {
             Sprite("BPM", detail, "freeplay/freeplayCapsule/bpmtext", 144, 87).drawScale = 0.9f;
@@ -500,6 +543,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             week.color = Hex("21242E");
             Sprite("Difficulty Label", detail, "freeplay/freeplayCapsule/difficultytext", 414, 87).drawScale = 0.9f;
             capsule.ratingDigits = NumberSprites(detail, "Rating", "freeplay/freeplayCapsule/bignumbers", song.Rating(Difficulty), 2, 466, 32, 30, 0.9f);
+            capsule.newMarker = Sprite("New", detail, "freeplay/freeplayCapsule/new", 454, 9, "NEW notif");
+            capsule.newMarker.drawScale = .9f;
         }
         Hit("Select", root, 70, 15, 475, 105, () =>
         {
@@ -516,10 +561,12 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (song == null) return;
         RectTransform detail = (RectTransform)capsule.detail.transform;
         int rank = PlayerPrefs.GetInt("Freeplay.Rank." + song.ScoreKey(Difficulty, Mode), -1);
-        bool favorite = song.Favorite;
+        bool favorite = song.Favorite || capsule.favoriteAge >= 0 && capsule.removingFavorite;
         int titleSlots = (rank >= 0 ? 1 : 0) + (favorite ? 1 : 0);
         capsule.titleMask.sizeDelta = new Vector2(titleSlots == 2 ? 210 : titleSlots == 1 ? 245 : 290, 42);
         capsule.title.text = song.Title(Difficulty);
+        capsule.titleMask.GetComponent<RectMask2D>().enabled = capsule.title.preferredWidth > capsule.titleMask.rect.width;
+        capsule.newMarker.gameObject.SetActive(song.IsNew);
         string character = song.Icon(Difficulty);
         string icon = "freeplay/icons/" + character + "pixel";
         while (Resources.Load<Texture2D>("VanillaFreeplay/" + icon) == null && character.Contains("-"))
@@ -545,13 +592,23 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         UpdateNumberSprites(capsule.ratingDigits, "freeplay/freeplayCapsule/bignumbers", song.Rating(Difficulty), 466, 32, 30);
         if (favorite && capsule.favorite == null)
         {
+            capsule.favoriteGlow = Sprite("Favorite Glow", detail, "freeplay/favHeart", 405, 40, "favorite heart");
             capsule.favorite = Sprite("Favorite", detail, "freeplay/favHeart", 405, 40, "favorite heart");
-            capsule.favorite.loop = false;
+            foreach (var heart in new[] { capsule.favorite, capsule.favoriteGlow })
+            {
+                heart.loop = false;
+                heart.drawScale = 50 / heart.FrameSize.x;
+                heart.stretch = new Vector2(1, heart.FrameSize.x / heart.FrameSize.y);
+                heart.material = RankMaterial;
+                heart.FreezeFrame(heart.FrameCount - 1);
+            }
         }
         if (capsule.favorite != null)
         {
             capsule.favorite.gameObject.SetActive(favorite);
             capsule.favorite.rectTransform.anchoredPosition = new Vector2(rank >= 0 ? 370 : 405, -40);
+            capsule.favoriteGlow.gameObject.SetActive(favorite);
+            capsule.favoriteGlow.rectTransform.anchoredPosition = capsule.favorite.rectTransform.anchoredPosition;
         }
         if (rank >= 0)
         {
@@ -587,7 +644,15 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void RebuildFilters()
     {
-        Clear(filters);
+        if (filterLetters.Count > 0)
+        {
+            for (int i = 0; i < filterLetters.Count; i++)
+            {
+                string value = Filters[(filterIndex + i - 2 + Filters.Length) % Filters.Length];
+                filterLetters[i].PlaySymbol(value.Replace("-", "") + " move", i == 2);
+            }
+            return;
+        }
         for (int i = -2; i <= 2; i++)
         {
             int change = i;
@@ -595,6 +660,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             float x = (i + 2) * 80;
             var letters = Animate(value, filters, "freeplay/sortedLetters", x, -10, false);
             letters.PlaySymbol(value.Replace("-", "") + " move", i == 0);
+            filterLetters.Add(letters);
             float brightness = 1 - Mathf.Max(Mathf.Abs(i) / 6f, 0.01f);
             letters.color = new Color(brightness, brightness, brightness);
             if (i != 0)
@@ -602,7 +668,12 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
                 letters.rectTransform.localScale = Vector3.one * 0.8f;
                 letters.rectTransform.anchoredPosition += new Vector2(letters.BoundsSize.x * 0.1f, -letters.BoundsSize.y * 0.1f);
             }
-            if (i < 2) Sprite("Separator", filters, "freeplay/seperator", x + 60, 20);
+            if (i < 2)
+            {
+                var separator = Sprite("Separator", filters, "freeplay/seperator", x + 60, 20);
+                separator.color = new Color(brightness * brightness, brightness * brightness, brightness * brightness);
+                filterSeparators.Add(separator);
+            }
             Hit("Filter " + value, filters, x - 5, -5, 65, 60, () => ChangeFilter(change));
         }
         var left = Sprite("Previous Filter", filters, "freeplay/miniArrow", -20, 15);
@@ -610,17 +681,16 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Sprite("Next Filter", filters, "freeplay/miniArrow", 380, 15);
         Hit("Previous Filter Button", filters, -30, 0, 30, 55, () => ChangeFilter(-1));
         Hit("Next Filter Button", filters, 375, 0, 35, 55, () => ChangeFilter(1));
+        filterPositions = filterLetters.Select(letter => letter.rectTransform.anchoredPosition).ToArray();
     }
 
     private void RebuildDifficulty()
     {
-        Transform old = difficultyRoot.Find("Name");
-        if (old != null) { old.gameObject.SetActive(false); Destroy(old.gameObject); }
-        Transform oldDots = difficultyRoot.Find("Dots");
-        if (oldDots != null) { oldDots.gameObject.SetActive(false); Destroy(oldDots.gameObject); }
-        string path = "freeplay/freeplay" + Difficulty.ToLowerInvariant();
-        if (Resources.Load<Texture2D>("VanillaFreeplay/" + path) != null) Sprite("Name", difficultyRoot, path, 90, 80, Difficulty == "Nightmare" ? "idle" : "");
-        else Label("Name", difficultyRoot, Difficulty.ToUpperInvariant(), 80, 85, 240, 80, 40, pixelFont);
+        EnsureDifficulties();
+    }
+
+    private void BuildDifficultyDots()
+    {
         RectTransform dots = Rect("Dots", difficultyRoot, 260 - 14.7f * (Mathf.Min(difficulties.Count, 8) - 1) - 75, 170, 250, 60);
         difficultyDots.Clear();
         for (int i = 0; i < difficulties.Count; i++)
@@ -640,27 +710,20 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
             bool selected = capsule.index == SelectedIndex;
             capsule.body.Load("freeplay/freeplayCapsule/capsule/freeplayCapsule" + StyleSuffix, selected ? "mp3 capsule w backing0" : "mp3 capsule w backing NOT SELECTED");
             capsule.body.rectTransform.anchoredPosition = new Vector2(selected ? 0 : 5, 0);
-            capsule.detail.alpha = selected ? 1 : 0.6f;
-            capsule.glow.enabled = selected;
+            capsule.detail.alpha = 1;
+            PresentCapsule(capsule, selected);
             capsule.title.rectTransform.anchoredPosition = Vector2.zero;
         }
         RefreshAlbum();
+        RefreshBackingText();
         for (int i = 0; i < difficultyDots.Count; i++)
         {
             bool erect = string.Equals(difficulties[i], "Erect", StringComparison.OrdinalIgnoreCase) || string.Equals(difficulties[i], "Nightmare", StringComparison.OrdinalIgnoreCase);
             bool available = SelectedSong == null || SelectedSong.Difficulty(difficulties[i]) != null;
-            difficultyDots[i].color = !available ? new Color(0.07f, 0.07f, 0.07f, 0.33f)
-                : difficulties[i] == Difficulty ? Hex(erect ? "C28AFF" : "FAFAFA") : Hex(erect ? "34296A" : "484848");
+            SetDifficultyDot(i, !available ? new Color(0.07f, 0.07f, 0.07f, 0.33f)
+                : difficulties[i] == Difficulty ? Hex(erect ? "C28AFF" : "FAFAFA") : Hex(erect ? "34296A" : "484848"));
         }
-        Clear(clearDigits);
-        float clear = SelectedSong == null ? 0 : PlayerPrefs.GetFloat("Freeplay.Clear." + SelectedSong.ScoreKey(Difficulty, Mode), 0);
-        string digits = Mathf.FloorToInt(clear * 100).ToString();
-        float x = digits.Length == 1 ? 24 : digits.Length == 3 ? -10 : 0;
-        foreach (char digit in digits)
-        {
-            VanillaFreeplaySprite image = Sprite("Clear " + x, clearDigits, "fonts/freeplay-clear", x, 0, digit + "0000");
-            x += image.FrameSize.x;
-        }
+        intendedClear = SelectedSong == null ? 0 : PlayerPrefs.GetFloat("Freeplay.Clear." + SelectedSong.ScoreKey(Difficulty, Mode), 0);
         modeHint.text = Mode == PlayModes.Boyfriend ? "F: FAVORITE   Q/E: FILTER   TAB: CHARACTER   M: PLAY MODE" : "MODE: " + PlayModes.Label(Mode) + "   M: CHANGE   TAB: CHARACTER";
         modeHint.gameObject.SetActive(Mode != 1);
         status.text = string.Empty;
@@ -673,18 +736,23 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         stars.SetRating(SelectedSong?.Rating(Difficulty) ?? 0);
         Texture2D texture = id == null ? null : Resources.Load<Texture2D>("VanillaFreeplay/freeplay/albumRoll/" + id);
         albumRoot.gameObject.SetActive(texture != null);
-        if (texture == null) return;
+        if (texture == null) { albumId = null; return; }
+        if (albumId == id) return;
+        albumId = id;
         album.SetSymbolTexture("album art placeholder", texture);
         album.Play("switch", false);
         albumTitle.Load("freeplay/albumRoll/" + id + "-text", "idle");
+        albumTitle.TryPlay("switch", false, "idle");
         Vector2 titleOffset = id == "volume1" ? new Vector2(8, 0) : id.StartsWith("volume", StringComparison.Ordinal) ? new Vector2(8, -7) : id == "spaghetti" ? new Vector2(-35, 0) : new Vector2(-22, -3);
         albumTitle.rectTransform.anchoredPosition = new Vector2(925 + titleOffset.x, -500 - titleOffset.y);
     }
 
+    private float capsuleSpacing = 115.6f;
+
     private Vector2 Target(int index)
     {
         int relative = index + 1 - SelectedIndex;
-        float y = 120 + 115.6f * relative;
+        float y = 120 + capsuleSpacing * relative;
         if (relative < 0) y -= 50;
         else if (relative > 4) y += 10;
         if (index + 1 < SelectedIndex) y -= 100;
@@ -699,9 +767,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         cardRoot.anchoredPosition = new Vector2(-524 * Mathf.Pow(1 - intro, 4), 0);
         backing.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(viewportWidth, 387.76f, 1 - Mathf.Pow(1 - Mathf.Clamp01(age / 0.7f), 5)), 0);
         chrome.alpha = ready ? 1 : 0;
+        difficultyLabelVisibility.alpha = chrome.alpha;
         topBar.anchoredPosition = new Vector2(0, -64 * (1 - Mathf.Pow(1 - Mathf.Clamp01(age / 0.3f), 4)));
-        Transform difficultyName = difficultyRoot.Find("Name");
-        if (difficultyName != null) ((RectTransform)difficultyName).anchoredPosition = new Vector2(90 - 390 * Mathf.Pow(1 - Mathf.Clamp01((age - IntroDuration) / 0.6f), 4), -80);
+        DrawDifficulty(delta);
+        DrawFilters(delta);
         headerRoot.gameObject.SetActive(age >= IntroDuration + 1f / 24);
         SetHeaderStroke(age < IntroDuration + 2.5f / 24);
         hintAge += delta;
@@ -713,16 +782,23 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         scoreRoot.gameObject.SetActive(age >= IntroDuration + 1f / 24);
         stars.gameObject.SetActive(age >= IntroDuration + 0.75f);
         albumTitle.enabled = age >= IntroDuration + 0.75f;
+        if (!albumTitleEntered && albumTitle.enabled && albumRoot.gameObject.activeSelf)
+        {
+            albumTitleEntered = true;
+            albumTitle.TryPlay("switch", false, "idle");
+        }
         card.color = ready ? Hex(IsPico ? "98A2F3" : "FFD863") : Hex(IsPico ? "84D7E8" : "FFD4E9");
         if (IsPico) DrawPicoCard(delta);
         cardRoot.Find("Band").gameObject.SetActive(!IsPico && ready && confirmAge < 0);
+        cardRoot.Find("Band Edge").gameObject.SetActive(!IsPico && ready && confirmAge < 0);
         float light = ready ? 1 - Mathf.Pow(2, -10 * Mathf.Clamp01((age - IntroDuration) / 0.6f)) : 0;
         backing.color = new Color(light, light, light);
+        DrawBackingEffects(delta);
         if (confirmAge >= 0)
         {
-            if (!IsPico) card.color = Color.Lerp(Hex("FFD0D5"), Hex("171831"), Mathf.Clamp01(confirmAge / 0.33f));
-            backing.color = IsPico ? PicoConfirmColor() : Color.Lerp(Hex("A8A8A8"), Hex("646464"), Mathf.Clamp01(confirmAge / 0.5f));
-            confirmGlow.color = new Color(1, 1, 1, 0.6f * Mathf.Clamp01(confirmAge / 0.33f));
+            if (!IsPico) card.color = Color.Lerp(Hex("FFD0D5"), Hex("171831"), 1 - Mathf.Pow(1 - Mathf.Clamp01(confirmAge / .33f), 2));
+            backing.color = ConfirmationBackdropColor();
+            confirmGlow.color = new Color(1, 1, 1, confirmAge < .33f ? .5f * (1 - Mathf.Pow(1 - confirmAge / .33f, 2)) : .6f);
             confirmText.color = new Color(1, 1, 1, confirmAge < 0.33f ? 0 : Mathf.Lerp(1, 0.4f, (confirmAge - 0.33f) / 0.5f));
         }
         for (int i = 0; i < marquees.Count; i++)
@@ -736,20 +812,30 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         {
             SetCapsuleStretch(capsule, capsuleAge);
             DrawRankSparkle(capsule, delta);
+            DrawCapsulePresentation(capsule, delta);
             if (RankControlsCapsule(capsule)) continue;
             Vector2 target = ToUI(Target(capsule.index));
-            if (confirmAge >= 0 && capsule.index != SelectedIndex) target.x = Mathf.Lerp(target.x, viewportWidth * 1.2f, Mathf.Clamp01(confirmAge / 0.3f));
+            if (capsuleAge < 7f / 24)
+            {
+                int frame = Mathf.Clamp(Mathf.FloorToInt(capsuleAge * 24) - 1, 0, 6);
+                float entranceX = viewportWidth * EntrancePositions[frame];
+                if (entranceX > 320) target.x = entranceX;
+            }
             Vector2 current = capsule.root.anchoredPosition;
             capsule.root.anchoredPosition = new Vector2(Mathf.Lerp(target.x, current.x, Mathf.Pow(0.01f, delta / 0.256f)), Mathf.Lerp(target.y, current.y, Mathf.Pow(0.01f, delta / 0.192f)));
+            if (capsule.favoriteAge >= 0) capsule.root.anchoredPosition = new Vector2(current.x, capsule.favoriteStartY + FavoriteOffset(capsule));
+            if (confirmAge >= 0) continue;
             if (capsule.index != SelectedIndex || selectionAge < 0.6f) continue;
             float excess = Mathf.Max(0, capsule.title.preferredWidth - ((RectTransform)capsule.title.transform.parent).rect.width);
             float time = Mathf.Repeat(selectionAge - 0.6f, 4.6f);
             float progress = time < 2 ? time / 2 : time < 2.3f ? 1 : time < 4.3f ? 1 - (time - 2.3f) / 2 : 0;
             capsule.title.rectTransform.anchoredPosition = new Vector2(-excess * (1 - Mathf.Cos(progress * Mathf.PI)) / 2, 0);
         }
+        if (favoriteRefresh) { favoriteRefresh = false; RebuildList(false); }
         int score = SelectedSong == null || Mode == PlayModes.Autoplay ? 0 : PlayerPrefs.GetInt(SelectedSong.ScoreKey(Difficulty, Mode), 0);
-        displayedScore = Mathf.Lerp(displayedScore, score, 1 - Mathf.Pow(0.85f, delta * 60));
-        int shown = Mathf.Clamp(Mathf.RoundToInt(displayedScore), 0, 9999999);
+        displayedScore = SmoothValue(displayedScore, score, delta, .2f, 1);
+        DrawCompletion(delta);
+        int shown = Mathf.Clamp((int)displayedScore, 0, 9999999);
         if (shown != previousScore)
         {
             string text = shown.ToString("D7");
@@ -869,7 +955,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         selected.body.stretch = Vector2.one;
         selected.body.SetVerticesDirty();
         selected.icon?.TryPlay("confirm0", false, "confirm-hold0");
+        selected.title.rectTransform.anchoredPosition = Vector2.zero;
+        if (!IsPico) backingYeah.PlayAll(false);
         capsuleAge = 2;
+        previousBackingTint = backing.color;
         confirmAge = 0;
         confirmGlow.gameObject.SetActive(true);
         confirmText.gameObject.SetActive(true);
@@ -884,15 +973,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     {
         VanillaFreeplaySong song = SelectedSong;
         float elapsed = 0;
-        while (elapsed < 1)
+        while (elapsed < ConfirmationDelay)
         {
             elapsed += VanillaMenuTiming.Delta;
             confirmAge = elapsed;
-            foreach (Capsule capsule in capsules)
-            {
-                if (capsule.index != SelectedIndex) capsule.detail.alpha = Mathf.Clamp01(1 - elapsed * 3);
-                else if (menu.vanillaMenu.flashingLights) capsule.title.color = (int)(elapsed * 24) % 2 == 0 ? Color.white : Hex(IsPico ? "CC6600" : "00CCFF");
-            }
             yield return null;
         }
         Song.currentSongMeta = song.meta;
@@ -900,7 +984,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Song.modeOfPlay = Mode;
         ArmRankReturn(song.meta, Song.difficulty, Mode);
         ReturnToFreeplay = true;
-        LoadingTransition.instance.LoadScene("Game_Backup3", fadeThroughBlack: true);
+        LoadingTransition.instance.LoadScene("Game_Backup3", fadeThroughBlack: true, blackFadeDuration: .2f, linearBlackFade: true);
     }
 
     public void Close()
@@ -917,7 +1001,10 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         menu.mainScreen.gameObject.SetActive(true);
         menu.vanillaMenu?.SetFreeplaySuspended(true);
         cardRoot.Find("Band").gameObject.SetActive(false);
+        cardRoot.Find("Band Edge").gameObject.SetActive(false);
         foreach (Text marquee in marquees) marquee.gameObject.SetActive(false);
+        if (bfGlow != null) bfGlow.gameObject.SetActive(false);
+        if (bfDark != null) bfDark.gameObject.SetActive(false);
         foreach (var item in picoLoops) item.sprite.gameObject.SetActive(false);
         if (picoBlue != null) picoBlue.gameObject.SetActive(false);
         if (picoDark != null) picoDark.gameObject.SetActive(false);
@@ -925,7 +1012,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         QueueExit(cardRoot, 0.4f, -524);
         QueueExit(dj.rectTransform, 0.5f, -dj.rectTransform.rect.width * 1.6f);
         QueueExit(backing.rectTransform, 0.4f, viewportWidth * 1.5f);
-        Transform difficultyName = difficultyRoot.Find("Name");
+        Transform difficultyName = difficultyLabelRoot.Find("Name");
         if (difficultyName != null) QueueExit((RectTransform)difficultyName, 0.25f, -300);
         foreach (VanillaFreeplaySprite arrow in difficultyRoot.GetComponentsInChildren<VanillaFreeplaySprite>())
             if (arrow.name.EndsWith("Difficulty", StringComparison.Ordinal)) QueueExit(arrow.rectTransform, 0.26f, -arrow.FrameSize.x * 2);
@@ -963,6 +1050,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private void DrawExit(float delta)
     {
         exitAge += delta;
+        DrawCardBurst(exitAge, .25f);
         foreach (ExitTween tween in exitTweens)
         {
             float t = Mathf.Clamp01(exitAge / tween.duration);
@@ -1011,6 +1099,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         Destroy(picoMultiply);
         Destroy(picoAdditive);
         Destroy(instrumentalWhite);
+        if (bfMultiply != null) Destroy(bfMultiply);
         StopCartoon(false);
         CancelPreview();
         if (rankAdditive != null) Destroy(rankAdditive);

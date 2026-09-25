@@ -47,6 +47,8 @@ public static class VanillaFreeplayValidation
     {
         if (!Application.isBatchMode) throw new InvalidOperationException("Run Freeplay validation in an isolated batch editor.");
         Directory.CreateDirectory(Output);
+        PlayerSettings.companyName = "UnityPartyValidation";
+        PlayerSettings.productName = "FreeplayValidation";
         CheckCatalog();
         CheckScores();
         CheckIcons();
@@ -214,6 +216,12 @@ public static class VanillaFreeplayValidation
                     if (wait < 4) return;
                     menu = Object.FindFirstObjectByType<MenuV2>();
                     Require(menu?.vanillaMenu != null, "Main menu missing.");
+                    if (VanillaTitleScreen.Active != null)
+                    {
+                        VanillaTitleScreen.Active.MoveToMainMenu();
+                        return;
+                    }
+                    if (VanillaCreditsTransition.BlocksInput) return;
                     menu.vanillaMenu.MoveSelection(1 - menu.vanillaMenu.SelectedIndex);
                     menu.vanillaMenu.ConfirmSelection();
                     Next();
@@ -280,9 +288,11 @@ public static class VanillaFreeplayValidation
                     favoriteKey = freeplay.SelectedSong.FavoriteKey;
                     favoriteValue = PlayerPrefs.GetInt(favoriteKey, 0);
                     if (!freeplay.SelectedSong.Favorite) freeplay.ToggleFavorite();
+                    typeof(VanillaFreeplay).GetMethod("Draw", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(freeplay, new object[] { .21f });
                     freeplay.ChangeFilter(-1);
                     Require(freeplay.SelectedSong != null && freeplay.SelectedSong.Favorite, "Favorites filter lost current favorite.");
                     freeplay.ToggleFavorite();
+                    typeof(VanillaFreeplay).GetMethod("Draw", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(freeplay, new object[] { .21f });
                     Require(freeplay.SelectedSong == null || freeplay.SelectedSong.Favorite, "Unfavorited song remained in favorites.");
                     PlayerPrefs.SetInt(favoriteKey, favoriteValue);
                     PlayerPrefs.Save();

@@ -114,11 +114,12 @@ public sealed class VanillaFreeplaySprite : MaskableGraphic
         SetVerticesDirty();
     }
 
-    public void PlayReverse(string prefix, string then)
+    public void PlayReverse(string prefix, string then, int startFrame = -1)
     {
         if (!TryPlay(prefix, false, then)) return;
         reversed = true;
-        index = frames.Length - 1;
+        index = startFrame < 0 ? frames.Length - 1 : Mathf.Clamp(startFrame, 0, frames.Length - 1);
+        clock = (frames.Length - 1 - index) / fps;
         SetVerticesDirty();
     }
 

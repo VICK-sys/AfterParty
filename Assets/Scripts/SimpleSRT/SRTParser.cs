@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class SRTParser
@@ -82,7 +83,8 @@ public class SRTParser
             if (string.IsNullOrEmpty(line) || l == lines.Length - 1)
             {
               // Create the SubtitleBlock with the data we've aquired 
-              subs.Add(new SubtitleBlock(currentIndex, currentFrom, currentTo, currentText));
+              subs.Add(new SubtitleBlock(currentIndex, currentFrom, currentTo,
+                Regex.Replace(currentText, @"\{\\[^{}\r\n]*\}", string.Empty)));
 
               // Reset stuff so we can start again for the next block
               currentText = string.Empty;

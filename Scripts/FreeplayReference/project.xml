@@ -1,0 +1,10 @@
+<project>
+    <meta title="Freeplay Reference" package="local.freeplay.reference" version="1.0.0" company="Local" />
+    <app main="Main" file="FreeplayReference" path="../../Builds/FreeplayReference/compiled" />
+    <window width="640" height="120" hidden="true" />
+    <source path="." />
+    <haxelib name="flixel" version="6.2.0" />
+    <haxelib name="flixel-addons" version="3.3.0" />
+    <assets path="../../Assets/Resources/VanillaFreeplay/5by7.ttf" rename="assets/5by7.ttf" />
+    <haxedef name="FLX_NO_DEBUG" />
+</project>

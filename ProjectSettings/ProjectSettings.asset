@@ -776,7 +776,7 @@ PlayerSettings:
   webProgressiveAssetLoading: 0
   scriptingDefineSymbols:
     Standalone: CANARY;SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
-    Windows Store Apps: SENTIS_ANALYTICS_ENABLED
+    Windows Store Apps: SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

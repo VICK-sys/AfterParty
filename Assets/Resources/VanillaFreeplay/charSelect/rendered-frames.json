@@ -16,13 +16,14 @@
     "frames": 56,
     "uniqueFrames": 21,
     "size": [
-      8192,
-      982
+      2048,
+      6952
     ],
+    "renderScale": 2.0,
     "sha256": {
-      "Animation.json": "1b41641b9b106ade3edfa4ceb24319cf398309ea1a58e2db94bdf0bb26e938b9",
-      "spritemap1.json": "a2ec6b6c636c91f2b91176db59d30e1d02f33c14bccb914bee30f66359c321db",
-      "spritemap1.png": "a3f3569758a9e01506ed0ce4ca9645f3ac7eb4a5f8367ddde0b244de5c64b479"
+      "Animation.json": "6bcc2e3f0ba774eb91fe8a346d4c2fa5ecb89477cfa214355999638c8774d1da",
+      "spritemap1.json": "4f130809c1f7b5fac3945304a47539fdb9d2c9aa874920f97fa6c53a867bf76a",
+      "spritemap1.png": "429628a44ac1323d500c9c4105e8770ff883b0145bd28ba59fe9ade9bf036e32"
     },
     "overlayBlend": "sRGB Overlay"
   },
@@ -30,13 +31,14 @@
     "frames": 79,
     "uniqueFrames": 30,
     "size": [
-      8192,
-      1392
+      4096,
+      4396
     ],
+    "renderScale": 2.0,
     "sha256": {
-      "Animation.json": "44b2fdcfee60d28964d39b0f36c6d5311f8c0142f5c2b88e9ef9f31ed6ab3014",
-      "spritemap1.json": "a1b1bbfba2300eaffadf86d8cf99d048ef7d37609ce83f852a63d61f313fe403",
-      "spritemap1.png": "b8169f85aee4b8bb2c5ab926d1d0d59d4db3fc7c3e0e823b88f3bbed11523f1c"
+      "Animation.json": "b162577ecd5f93d4dbea6de132444e56fbf841cf0ac095eefe5cd8763ed94ab2",
+      "spritemap1.json": "894faff757891438c81c811c493e33ac0e17930bf280d5110c7f10f120e3cdb8",
+      "spritemap1.png": "caf9a35dcd6aaaa441a0d7142bca7bbd8d82dd7fa99d9706c4be87469cd295d8"
     },
     "overlayBlend": "sRGB Overlay"
   },
@@ -58,12 +60,13 @@
     "uniqueFrames": 38,
     "size": [
       8192,
-      1933
+      5840
     ],
+    "renderScale": 2.0,
     "sha256": {
-      "Animation.json": "b357c6f93e82a8cb6d3beb66f237e4c806d0557edf5c60bc7240469055016263",
-      "spritemap1.json": "898a281e098971ce9d3eadab649f26560c88005b2713c9eb3cd34e98e5531d68",
-      "spritemap1.png": "cbea234a9278ecbba2f619560e252679c44068e0edc13767d28ff16e1951110e"
+      "Animation.json": "bc46c1c5dc62631e86aacf5762ded9fe17f707fb55311d19c643ccabefba3e5b",
+      "spritemap1.json": "3e4f8229d21b9e82c3981e9f21fc56502667aa2b97989adb481e21ff4b87a530",
+      "spritemap1.png": "ca184c43d8f2e706fd7403cc7c0428fd4c3db7160026a3cc167bed484ff66ee1"
     },
     "overlayBlend": "sRGB Overlay"
   },
@@ -72,12 +75,13 @@
     "uniqueFrames": 59,
     "size": [
       8192,
-      1977
+      5528
     ],
+    "renderScale": 2.0,
     "sha256": {
-      "Animation.json": "96226a25b6756d398846418e70569ce3ec771c113c9ce8bab28fc5d48ed360b1",
-      "spritemap1.json": "bf5e206e22014c3977a35223bbe08fa1058b7b5861bc3a3d3673ffce2ac0a0d2",
-      "spritemap1.png": "dde03cfc4b66724b1b1234407d514b9c82f6cee48edb53b011a6f08de4b20d8a"
+      "Animation.json": "4b78c671ced9a48a9e51319ed10d3beb370cd45dd2a91f996d97606c86195740",
+      "spritemap1.json": "2630066a1d4a8acf8b5b235bc330a6e2c1e21809e5b429c7d96874bdd4af05f1",
+      "spritemap1.png": "799c2d04acc08043e5cfb7c7c141f7ed59bcce305f47a8f4bdd1a20b7cb3376b"
     },
     "overlayBlend": "sRGB Overlay"
   }

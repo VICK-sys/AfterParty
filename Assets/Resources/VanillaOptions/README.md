@@ -38,6 +38,8 @@ It does not reproduce the upstream screenshot editor.
 ## Controls and calibration
 
 Keyboard and gamepad bindings apply to menus and gameplay.
+Gameplay and keyboard menus hide the mouse cursor.
+The bundle picker retains the mouse cursor.
 Existing note bindings migrate into the Controls page.
 Bindings retain additional source defaults beyond the two visible columns.
 Conflicts swap inputs within their control group.
