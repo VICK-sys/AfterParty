@@ -29,6 +29,26 @@ public sealed class VanillaMainMenu : MonoBehaviour
     private int enabledFrame;
     private bool freeplaySuspended;
 
+    private void Start()
+    {
+        Text buildLabel = new GameObject("Build Version", typeof(RectTransform)).AddComponent<Text>();
+        buildLabel.rectTransform.SetParent(background.parent, false);
+        buildLabel.rectTransform.anchorMin = buildLabel.rectTransform.anchorMax = Vector2.zero;
+        buildLabel.rectTransform.pivot = Vector2.zero;
+        buildLabel.rectTransform.anchoredPosition = new Vector2(12, 8);
+        buildLabel.rectTransform.sizeDelta = new Vector2(100, 16);
+        buildLabel.text = "Made in Unity";
+        buildLabel.font = Resources.Load<Font>("VanillaFreeplay/vcr-build");
+        buildLabel.font.material.mainTexture.filterMode = FilterMode.Point;
+        buildLabel.fontSize = 12;
+        buildLabel.alignment = TextAnchor.MiddleLeft;
+        buildLabel.color = Color.white;
+        buildLabel.raycastTarget = false;
+        Outline outline = buildLabel.gameObject.AddComponent<Outline>();
+        outline.effectColor = Color.black;
+        outline.effectDistance = new Vector2(1, -1);
+    }
+
     public void SetFreeplaySuspended(bool value)
     {
         freeplaySuspended = value;
