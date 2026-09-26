@@ -31,22 +31,15 @@ public sealed class VanillaMainMenu : MonoBehaviour
 
     private void Start()
     {
-        Text buildLabel = new GameObject("Build Version", typeof(RectTransform)).AddComponent<Text>();
+        RawImage buildLabel = new GameObject("Build Version", typeof(RectTransform)).AddComponent<RawImage>();
         buildLabel.rectTransform.SetParent(background.parent, false);
         buildLabel.rectTransform.anchorMin = buildLabel.rectTransform.anchorMax = Vector2.zero;
-        buildLabel.rectTransform.pivot = Vector2.zero;
-        buildLabel.rectTransform.anchoredPosition = new Vector2(12, 8);
-        buildLabel.rectTransform.sizeDelta = new Vector2(100, 16);
-        buildLabel.text = "Made in Unity";
-        buildLabel.font = Resources.Load<Font>("VanillaFreeplay/vcr-build");
-        buildLabel.font.material.mainTexture.filterMode = FilterMode.Point;
-        buildLabel.fontSize = 12;
-        buildLabel.alignment = TextAnchor.MiddleLeft;
-        buildLabel.color = Color.white;
+        buildLabel.rectTransform.pivot = new Vector2(0, 1);
+        buildLabel.rectTransform.anchoredPosition = new Vector2(0, 18);
+        buildLabel.texture = Resources.Load<Texture2D>("VanillaText/made-in-unity");
+        buildLabel.material = Resources.Load<Material>("VanillaText/Premultiplied");
+        buildLabel.SetNativeSize();
         buildLabel.raycastTarget = false;
-        Outline outline = buildLabel.gameObject.AddComponent<Outline>();
-        outline.effectColor = Color.black;
-        outline.effectDistance = new Vector2(1, -1);
     }
 
     public void SetFreeplaySuspended(bool value)

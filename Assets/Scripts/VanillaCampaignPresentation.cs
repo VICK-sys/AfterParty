@@ -352,13 +352,12 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
         yield return LoadAudio(6, "textboxClick", clip => click = clip);
         var portrait = Rect("Speaker", viewport,0,0,1280,720).gameObject.AddComponent<VanillaDialogueGraphic>();
         var box = Rect("Dialogue Box",viewport,-20,20,1280,720).gameObject.AddComponent<VanillaDialogueGraphic>();
-        var text = Rect("Dialogue",viewport,205,470,900,200).gameObject.AddComponent<Text>();
+        var text = Rect("Dialogue",viewport,205,470,900,200).gameObject.AddComponent<VanillaDialogueText>();
         text.font = Resources.Load<Font>("FunkinHud/Pixel/dialogue");
         text.fontSize = 32;
         text.horizontalOverflow = HorizontalWrapMode.Wrap;
         text.verticalOverflow = VerticalWrapMode.Overflow;
         text.raycastTarget = false;
-        var shadow = text.gameObject.AddComponent<Shadow>();
         ReleaseIntroCover();
         string lastBox = null;
         string lastSpeaker = null;
@@ -399,27 +398,25 @@ public sealed partial class VanillaCampaignPresentation : MonoBehaviour
             text.rectTransform.anchoredPosition = box.rectTransform.anchoredPosition + new Vector2((float)boxData["text"]["offsets"][0],-(float)boxData["text"]["offsets"][1]);
             text.rectTransform.sizeDelta = new Vector2((float)boxData["text"]["width"],200);
             ColorUtility.TryParseHtmlString((string)boxData["text"]["color"],out Color color);
-            text.color = color;
-            text.fontSize = (int?)boxData["text"]["size"] ?? 32;
             ColorUtility.TryParseHtmlString((string)boxData["text"]["shadowColor"], out Color shadowColor);
-            shadow.effectColor = shadowColor;
             float shadowWidth = (float?)boxData["text"]["shadowWidth"] ?? 2;
-            shadow.effectDistance = new Vector2(shadowWidth,-shadowWidth);
+            text.Configure(color, shadowColor, shadowWidth, (int?)boxData["text"]["size"] ?? 32);
             string content = "";
             foreach (JToken segment in line["text"])
             {
-                int previousLength = content.Length;
+                int previousLength = text.text.Length;
                 content += (string)segment;
+                string wrapped = text.Prepare(content);
                 int shown = previousLength;
                 float age = 0;
-                while (shown < content.Length)
+                while (shown < wrapped.Length)
                 {
                     age += Time.deltaTime;
-                    int next = Mathf.Min(content.Length,previousLength + (int)(age / (.05f * ((float?)line["speed"] ?? 1))));
-                    if (Advance) next = content.Length;
+                    int next = Mathf.Min(wrapped.Length,previousLength + (int)(age / (.05f * ((float?)line["speed"] ?? 1))));
+                    if (Advance) next = wrapped.Length;
                     if (next > shown) sound.PlayOneShot(sound.clip,.6f);
                     shown = next;
-                    text.text = content.Substring(0,shown);
+                    text.text = wrapped.Substring(0,shown);
                     FadeDialogue(backdrop);
                     yield return null;
                 }

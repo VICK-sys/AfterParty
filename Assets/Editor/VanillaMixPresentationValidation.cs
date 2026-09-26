@@ -198,7 +198,8 @@ public static class VanillaMixPresentationValidation
         if (text == null) return;
         Require(Presentation.Busy && !song.IsCountingDown && !song.uiCamera.enabled && !song.battleCanvas.enabled,
             "Dialogue overlaps countdown or gameplay HUD.");
-        if (dialogueLines.Contains(text.text)) seenLines.Add(text.text);
+        string content = text.text.Replace("\n", "");
+        if (dialogueLines.Contains(content)) seenLines.Add(content);
         if (!captured && text.text.Length > 12)
         {
             Require(text.font != null, "Dialogue font did not load.");

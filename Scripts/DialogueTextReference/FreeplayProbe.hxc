@@ -1,0 +1,163 @@
+import funkin.modding.module.Module;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.play.cutscene.dialogue.FunkinTypeText;
+import funkin.util.FileUtil;
+import funkin.util.FileUtil.FileWriteMode;
+import funkin.Preferences;
+import flixel.FlxCamera;
+import flixel.text.FlxText;
+import flixel.text.FlxText.FlxTextBorderStyle;
+import openfl.display.BitmapData;
+import openfl.display.PNGEncoderOptions;
+import openfl.geom.Point;
+import haxe.Json;
+
+class FreeplayProbe extends Module
+{
+  var output:String = "DialogueTextParity/reference";
+  var elapsed:Float = 0;
+  var phase:Int = 0;
+  var index:Int = -1;
+  var resolution:Int = 720;
+  var camera:Dynamic;
+  var label:Dynamic;
+  var dialogue:Dynamic;
+  var cases:Dynamic;
+  var capturePending:Bool = false;
+
+  public function new() { super("FreeplayProbe"); }
+
+  override public function onCreate(event)
+  {
+    FlxG.autoPause = false;
+    FlxG.stage.window.resize(1280, 720);
+    Preferences.setDebugDisplayMode("Off");
+    FileUtil.createDirIfNotExists(output);
+    cases = FileUtil.readJSONFromPath("dialogue-text-cases.json");
+    FlxG.signals.postDraw.add(capture);
+  }
+
+  function save(name:String, bitmap:Dynamic)
+  {
+    FileUtil.writeBytesToPath(output + "/" + name + ".png", bitmap.encode(bitmap.rect, new PNGEncoderOptions()), FileWriteMode.Force);
+  }
+
+  function prepare()
+  {
+    var item = cases[index];
+    dialogue.visible = true;
+    dialogue.fieldWidth = item.width;
+    dialogue.setFormat("Pixel Arial 11 Bold", 32, Std.parseInt("0xFF" + item.color.substr(1)), "left", FlxTextBorderStyle.SHADOW,
+      item.shadowColor == "#00000000" ? 0 : Std.parseInt("0xFF" + item.shadowColor.substr(1)), false);
+    dialogue.borderSize = item.shadowWidth;
+    dialogue.resetText(item.text);
+    dialogue.start();
+    dialogue.skip();
+    dialogue.update(0);
+    var wrapped = dialogue.text;
+    if (item.visible != null) dialogue.text = wrapped.substr(0, item.visible);
+    dialogue.drawFrame(true);
+    item.wrapped = wrapped;
+    item.shown = dialogue.text;
+    item.lineHeight = dialogue.textField.getLineMetrics(0).height;
+    item.antialiasing = dialogue.antialiasing;
+    item.pixelWidth = dialogue.pixels.width;
+    item.pixelHeight = dialogue.pixels.height;
+    save(item.id + "-raster", dialogue.pixels);
+    elapsed = 0;
+  }
+
+  function capture()
+  {
+    if (!capturePending) return;
+    capturePending = false;
+    var key = index < 0 ? "label" : cases[index].id;
+    save(key + "-" + resolution + "p", BitmapData.fromImage(FlxG.stage.window.readPixels()));
+    phase = 3;
+    elapsed = 0;
+  }
+
+  override public function onUpdate(event)
+  {
+    elapsed += event.elapsed;
+    if (phase == 0 && elapsed > 1)
+    {
+      FlxG.switchState(function() { return new MainMenuState(); });
+      phase = 1;
+      elapsed = 0;
+    }
+    else if (phase == 1 && elapsed > 2)
+    {
+      camera = new FlxCamera(0, 0, 1280, 720);
+      camera.bgColor = 0xFF121824;
+      FlxG.cameras.add(camera, false);
+      label = FlxG.state.leftWatermarkText;
+      label.text = "Made in Unity";
+      label.cameras = [camera];
+      label.drawFrame(true);
+      save("made-in-unity", label.pixels);
+      FileUtil.writeStringToPath(output + "/label.json", Json.stringify({x:label.x, y:label.y, width:label.width,
+        height:label.height, pixelWidth:label.pixels.width, pixelHeight:label.pixels.height, size:label.size,
+        borderSize:label.borderSize, antialiasing:label.antialiasing}), FileWriteMode.Force);
+      var glyph = new FlxText(0, 0, 0, "M", 32);
+      glyph.setFormat("Pixel Arial 11 Bold", 32);
+      glyph.antialiasing = true;
+      var atlas = new BitmapData(1536, 576, true, 0);
+      var glyphs = [];
+      for (code in 32...127)
+      {
+        glyph.text = " " + String.fromCharCode(code) + " ";
+        glyph.drawFrame(true);
+        var x = ((code - 32) % 16) * 96;
+        var y = Std.int((code - 32) / 16) * 96;
+        atlas.copyPixels(glyph.pixels, glyph.pixels.rect, new Point(x, y));
+        glyphs.push({code:code, x:x, y:y, width:glyph.pixels.width, height:glyph.pixels.height, offsetX:-16, advance:glyph.textField.textWidth - 32});
+      }
+      save("dialogue", atlas);
+      FileUtil.writeStringToPath(output + "/dialogue.json", Json.stringify({lineHeight:glyph.textField.getLineMetrics(0).height, glyphs:glyphs}), FileWriteMode.Force);
+      glyph.destroy();
+      dialogue = new FunkinTypeText(205, 470, 800, "", 32);
+      dialogue.cameras = [camera];
+      dialogue.visible = false;
+      dialogue.active = false;
+      FlxG.state.add(dialogue);
+      phase = 2;
+      elapsed = 0;
+    }
+    else if (phase == 2 && elapsed > .2)
+    {
+      capturePending = true;
+      phase = 4;
+    }
+    else if (phase == 3 && elapsed > .1)
+    {
+      if (resolution == 720)
+      {
+        resolution = 1080;
+        FlxG.stage.window.resize(1920, 1080);
+        phase = 2;
+        elapsed = -0.5;
+      }
+      else
+      {
+        resolution = 720;
+        FlxG.stage.window.resize(1280, 720);
+        label.visible = false;
+        index++;
+        if (index == cases.length)
+        {
+          FileUtil.writeStringToPath(output + "/cases.json", Json.stringify(cases), FileWriteMode.Force);
+          trace("DIALOGUE_TEXT_DONE " + cases.length);
+          FlxG.stage.window.close();
+          phase = 10;
+        }
+        else
+        {
+          prepare();
+          phase = 2;
+          elapsed = -0.5;
+        }
+      }
+    }
+  }
+}
