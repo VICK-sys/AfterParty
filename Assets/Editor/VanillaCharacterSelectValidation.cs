@@ -172,7 +172,7 @@ public static class VanillaCharacterSelectValidation
                     break;
                 case 8:
                     if (elapsed < 4 || VanillaFreeplay.Active.Busy) return;
-                    Require(entryCompleted, "Pico entry did not switch from Intro to Idle.");
+                    Require(entryCompleted, "Pico entry did not finish its DJ intro.");
                     Require(idleAdvanced, "Pico stayed on one pose after the menu opened.");
                     Debug.Log("PICO ENTRY FRAME GAP MS: " + picoEntryGap);
                     var freeplay = VanillaFreeplay.Active;
@@ -221,6 +221,7 @@ public static class VanillaCharacterSelectValidation
     private static void CheckFreeplayEntry()
     {
         var freeplay = VanillaFreeplay.Active;
+        bool firstFrame = entryScreen != freeplay;
         if (entryScreen != freeplay)
         {
             entryScreen = freeplay;
@@ -230,10 +231,43 @@ public static class VanillaCharacterSelectValidation
         }
         var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
         var dj = (VanillaFreeplayAnimate)typeof(VanillaFreeplay).GetField("dj", flags).GetValue(freeplay);
+        var returnTransition = (VanillaFreeplayTransition)typeof(VanillaFreeplay).GetField("characterReturnTransition", flags).GetValue(freeplay);
+        if (phase == 8 || phase == 12)
+        {
+            if (firstFrame)
+            {
+                Require(returnTransition != null && returnTransition.Progress < 1, "Character select return omitted its fade.");
+                Require(dj.CurrentLabel == "Intro", "Character select return skipped its DJ intro.");
+            }
+            if (returnTransition != null)
+            {
+                float returnAge = (float)typeof(VanillaFreeplay).GetField("characterReturnAge", flags).GetValue(freeplay);
+                var fade = (Material)typeof(VanillaFreeplayTransition).GetField("blue", flags).GetValue(returnTransition);
+                float t = Mathf.Clamp01(returnAge / .8f);
+                Require(Mathf.Abs(fade.GetFloat("_Fade") - t * t) < .001f, "Character return fade does not follow the reference timing.");
+                var score = (RectTransform)typeof(VanillaFreeplay).GetField("scoreRoot", flags).GetValue(freeplay);
+                float expectedY = returnAge >= .96f ? 0 : 270 * Mathf.Pow(2, -10 * returnAge / .96f);
+                Require(Mathf.Abs(score.anchoredPosition.y - expectedY) < .1f, "Character return score motion differs from the reference.");
+            }
+            if (EditorApplication.timeSinceStartup - changed > 2)
+                Require(returnTransition == null, "Character return fade did not release its capture camera.");
+            Require((bool)typeof(VanillaFreeplay).GetField("ready", flags).GetValue(freeplay),
+                "Character select return did not make Freeplay ready.");
+            foreach (string field in new[] { "headerRoot", "scoreRoot" })
+                Require(((RectTransform)typeof(VanillaFreeplay).GetField(field, flags).GetValue(freeplay)).gameObject.activeSelf,
+                    "Character select return delayed " + field + ".");
+        }
+        else if (firstFrame)
+        {
+            Require(returnTransition == null, "Normal Freeplay entry used the character return fade.");
+            Require(dj.CurrentLabel == "Intro", "Normal Freeplay entry skipped its intro control.");
+        }
         double now = Time.realtimeSinceStartupAsDouble;
         if (dj.CurrentLabel == "Intro")
         {
-            Require(freeplay.Busy, "Freeplay accepted input before its DJ intro completed.");
+            if (phase == 1) Require(freeplay.Busy, "Normal Freeplay entry accepted input before its DJ intro completed.");
+            else if (EditorApplication.timeSinceStartup - changed > .25)
+                Require(!freeplay.Busy, "Character return waited for the DJ intro before accepting input.");
             if (!dj.Finished) return;
             if (finishedIntroTime == 0) finishedIntroTime = now;
             Require(now - finishedIntroTime < .1, "Freeplay holds the finished DJ intro instead of revealing the menu.");

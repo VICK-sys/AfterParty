@@ -149,6 +149,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     public static VanillaFreeplay Open(MenuV2 owner, bool skipIntro = false, string userRoot = null, List<VanillaFreeplaySong> catalog = null, bool fromCharacterSelect = false)
     {
         if (Active != null) return Active;
+        skipIntro |= fromCharacterSelect;
         var root = new GameObject("Vanilla Freeplay", typeof(RectTransform));
         root.SetActive(false);
         var freeplay = root.AddComponent<VanillaFreeplay>();
@@ -163,14 +164,21 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         root.SetActive(true);
         Active = freeplay;
         freeplay.openedFrame = Time.frameCount;
-        freeplay.age = skipIntro ? 2 : 0;
+        freeplay.age = skipIntro ? Mathf.Max(2, freeplay.IntroDuration + .75f) : 0;
         freeplay.capsuleAge = skipIntro ? 2 : 0;
         freeplay.ready = skipIntro;
         freeplay.RebuildList(true);
-        freeplay.dj.Play(skipIntro ? "Idle" : "Intro", skipIntro);
+        bool skipDJIntro = skipIntro && !fromCharacterSelect;
+        freeplay.dj.Play(skipDJIntro ? "Idle" : "Intro", skipDJIntro);
         Canvas.ForceUpdateCanvases();
         freeplay.ApplyLayout(((RectTransform)freeplay.transform).rect.width);
         freeplay.Draw(0);
+        if (fromCharacterSelect)
+        {
+            freeplay.BeginCharacterReturn();
+            freeplay.characterReturnTransition = VanillaFreeplayTransition.Create(freeplay.GetComponent<Canvas>());
+            freeplay.characterReturnTransition.DrawFreeplayEntrance(0);
+        }
         freeplay.ConsumeRankReturn(skipIntro);
         freeplay.lastUpdateTime = Time.realtimeSinceStartupAsDouble;
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
@@ -347,7 +355,8 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
 
     private void Update()
     {
-        if (characterTransition == null && exitAge < 0) ApplyLayout(((RectTransform)transform).rect.width);
+        ClearCharacterReturnOffset();
+        if (characterTransition == null && characterReturnTransition == null && exitAge < 0) ApplyLayout(((RectTransform)transform).rect.width);
         double now = Time.realtimeSinceStartupAsDouble;
         float elapsed = Mathf.Max(0, (float)(now - lastUpdateTime));
         float delta = VanillaMenuTiming.Clamp(elapsed);
@@ -356,16 +365,20 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         age += delta;
         capsuleAge += delta;
         selectionAge += delta;
-        if (!ready && dj.CurrentLabel == "Intro" && dj.Finished && !closing)
+        if (dj.CurrentLabel == "Intro" && dj.Finished && !closing)
         {
-            ready = true;
-            menu.mainScreen.gameObject.SetActive(false);
             dj.Play("Idle", true);
-            if (albumRoot.gameObject.activeSelf) album.Play("intro", false);
-            StartPreview();
+            if (!ready)
+            {
+                ready = true;
+                menu.mainScreen.gameObject.SetActive(false);
+                if (albumRoot.gameObject.activeSelf) album.Play("intro", false);
+                StartPreview();
+            }
         }
         Draw(delta);
         DrawRankAnimation(delta);
+        DrawCharacterReturn(delta);
         UpdateDJ(delta);
         UpdatePreview(delta);
         if (instrumentalRoot != null && !closing) { UpdateInstrumentalMenu(); return; }
@@ -1096,6 +1109,7 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
     private void OnDestroy()
     {
         if (characterTransition != null) Destroy(characterTransition.gameObject);
+        if (characterReturnTransition != null) Destroy(characterReturnTransition.gameObject);
         Destroy(picoMultiply);
         Destroy(picoAdditive);
         Destroy(instrumentalWhite);

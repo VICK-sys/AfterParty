@@ -107,6 +107,14 @@ public sealed class VanillaFreeplayTransition : MonoBehaviour
         if (flash != null) flash.color = new Color(1, 1, 1, Mathf.Clamp01(1 - elapsed));
     }
 
+    public void DrawFreeplayEntrance(float elapsed)
+    {
+        Progress = Mathf.Clamp01(elapsed / .8f);
+        blue.SetFloat("_Fade", Progress * Progress);
+        float t = Mathf.Clamp01(elapsed / 1.8f);
+        gradient.anchoredPosition = new Vector2(0, -720 * (t >= 1 ? 1 : 1 - Mathf.Pow(2, -10 * t)));
+    }
+
     public void Flash()
     {
         flash = Rect("Lights Flash", Overlay.transform.Find("Viewport"), new Vector2(width, 720)).gameObject.AddComponent<Image>();

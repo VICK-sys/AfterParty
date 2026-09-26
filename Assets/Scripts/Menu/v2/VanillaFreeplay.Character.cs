@@ -15,13 +15,64 @@ public sealed partial class VanillaFreeplay
     private float picoGlowAge = 1;
     private float characterTransitionAge = -1;
     private VanillaFreeplayTransition characterTransition;
+    private VanillaFreeplayTransition characterReturnTransition;
+    private float characterReturnAge;
+    private float characterReturnOffset;
+    private readonly List<(RectTransform rect, float distance)> characterReturnMovers = new List<(RectTransform, float)>();
     private float characterPreviewVolume;
     private readonly List<(RectTransform rect, Vector2 start, float distance)> characterMovers = new List<(RectTransform, Vector2, float)>();
 
     public void OpenCharacterSelect()
     {
-        if (Busy || selectingMode) return;
+        if (Busy || selectingMode || characterReturnTransition != null) return;
         StartCoroutine(CharacterTransition());
+    }
+
+    private void BeginCharacterReturn()
+    {
+        characterReturnMovers.Add((backing.rectTransform, 100));
+        characterReturnMovers.Add((card.rectTransform, 100));
+        characterReturnMovers.Add(((RectTransform)cardRoot.Find("Band"), 40));
+        characterReturnMovers.Add(((RectTransform)cardRoot.Find("Band Edge"), 40));
+        characterReturnMovers.Add((difficultyLabelRoot, 270));
+        characterReturnMovers.Add((filters, 270));
+        characterReturnMovers.Add((scoreRoot, 270));
+        characterReturnMovers.Add((topBar, 300));
+        characterReturnMovers.Add((headerRoot, 300));
+        characterReturnMovers.Add((characterHint.rectTransform, 300));
+        characterReturnMovers.Add((album.rectTransform, 175));
+        characterReturnMovers.Add((stars.GetComponent<RectTransform>(), 175));
+        foreach (var item in picoLoops)
+            characterReturnMovers.Add((item.sprite.rectTransform, item.y == 80 ? 90 : item.y == 346 ? 80 : item.y == 406 ? 60 : 50));
+        if (picoBlue != null) characterReturnMovers.Add((picoBlue.rectTransform, 70));
+        ApplyCharacterReturnOffset(1);
+    }
+
+    private void ClearCharacterReturnOffset()
+    {
+        if (characterReturnOffset == 0) return;
+        foreach (var item in characterReturnMovers)
+            if (item.rect != null) item.rect.anchoredPosition -= Vector2.up * (item.distance * characterReturnOffset);
+        characterReturnOffset = 0;
+    }
+
+    private void ApplyCharacterReturnOffset(float offset)
+    {
+        characterReturnOffset = offset;
+        foreach (var item in characterReturnMovers)
+            if (item.rect != null) item.rect.anchoredPosition += Vector2.up * (item.distance * offset);
+    }
+
+    private void DrawCharacterReturn(float delta)
+    {
+        if (characterReturnTransition == null) return;
+        characterReturnAge += delta;
+        ApplyCharacterReturnOffset(characterReturnAge >= .96f ? 0 : Mathf.Pow(2, -10 * characterReturnAge / .96f));
+        characterReturnTransition.DrawFreeplayEntrance(characterReturnAge);
+        if (characterReturnAge < 1.8f) return;
+        Destroy(characterReturnTransition.gameObject);
+        characterReturnTransition = null;
+        characterReturnMovers.Clear();
     }
 
     private IEnumerator CharacterTransition()
