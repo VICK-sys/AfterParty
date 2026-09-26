@@ -120,16 +120,8 @@ public sealed class VanillaFreeplayCapsuleText : Text
                     output[index] = new Color32(0, 0, 0, 255);
                     continue;
                 }
-                float blur = raw[index] * .19648255f;
-                for (int tap = 0; tap < 3; tap++)
-                {
-                    float offset = 2 * (tap == 0 ? 1.4117647f : tap == 1 ? 3.2941176f : 5.1764706f);
-                    float weight = (tap == 0 ? .29690696f : tap == 1 ? .0944704f : .01038136f) * .5f;
-                    blur += weight * (Sample(raw, w, h, x + offset, y) + Sample(raw, w, h, x - offset, y)
-                        + Sample(raw, w, h, x, y + offset) + Sample(raw, w, h, x, y - offset));
-                }
-                output[index] = new Color32((byte)Mathf.RoundToInt(raw[index] * 255), (byte)glow[index],
-                    (byte)Mathf.RoundToInt(blur * 255), 255);
+                output[index] = new Color32((byte)Mathf.RoundToInt(raw[index] * 255), (byte)Mathf.RoundToInt(glow[index] * (1 - raw[index])),
+                    0, 255);
             }
         texture = new Texture2D(w, h, TextureFormat.RGBA32, false, true) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
         texture.SetPixels32(output);
@@ -137,22 +129,16 @@ public sealed class VanillaFreeplayCapsuleText : Text
         if (effect == null) effect = new Material(Resources.Load<Shader>("VanillaFreeplay/CapsuleText"));
     }
 
-    private static float Sample(float[] input, int w, int h, float x, float y)
-    {
-        x = Mathf.Clamp(x, 0, w - 1);
-        y = Mathf.Clamp(y, 0, h - 1);
-        return input[Mathf.RoundToInt(y) * w + Mathf.RoundToInt(x)];
-    }
-
     protected override void OnPopulateMesh(VertexHelper mesh)
     {
         if (!native || texture == null) { base.OnPopulateMesh(mesh); return; }
         mesh.Clear();
-        float left = -Padding, top = Padding;
-        mesh.AddVert(new Vector3(left, top), color, new Vector2(0, 1));
-        mesh.AddVert(new Vector3(left + texture.width, top), color, new Vector2(1, 1));
-        mesh.AddVert(new Vector3(left + texture.width, top - texture.height), color, new Vector2(1, 0));
-        mesh.AddVert(new Vector3(left, top - texture.height), color, new Vector2(0, 0));
+        float right = texture.width - Padding * 2, bottom = Padding * 2 - texture.height;
+        float u = Padding / (float)texture.width, v = Padding / (float)texture.height;
+        mesh.AddVert(new Vector3(0, 0), color, new Vector2(u, 1 - v));
+        mesh.AddVert(new Vector3(right, 0), color, new Vector2(1 - u, 1 - v));
+        mesh.AddVert(new Vector3(right, bottom), color, new Vector2(1 - u, v));
+        mesh.AddVert(new Vector3(0, bottom), color, new Vector2(u, v));
         mesh.AddTriangle(0, 1, 2);
         mesh.AddTriangle(0, 2, 3);
     }

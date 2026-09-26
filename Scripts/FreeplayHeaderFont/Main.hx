@@ -31,6 +31,7 @@ class FontState extends FlxState
             var glyphs = [];
             var text = new FlxText(0, 0, 0, "X", entry.size);
             text.setFormat("assets/" + entry.font + ".ttf", entry.size);
+            text.antialiasing = true;
             text.drawFrame(true);
             var advance = text.textField.textWidth;
             var lineHeight = text.textField.getLineMetrics(0).height;

@@ -1,3 +1,4 @@
+import argparse
 import json
 from pathlib import Path
 
@@ -6,8 +7,12 @@ from PIL import Image
 
 
 root = Path(__file__).resolve().parents[1]
-reference = root / 'Builds/FreeplayHeaderReference'
-actual = root / 'Builds/FreeplayHeaderValidation'
+parser = argparse.ArgumentParser()
+parser.add_argument('--reference', type=Path, default=root / 'Builds/FreeplayHeaderReference')
+parser.add_argument('--actual', type=Path, default=root / 'Builds/FreeplayHeaderValidation')
+args = parser.parse_args()
+reference = args.reference
+actual = args.actual
 blank = np.asarray(Image.open(actual / 'blank.png').convert('RGB'), dtype=float)[:64]
 results = {}
 for key in ['TAB', 'SPACE', 'intro']:

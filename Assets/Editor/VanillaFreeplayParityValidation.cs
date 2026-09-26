@@ -334,6 +334,11 @@ public static class VanillaFreeplayParityValidation
         title.font = Resources.Load<Font>("VanillaFreeplay/5by7");
         title.fontSize = 32;
         title.raycastTarget = false;
+        var clipHost = new GameObject("Title Clip", typeof(RectTransform), typeof(RectMask2D));
+        var clip = clipHost.GetComponent<RectTransform>();
+        clip.SetParent(root.transform, false);
+        clip.anchorMin = clip.anchorMax = clip.pivot = new Vector2(0, 1);
+        clip.sizeDelta = new Vector2(91, 42);
         foreach (var item in root.GetComponentsInChildren<Transform>()) item.gameObject.layer = 31;
         var features = AssetDatabase.FindAssets("t:UniversalRendererData")
             .Select(id => AssetDatabase.LoadAssetAtPath<UniversalRendererData>(AssetDatabase.GUIDToAssetPath(id)))
@@ -342,24 +347,52 @@ public static class VanillaFreeplayParityValidation
         int index = 0;
         try
         {
-            foreach (string text in new[] { "Tutorial", "DadBattle", "Winter Horrorland", "SPAGHETTI (feat. j-hope)" })
-                foreach (bool pico in new[] { false, true })
-                    foreach (bool selected in new[] { true, false })
-                    {
-                        title.text = text;
-                        title.color = new Color(1, 1, 1, selected ? 1 : .6f);
-                        title.Present(pico ? new Color32(204, 102, 0, 255) : new Color32(0, 204, 255, 255), selected, false, false);
-                        SaveTitle("title-" + index++);
-                    }
-            foreach (bool pico in new[] { false, true })
-                foreach (string phase in new[] { "first", "white", "dim" })
+            foreach (float scale in new[] { 1f, 1.5f })
+                foreach (bool fractional in new[] { false, true })
                 {
-                    title.text = "Tutorial";
-                    title.color = phase == "white" ? Color.white : new Color32(221, 221, 221, 255);
-                    title.Present(pico ? new Color32(204, 102, 0, 255) : new Color32(0, 204, 255, 255), true,
-                        phase != "first", phase == "white", phase != "white");
-                    SaveTitle("title-" + index++);
+                    camera.targetTexture = null;
+                    Object.DestroyImmediate(target);
+                    target = new RenderTexture(Mathf.RoundToInt(640 * scale), Mathf.RoundToInt(120 * scale), 24);
+                    camera.targetTexture = target;
+                    canvas.scaleFactor = scale;
+                    rect.anchoredPosition = fractional ? new Vector2(20.37f, -35.6f) : new Vector2(20, -35);
+                    foreach (string text in new[] { "Tutorial", "DadBattle", "Winter Horrorland", "SPAGHETTI (feat. j-hope)" })
+                        foreach (bool pico in new[] { false, true })
+                            foreach (bool selected in new[] { true, false })
+                            {
+                                title.text = text;
+                                title.color = new Color(1, 1, 1, selected ? 1 : .6f);
+                                title.Present(pico ? new Color32(204, 102, 0, 255) : new Color32(0, 204, 255, 255), selected, false, false);
+                                SaveTitle("title-" + index++);
+                            }
+                    foreach (bool pico in new[] { false, true })
+                        foreach (string phase in new[] { "first", "white", "dim" })
+                        {
+                            title.text = "Tutorial";
+                            title.color = phase == "white" ? Color.white : new Color32(221, 221, 221, 255);
+                            title.Present(pico ? new Color32(204, 102, 0, 255) : new Color32(0, 204, 255, 255), true,
+                                phase != "first", phase == "white", phase != "white");
+                            SaveTitle("title-" + index++);
+                        }
+                    clip.anchoredPosition = rect.anchoredPosition;
+                    rect.SetParent(clip, false);
+                    rect.anchoredPosition = Vector2.zero;
+                    foreach (bool pico in new[] { false, true })
+                        foreach (bool selected in new[] { true, false })
+                        {
+                            title.text = "Winter Horrorland";
+                            title.color = new Color(1, 1, 1, selected ? 1 : .6f);
+                            title.Present(pico ? new Color32(204, 102, 0, 255) : new Color32(0, 204, 255, 255), selected, false, false);
+                            SaveTitle("title-" + index++);
+                        }
+                    rect.SetParent(root.transform, false);
                 }
+            camera.targetTexture = null;
+            Object.DestroyImmediate(target);
+            target = new RenderTexture(640, 120, 24);
+            camera.targetTexture = target;
+            canvas.scaleFactor = 1;
+            rect.anchoredPosition = new Vector2(20, -35);
             title.text = "Tutorial";
             Texture cachedTitle = title.mainTexture;
             title.text = "Fresh";
@@ -386,8 +419,8 @@ public static class VanillaFreeplayParityValidation
             RenderPipeline.SubmitRenderRequest(camera, new UniversalRenderPipeline.SingleCameraRequest { destination = target });
             var previous = RenderTexture.active;
             RenderTexture.active = target;
-            var image = new Texture2D(640, 120, TextureFormat.RGBA32, false);
-            image.ReadPixels(new Rect(0, 0, 640, 120), 0, 0);
+            var image = new Texture2D(target.width, target.height, TextureFormat.RGBA32, false);
+            image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0);
             image.Apply();
             RenderTexture.active = previous;
             File.WriteAllBytes(Path.Combine(Output, name + ".png"), image.EncodeToPNG());

@@ -769,7 +769,13 @@ public sealed partial class VanillaFreeplay : MonoBehaviour
         if (relative < 0) y -= 50;
         else if (relative > 4) y += 10;
         if (index + 1 < SelectedIndex) y -= 100;
-        return new Vector2(270 + 60 * Mathf.Sin(relative), y);
+        double angle = relative * 0.3183098862;
+        if (angle > 1) angle -= ((int)Math.Ceiling(angle) >> 1) << 1;
+        else if (angle < -1) angle += ((int)Math.Ceiling(-angle) >> 1) << 1;
+        double curve = angle > 0
+            ? angle * (3.1 + angle * (0.5 + angle * (-7.2 + angle * 3.6)))
+            : angle * (3.1 - angle * (0.5 + angle * (7.2 + angle * 3.6)));
+        return new Vector2((float)(270 + 60 * curve), y);
     }
 
     private void Draw(float delta)

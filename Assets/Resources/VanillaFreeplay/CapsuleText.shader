@@ -35,8 +35,30 @@ Shader "UnityParty/Freeplay Capsule Text"
             struct appdata { float4 vertex : POSITION; float4 color : COLOR; float2 uv : TEXCOORD0; };
             struct v2f { float4 vertex : SV_POSITION; float4 color : COLOR; float2 uv : TEXCOORD0; float4 position : TEXCOORD1; };
             sampler2D _MainTex;
+            float4 _MainTex_TexelSize;
             float4 _GlowColor, _BlurColor, _ClipRect;
             float _Selected, _Additive;
+            float2 ClampUV(float2 uv)
+            {
+                float2 edge = 12.5 * _MainTex_TexelSize.xy;
+                return clamp(uv, edge, 1 - edge);
+            }
+            float Blur(float2 uv, float center)
+            {
+                float result = center * .1964825501511404;
+                const float3 offsets = float3(2.823529411764706, 6.588235294117646, 10.352941176470588);
+                const float3 weights = float3(.1484534823364172, .04723519892522366, .005190681200574029);
+                [unroll]
+                for (int tap = 0; tap < 3; tap++)
+                {
+                    float2 offset = offsets[tap] * _MainTex_TexelSize.xy;
+                    result += weights[tap] * (tex2D(_MainTex, ClampUV(uv + float2(offset.x, 0))).r
+                        + tex2D(_MainTex, ClampUV(uv - float2(offset.x, 0))).r
+                        + tex2D(_MainTex, ClampUV(uv + float2(0, offset.y))).r
+                        + tex2D(_MainTex, ClampUV(uv - float2(0, offset.y))).r);
+                }
+                return result;
+            }
             v2f vert(appdata v)
             {
                 v2f o;
@@ -48,17 +70,18 @@ Shader "UnityParty/Freeplay Capsule Text"
             }
             fixed4 frag(v2f i) : SV_Target
             {
-                float3 mask = tex2D(_MainTex, i.uv).rgb;
+                float3 mask = tex2D(_MainTex, ClampUV(i.uv)).rgb;
                 mask.g *= _GlowColor.a;
-                float front = mask.r + mask.g * (1 - mask.r);
-                float back = mask.b * _Selected;
+                float front = mask.r + mask.g;
+                float back = _Selected > .5 ? Blur(i.uv, mask.r) : 0;
                 float coverage = lerp(1 - front, 1, _Additive);
                 float alpha = saturate(front + back * coverage);
-                float3 rgb = (mask.r * i.color.rgb + _GlowColor.rgb * mask.g * (1 - mask.r)
+                float3 rgb = (mask.r * i.color.rgb + _GlowColor.rgb * mask.g
                     + _BlurColor.rgb * back * coverage) / max(alpha, .00001);
                 fixed4 color = fixed4(rgb, alpha * i.color.a);
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(i.position.xy, _ClipRect);
+                color.a *= i.position.x < _ClipRect.z;
                 #endif
                 return color;
             }

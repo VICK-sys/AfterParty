@@ -14,7 +14,7 @@ public sealed class VanillaFreeplayAssets : AssetPostprocessor
         importer.maxTextureSize = Mathf.Max(4096, Mathf.NextPowerOfTwo(Mathf.Max(width, height)));
         importer.mipmapEnabled = false;
         importer.alphaIsTransparency = true;
-        importer.filterMode = assetPath.Contains("/icons/") || assetPath.Contains("/fonts/") ? FilterMode.Point : FilterMode.Bilinear;
+        importer.filterMode = assetPath.Contains("/icons/") ? FilterMode.Point : FilterMode.Bilinear;
         importer.wrapMode = TextureWrapMode.Clamp;
         if (assetPath == "Assets/Resources/VanillaFreeplay/fonts/header/5by7-32.png") importer.isReadable = true;
         foreach (string character in new[] { "bfChill", "gfChill", "picoChill", "neneChill" })
